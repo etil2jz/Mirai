@@ -1,8 +1,5 @@
-import io.papermc.paperweight.util.constants.*
-
 plugins {
     java
-    `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
     id("io.papermc.paperweight.patcher") version "1.1.11"
 }
@@ -15,14 +12,12 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.4.3")
-    decompiler("net.minecraftforge:forgeflower:1.5.498.12")
+    remapper("org.quiltmc:tiny-remapper:0.4.3:fat")
     paperclip("io.papermc:paperclip:2.0.1")
 }
 
 allprojects {
     apply(plugin = "java")
-    apply(plugin = "maven-publish")
 
     java {
         toolchain {
@@ -51,6 +46,7 @@ subprojects {
         maven("https://repo.aikar.co/content/groups/aikar")
         maven("https://repo.md-5.net/content/repositories/releases/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://jitpack.io")
     }
 }
 
