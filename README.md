@@ -21,7 +21,7 @@
 ## Downloads
 The latest JAR file can be downloaded from the [release/1.17 branch](https://github.com/etil2jz/Mirai/raw/release/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar). You can also clone this repository and build it yourself.
 
-If you are interested in making a fork, check out this template [here](https://github.com/TECHNOVE/MyAirplaneFork)!
+If you are interested in making a fork, check out this template [here](https://github.com/PaperMC/paperweight-examples)!
 
 ## Building
 
