@@ -1,0 +1,136 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Fri, 17 Sep 2021 23:38:06 +0200
+Subject: [PATCH] (Yatopia) Utilities
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 79983b971264e8de36bfc547439f8889e2e2a5fe..b5871f179baa86668390ff0c4e4b6ef2a55c72ea 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -50,6 +50,7 @@ dependencies {
+     implementation("org.apache.logging.log4j:log4j-api:2.14.1") // Paper
+     implementation("org.ow2.asm:asm:9.2")
+     implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
++	implementation("org.apache.commons:commons-rng-core:1.4")
+     implementation("com.googlecode.json-simple:json-simple:1.1.1") {
+         // This includes junit transitively for whatever reason
+         isTransitive = false
+diff --git a/src/main/java/xyz/arthurb/mirai/server/util/Constants.java b/src/main/java/xyz/arthurb/mirai/server/util/Constants.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..f39a4aadc3697d428aede01c36298a1e5b9df5b2
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/server/util/Constants.java
+@@ -0,0 +1,6 @@
++package xyz.arthurb.mirai.server.util;
++
++public class Constants {
++    public static final int[] EMPTY_ARRAY = new int[0];
++    public static final int[] ZERO_ARRAY = new int[]{0};
++}
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/server/util/FastRandom.java b/src/main/java/xyz/arthurb/mirai/server/util/FastRandom.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..1bda325ec0eabaec992145e812785ddfd79d3e23
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/server/util/FastRandom.java
+@@ -0,0 +1,64 @@
++package xyz.arthurb.mirai.server.util;
++
++import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
++
++import java.util.Random;
++import java.util.SplittableRandom;
++
++public class FastRandom extends Random {
++
++    private XoRoShiRo128PlusPlus random;
++
++    public FastRandom() {
++        super();
++        SplittableRandom randomseed = new SplittableRandom();
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    public FastRandom(long seed) {
++        super(seed);
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    @Override
++    public boolean nextBoolean() {
++        return random.nextBoolean();
++    }
++
++    @Override
++    public int nextInt() {
++        return random.nextInt();
++    }
++
++    @Override
++    public float nextFloat() {
++        return (float) random.nextDouble();
++    }
++
++    @Override
++    public double nextDouble() {
++        return random.nextDouble();
++    }
++
++    @Override
++    public synchronized void setSeed(long seed) {
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    @Override
++    public void nextBytes(byte[] bytes) {
++        random.nextBytes(bytes);
++    }
++
++    @Override
++    public int nextInt(int bound) {
++        return random.nextInt(bound);
++    }
++
++    @Override
++    public long nextLong() {
++        return random.nextLong();
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/server/util/TimeUtils.java b/src/main/java/xyz/arthurb/mirai/server/util/TimeUtils.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..6aac96e4e4e312262faa281f23a52fd9f013c5b5
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/server/util/TimeUtils.java
+@@ -0,0 +1,27 @@
++package xyz.arthurb.mirai.server.util;
++
++import java.util.concurrent.TimeUnit;
++
++public class TimeUtils {
++
++    public static String getFriendlyName(TimeUnit unit) {
++        switch (unit) {
++            case NANOSECONDS:
++                return "ns";
++            case MILLISECONDS:
++                return "ms";
++            case MICROSECONDS:
++                return "micros";
++            case SECONDS:
++                return "s";
++            case MINUTES:
++                return "m";
++            case DAYS:
++                return "d";
++            case HOURS:
++                return "h";
++            default:
++                throw new AssertionError();
++        }
++    }
++}
+\ No newline at end of file
