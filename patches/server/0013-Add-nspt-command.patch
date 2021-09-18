@@ -1,0 +1,109 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 18 Sep 2021 18:48:42 +0200
+Subject: [PATCH] Add nspt command
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index edb0bcfed9d83c4d7624a28f343dd614e5ab3b3b..70f022bc9cc834f84304b731b131f4df19aa0ef5 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -942,6 +942,7 @@ public final class CraftServer implements Server {
+         this.reloadData();
+         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+         com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
++		xyz.arthurb.mirai.MiraiConfig.registerCommands(); // Mirai
+         this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
+         this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
+ 
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 50392b3056d1cc10d9c59353bfa8edda3bab85f4..dbc91e0f22114860b453f0fce805c84587f46f63 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -72,7 +72,7 @@ public class MiraiConfig {
+ 
+     public static void registerCommands() {
+         for (Map.Entry<String, Command> entry : commands.entrySet()) {
+-            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
++            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Mirai", entry.getValue());
+         }
+     }
+ 
+@@ -204,5 +204,10 @@ public class MiraiConfig {
+ 	private static void protocolLib() {
+ 		fixProtocolLib = getBoolean("settings.fix-protocollib", fixProtocolLib);
+ 	}
++	
++	static {
++		commands = new HashMap<>();
++		commands.put("nspt", new NSPTCommand("nspt"));
++	}
+ 
+ }
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/server/NSPTCommand.java b/src/main/java/xyz/arthurb/mirai/server/NSPTCommand.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..1ef61928596a2486e614019b3b0e751796878fac
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/server/NSPTCommand.java
+@@ -0,0 +1,59 @@
++package xyz.arthurb.mirai.server;
++
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.List;
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++
++public class NSPTCommand extends Command {
++
++    public NSPTCommand(String name) {
++        super(name);
++        this.description = "View server tick times in nanoseconds";
++        this.usageMessage = "/nspt";
++        this.setPermission("bukkit.command.nspt");
++    }
++
++    @Override
++    public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
++        return Collections.emptyList();
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        if (!testPermission(sender)) return true;
++
++        MinecraftServer server = MinecraftServer.getServer();
++
++        List<String> times = new ArrayList<>();
++        times.addAll(eval(server.tickTimes5s.getTimes()));
++        times.addAll(eval(server.tickTimes10s.getTimes()));
++        times.addAll(eval(server.tickTimes60s.getTimes()));
++
++        sender.sendMessage("§6Server tick NS times §e(§7avg§e/§7min§e/§7max§e)§6 from last 5s§7,§6 10s§7,§6 1m§e:");
++        sender.sendMessage(String.format("§6◴ %s§7/%s§7/%s§e, %s§7/%s§7/%s§e, %s§7/%s§7/%s", times.toArray()));
++        return true;
++    }
++
++    private static List<String> eval(long[] times) {
++        long min = Integer.MAX_VALUE;
++        long max = 0L;
++        long total = 0L;
++        for (long value : times) {
++            if (value > 0L && value < min) min = value;
++            if (value > max) max = value;
++            total += value;
++        }
++        double avgD = ((double) total / (double) times.length);
++        return Arrays.asList(getColor(avgD), getColor(min), getColor(max));
++    }
++
++    private static String getColor(double avg) {
++        return ChatColor.COLOR_CHAR + (avg >= 5E+7 ? "c" : avg >= (4E+7) ? "e" : "a") + avg;
++    }
++}
+\ No newline at end of file
