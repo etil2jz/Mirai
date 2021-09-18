@@ -1,0 +1,1374 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 00:17:03 +0200
+Subject: [PATCH] (Patina) Completely remove metrics
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+deleted file mode 100644
+index f5d01bce4d5547b4aeca96b7962b2090f47ea541..0000000000000000000000000000000000000000
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ /dev/null
+@@ -1,675 +0,0 @@
+-package com.destroystokyo.paper;
+-
+-import net.minecraft.server.MinecraftServer;
+-import org.bukkit.Bukkit;
+-import org.bukkit.configuration.file.YamlConfiguration;
+-import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+-import org.bukkit.plugin.Plugin;
+-
+-import org.json.simple.JSONArray;
+-import org.json.simple.JSONObject;
+-
+-import javax.net.ssl.HttpsURLConnection;
+-import java.io.ByteArrayOutputStream;
+-import java.io.DataOutputStream;
+-import java.io.File;
+-import java.io.IOException;
+-import java.net.URL;
+-import java.util.*;
+-import java.util.concurrent.Callable;
+-import java.util.concurrent.Executors;
+-import java.util.concurrent.ScheduledExecutorService;
+-import java.util.concurrent.TimeUnit;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-import java.util.regex.Matcher;
+-import java.util.regex.Pattern;
+-import java.util.zip.GZIPOutputStream;
+-
+-/**
+- * bStats collects some data for plugin authors.
+- *
+- * Check out https://bStats.org/ to learn more about bStats!
+- */
+-public class Metrics {
+-
+-    // Executor service for requests
+-    // We use an executor service because the Bukkit scheduler is affected by server lags
+-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+-
+-    // The version of this bStats class
+-    public static final int B_STATS_VERSION = 1;
+-
+-    // The url to which the data is sent
+-    private static final String URL = "https://bStats.org/submitData/server-implementation";
+-
+-    // Should failed requests be logged?
+-    private static boolean logFailedRequests = false;
+-
+-    // The logger for the failed requests
+-    private static Logger logger = Logger.getLogger("bStats");
+-
+-    // The name of the server software
+-    private final String name;
+-
+-    // The uuid of the server
+-    private final String serverUUID;
+-
+-    // A list with all custom charts
+-    private final List<CustomChart> charts = new ArrayList<>();
+-
+-    /**
+-     * Class constructor.
+-     *
+-     * @param name              The name of the server software.
+-     * @param serverUUID        The uuid of the server.
+-     * @param logFailedRequests Whether failed requests should be logged or not.
+-     * @param logger            The logger for the failed requests.
+-     */
+-    public Metrics(String name, String serverUUID, boolean logFailedRequests, Logger logger) {
+-        this.name = name;
+-        this.serverUUID = serverUUID;
+-        Metrics.logFailedRequests = logFailedRequests;
+-        Metrics.logger = logger;
+-
+-        // Start submitting the data
+-        startSubmitting();
+-    }
+-
+-    /**
+-     * Adds a custom chart.
+-     *
+-     * @param chart The chart to add.
+-     */
+-    public void addCustomChart(CustomChart chart) {
+-        if (chart == null) {
+-            throw new IllegalArgumentException("Chart cannot be null!");
+-        }
+-        charts.add(chart);
+-    }
+-
+-    /**
+-     * Starts the Scheduler which submits our data every 30 minutes.
+-     */
+-    private void startSubmitting() {
+-        final Runnable submitTask = () -> {
+-            if (MinecraftServer.getServer().hasStopped()) {
+-                return;
+-            }
+-            submitData();
+-        };
+-
+-        // Many servers tend to restart at a fixed time at xx:00 which causes an uneven distribution of requests on the
+-        // bStats backend. To circumvent this problem, we introduce some randomness into the initial and second delay.
+-        // WARNING: You must not modify any part of this Metrics class, including the submit delay or frequency!
+-        // WARNING: Modifying this code will get your plugin banned on bStats. Just don't do it!
+-        long initialDelay = (long) (1000 * 60 * (3 + Math.random() * 3));
+-        long secondDelay = (long) (1000 * 60 * (Math.random() * 30));
+-        scheduler.schedule(submitTask, initialDelay, TimeUnit.MILLISECONDS);
+-        scheduler.scheduleAtFixedRate(submitTask, initialDelay + secondDelay, 1000 * 60 * 30, TimeUnit.MILLISECONDS);
+-    }
+-
+-    /**
+-     * Gets the plugin specific data.
+-     *
+-     * @return The plugin specific data.
+-     */
+-    private JSONObject getPluginData() {
+-        JSONObject data = new JSONObject();
+-
+-        data.put("pluginName", name); // Append the name of the server software
+-        JSONArray customCharts = new JSONArray();
+-        for (CustomChart customChart : charts) {
+-            // Add the data of the custom charts
+-            JSONObject chart = customChart.getRequestJsonObject();
+-            if (chart == null) { // If the chart is null, we skip it
+-                continue;
+-            }
+-            customCharts.add(chart);
+-        }
+-        data.put("customCharts", customCharts);
+-
+-        return data;
+-    }
+-
+-    /**
+-     * Gets the server specific data.
+-     *
+-     * @return The server specific data.
+-     */
+-    private JSONObject getServerData() {
+-        // OS specific data
+-        String osName = System.getProperty("os.name");
+-        String osArch = System.getProperty("os.arch");
+-        String osVersion = System.getProperty("os.version");
+-        int coreCount = Runtime.getRuntime().availableProcessors();
+-
+-        JSONObject data = new JSONObject();
+-
+-        data.put("serverUUID", serverUUID);
+-
+-        data.put("osName", osName);
+-        data.put("osArch", osArch);
+-        data.put("osVersion", osVersion);
+-        data.put("coreCount", coreCount);
+-
+-        return data;
+-    }
+-
+-    /**
+-     * Collects the data and sends it afterwards.
+-     */
+-    private void submitData() {
+-        final JSONObject data = getServerData();
+-
+-        JSONArray pluginData = new JSONArray();
+-        pluginData.add(getPluginData());
+-        data.put("plugins", pluginData);
+-
+-        try {
+-            // We are still in the Thread of the timer, so nothing get blocked :)
+-            sendData(data);
+-        } catch (Exception e) {
+-            // Something went wrong! :(
+-            if (logFailedRequests) {
+-                logger.log(Level.WARNING, "Could not submit stats of " + name, e);
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Sends the data to the bStats server.
+-     *
+-     * @param data The data to send.
+-     * @throws Exception If the request failed.
+-     */
+-    private static void sendData(JSONObject data) throws Exception {
+-        if (data == null) {
+-            throw new IllegalArgumentException("Data cannot be null!");
+-        }
+-        HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
+-
+-        // Compress the data to save bandwidth
+-        byte[] compressedData = compress(data.toString());
+-
+-        // Add headers
+-        connection.setRequestMethod("POST");
+-        connection.addRequestProperty("Accept", "application/json");
+-        connection.addRequestProperty("Connection", "close");
+-        connection.addRequestProperty("Content-Encoding", "gzip"); // We gzip our request
+-        connection.addRequestProperty("Content-Length", String.valueOf(compressedData.length));
+-        connection.setRequestProperty("Content-Type", "application/json"); // We send our data in JSON format
+-        connection.setRequestProperty("User-Agent", "MC-Server/" + B_STATS_VERSION);
+-
+-        // Send data
+-        connection.setDoOutput(true);
+-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+-        outputStream.write(compressedData);
+-        outputStream.flush();
+-        outputStream.close();
+-
+-        connection.getInputStream().close(); // We don't care about the response - Just send our data :)
+-    }
+-
+-    /**
+-     * Gzips the given String.
+-     *
+-     * @param str The string to gzip.
+-     * @return The gzipped String.
+-     * @throws IOException If the compression failed.
+-     */
+-    private static byte[] compress(final String str) throws IOException {
+-        if (str == null) {
+-            return null;
+-        }
+-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+-        GZIPOutputStream gzip = new GZIPOutputStream(outputStream);
+-        gzip.write(str.getBytes("UTF-8"));
+-        gzip.close();
+-        return outputStream.toByteArray();
+-    }
+-
+-    /**
+-     * Represents a custom chart.
+-     */
+-    public static abstract class CustomChart {
+-
+-        // The id of the chart
+-        final String chartId;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId The id of the chart.
+-         */
+-        CustomChart(String chartId) {
+-            if (chartId == null || chartId.isEmpty()) {
+-                throw new IllegalArgumentException("ChartId cannot be null or empty!");
+-            }
+-            this.chartId = chartId;
+-        }
+-
+-        private JSONObject getRequestJsonObject() {
+-            JSONObject chart = new JSONObject();
+-            chart.put("chartId", chartId);
+-            try {
+-                JSONObject data = getChartData();
+-                if (data == null) {
+-                    // If the data is null we don't send the chart.
+-                    return null;
+-                }
+-                chart.put("data", data);
+-            } catch (Throwable t) {
+-                if (logFailedRequests) {
+-                    logger.log(Level.WARNING, "Failed to get data for custom chart with id " + chartId, t);
+-                }
+-                return null;
+-            }
+-            return chart;
+-        }
+-
+-        protected abstract JSONObject getChartData() throws Exception;
+-
+-    }
+-
+-    /**
+-     * Represents a custom simple pie.
+-     */
+-    public static class SimplePie extends CustomChart {
+-
+-        private final Callable<String> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public SimplePie(String chartId, Callable<String> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            String value = callable.call();
+-            if (value == null || value.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("value", value);
+-            return data;
+-        }
+-    }
+-
+-    /**
+-     * Represents a custom advanced pie.
+-     */
+-    public static class AdvancedPie extends CustomChart {
+-
+-        private final Callable<Map<String, Integer>> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public AdvancedPie(String chartId, Callable<Map<String, Integer>> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            JSONObject values = new JSONObject();
+-            Map<String, Integer> map = callable.call();
+-            if (map == null || map.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            boolean allSkipped = true;
+-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+-                if (entry.getValue() == 0) {
+-                    continue; // Skip this invalid
+-                }
+-                allSkipped = false;
+-                values.put(entry.getKey(), entry.getValue());
+-            }
+-            if (allSkipped) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("values", values);
+-            return data;
+-        }
+-    }
+-
+-    /**
+-     * Represents a custom drilldown pie.
+-     */
+-    public static class DrilldownPie extends CustomChart {
+-
+-        private final Callable<Map<String, Map<String, Integer>>> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public DrilldownPie(String chartId, Callable<Map<String, Map<String, Integer>>> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        public JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            JSONObject values = new JSONObject();
+-            Map<String, Map<String, Integer>> map = callable.call();
+-            if (map == null || map.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            boolean reallyAllSkipped = true;
+-            for (Map.Entry<String, Map<String, Integer>> entryValues : map.entrySet()) {
+-                JSONObject value = new JSONObject();
+-                boolean allSkipped = true;
+-                for (Map.Entry<String, Integer> valueEntry : map.get(entryValues.getKey()).entrySet()) {
+-                    value.put(valueEntry.getKey(), valueEntry.getValue());
+-                    allSkipped = false;
+-                }
+-                if (!allSkipped) {
+-                    reallyAllSkipped = false;
+-                    values.put(entryValues.getKey(), value);
+-                }
+-            }
+-            if (reallyAllSkipped) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("values", values);
+-            return data;
+-        }
+-    }
+-
+-    /**
+-     * Represents a custom single line chart.
+-     */
+-    public static class SingleLineChart extends CustomChart {
+-
+-        private final Callable<Integer> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public SingleLineChart(String chartId, Callable<Integer> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            int value = callable.call();
+-            if (value == 0) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("value", value);
+-            return data;
+-        }
+-
+-    }
+-
+-    /**
+-     * Represents a custom multi line chart.
+-     */
+-    public static class MultiLineChart extends CustomChart {
+-
+-        private final Callable<Map<String, Integer>> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public MultiLineChart(String chartId, Callable<Map<String, Integer>> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            JSONObject values = new JSONObject();
+-            Map<String, Integer> map = callable.call();
+-            if (map == null || map.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            boolean allSkipped = true;
+-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+-                if (entry.getValue() == 0) {
+-                    continue; // Skip this invalid
+-                }
+-                allSkipped = false;
+-                values.put(entry.getKey(), entry.getValue());
+-            }
+-            if (allSkipped) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("values", values);
+-            return data;
+-        }
+-
+-    }
+-
+-    /**
+-     * Represents a custom simple bar chart.
+-     */
+-    public static class SimpleBarChart extends CustomChart {
+-
+-        private final Callable<Map<String, Integer>> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public SimpleBarChart(String chartId, Callable<Map<String, Integer>> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            JSONObject values = new JSONObject();
+-            Map<String, Integer> map = callable.call();
+-            if (map == null || map.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+-                JSONArray categoryValues = new JSONArray();
+-                categoryValues.add(entry.getValue());
+-                values.put(entry.getKey(), categoryValues);
+-            }
+-            data.put("values", values);
+-            return data;
+-        }
+-
+-    }
+-
+-    /**
+-     * Represents a custom advanced bar chart.
+-     */
+-    public static class AdvancedBarChart extends CustomChart {
+-
+-        private final Callable<Map<String, int[]>> callable;
+-
+-        /**
+-         * Class constructor.
+-         *
+-         * @param chartId  The id of the chart.
+-         * @param callable The callable which is used to request the chart data.
+-         */
+-        public AdvancedBarChart(String chartId, Callable<Map<String, int[]>> callable) {
+-            super(chartId);
+-            this.callable = callable;
+-        }
+-
+-        @Override
+-        protected JSONObject getChartData() throws Exception {
+-            JSONObject data = new JSONObject();
+-            JSONObject values = new JSONObject();
+-            Map<String, int[]> map = callable.call();
+-            if (map == null || map.isEmpty()) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            boolean allSkipped = true;
+-            for (Map.Entry<String, int[]> entry : map.entrySet()) {
+-                if (entry.getValue().length == 0) {
+-                    continue; // Skip this invalid
+-                }
+-                allSkipped = false;
+-                JSONArray categoryValues = new JSONArray();
+-                for (int categoryValue : entry.getValue()) {
+-                    categoryValues.add(categoryValue);
+-                }
+-                values.put(entry.getKey(), categoryValues);
+-            }
+-            if (allSkipped) {
+-                // Null = skip the chart
+-                return null;
+-            }
+-            data.put("values", values);
+-            return data;
+-        }
+-
+-    }
+-
+-    static class PaperMetrics {
+-        static void startMetrics() {
+-            // Get the config file
+-            File configFile = new File(new File((File) MinecraftServer.getServer().options.valueOf("plugins"), "bStats"), "config.yml");
+-            YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+-
+-            // Check if the config file exists
+-            if (!config.isSet("serverUuid")) {
+-
+-                // Add default values
+-                config.addDefault("enabled", true);
+-                // Every server gets it's unique random id.
+-                config.addDefault("serverUuid", UUID.randomUUID().toString());
+-                // Should failed request be logged?
+-                config.addDefault("logFailedRequests", false);
+-
+-                // Inform the server owners about bStats
+-                config.options().header(
+-                        "bStats collects some data for plugin authors like how many servers are using their plugins.\n" +
+-                                "To honor their work, you should not disable it.\n" +
+-                                "This has nearly no effect on the server performance!\n" +
+-                                "Check out https://bStats.org/ to learn more :)"
+-                ).copyDefaults(true);
+-                try {
+-                    config.save(configFile);
+-                } catch (IOException ignored) {
+-                }
+-            }
+-            // Load the data
+-            String serverUUID = config.getString("serverUuid");
+-            boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+-            // Only start Metrics, if it's enabled in the config
+-            if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
+-
+-                metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+-                    String minecraftVersion = Bukkit.getVersion();
+-                    minecraftVersion = minecraftVersion.substring(minecraftVersion.indexOf("MC: ") + 4, minecraftVersion.length() - 1);
+-                    return minecraftVersion;
+-                }));
+-
+-                metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+-                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
+-                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
+-
+-                metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+-                    Map<String, Map<String, Integer>> map = new HashMap<>();
+-                    String javaVersion = System.getProperty("java.version");
+-                    Map<String, Integer> entry = new HashMap<>();
+-                    entry.put(javaVersion, 1);
+-
+-                    // http://openjdk.java.net/jeps/223
+-                    // Java decided to change their versioning scheme and in doing so modified the java.version system
+-                    // property to return $major[.$minor][.$secuity][-ea], as opposed to 1.$major.0_$identifier
+-                    // we can handle pre-9 by checking if the "major" is equal to "1", otherwise, 9+
+-                    String majorVersion = javaVersion.split("\\.")[0];
+-                    String release;
+-
+-                    int indexOf = javaVersion.lastIndexOf('.');
+-
+-                    if (majorVersion.equals("1")) {
+-                        release = "Java " + javaVersion.substring(0, indexOf);
+-                    } else {
+-                        // of course, it really wouldn't be all that simple if they didn't add a quirk, now would it
+-                        // valid strings for the major may potentially include values such as -ea to deannotate a pre release
+-                        Matcher versionMatcher = Pattern.compile("\\d+").matcher(majorVersion);
+-                        if (versionMatcher.find()) {
+-                            majorVersion = versionMatcher.group(0);
+-                        }
+-                        release = "Java " + majorVersion;
+-                    }
+-                    map.put(release, entry);
+-
+-                    return map;
+-                }));
+-
+-                metrics.addCustomChart(new Metrics.DrilldownPie("legacy_plugins", () -> {
+-                    Map<String, Map<String, Integer>> map = new HashMap<>();
+-
+-                    // count legacy plugins
+-                    int legacy = 0;
+-                    for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+-                        if (CraftMagicNumbers.isLegacy(plugin.getDescription())) {
+-                            legacy++;
+-                        }
+-                    }
+-
+-                    // insert real value as lower dimension
+-                    Map<String, Integer> entry = new HashMap<>();
+-                    entry.put(String.valueOf(legacy), 1);
+-
+-                    // create buckets as higher dimension
+-                    if (legacy == 0) {
+-                        map.put("0 \uD83D\uDE0E", entry); // :sunglasses:
+-                    } else if (legacy <= 5) {
+-                        map.put("1-5", entry);
+-                    } else if (legacy <= 10) {
+-                        map.put("6-10", entry);
+-                    } else if (legacy <= 25) {
+-                        map.put("11-25", entry);
+-                    } else if (legacy <= 50) {
+-                        map.put("26-50", entry);
+-                    } else {
+-                        map.put("50+ \uD83D\uDE2D", entry); // :cry:
+-                    }
+-
+-                    return map;
+-                }));
+-            }
+-
+-        }
+-    }
+-}
+diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+index 3cb9e223c90f97aa106ee1e9512d33897a6bac1a..a94be051d8c7aec6fe6bc00e14994c3b493cd28d 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+@@ -51,7 +51,7 @@ public class PaperConfig {
+     private static boolean verbose;
+     private static boolean fatalError;
+     /*========================================================================*/
+-    private static boolean metricsStarted;
++    //private static boolean metricsStarted; // Patina
+ 
+     public static void init(File configFile) {
+         CONFIG_FILE = configFile;
+@@ -96,10 +96,12 @@ public class PaperConfig {
+             MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
+         }
+ 
+-        if (!metricsStarted) {
++        /* // Patina
++		if (!metricsStarted) {
+             Metrics.PaperMetrics.startMetrics();
+             metricsStarted = true;
+         }
++		*/
+     }
+ 
+     static void readConfig(Class<?> clazz, Object instance) {
+diff --git a/src/main/java/org/spigotmc/Metrics.java b/src/main/java/org/spigotmc/Metrics.java
+deleted file mode 100644
+index 8f15af52d2ed734732134bf011ccdd4b7856a284..0000000000000000000000000000000000000000
+--- a/src/main/java/org/spigotmc/Metrics.java
++++ /dev/null
+@@ -1,641 +0,0 @@
+-/*
+- * Copyright 2011-2013 Tyler Blair. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, are
+- * permitted provided that the following conditions are met:
+- *
+- *    1. Redistributions of source code must retain the above copyright notice, this list of
+- *       conditions and the following disclaimer.
+- *
+- *    2. Redistributions in binary form must reproduce the above copyright notice, this list
+- *       of conditions and the following disclaimer in the documentation and/or other materials
+- *       provided with the distribution.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
+- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR
+- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * The views and conclusions contained in the software and documentation are those of the
+- * authors and contributors and should not be interpreted as representing official policies,
+- * either expressed or implied, of anybody else.
+- */
+-package org.spigotmc;
+-
+-import java.io.BufferedReader;
+-import java.io.File;
+-import java.io.IOException;
+-import java.io.InputStreamReader;
+-import java.io.OutputStreamWriter;
+-import java.io.UnsupportedEncodingException;
+-import java.net.Proxy;
+-import java.net.URL;
+-import java.net.URLConnection;
+-import java.net.URLEncoder;
+-import java.util.Collections;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.LinkedHashSet;
+-import java.util.Set;
+-import java.util.Timer;
+-import java.util.TimerTask;
+-import java.util.UUID;
+-import java.util.concurrent.TimeUnit;
+-import java.util.logging.Level;
+-import net.minecraft.server.MinecraftServer;
+-import org.bukkit.Bukkit;
+-import org.bukkit.configuration.InvalidConfigurationException;
+-import org.bukkit.configuration.file.YamlConfiguration;
+-
+-/**
+- * <p> The metrics class obtains data about a plugin and submits statistics about it to the metrics backend. </p> <p>
+- * Public methods provided by this class: </p>
+- * <code>
+- * Graph createGraph(String name); <br/>
+- * void addCustomData(BukkitMetrics.Plotter plotter); <br/>
+- * void start(); <br/>
+- * </code>
+- */
+-public class Metrics {
+-
+-    /**
+-     * The current revision number
+-     */
+-    private static final int REVISION = 6;
+-    /**
+-     * The base url of the metrics domain
+-     */
+-    private static final String BASE_URL = "https://mcstats.spigotmc.org";
+-    /**
+-     * The url used to report a server's status
+-     */
+-    private static final String REPORT_URL = "/report/%s";
+-    /**
+-     * The separator to use for custom data. This MUST NOT change unless you are hosting your own version of metrics and
+-     * want to change it.
+-     */
+-    private static final String CUSTOM_DATA_SEPARATOR = "~~";
+-    /**
+-     * Interval of time to ping (in minutes)
+-     */
+-    private static final int PING_INTERVAL = 10;
+-    /**
+-     * All of the custom graphs to submit to metrics
+-     */
+-    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+-    /**
+-     * The default graph, used for addCustomData when you don't want a specific graph
+-     */
+-    private final Graph defaultGraph = new Graph("Default");
+-    /**
+-     * The plugin configuration file
+-     */
+-    private final YamlConfiguration configuration;
+-    /**
+-     * The plugin configuration file
+-     */
+-    private final File configurationFile;
+-    /**
+-     * Unique server id
+-     */
+-    private final String guid;
+-    /**
+-     * Debug mode
+-     */
+-    private final boolean debug;
+-    /**
+-     * Lock for synchronization
+-     */
+-    private final Object optOutLock = new Object();
+-    /**
+-     * The scheduled task
+-     */
+-    private volatile Timer task = null;
+-
+-    public Metrics() throws IOException {
+-        // load the config
+-        this.configurationFile = this.getConfigFile();
+-        this.configuration = YamlConfiguration.loadConfiguration(configurationFile);
+-
+-        // add some defaults
+-        this.configuration.addDefault("opt-out", false);
+-        this.configuration.addDefault("guid", UUID.randomUUID().toString());
+-        this.configuration.addDefault("debug", false);
+-
+-        // Do we need to create the file?
+-        if (this.configuration.get("guid", null) == null) {
+-            this.configuration.options().header("http://mcstats.org").copyDefaults(true);
+-            this.configuration.save(configurationFile);
+-        }
+-
+-        // Load the guid then
+-        this.guid = this.configuration.getString("guid");
+-        this.debug = this.configuration.getBoolean("debug", false);
+-    }
+-
+-    /**
+-     * Construct and create a Graph that can be used to separate specific plotters to their own graphs on the metrics
+-     * website. Plotters can be added to the graph object returned.
+-     *
+-     * @param name The name of the graph
+-     * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
+-     */
+-    public Graph createGraph(final String name) {
+-        if (name == null) {
+-            throw new IllegalArgumentException("Graph name cannot be null");
+-        }
+-
+-        // Construct the graph object
+-        final Graph graph = new Graph(name);
+-
+-        // Now we can add our graph
+-        this.graphs.add(graph);
+-
+-        // and return back
+-        return graph;
+-    }
+-
+-    /**
+-     * Add a Graph object to BukkitMetrics that represents data for the plugin that should be sent to the backend
+-     *
+-     * @param graph The name of the graph
+-     */
+-    public void addGraph(final Graph graph) {
+-        if (graph == null) {
+-            throw new IllegalArgumentException("Graph cannot be null");
+-        }
+-
+-        this.graphs.add(graph);
+-    }
+-
+-    /**
+-     * Adds a custom data plotter to the default graph
+-     *
+-     * @param plotter The plotter to use to plot custom data
+-     */
+-    public void addCustomData(final Plotter plotter) {
+-        if (plotter == null) {
+-            throw new IllegalArgumentException("Plotter cannot be null");
+-        }
+-
+-        // Add the plotter to the graph o/
+-        this.defaultGraph.addPlotter(plotter);
+-
+-        // Ensure the default graph is included in the submitted graphs
+-        this.graphs.add(defaultGraph);
+-    }
+-
+-    /**
+-     * Start measuring statistics. This will immediately create an async repeating task as the plugin and send the
+-     * initial data to the metrics backend, and then after that it will post in increments of PING_INTERVAL * 1200
+-     * ticks.
+-     *
+-     * @return True if statistics measuring is running, otherwise false.
+-     */
+-    public boolean start() {
+-        synchronized (this.optOutLock) {
+-            // Did we opt out?
+-            if (this.isOptOut()) {
+-                return false;
+-            }
+-
+-            // Is metrics already running?
+-            if (this.task != null) {
+-                return true;
+-            }
+-
+-            // Begin hitting the server with glorious data
+-            this.task = new Timer("Spigot Metrics Thread", true);
+-
+-            this.task.scheduleAtFixedRate(new TimerTask() {
+-                private boolean firstPost = true;
+-
+-                public void run() {
+-                    try {
+-                        // This has to be synchronized or it can collide with the disable method.
+-                        synchronized (Metrics.this.optOutLock) {
+-                            // Disable Task, if it is running and the server owner decided to opt-out
+-                            if (Metrics.this.isOptOut() && Metrics.this.task != null) {
+-                                Metrics.this.task.cancel();
+-                                Metrics.this.task = null;
+-                                // Tell all plotters to stop gathering information.
+-                                for (Graph graph : Metrics.this.graphs) {
+-                                    graph.onOptOut();
+-                                }
+-                            }
+-                        }
+-
+-                        // We use the inverse of firstPost because if it is the first time we are posting,
+-                        // it is not a interval ping, so it evaluates to FALSE
+-                        // Each time thereafter it will evaluate to TRUE, i.e PING!
+-                        Metrics.this.postPlugin(!firstPost);
+-
+-                        // After the first post we set firstPost to false
+-                        // Each post thereafter will be a ping
+-                        firstPost = false;
+-                    } catch (IOException e) {
+-                        if (Metrics.this.debug) {
+-                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+-                        }
+-                    }
+-                }
+-            }, 0, TimeUnit.MINUTES.toMillis(PING_INTERVAL));
+-
+-            return true;
+-        }
+-    }
+-
+-    /**
+-     * Has the server owner denied plugin metrics?
+-     *
+-     * @return true if metrics should be opted out of it
+-     */
+-    public boolean isOptOut() {
+-        synchronized (this.optOutLock) {
+-            try {
+-                // Reload the metrics file
+-                this.configuration.load(this.getConfigFile());
+-            } catch (IOException ex) {
+-                if (this.debug) {
+-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+-                }
+-                return true;
+-            } catch (InvalidConfigurationException ex) {
+-                if (this.debug) {
+-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+-                }
+-                return true;
+-            }
+-            return this.configuration.getBoolean("opt-out", false);
+-        }
+-    }
+-
+-    /**
+-     * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
+-     *
+-     * @throws java.io.IOException
+-     */
+-    public void enable() throws IOException {
+-        // This has to be synchronized or it can collide with the check in the task.
+-        synchronized (this.optOutLock) {
+-            // Check if the server owner has already set opt-out, if not, set it.
+-            if (this.isOptOut()) {
+-                this.configuration.set("opt-out", false);
+-                this.configuration.save(configurationFile);
+-            }
+-
+-            // Enable Task, if it is not running
+-            if (this.task == null) {
+-                this.start();
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Disables metrics for the server by setting "opt-out" to true in the config file and canceling the metrics task.
+-     *
+-     * @throws java.io.IOException
+-     */
+-    public void disable() throws IOException {
+-        // This has to be synchronized or it can collide with the check in the task.
+-        synchronized (this.optOutLock) {
+-            // Check if the server owner has already set opt-out, if not, set it.
+-            if (!this.isOptOut()) {
+-                this.configuration.set("opt-out", true);
+-                this.configuration.save(configurationFile);
+-            }
+-
+-            // Disable Task, if it is running
+-            if (this.task != null) {
+-                this.task.cancel();
+-                this.task = null;
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Gets the File object of the config file that should be used to store data such as the GUID and opt-out status
+-     *
+-     * @return the File object for the config file
+-     */
+-    public File getConfigFile() {
+-        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
+-        // is to abuse the plugin object we already have
+-        // plugin.getDataFolder() => base/plugins/PluginA/
+-        // pluginsFolder => base/plugins/
+-        // The base is not necessarily relative to the startup directory.
+-        // File pluginsFolder = plugin.getDataFolder().getParentFile();
+-
+-        // return => base/plugins/PluginMetrics/config.yml
+-        return new File(new File((File) MinecraftServer.getServer().options.valueOf("plugins"), "PluginMetrics"), "config.yml");
+-    }
+-
+-    /**
+-     * Generic method that posts a plugin to the metrics website
+-     */
+-    private void postPlugin(final boolean isPing) throws IOException {
+-        // Server software specific section
+-        String pluginName = "Spigot";
+-        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+-        String pluginVersion = (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown";
+-        String serverVersion = Bukkit.getVersion();
+-        int playersOnline = Bukkit.getServer().getOnlinePlayers().size();
+-
+-        // END server software specific section -- all code below does not use any code outside of this class / Java
+-
+-        // Construct the post data
+-        final StringBuilder data = new StringBuilder();
+-
+-        // The plugin's description file containg all of the plugin data such as name, version, author, etc
+-        data.append(Metrics.encode("guid")).append('=').append(Metrics.encode(this.guid));
+-        Metrics.encodeDataPair(data, "version", pluginVersion);
+-        Metrics.encodeDataPair(data, "server", serverVersion);
+-        Metrics.encodeDataPair(data, "players", Integer.toString(playersOnline));
+-        Metrics.encodeDataPair(data, "revision", String.valueOf(REVISION));
+-
+-        // New data as of R6
+-        String osname = System.getProperty("os.name");
+-        String osarch = System.getProperty("os.arch");
+-        String osversion = System.getProperty("os.version");
+-        String java_version = System.getProperty("java.version");
+-        int coreCount = Runtime.getRuntime().availableProcessors();
+-
+-        // normalize os arch .. amd64 -> x86_64
+-        if (osarch.equals("amd64")) {
+-            osarch = "x86_64";
+-        }
+-
+-        Metrics.encodeDataPair(data, "osname", osname);
+-        Metrics.encodeDataPair(data, "osarch", osarch);
+-        Metrics.encodeDataPair(data, "osversion", osversion);
+-        Metrics.encodeDataPair(data, "cores", Integer.toString(coreCount));
+-        Metrics.encodeDataPair(data, "online-mode", Boolean.toString(onlineMode));
+-        Metrics.encodeDataPair(data, "java_version", java_version);
+-
+-        // If we're pinging, append it
+-        if (isPing) {
+-            Metrics.encodeDataPair(data, "ping", "true");
+-        }
+-
+-        // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
+-        // inside of the graph (e.g plotters)
+-        synchronized (this.graphs) {
+-            final Iterator<Graph> iter = this.graphs.iterator();
+-
+-            while (iter.hasNext()) {
+-                final Graph graph = iter.next();
+-
+-                for (Plotter plotter : graph.getPlotters()) {
+-                    // The key name to send to the metrics server
+-                    // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
+-                    // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
+-                    final String key = String.format("C%s%s%s%s", CUSTOM_DATA_SEPARATOR, graph.getName(), CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
+-
+-                    // The value to send, which for the foreseeable future is just the string
+-                    // value of plotter.getValue()
+-                    final String value = Integer.toString(plotter.getValue());
+-
+-                    // Add it to the http post data :)
+-                    Metrics.encodeDataPair(data, key, value);
+-                }
+-            }
+-        }
+-
+-        // Create the url
+-        URL url = new URL(Metrics.BASE_URL + String.format(REPORT_URL, Metrics.encode(pluginName)));
+-
+-        // Connect to the website
+-        URLConnection connection;
+-
+-        // Mineshafter creates a socks proxy, so we can safely bypass it
+-        // It does not reroute POST requests so we need to go around it
+-        if (this.isMineshafterPresent()) {
+-            connection = url.openConnection(Proxy.NO_PROXY);
+-        } else {
+-            connection = url.openConnection();
+-        }
+-
+-        connection.setDoOutput(true);
+-
+-        // Write the data
+-        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+-        writer.write(data.toString());
+-        writer.flush();
+-
+-        // Now read the response
+-        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+-        final String response = reader.readLine();
+-
+-        // close resources
+-        writer.close();
+-        reader.close();
+-
+-        if (response == null || response.startsWith("ERR")) {
+-            throw new IOException(response); //Throw the exception
+-        } else {
+-            // Is this the first update this hour?
+-            if (response.contains("OK This is your first update this hour")) {
+-                synchronized (this.graphs) {
+-                    final Iterator<Graph> iter = this.graphs.iterator();
+-
+-                    while (iter.hasNext()) {
+-                        final Graph graph = iter.next();
+-
+-                        for (Plotter plotter : graph.getPlotters()) {
+-                            plotter.reset();
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Check if mineshafter is present. If it is, we need to bypass it to send POST requests
+-     *
+-     * @return true if mineshafter is installed on the server
+-     */
+-    private boolean isMineshafterPresent() {
+-        try {
+-            Class.forName("mineshafter.MineServer");
+-            return true;
+-        } catch (Exception e) {
+-            return false;
+-        }
+-    }
+-
+-    /**
+-     * <p>Encode a key/value data pair to be used in a HTTP post request. This INCLUDES a & so the first key/value pair
+-     * MUST be included manually, e.g:</p>
+-     * <code>
+-     * StringBuffer data = new StringBuffer();
+-     * data.append(encode("guid")).append('=').append(encode(guid));
+-     * encodeDataPair(data, "version", description.getVersion());
+-     * </code>
+-     *
+-     * @param buffer the stringbuilder to append the data pair onto
+-     * @param key the key value
+-     * @param value the value
+-     */
+-    private static void encodeDataPair(final StringBuilder buffer, final String key, final String value) throws UnsupportedEncodingException {
+-        buffer.append('&').append(Metrics.encode(key)).append('=').append(Metrics.encode(value));
+-    }
+-
+-    /**
+-     * Encode text as UTF-8
+-     *
+-     * @param text the text to encode
+-     * @return the encoded text, as UTF-8
+-     */
+-    private static String encode(final String text) throws UnsupportedEncodingException {
+-        return URLEncoder.encode(text, "UTF-8");
+-    }
+-
+-    /**
+-     * Represents a custom graph on the website
+-     */
+-    public static class Graph {
+-
+-        /**
+-         * The graph's name, alphanumeric and spaces only :) If it does not comply to the above when submitted, it is
+-         * rejected
+-         */
+-        private final String name;
+-        /**
+-         * The set of plotters that are contained within this graph
+-         */
+-        private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
+-
+-        private Graph(final String name) {
+-            this.name = name;
+-        }
+-
+-        /**
+-         * Gets the graph's name
+-         *
+-         * @return the Graph's name
+-         */
+-        public String getName() {
+-            return this.name;
+-        }
+-
+-        /**
+-         * Add a plotter to the graph, which will be used to plot entries
+-         *
+-         * @param plotter the plotter to add to the graph
+-         */
+-        public void addPlotter(final Plotter plotter) {
+-            this.plotters.add(plotter);
+-        }
+-
+-        /**
+-         * Remove a plotter from the graph
+-         *
+-         * @param plotter the plotter to remove from the graph
+-         */
+-        public void removePlotter(final Plotter plotter) {
+-            this.plotters.remove(plotter);
+-        }
+-
+-        /**
+-         * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
+-         *
+-         * @return an unmodifiable {@link java.util.Set} of the plotter objects
+-         */
+-        public Set<Plotter> getPlotters() {
+-            return Collections.unmodifiableSet(plotters);
+-        }
+-
+-        @Override
+-        public int hashCode() {
+-            return this.name.hashCode();
+-        }
+-
+-        @Override
+-        public boolean equals(final Object object) {
+-            if (!(object instanceof Graph)) {
+-                return false;
+-            }
+-
+-            final Graph graph = (Graph) object;
+-            return graph.name.equals(name);
+-        }
+-
+-        /**
+-         * Called when the server owner decides to opt-out of BukkitMetrics while the server is running.
+-         */
+-        protected void onOptOut() {
+-        }
+-    }
+-
+-    /**
+-     * Interface used to collect custom data for a plugin
+-     */
+-    public abstract static class Plotter {
+-
+-        /**
+-         * The plot's name
+-         */
+-        private final String name;
+-
+-        /**
+-         * Construct a plotter with the default plot name
+-         */
+-        public Plotter() {
+-            this("Default");
+-        }
+-
+-        /**
+-         * Construct a plotter with a specific plot name
+-         *
+-         * @param name the name of the plotter to use, which will show up on the website
+-         */
+-        public Plotter(final String name) {
+-            this.name = name;
+-        }
+-
+-        /**
+-         * Get the current value for the plotted point. Since this function defers to an external function it may or may
+-         * not return immediately thus cannot be guaranteed to be thread friendly or safe. This function can be called
+-         * from any thread so care should be taken when accessing resources that need to be synchronized.
+-         *
+-         * @return the current value for the point to be plotted.
+-         */
+-        public abstract int getValue();
+-
+-        /**
+-         * Get the column name for the plotted point
+-         *
+-         * @return the plotted point's column name
+-         */
+-        public String getColumnName() {
+-            return this.name;
+-        }
+-
+-        /**
+-         * Called after the website graphs have been updated
+-         */
+-        public void reset() {
+-        }
+-
+-        @Override
+-        public int hashCode() {
+-            return this.getColumnName().hashCode();
+-        }
+-
+-        @Override
+-        public boolean equals(final Object object) {
+-            if (!(object instanceof Plotter)) {
+-                return false;
+-            }
+-
+-            final Plotter plotter = (Plotter) object;
+-            return plotter.name.equals(name) && plotter.getValue() == this.getValue();
+-        }
+-    }
+-}
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index ba0e8902e7205bc6da88efd28be70ece04cc1974..740752da2942911d68f323c889725749d1a73bfe 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -48,7 +48,7 @@ public class SpigotConfig
+     static int version;
+     static Map<String, Command> commands;
+     /*========================================================================*/
+-    private static Metrics metrics;
++    //private static Metrics metrics; // Patina
+ 
+     public static void init(File configFile)
+     {
