@@ -1,0 +1,95 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 18 Sep 2021 14:25:19 +0200
+Subject: [PATCH] (Yatopia) Preload ProtocolLib EnumWrappers
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 03315bf6e95145bd91ea0ebfc1c416b76434f5a5..cc4b83b8d8f532fd1015a9259b67de6e34f242d7 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1226,6 +1226,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 String doneTime = String.format(java.util.Locale.ROOT, "%.3fs", (double) (Util.getNanos() - serverStartTime) / 1.0E9D);
+                 LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
+                 // Paper end
++				
++				if (xyz.arthurb.mirai.MiraiConfig.fixProtocolLib) xyz.arthurb.mirai.server.util.YatopiaPreloadProtocolLib.run(); // Yatopia - Preload ProtocolLib's Enum Wrappers
+ 
+                 org.spigotmc.WatchdogThread.tick(); // Paper
+                 org.spigotmc.WatchdogThread.hasStarted = true; // Paper
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 126d74b4b5964b0a3e3b09abd456d27466242c40..9c55b553418796761554ca32b843a5b2df72e755 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -113,18 +113,11 @@ public class MiraiConfig {
+             num = 0D;
+         }
+         switch (unit) {
+-            case 'd':
+-                num *= (double) 60 * 60 * 24;
+-                break;
+-            case 'h':
+-                num *= (double) 60 * 60;
+-                break;
+-            case 'm':
+-                num *= (double) 60;
+-                break;
+-            default:
+-            case 's':
+-                break;
++            case 'd':  num *= (double) 60 * 60 * 24;
++            case 'h':  num *= (double) 60 * 60;
++            case 'm':  num *= 60;
++			case 's':  break;
++            default: break;
+         }
+         return (int) num;
+     }
+@@ -199,5 +192,11 @@ public class MiraiConfig {
+ 	private static void brandName() {
+ 		brandName = getString("settings.brand-name", brandName);
+ 	}
++	
++	public static boolean fixProtocolLib = true;
++	
++	private static void protocolLib() {
++		fixProtocolLib = getBoolean("settings.fix-protocollib", fixProtocolLib);
++	}
+ 
+ }
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/server/util/YatopiaPreloadProtocolLib.java b/src/main/java/xyz/arthurb/mirai/server/util/YatopiaPreloadProtocolLib.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..3dd76ced1dd4d82d96bbdd448c7d8e194779d44f
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/server/util/YatopiaPreloadProtocolLib.java
+@@ -0,0 +1,28 @@
++package xyz.arthurb.mirai.server.util;
++
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.Bukkit;
++import org.bukkit.plugin.Plugin;
++import org.bukkit.plugin.SimplePluginManager;
++
++import java.lang.reflect.Method;
++
++public class YatopiaPreloadProtocolLib {
++
++    public synchronized static void run() {
++        try {
++            final SimplePluginManager pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
++            final Plugin protocolLib = pluginManager.getPlugin("ProtocolLib");
++            if(protocolLib != null && protocolLib.isEnabled()) {
++                MinecraftServer.LOGGER.info("Mirai: Attempting to fix ProtocolLib");
++                final Method initialize = Class.forName("com.comphenix.protocol.wrappers.EnumWrappers", true, protocolLib.getClass().getClassLoader()).getDeclaredMethod("initialize");
++                initialize.setAccessible(true);
++                initialize.invoke(null);
++                synchronized (YatopiaPreloadProtocolLib.class) {
++                }
++            }
++        } catch (Throwable t) {
++            MinecraftServer.LOGGER.warn("Mirai: Unable to fix ProtocolLib", t);
++        }
++    }
++}
+\ No newline at end of file

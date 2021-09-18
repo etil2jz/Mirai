@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 18 Sep 2021 15:49:16 +0200
+Subject: [PATCH] (Yatopia) Log player login location
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 4cd38de09c25ef77adf86636ae4d133c070771c9..08352cd0e6cc0cbd15aa894353b7e099216b9825 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -484,7 +484,14 @@ public abstract class PlayerList {
+         }
+         // Paper end
+         // CraftBukkit - Moved from above, added world
+-        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        
++		// Yatopia start - log player login location
++		if (xyz.arthurb.mirai.server.YatopiaConfig.logPlayerLoginLoc) {
++			PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++		} else {
++			PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
++		}
++		// Yatopia end - log player login location
+     }
+ 
+     public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 9c55b553418796761554ca32b843a5b2df72e755..50392b3056d1cc10d9c59353bfa8edda3bab85f4 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -181,6 +181,12 @@ public class MiraiConfig {
+         hidePlayerIps = getBoolean("settings.hide-player-ips", hidePlayerIps);
+     }
+ 	
++	public static boolean logPlayerLoginLoc = true;
++	
++	private static void general() {
++		logPlayerLoginLoc = getBoolean("settings.log-player-login-location", logPlayerLoginLoc);
++	}
++	
+ 	public static boolean disableEntityStuckChecks = false;
+ 	
+ 	private static void disableEntityStuckChecks() {
