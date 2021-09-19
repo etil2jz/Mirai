@@ -1,0 +1,81 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 18:20:32 +0200
+Subject: [PATCH] Adjustments to Mirai Configuration
+
+
+diff --git a/src/main/java/net/minecraft/commands/CommandSourceStack.java b/src/main/java/net/minecraft/commands/CommandSourceStack.java
+index a8000335c5a9644a6f60135555661fd9d934640b..d199986e3ac6d316ed17846f01a37ebee9b795d0 100644
+--- a/src/main/java/net/minecraft/commands/CommandSourceStack.java
++++ b/src/main/java/net/minecraft/commands/CommandSourceStack.java
+@@ -322,4 +322,28 @@ public class CommandSourceStack implements SharedSuggestionProvider, com.destroy
+         return this.source.getBukkitSender(this);
+     }
+     // CraftBukkit end
++	
++	// Purpur start
++    public void sendSuccess(@Nullable String message) {
++        sendSuccess(message, false);
++    }
++
++    public void sendSuccess(@Nullable String message, boolean broadcastToOps) {
++        if (message == null) {
++            return;
++        }
++        sendSuccess(net.kyori.adventure.text.minimessage.MiniMessage.get().parse(message), broadcastToOps);
++    }
++
++    public void sendSuccess(@Nullable net.kyori.adventure.text.Component message) {
++        sendSuccess(message, false);
++    }
++
++    public void sendSuccess(@Nullable net.kyori.adventure.text.Component message, boolean broadcastToOps) {
++        if (message == null) {
++            return;
++        }
++        sendSuccess(io.papermc.paper.adventure.PaperAdventure.asVanilla(message), broadcastToOps);
++    }
++    // Purpur end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index dc29b787ac4bd446f20532536cb587453e6070f8..cb787b4e3e8bb8da89b2a1eb9b040e78edeccf09 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -2514,6 +2514,18 @@ public final class CraftServer implements Server {
+         {
+             return com.destroystokyo.paper.PaperConfig.config;
+         }
++		
++		// Mirai start
++        @Override
++        public YamlConfiguration getMiraiConfig() {
++            return xyz.arthurb.mirai.MiraiConfig.config;
++        }
++
++        @Override
++        public java.util.Properties getServerProperties() {
++            return getProperties().properties;
++        }
++        // Mirai end
+ 
+         @Override
+         public void restart() {
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 50392b3056d1cc10d9c59353bfa8edda3bab85f4..b444f912ee87a3b4b612f2ce425960d01b2e013c 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -2,9 +2,14 @@ package xyz.arthurb.mirai;
+ 
+ import com.destroystokyo.paper.PaperCommand;
+ import com.google.common.base.Throwables;
++import com.google.common.collect.ImmutableMap;
++import net.kyori.adventure.bossbar.BossBar;
+ import net.minecraft.server.MinecraftServer;
++import net.minecraft.world.entity.EntityDimensions;
++import net.minecraft.world.entity.EntityType;
+ import org.bukkit.Bukkit;
+ import org.bukkit.command.Command;
++import org.bukkit.configuration.ConfigurationSection;
+ import org.bukkit.configuration.InvalidConfigurationException;
+ import org.bukkit.configuration.file.YamlConfiguration;
+ 
