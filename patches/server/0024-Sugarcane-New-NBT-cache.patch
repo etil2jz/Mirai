@@ -27,7 +27,7 @@ index 8ce6d386a67687207966a9c577cff9046f45193e..ce80d1d424c195144215cf7bcd7792a8
      private final File playerDir;
      protected final DataFixer fixerUpper;
 +	// Sugarcane start - NBT Cache system
-+    private final org.sugarcanemc.sugarcane.cache.NBTCache dataCache = new org.sugarcanemc.sugarcane.cache.NBTCache();
++    private final xyz.arthurb.mirai.server.util.NBTCache dataCache = new xyz.arthurb.mirai.server.util.NBTCache();
 +    public final java.util.concurrent.ExecutorService executorService = java.util.concurrent.Executors.newSingleThreadExecutor(new com.google.common.util.concurrent.ThreadFactoryBuilder().setDaemon(true).setPriority(Thread.NORM_PRIORITY - 1).build());
 +    // Sugarcane end
  
