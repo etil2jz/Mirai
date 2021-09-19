@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 11:23:50 +0200
+Subject: [PATCH] (Patina) Remove unnecessary `LogManager.getLogger()`
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index a1f639651c6308c8329f93d1bbfb5dc4706de95d..3c272e6c7552cb5bc875cdaefc91aaac3751ec3a 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -164,7 +164,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         @Override
+         public synchronized void setSeed(long seed) {
+             if (locked) {
+-                LogManager.getLogger().error("Ignoring setSeed on Entity.SHARED_RANDOM", new Throwable());
++                LOGGER.error("Ignoring setSeed on Entity.SHARED_RANDOM", new Throwable()); // Patina - LOGGER
+             } else {
+                 super.setSeed(seed);
+                 locked = true;
+@@ -2317,7 +2317,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+                 try {
+                     spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.valueOf(spawnReasonName);
+                 } catch (Exception ignored) {
+-                    LogManager.getLogger().error("Unknown SpawnReason " + spawnReasonName + " for " + this);
++                    LOGGER.error("Unknown SpawnReason " + spawnReasonName + " for " + this); // Patina - LOGGER
+                 }
+             }
+             if (spawnReason == null) {
