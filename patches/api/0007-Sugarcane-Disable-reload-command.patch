@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 15:45:29 +0200
+Subject: [PATCH] (Sugarcane) Disable reload command
+
+
+diff --git a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
+index 0c7ba0718de2b93d013968ca0fec34ffd423990f..b48eef635a79bcf37b8237439d17c3172ba3a3c7 100644
+--- a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
+@@ -21,6 +21,18 @@ public class ReloadCommand extends BukkitCommand {
+     @Override
+     public boolean execute(@NotNull CommandSender sender, @NotNull String currentAlias, @NotNull String[] args) { // Paper
+         if (!testPermission(sender)) return true;
++		// Sugarcane start - disable reload command
++        if (Boolean.parseBoolean(System.getProperty("Mirai.DisableReloadCommand", "true"))) {
++            sender.sendMessage(ChatColor.RED + "Operation denied.");
++            sender.sendMessage(ChatColor.RED + "Reload command SHOULD NEVER EVER EVER be used in whatever circumstances.");
++            sender.sendMessage(ChatColor.RED + "Mirai has intentionally disabled it in order to stop you using it, instead of restarting your server.");
++            sender.sendMessage(ChatColor.RED + "---------------------------------------------");
++            sender.sendMessage(ChatColor.RED + "RESTART YOUR SERVER AND NEVER USE /reload");
++            sender.sendMessage(ChatColor.YELLOW + "For plugin developers: learn what a HOTSWAP AGENT is and stop using /reload");
++            sender.sendMessage(ChatColor.RED + "---------------------------------------------");
++            return true;
++        }
++        // Sugarcane end
+ 
+         // Paper start - Reload permissions.yml & require confirm
+         boolean confirmed = System.getProperty("LetMeReload") != null;

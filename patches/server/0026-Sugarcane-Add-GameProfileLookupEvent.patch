@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 15:19:32 +0200
+Subject: [PATCH] (Sugarcane) Add GameProfileLookupEvent
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+index 84551164b76bc8f064a3a0c030c3a1b47f567b6f..5dc4e8e05a4d018f407b20302c270fc028804cf0 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
++++ b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+@@ -188,9 +188,17 @@ public class CraftPlayerProfile implements PlayerProfile {
+ 
+         boolean isCompleteFromCache = this.completeFromCache(true, onlineMode);
+         if (onlineMode && (!isCompleteFromCache || textures && !hasTextures())) {
+-            GameProfile result = server.getSessionService().fillProfileProperties(profile, true);
+-            if (result != null) {
+-                copyProfileProperties(result, this.profile, true);
++            // Sugarcane start
++            xyz.arthurb.mirai.api.events.GameProfileLookupEvent event = new xyz.arthurb.mirai.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profile.getId(), profile.getName());
++            org.bukkit.Bukkit.getPluginManager().callEvent(event);
++            GameProfile eventProfile = event.getGameProfile();
++            if (eventProfile != null) {
++                GameProfile result = eventProfile;
++            } else {
++                GameProfile result = server.getSessionService().fillProfileProperties(profile, true);
++                if (result != null) {
++                    copyProfileProperties(result, this.profile, true);
++                }
+             }
+             if (this.profile.isComplete()) {
+                 server.getProfileCache().add(this.profile);
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
+index f61c313195c3d16d996721b2f8cd0d9a10ce1aaf..36ed9f56c18dbb320bdb5bfdc57c1f793be4aed6 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
+@@ -154,7 +154,16 @@ public class SkullBlockEntity extends BlockEntity {
+                     Util.ifElse(profile, (profilex) -> {
+                         Property property = Iterables.getFirst(profilex.getProperties().get("textures"), (Property)null);
+                         if (property == null) {
+-                            profilex = sessionService.fillProfileProperties(profilex, true);
++                            // Sugarcane start
++							org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent event = new org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profilex.getId(), profilex.getName());
++							org.bukkit.Bukkit.getPluginManager().callEvent(event);
++							GameProfile eventProfile = event.getGameProfile();
++							if (eventProfile != null) {
++								profilex = eventProfile;
++							} else {
++								profilex = sessionService.fillProfileProperties(profilex, true);
++							}
++							// Sugarcane end
+                         }
+ 
+                         GameProfile gameProfile = profilex;

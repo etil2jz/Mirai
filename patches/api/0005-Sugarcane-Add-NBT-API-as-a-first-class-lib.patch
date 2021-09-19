@@ -1,0 +1,170 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 15:30:33 +0200
+Subject: [PATCH] (Sugarcane) Add NBT API as a first class lib
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index ad4a140ac7e5622a600c5413642a11857050e48f..05e2ea89237c317943cb3edecb16ff09a28000da 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -3,6 +3,7 @@ import java.util.Locale
+ plugins {
+     `java-library`
+     `maven-publish`
++	id("com.github.johnrengelman.shadow")
+ }
+ 
+ java {
+@@ -40,6 +41,7 @@ dependencies {
+     api("org.apache.logging.log4j:log4j-api:2.14.1") // Paper
+     api("org.slf4j:slf4j-api:1.7.30") // Paper
+ 	api("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT") // Purpur
++	api("de.tr7zw:item-nbt-api:2.8.0") // Sugarcane
+ 
+     implementation("org.ow2.asm:asm:9.1")
+     implementation("org.ow2.asm:asm-commons:9.1")
+@@ -85,6 +87,9 @@ tasks.jar {
+     }
+ }
+ 
++tasks.shadowJar {
++	relocate("de.tr7zw.changeme.nbtapi", "de.tr7zw.nbtapi")
++}
+ tasks.withType<Javadoc>().configureEach {
+     (options as CoreJavadocOptions).addStringOption("sourcepath", apiAndDocs.resolvedConfiguration.files.joinToString(separator = File.pathSeparator, transform = File::getPath))
+ 	(options as StandardJavadocDocletOptions).encoding = "UTF-8"
+diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
+index 5a4884db36d448c885e49c965ae329a0638dd628..a2fcd12090c501eb4df7051b28e49d20068facf1 100644
+--- a/src/main/java/org/bukkit/Chunk.java
++++ b/src/main/java/org/bukkit/Chunk.java
+@@ -283,4 +283,16 @@ public interface Chunk extends PersistentDataHolder {
+      * @return if the block is contained within
+      */
+     boolean contains(@NotNull BlockData block);
++	
++	// Sugarcane start
++    /**
++     * Returns a custom tag container of this chunk.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return new de.tr7zw.changeme.nbtapi.NBTChunk(this).getPersistentDataContainer();
++    }
++    // Sugarcane end
+ }
+diff --git a/src/main/java/org/bukkit/block/TileState.java b/src/main/java/org/bukkit/block/TileState.java
+index 3b10fcc13893403b29f0260b8605144679e89b82..4297941459aec01c73b3bc8ebeac13db9db39dbb 100644
+--- a/src/main/java/org/bukkit/block/TileState.java
++++ b/src/main/java/org/bukkit/block/TileState.java
+@@ -36,4 +36,26 @@ public interface TileState extends BlockState, PersistentDataHolder {
+     @NotNull
+     @Override
+     PersistentDataContainer getPersistentDataContainer();
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this tile entity.
++     *
++     * @return vanilla NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTTileEntity getNBT() {
++        return new de.tr7zw.changeme.nbtapi.NBTTileEntity(this);
++    }
++
++    /**
++     * Returns a custom tag container of this tile entity.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return getNBT().getPersistentDataContainer();
++    }
++    // Sugarcane end
+ }
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index a9e455c5b3bbe4edbdb71f86f5c6eebc2f605547..6073f74747bfa571c96dc5937b9e3874ed8677ba 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -189,6 +189,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+         return future;
+     }
+     // Paper end
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this entity.
++     *
++     * @return vanilla NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTEntity getNBT() {
++        return new de.tr7zw.changeme.nbtapi.NBTEntity(this);
++    }
++
++    /**
++     * Returns a custom tag container of this entity.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return getNBT().getPersistentDataContainer();
++    }
++    // Sugarcane end
+ 
+     /**
+      * Returns a list of entities within a bounding box centered around this
+diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/org/bukkit/inventory/ItemStack.java
+index 59a026d80b0a0a4890becf98efdbe5325b2c622a..5ef2a292fba690f9564a08ad0a39354526481155 100644
+--- a/src/main/java/org/bukkit/inventory/ItemStack.java
++++ b/src/main/java/org/bukkit/inventory/ItemStack.java
+@@ -567,6 +567,44 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor
+         return false;
+     }
+     // Paper end
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this item. The ItemStack will be cloned!
++     *
++     * @return item's NBT tags container
++     */
++    @NotNull
++    public de.tr7zw.changeme.nbtapi.NBTItem getNBT() {
++        return getNBT(false);
++    }
++
++    /**
++    * Returns NBT representation of this item. If directApply is true,
++    * all changes will be mapped to the original item. Changes to the NBTItem will
++    * overwrite changes done to the original item in that case.
++    *
++    * @param directApply if true, changes to NBTItem will affect this ItemStack
++    * @return item's NBT tags container
++    */
++    @NotNull
++    public de.tr7zw.changeme.nbtapi.NBTItem getNBT(boolean directApply) {
++        return new de.tr7zw.changeme.nbtapi.NBTItem(this, directApply);
++    }
++
++    /**
++     * Applies NBT data from the provided NBT item.
++     *
++     * @param nbt ItemStack's NBT container
++     */
++    public void setNBT(@NotNull de.tr7zw.changeme.nbtapi.NBTItem nbt) {
++        ItemStack nbtItem = nbt.getItem();
++        setType(nbtItem.getType());
++        setAmount(nbtItem.getAmount());
++        setData(nbtItem.getData());
++        setItemMeta(nbtItem.getItemMeta());
++    }
++    // Sugarcane end
+ 
+     /**
+      * Get a copy of this ItemStack's {@link ItemMeta}.
