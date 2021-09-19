@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 17:27:45 +0200
+Subject: [PATCH] (Purpur) Add ping command
+
+
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index 6fec6a47538da4c0c5a4505e9bedf492bb3376dd..d1f2e3e88e43e33e51120d9b23cf23caa68a66d1 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -198,6 +198,7 @@ public class Commands {
+             SetPlayerIdleTimeoutCommand.register(this.dispatcher);
+             StopCommand.register(this.dispatcher);
+             WhitelistCommand.register(this.dispatcher);
++			xyz.arthurb.mirai.command.PingCommand.register(this.dispatcher); // Purpur
+         }
+ 
+         if (environment.includeIntegrated) {
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 50392b3056d1cc10d9c59353bfa8edda3bab85f4..4d63701729f472645119d7381b7db2c32b4ad4e4 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -204,5 +204,14 @@ public class MiraiConfig {
+ 	private static void protocolLib() {
+ 		fixProtocolLib = getBoolean("settings.fix-protocollib", fixProtocolLib);
+ 	}
++	
++	public static String pingCommandOutput = "<green>%s's ping is %sms";
++	
++	// add new command outputs above ^
++	
++	private static void messages() {
++		pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
++	}
++	// add new command outputs above ^
+ 
+ }
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/command/PingCommand.java b/src/main/java/xyz/arthurb/mirai/command/PingCommand.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..483e8c4b50494f58607758bbfce9ec43db66a8dc
+--- /dev/null
++++ b/src/main/java/xyz/arthurb/mirai/command/PingCommand.java
+@@ -0,0 +1,32 @@
++package xyz.arthurb.mirai.command;
++
++import com.mojang.brigadier.CommandDispatcher;
++import net.minecraft.commands.CommandSourceStack;
++import net.minecraft.commands.Commands;
++import net.minecraft.commands.arguments.EntityArgument;
++import net.minecraft.server.level.ServerPlayer;
++import xyz.arthurb.mirai.MiraiConfig;
++import org.bukkit.craftbukkit.util.CraftChatMessage;
++
++import java.util.Collection;
++import java.util.Collections;
++
++public class PingCommand {
++    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
++        dispatcher.register(Commands.literal("ping")
++                .requires((listener) -> listener.hasPermission(2))
++                .executes((context) -> execute(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException())))
++                .then(Commands.argument("targets", EntityArgument.players())
++                        .executes((context) -> execute(context.getSource(), EntityArgument.getPlayers(context, "targets")))
++                )
++        ).setPermission("bukkit.command.ping");
++    }
++
++    private static int execute(CommandSourceStack sender, Collection<ServerPlayer> targets) {
++        for (ServerPlayer player : targets) {
++            String output = String.format(MiraiConfig.pingCommandOutput, player.getGameProfile().getName(), player.latency);
++            sender.sendSuccess(output, false);
++        }
++        return targets.size();
++    }
++}
+\ No newline at end of file
