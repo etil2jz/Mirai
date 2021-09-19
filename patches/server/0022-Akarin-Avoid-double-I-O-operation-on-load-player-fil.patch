@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Sep 2021 13:32:04 +0200
+Subject: [PATCH] (Akarin) Avoid double I/O operation on load player file
+
+
+diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+index 35c39aed9583275ef25d32c783715798b52bdb63..8ce6d386a67687207966a9c577cff9046f45193e 100644
+--- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+@@ -56,7 +56,8 @@ public class PlayerDataStorage {
+             File file = new File(this.playerDir, player.getStringUUID() + ".dat");
+             // Spigot Start
+             boolean usingWrongFile = false;
+-            if ( org.bukkit.Bukkit.getOnlineMode() && !file.exists() ) // Paper - Check online mode first
++            boolean normalFile = file.exists() && file.isFile(); // Akarin - ensures normal file
++			if ( org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file
+             {
+                 file = new File( this.playerDir, java.util.UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + player.getScoreboardName() ).getBytes( "UTF-8" ) ).toString() + ".dat");
+                 if ( file.exists() )
+@@ -67,7 +68,7 @@ public class PlayerDataStorage {
+             }
+             // Spigot End
+ 
+-            if (file.exists() && file.isFile()) {
++            if (normalFile) { // Akarin - avoid double I/O operation
+                 nbttagcompound = NbtIo.readCompressed(file);
+             }
+             // Spigot Start
