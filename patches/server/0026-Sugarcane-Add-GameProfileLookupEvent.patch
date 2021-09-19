@@ -39,7 +39,7 @@ index f61c313195c3d16d996721b2f8cd0d9a10ce1aaf..36ed9f56c18dbb320bdb5bfdc57c1f79
                          if (property == null) {
 -                            profilex = sessionService.fillProfileProperties(profilex, true);
 +                            // Sugarcane start
-+							org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent event = new org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profilex.getId(), profilex.getName());
++							xyz.arthurb.mirai.api.events.GameProfileLookupEvent event = new xyz.arthurb.mirai.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profilex.getId(), profilex.getName());
 +							org.bukkit.Bukkit.getPluginManager().callEvent(event);
 +							GameProfile eventProfile = event.getGameProfile();
 +							if (eventProfile != null) {
