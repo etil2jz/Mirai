@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Mon, 20 Sep 2021 21:13:15 +0200
+Subject: [PATCH] (EMC) Do not process chat/commands before player has joined
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 86ff3ee13ac571570965966fc5b2392bb928ffb0..a31e066571b98d18cd6805c4037ebc0cefc1f17f 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2056,6 +2056,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     private void handleChat(TextFilter.FilteredText message) {
+         if (this.player.isRemoved() || this.player.getChatVisibility() == ChatVisiblity.HIDDEN) { // CraftBukkit - dead men tell no tales
+             this.send(new ClientboundChatPacket((new TranslatableComponent("chat.disabled.options")).withStyle(ChatFormatting.RED), ChatType.SYSTEM, Util.NIL_UUID));
++		} else if (!player.didPlayerJoinEvent) { return; // EMC - do not handle chat messages before they joined
+         } else {
+             this.player.resetLastActionTime();
+             String s = message.getRaw();
