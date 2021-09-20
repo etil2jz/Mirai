@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Mon, 20 Sep 2021 20:33:51 +0200
+Subject: [PATCH] (EMC) Fix Give command
+
+
+diff --git a/src/main/java/net/minecraft/server/commands/GiveCommand.java b/src/main/java/net/minecraft/server/commands/GiveCommand.java
+index a0dc380e90415de9068ea408d62a1605c82631df..b4d42c9e270fa1fedf76eeda4d3c4a5896fd642e 100644
+--- a/src/main/java/net/minecraft/server/commands/GiveCommand.java
++++ b/src/main/java/net/minecraft/server/commands/GiveCommand.java
+@@ -45,6 +45,7 @@ public class GiveCommand {
+                     k -= l;
+                     ItemStack itemStack = item.createItemStack(l, false);
+                     boolean bl = serverPlayer.getInventory().add(itemStack);
++					if (true) { continue; } // EMC - never drop items
+                     if (bl && itemStack.isEmpty()) {
+                         itemStack.setCount(1);
+                         ItemEntity itemEntity2 = serverPlayer.drop(itemStack, false, false, true); // Paper - Fix duplicating /give items on item drop cancel
