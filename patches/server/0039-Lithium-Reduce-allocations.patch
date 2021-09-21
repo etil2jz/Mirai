@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 21 Sep 2021 17:44:35 +0200
+Subject: [PATCH] (Lithium) Reduce allocations
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+index 4c9ae6bdb2f0358798f84928271a2d783dcba7b4..9ff643b8c7d4eae59594da1eb5ed9aae815fa9be 100644
+--- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+@@ -374,7 +374,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.DOWN ? new int[]{0} : new int[0];
++            return side == Direction.DOWN ? xyz.arthurb.mirai.server.util.Constants.ZERO_ARRAY : xyz.arthurb.mirai.server.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
+@@ -423,7 +423,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.UP ? new int[]{0} : new int[0];
++            return side == Direction.UP ? xyz.arthurb.mirai.server.util.Constants.ZERO_ARRAY : xyz.arthurb.mirai.server.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
+@@ -460,7 +460,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return new int[0];
++            return xyz.arthurb.mirai.server.util.Constants.EMPTY_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
