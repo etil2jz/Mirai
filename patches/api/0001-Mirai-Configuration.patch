@@ -18,6 +18,11 @@ index f153ab46a756ec51a0fe99362c65b87e1364aa10..1682b2ba00ce969954e4fc14454e10cc
 +		public org.bukkit.configuration.file.YamlConfiguration getMiraiConfig() {
 +			throw new UnsupportedOperationException("Not supported yet.");
 +		}
++
++             @NotNull
++             public java.util.Properties getServerProperties() {
++               throw new UnsupportedOperationException("Not supported yet.");
++             }
 +		// Mirai end
  
          /**
