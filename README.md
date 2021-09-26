@@ -18,9 +18,10 @@
 - **Faster** crafting, reduction in uselessly loaded chunks, entity ticking, block ticking, bat spawning…
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
-- **Removed** metrics, no one can collect data, not even us.
+- **IP and login location** hiding feature, which adds another security layer in the logs.
+- **Removed metrics**, no one can collect data, not even us.
 - **Bugfixes** for several Minecraft issues.
-- **Safer** methods for Vanilla calls.
+- **Safer methods** for Vanilla calls.
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
