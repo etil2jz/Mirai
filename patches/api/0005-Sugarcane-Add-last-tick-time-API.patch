@@ -26,10 +26,10 @@ index d36e4bc3c3713407704b865574cba28662f17315..2b5132582c4e3b08d3fa7a5f0e4a92e0
      /**
       * Returns the {@link com.destroystokyo.paper.entity.ai.MobGoals} manager
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 83870d54a5ff1017ad7455e9c931fdee54354434..f153ab46a756ec51a0fe99362c65b87e1364aa10 100644
+index 24cc40453507b0da510b06b29e49b415afa6e4e8..70f210533f5e412da8a19e052ccd6978ad2d029a 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1774,6 +1774,26 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1786,6 +1786,26 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
       * @return true if server is in the process of being shutdown
       */
      boolean isStopping();

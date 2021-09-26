@@ -69,7 +69,7 @@ index af598369e5aeae700d7d9da049f173fc51b7a370..4e8b794eb268abf2bbca83dfef1a3c33
                      @Override
 diff --git a/src/main/java/net/minecraft/server/ServerWorkerWrapper.java b/src/main/java/net/minecraft/server/ServerWorkerWrapper.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d6344b4426cf88027b18dc69a0d4be9fa57bd3a4
+index 0000000000000000000000000000000000000000..04081dbd55f7a16e726fb877ac6a9f554cb9e5a6
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ServerWorkerWrapper.java
 @@ -0,0 +1,24 @@

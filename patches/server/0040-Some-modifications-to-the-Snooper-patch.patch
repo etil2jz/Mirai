@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 26 Sep 2021 11:40:35 +0200
+Subject: [PATCH] Some modifications to the Snooper patch
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index af469197dcb8d81e57f53ff75abbd451942dc1ac..76fff7a82c67fe62b090dd5ec5906bc54862eb6d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -120,8 +120,8 @@ import net.minecraft.util.profiling.metrics.profiling.ServerMetricsSamplersProvi
+ import net.minecraft.util.profiling.metrics.storage.MetricsPersister;
+ import net.minecraft.util.thread.ReentrantBlockableEventLoop;
+ import net.minecraft.world.Difficulty;
+-import net.minecraft.world.Snooper;
+-import net.minecraft.world.SnooperPopulator;
++//import net.minecraft.world.Snooper;
++//import net.minecraft.world.SnooperPopulator;
+ import net.minecraft.world.entity.Entity;
+ import net.minecraft.world.entity.ai.village.VillageSiege;
+ import net.minecraft.world.entity.npc.CatSpawner;
+@@ -1536,10 +1536,10 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         if (((DedicatedServer) this).getProperties().snooperEnabled && this.tickCount % 6000 == 0) { // Spigot
+             this.snooper.prepare();
+         }
+-		*/
+ 
+         io.papermc.paper.util.CachedLists.reset(); // Paper
+         this.profiler.pop();
++		*/
+ 
+         // Paper start - move executeAll() into full server tick timing
+         try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
+@@ -1931,12 +1931,10 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         snooper.setFixedData("gui_supported", GraphicsEnvironment.isHeadless() ? "headless" : "supported");
+         snooper.setFixedData("dedicated", this.isDedicatedServer());
+     }
+-	*/
+ 
+-    /* // Patina - completely remove snooper
+ 	@Override
+     public boolean isSnooperEnabled() {
+-        return true;
++        return false;
+     }
+ 	*/
+ 
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index d88878bc094fa0fb2f7e9bfe288c250d14e228c7..303dff5ba819897f8c011f57d8f1e7ba7624e020 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -501,9 +501,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         snooper.setDynamicData("whitelist_count", (Object) this.getPlayerList().getWhiteListNames().length);
+         super.populateSnooper(snooper);
+     }
+-	*/
+ 
+-    /* // Patina - completely remove snooper
+ 	@Override
+     public boolean isSnooperEnabled() {
+         return this.getProperties().snooperEnabled;
