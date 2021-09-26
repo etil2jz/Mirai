@@ -1,0 +1,237 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 26 Sep 2021 13:03:51 +0200
+Subject: [PATCH] (Yatopia) Use faster random implementation
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..8d4f8de8aa9a9f8194e37b9261ee081986d9f19b 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+@@ -13,7 +13,7 @@ import java.util.UUID;
+ 
+ public class PaperLootableInventoryData {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new xyz.arthurb.mirai.server.util.FastRandom();
+ 
+     private long lastFill = -1;
+     private long nextRefill = -1;
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 76fff7a82c67fe62b090dd5ec5906bc54862eb6d..26f2f8cbd0235b22615dbacdea5183b44bfa8d39 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -412,7 +412,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         this.onMetricsRecordingFinished = (path) -> {
+         };
+         this.status = new ServerStatus();
+-        this.random = new Random();
++        this.random = new xyz.arthurb.mirai.server.util.FastRandom();
+         this.port = -1;
+         this.levels = Maps.newLinkedHashMap(); // CraftBukkit - keep order, k+v already use identity methods
+         this.running = true;
+@@ -774,7 +774,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             // Paper start - moved down
+             // CraftBukkit start
+             if (world.generator != null) {
+-                Random rand = new Random(world.getSeed());
++                Random rand = new xyz.arthurb.mirai.server.util.FastRandom(world.getSeed());
+                 org.bukkit.Location spawn = world.generator.getFixedSpawnLocation(world.getWorld(), rand);
+ 
+                 if (spawn != null) {
+@@ -790,7 +790,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             // Paper start - if the generator created a spawn for us, then there is no need for us to also create a spawn -
+             // only do it if the generator did not
+             BiomeSource worldchunkmanager = chunkgenerator.getBiomeSource();
+-            Random random = new Random(world.getSeed());
++            Random random = new xyz.arthurb.mirai.server.util.FastRandom(world.getSeed());
+             BlockPos blockposition = worldchunkmanager.findBiomeHorizontal(0, world.getSeaLevel(), 0, 256, (biomebase) -> {
+                 return biomebase.getMobSettings().playerSpawnFriendly();
+             }, random);
+diff --git a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+index a7ea776f5f8dad3dd9475de41209d8704c0886d3..277acda841ed4d7a13b4ffd64dee46a44434df9d 100644
+--- a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
++++ b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+@@ -56,7 +56,7 @@ public class SpreadPlayersCommand {
+     }
+ 
+     private static int spreadPlayers(CommandSourceStack source, Vec2 center, float spreadDistance, float maxRange, int maxY, boolean respectTeams, Collection<? extends Entity> players) throws CommandSyntaxException {
+-        Random random = new Random();
++        Random random = new xyz.arthurb.mirai.server.util.FastRandom();
+         double d0 = (double) (center.x - maxRange);
+         double d1 = (double) (center.y - maxRange);
+         double d2 = (double) (center.x + maxRange);
+diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+index 3cf32793d7de14cd7b070037896916c542008984..60409c1ece97e1f7b51a7394f048d3e676469fde 100644
+--- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+@@ -55,7 +55,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+     private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger(0);
+     static final Logger LOGGER = LogManager.getLogger();
+     private static final int MAX_TICKS_BEFORE_LOGIN = 600;
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new xyz.arthurb.mirai.server.util.FastRandom();
+     private final byte[] nonce = new byte[4];
+     final MinecraftServer server;
+     public final Connection connection;
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 3c272e6c7552cb5bc875cdaefc91aaac3751ec3a..0ebdf40a10c2760a2810f3bd39bed173a0b8dca5 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -159,7 +159,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     }
+ 
+     // Paper start
+-    public static Random SHARED_RANDOM = new Random() {
++    public static Random SHARED_RANDOM = new xyz.arthurb.mirai.server.util.FastRandom() {
+         private boolean locked = false;
+         @Override
+         public synchronized void setSeed(long seed) {
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+index 7fa5cde9c26c21d4d800f720f373a8b702f4fcb5..2fa9038e511221339d5f48eed1eb62ed77063d46 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+@@ -378,7 +378,7 @@ public class PiglinAi {
+     }
+ 
+     private static boolean wantsToDance(LivingEntity piglin, LivingEntity target) {
+-        return target.getType() != EntityType.HOGLIN ? false : (new Random(piglin.level.getGameTime())).nextFloat() < 0.1F;
++        return target.getType() != EntityType.HOGLIN ? false : (new xyz.arthurb.mirai.server.util.FastRandom(piglin.level.getGameTime())).nextFloat() < 0.1F;
+     }
+ 
+     protected static boolean wantsToPickup(Piglin piglin, ItemStack stack) {
+diff --git a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+index f8ede3588bfda9a7d4d5807311a3e9c2651fd0a3..5b2b7ff744a94493ee7598b89439553af47123bb 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
++++ b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+@@ -35,7 +35,7 @@ public class WanderingTraderSpawner implements CustomSpawner {
+     private static final int SPAWN_CHANCE_INCREASE = 25;
+     private static final int SPAWN_ONE_IN_X_CHANCE = 10;
+     private static final int NUMBER_OF_SPAWN_ATTEMPTS = 10;
+-    private final Random random = new Random();
++    private final Random random = new xyz.arthurb.mirai.server.util.FastRandom();
+     private final ServerLevelData serverLevelData;
+     private int tickDelay;
+     private int spawnDelay;
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+index 852a4edde291bf368b2396e3c94ab402e3c66622..eb165d4c64cfd5c18cc522e4a798392e3402d743 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+@@ -77,7 +77,7 @@ public class FishingHook extends Projectile {
+ 
+     private FishingHook(EntityType<? extends FishingHook> type, Level world, int lureLevel, int luckOfTheSeaLevel) {
+         super(type, world);
+-        this.syncronizedRandom = new Random();
++        this.syncronizedRandom = new xyz.arthurb.mirai.server.util.FastRandom();
+         this.openWater = true;
+         this.currentState = FishingHook.FishHookState.FLYING;
+         this.noCulling = true;
+diff --git a/src/main/java/net/minecraft/world/entity/raid/Raid.java b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+index a79ba23ecf887ecbb6e095140f019ebb6fd0a6f7..643be51d309249aa6fc005d454273f18c25814ca 100644
+--- a/src/main/java/net/minecraft/world/entity/raid/Raid.java
++++ b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+@@ -110,7 +110,7 @@ public class Raid {
+ 
+     public Raid(int id, ServerLevel world, BlockPos pos) {
+         this.raidEvent = new ServerBossEvent(Raid.RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+-        this.random = new Random();
++        this.random = new xyz.arthurb.mirai.server.util.FastRandom();
+         this.waveSpawnPos = Optional.empty();
+         this.id = id;
+         this.level = world;
+diff --git a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+index 717b101bd2492037a9ca1d65d8cb3cebb7d6d4fe..8d7a50ab578a43ea0138926dfe4da4ab2a4b5a99 100644
+--- a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+@@ -68,7 +68,7 @@ public class EnchantmentMenu extends AbstractContainerMenu {
+             }
+             // CraftBukkit end
+         };
+-        this.random = new Random();
++        this.random = new xyz.arthurb.mirai.server.util.FastRandom();
+         this.enchantmentSeed = DataSlot.standalone();
+         this.costs = new int[3];
+         this.enchantClue = new int[]{-1, -1, -1};
+diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
+index bff8b8172aaa837378c43513761e0a7cd0b9567b..436abc0f53c651f6ac2b977c4f39b97c5ac5280a 100644
+--- a/src/main/java/net/minecraft/world/level/Explosion.java
++++ b/src/main/java/net/minecraft/world/level/Explosion.java
+@@ -90,7 +90,7 @@ public class Explosion {
+     }
+ 
+     public Explosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType) {
+-        this.random = new Random();
++        this.random = new xyz.arthurb.mirai.server.util.FastRandom();
+         this.toBlow = Lists.newArrayList();
+         this.hitPlayers = Maps.newHashMap();
+         this.level = world;
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+index cfec89db4300bdb96a220540ee87892d22215e9d..56b54a0f784397663f951d2838b341e95f4d37cd 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+@@ -22,7 +22,7 @@ import org.bukkit.entity.HumanEntity;
+ 
+ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new xyz.arthurb.mirai.server.util.FastRandom();
+     public static final int CONTAINER_SIZE = 9;
+     private NonNullList<ItemStack> items;
+ 
+diff --git a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
+index 53001f490f374c75e0d44ec75387f4bee6ab8952..6bbd6ee76be340759eafffde2414fbad711de5e3 100644
+--- a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
++++ b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
+@@ -120,7 +120,7 @@ public class EndDragonFight {
+             }
+         } else {
+             this.gateways.addAll(ContiguousSet.create(Range.closedOpen(0, 20), DiscreteDomain.integers()));
+-            Collections.shuffle(this.gateways, new Random(gatewaysSeed));
++            Collections.shuffle(this.gateways, new xyz.arthurb.mirai.server.util.FastRandom(gatewaysSeed));
+         }
+ 
+         this.exitPortalPattern = BlockPatternBuilder.start().aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("  ###  ", " #   # ", "#     #", "#  #  #", "#     #", " #   # ", "  ###  ").aisle("       ", "  ###  ", " ##### ", " ##### ", " ##### ", "  ###  ", "       ").where('#', BlockInWorld.hasState(BlockPredicate.forBlock(Blocks.BEDROCK))).build();
+@@ -399,7 +399,7 @@ public class EndDragonFight {
+ 
+     private void spawnNewGateway(BlockPos pos) {
+         this.level.levelEvent(3000, pos, 0);
+-        Features.END_GATEWAY_DELAYED.place(this.level, this.level.getChunkSource().getGenerator(), new Random(), pos);
++        Features.END_GATEWAY_DELAYED.place(this.level, this.level.getChunkSource().getGenerator(), new xyz.arthurb.mirai.server.util.FastRandom(), pos);
+     }
+ 
+     public void spawnExitPortal(boolean previouslyKilled) {
+@@ -415,7 +415,7 @@ public class EndDragonFight {
+         }
+         // Paper end
+ 
+-        endPodiumFeature.configured(FeatureConfiguration.NONE).place(this.level, this.level.getChunkSource().getGenerator(), new Random(), this.portalLocation);
++        endPodiumFeature.configured(FeatureConfiguration.NONE).place(this.level, this.level.getChunkSource().getGenerator(), new xyz.arthurb.mirai.server.util.FastRandom(), this.portalLocation);
+     }
+ 
+     private EnderDragon createNewDragon() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index b03f0224b7867dfb20a0cf71a522119d5cb9e40a..96e16fbe06c1239b7489ae5fb62c38bca725011c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -200,7 +200,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+     }
+     // Paper end
+ 
+-    private static final Random rand = new Random();
++    private static final Random rand = new xyz.arthurb.mirai.server.util.FastRandom();
+ 
+     public CraftWorld(ServerLevel world, ChunkGenerator gen, BiomeProvider biomeProvider, Environment env) {
+         this.world = world;
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+index be86114eac3975b82ca74d4d6ed3f0402a642e8a..bb2a00bae55f164e3754ee6a364fd58b5fb65757 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
+ 
+ public class CraftFirework extends CraftProjectile implements Firework {
+ 
+-    private final Random random = new Random();
++    private final Random random = new xyz.arthurb.mirai.server.util.FastRandom();
+     private final CraftItemStack item;
+ 
+     public CraftFirework(CraftServer server, FireworkRocketEntity entity) {

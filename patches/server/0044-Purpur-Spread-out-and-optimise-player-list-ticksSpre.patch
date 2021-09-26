@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 26 Sep 2021 12:11:58 +0200
+Subject: [PATCH] (Purpur) Spread out and optimise player list ticksSpread out
+ and optimise player list ticks
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index e61c9b789583382612b4b0fd56084ebe2e9adbda..694006404be284042991cddd19caab909ada3cf2 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1029,22 +1029,22 @@ public abstract class PlayerList {
+     }
+ 
+     public void tick() {
+-        if (++this.sendAllPlayerInfoIn > 600) {
+-            // CraftBukkit start
+-            for (int i = 0; i < this.players.size(); ++i) {
+-                final ServerPlayer target = (ServerPlayer) this.players.get(i);
+-
+-                target.connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.UPDATE_LATENCY, this.players.stream().filter(new Predicate<ServerPlayer>() {
+-                    @Override
+-                    public boolean apply(ServerPlayer input) {
+-                        return target.getBukkitEntity().canSee(input.getBukkitEntity());
+-                    }
+-                }).collect(Collectors.toList())));
++        // Purpur start
++        if (this.sendAllPlayerInfoIn < this.players.size()) {
++            final org.bukkit.craftbukkit.entity.CraftPlayer target = this.players.get(this.sendAllPlayerInfoIn).getBukkitEntity();
++            final List<ServerPlayer> list = new java.util.ArrayList<>();
++            for (ServerPlayer player : this.players) {
++                if (target.canSee(player.getUUID())) {
++                    list.add(player);
++                }
+             }
+-            // CraftBukkit end
++            target.getHandle().connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.UPDATE_LATENCY, list));
++        }
++		
++		if (++this.sendAllPlayerInfoIn > 600) {
+             this.sendAllPlayerInfoIn = 0;
+         }
+-
++        // Purpur end
+     }
+ 
+     public void broadcastAll(Packet<?> packet) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 1ccbdd2554073a41ca2f37deca3f1ec3e6a0665f..f477de27ec01a8c28311583f08e164b3d04cf8e1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1565,7 +1565,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+ 
+     @Override
+     public boolean canSee(Player player) {
+-        return !this.hiddenPlayers.containsKey(player.getUniqueId());
++        // Purpur start
++        return canSee(player.getUniqueId());
++    }
++
++    public boolean canSee(UUID uuid) {
++        return !hiddenPlayers.containsKey(uuid);
++        // Purpur end
+     }
+ 
+     @Override
