@@ -12,11 +12,15 @@
 - **30% faster hoppers** over Paper.
 - **Improved entity performance** from a reduction in ticking entity behavior based on how far away they are from the player.
 - **Reduced GC times & frequency** from removing useless allocations, which also improves CPU performance.
+- **Reduced bandwidth consumption** from avoiding sending useless entity packets.
 - **Fast raytracing** which improves performance of any entity which utilizes line of sight, mainly Villagers.
 - **Built-in profiler** which has 0 performance hit and easy to read metrics for both server owners and developers.
-- Faster crafting, reduction in uselessly loaded chunks, faster entity ticking, faster block ticking, faster bat spawning, and more!
-- Plugin compatibility with Spigot & Paper plugins.
-- All metrics, bStats and the vanilla snooper included, are removed.
+- **Faster** crafting, reduction in uselessly loaded chunks, entity ticking, block ticking, bat spawning…
+- **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
+- **Removed** metrics, no one can collect data, not even us.
+- **Bugfixes** for several Minecraft issues.
+- **Safer** methods for Vanilla calls.
+- **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
 The latest JAR file can be downloaded from the [release/1.17 branch](https://github.com/etil2jz/Mirai/raw/release/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar). You can also clone this repository and build it yourself.
