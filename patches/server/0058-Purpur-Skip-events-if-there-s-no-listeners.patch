@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 26 Sep 2021 14:11:10 +0200
+Subject: [PATCH] (Purpur) Skip events if there's no listeners
+
+
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index fcef1eec26a4b7d76b2e7a8676a7bf84c1cc84a3..91a2a51c767f68f9d20a6e6827109e0111c62268 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -386,6 +386,7 @@ public class Commands {
+     }
+ 
+     private void runSync(ServerPlayer player, Collection<String> bukkit, RootCommandNode<SharedSuggestionProvider> rootcommandnode) {
++		if (PlayerCommandSendEvent.getHandlerList().getRegisteredListeners().length > 0) { // Purpur - skip all this crap if there's nothing listening
+         // Paper end - Async command map building
+         new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandSourceStack>(player.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
+         PlayerCommandSendEvent event = new PlayerCommandSendEvent(player.getBukkitEntity(), new LinkedHashSet<>(bukkit));
+@@ -398,6 +399,7 @@ public class Commands {
+             }
+         }
+         // CraftBukkit end
++		} // Purpur - skip event
+         player.connection.send(new ClientboundCommandsPacket(rootcommandnode));
+     }
+ 
