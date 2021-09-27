@@ -1,4 +1,4 @@
-From feb320471e9ab2f19ee69e041ad1415231925b59 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 23:00:58 +0100
 Subject: [PATCH] (Origami) Optimize inventory API item handling

@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Thu, 14 Jan 2021 16:48:10 -0600
+Subject: [PATCH] (Purpur) Fix stuck in portals
+
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index fe38270c83555fd2008f9ce873ba2964a283e6a8..142ca290c1964fe78dcfe247d5e927ae5a2ddf2f 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1111,6 +1111,7 @@ public class ServerPlayer extends Player {
+                 playerlist.sendPlayerPermissionLevel(this);
+                 worldserver1.removePlayerImmediately(this, Entity.RemovalReason.CHANGED_DIMENSION);
+                 this.unsetRemoved();
++				this.portalPos = net.minecraft.server.MCUtil.toBlockPosition(exit); // Purpur
+ 
+                 // CraftBukkit end
+                 this.setLevel(worldserver);
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index b6d3e77b5ea67f9c2a35e37ac35d5f77e8436995..36e8f89609b9b4078ab7a134b780b87400633c03 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2716,12 +2716,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         return Vec3.directionFromRotation(this.getRotationVector());
+     }
+ 
+-    public void handleInsidePortal(BlockPos pos) {
++    public BlockPos portalPos = BlockPos.ZERO; // Purpur
++	public void handleInsidePortal(BlockPos pos) {
+         if (this.isOnPortalCooldown()) {
++			if (!(xyz.arthurb.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
+             this.setPortalCooldown();
+         } else {
+             if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
+                 this.portalEntrancePos = pos.immutable();
++				portalPos = BlockPos.ZERO; // Purpur
+             }
+ 
+             this.isInsidePortal = true;
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 8a06c7ef1c239b4999aa58bbe95da68aca903a19..5b3e83d7ca76819bed73a261736949968806b332 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -231,5 +231,11 @@ public class MiraiConfig {
+         loggerSuppressIgnoredAdvancementWarnings = getBoolean("settings.logger.suppress-ignored-advancement-warnings", loggerSuppressIgnoredAdvancementWarnings);
+         loggerSuppressUnrecognizedRecipeErrors = getBoolean("settings.logger.suppress-unrecognized-recipe-errors", loggerSuppressUnrecognizedRecipeErrors);
+     }
++	
++	public static boolean playerFixStuckPortal = true;
++	
++	private static void playerFixStuckPortal() {
++		playerFixStuckPortal = getBoolean("settings.fix-stuck-in-portal", playerFixStuckPortal);
++	}
+ 
+ }
+\ No newline at end of file
