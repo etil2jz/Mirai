@@ -5,7 +5,7 @@ Subject: [PATCH] (Sugarcane) New NBT cache
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d30d7a025cb88da120b3c6b7cb57a4f4d0afe043..883de715e3a5a1c9335854b7d0d0cfd998f7866f 100644
+index b660c853128e79334f3da8f7334125d240cf0fc6..31de069f4a5cee86eb5fa3316a031b85c8f6eb1b 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1097,7 +1097,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -19,7 +19,7 @@ index d30d7a025cb88da120b3c6b7cb57a4f4d0afe043..883de715e3a5a1c9335854b7d0d0cfd9
          if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
              MinecraftServer.LOGGER.info("Saving usercache.json");
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 8ce6d386a67687207966a9c577cff9046f45193e..ce80d1d424c195144215cf7bcd7792a889c9d5f8 100644
+index 8ce6d386a67687207966a9c577cff9046f45193e..6a7dc4d116056ce55ac3c82d3ab5ff3d74158795 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -24,6 +24,10 @@ public class PlayerDataStorage {

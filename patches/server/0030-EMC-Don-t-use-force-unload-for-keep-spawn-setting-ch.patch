@@ -5,10 +5,10 @@ Subject: [PATCH] (EMC) Don't use force unload for keep spawn setting change
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index f9df6e9d3d74e25a72abee8b43df21bbc0372409..b03f0224b7867dfb20a0cf71a522119d5cb9e40a 100644
+index 883b2070fcf99cf10d44aef6dece0f7f84bfeeed..63f6dd93aa00b8c30478f50bd388fae805b9e3b4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -368,7 +368,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -369,7 +369,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
  
      @Override
      public boolean unloadChunk(int x, int z) {

@@ -5,7 +5,7 @@ Subject: [PATCH] Some modifications to the Snooper patch
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index af469197dcb8d81e57f53ff75abbd451942dc1ac..76fff7a82c67fe62b090dd5ec5906bc54862eb6d 100644
+index a1d0389f7c6126d0088734f4f7997eb202486b6e..c2e170e1fd84796298888e237bc8eb4f98ab1ceb 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -120,8 +120,8 @@ import net.minecraft.util.profiling.metrics.profiling.ServerMetricsSamplersProvi

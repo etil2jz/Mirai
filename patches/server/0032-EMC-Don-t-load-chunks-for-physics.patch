@@ -5,10 +5,10 @@ Subject: [PATCH] (EMC) Don't load chunks for physics
 
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index cce49ce7a8815017c718f0d96ea9b86e607de547..3ad9bf45b52a4991f50ed7e9c8392d45212e4947 100644
+index 66e48492c2cbb4833ffda027332a81b80538d214..35cf04c0710f831eb6663a66f7de1d05d615adc1 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -898,7 +898,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -914,7 +914,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
  
      public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
          if (!this.isClientSide) {

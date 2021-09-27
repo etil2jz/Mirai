@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 19 Sep 2021 11:17:16 +0200
+Date: Mon, 27 Sep 2021 12:04:35 +0200
 Subject: [PATCH] (Patina) Remove VersionFetcher
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 deleted file mode 100644
-index 51d89d6bcbcc24a6be6a836263ebb1ed23e91cba..0000000000000000000000000000000000000000
+index 580bae0d414d371a07a6bfeefc41fdd989dc0083..0000000000000000000000000000000000000000
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ /dev/null
 @@ -1,142 +0,0 @@
@@ -41,8 +41,8 @@ index 51d89d6bcbcc24a6be6a836263ebb1ed23e91cba..00000000000000000000000000000000
 -    @Nonnull
 -    @Override
 -    public Component getVersionMessage(@Nonnull String serverVersion) {
--        String[] parts = serverVersion.substring("git-Airplane-".length()).split("[-\\s]"); // Tuinity
--        final Component updateMessage = getUpdateStatusMessage("TECHNOVE/Airplane", GITHUB_BRANCH_NAME, parts[0]); // Tuinity
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
 -        final Component history = getHistory();
 -
 -        return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
@@ -66,13 +66,13 @@ index 51d89d6bcbcc24a6be6a836263ebb1ed23e91cba..00000000000000000000000000000000
 -
 -    private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
 -        int distance;
--        //try {
--        //    int jenkinsBuild = Integer.parseInt(versionInfo);
--        //    distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
--        //} catch (NumberFormatException ignored) {
+-        try {
+-            int jenkinsBuild = Integer.parseInt(versionInfo);
+-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+-        } catch (NumberFormatException ignored) {
 -            versionInfo = versionInfo.replace("\"", "");
 -            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
--        //}
+-        }
 -
 -        switch (distance) {
 -            case -1:
@@ -153,7 +153,7 @@ index 51d89d6bcbcc24a6be6a836263ebb1ed23e91cba..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 72cfffd80ad76abe7cb16bc9133730338c07b6f6..fe059446a2860d52865c6db15ddd162ad69b0e38 100644
+index 2ad9bac4c1ae2adb50bb6291591ff4b741b3007e..dbbbe1ede16399ba32dc7f912f43c137c9fb2779 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -392,10 +392,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -164,7 +164,7 @@ index 72cfffd80ad76abe7cb16bc9133730338c07b6f6..fe059446a2860d52865c6db15ddd162a
 +    /* // Patina
 +	@Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
-         return new com.destroystokyo.paper.PaperVersionFetcher();
+         return new com.destroystokyo.paper.PaperVersionFetcher(); // Airplane // Mirai - revert VersionFetcher to Paper
      }
 +	*/
  

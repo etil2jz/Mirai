@@ -5,7 +5,7 @@ Subject: [PATCH] (Purpur) Alternative Keepalive Handling
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index a31e066571b98d18cd6805c4037ebc0cefc1f17f..63fd225c449d5ec1e84b4e561b310ae502eb88f4 100644
+index 3312de09e16d4656a2e1c39da6f9f97679541f1f..13d270396132edbc1101837a5b4e6631082dec00 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -228,6 +228,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
