@@ -1,0 +1,488 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 28 Sep 2021 00:08:34 +0200
+Subject: [PATCH] Change defaults in YAML config files
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+index a94be051d8c7aec6fe6bc00e14994c3b493cd28d..5d211fc499e9b38d29be4de2b3389b9d86f9f638 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+@@ -203,7 +203,7 @@ public class PaperConfig {
+ 
+     public static String timingsServerName;
+     private static void timings() {
+-        boolean timings = getBoolean("timings.enabled", true);
++        boolean timings = getBoolean("timings.enabled", false);
+         // Airplane start
+         boolean reallyEnableTimings = getBoolean("timings.really-enabled", false);
+         if (timings && !reallyEnableTimings) {
+@@ -214,11 +214,11 @@ public class PaperConfig {
+         timings = reallyEnableTimings;
+         // Airplane end
+         boolean verboseTimings = getBoolean("timings.verbose", true);
+-        TimingsManager.url = getString("timings.url", "https://timings.aikar.co/");
++        TimingsManager.url = getString("timings.url", "https://timings.pl3x.net/");
+         if (!TimingsManager.url.endsWith("/")) {
+             TimingsManager.url += "/";
+         }
+-        TimingsManager.privacy = getBoolean("timings.server-name-privacy", false);
++        TimingsManager.privacy = getBoolean("timings.server-name-privacy", true);
+         TimingsManager.hiddenConfigs = getList("timings.hidden-config-entries", Lists.newArrayList("database", "settings.bungeecord-addresses", "settings.velocity-support.secret", "web-services.token")); // Airplane
+         if (!TimingsManager.hiddenConfigs.contains("settings.velocity-support.secret")) {
+             TimingsManager.hiddenConfigs.add("settings.velocity-support.secret");
+@@ -256,9 +256,9 @@ public class PaperConfig {
+         loadPermsBeforePlugins = getBoolean("settings.load-permissions-yml-before-plugins", true);
+     }
+ 
+-    public static int regionFileCacheSize = 256;
++    public static int regionFileCacheSize = 512;
+     private static void regionFileCacheSize() {
+-        regionFileCacheSize = Math.max(getInt("settings.region-file-cache-size", 256), 4);
++        regionFileCacheSize = Math.max(getInt("settings.region-file-cache-size", regionFileCacheSize), 4);
+     }
+ 
+     public static boolean enablePlayerCollisions = true;
+@@ -334,9 +334,9 @@ public class PaperConfig {
+         }
+     }
+ 
+-    public static boolean useAlternativeLuckFormula = false;
++    public static boolean useAlternativeLuckFormula = true;
+     private static void useAlternativeLuckFormula() {
+-        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
++        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", useAlternativeLuckFormula);
+         if (useAlternativeLuckFormula) {
+             Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
+         }
+@@ -385,7 +385,7 @@ public class PaperConfig {
+         }
+     }
+ 
+-    public static int maxBookPageSize = 2560;
++    public static int maxBookPageSize = 400;
+     public static double maxBookTotalSizeMultiplier = 0.98D;
+     private static void maxBookSize() {
+         maxBookPageSize = Math.min(8192, getInt("settings.book-size.page-max", maxBookPageSize));
+@@ -469,7 +469,7 @@ public class PaperConfig {
+         allowBlockPermanentBreakingExploits = getBoolean("settings.unsupported-settings.allow-permanent-block-break-exploits", allowBlockPermanentBreakingExploits);
+     }
+ 
+-    public static boolean consoleHasAllPermissions = false;
++    public static boolean consoleHasAllPermissions = true;
+     private static void consoleHasAllPermissions() {
+         consoleHasAllPermissions = getBoolean("settings.console-has-all-permissions", consoleHasAllPermissions);
+     }
+diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
+index 7db27ff19a66454a941d24d3c6fb47830e927509..13079953c62948c9f036d01f0cd216e4f9809bea 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
+@@ -59,9 +59,9 @@ public class PaperWorldConfig {
+         piglinsGuardChests = getBoolean("piglins-guard-chests", piglinsGuardChests);
+     }
+ 
+-    public boolean useEigencraftRedstone = false;
++    public boolean useEigencraftRedstone = true;
+     private void useEigencraftRedstone() {
+-        useEigencraftRedstone = this.getBoolean("use-faster-eigencraft-redstone", false);
++        useEigencraftRedstone = this.getBoolean("use-faster-eigencraft-redstone", useEigencraftRedstone);
+         if (useEigencraftRedstone) {
+             log("Using Eigencraft redstone algorithm by theosib.");
+         } else {
+@@ -102,7 +102,7 @@ public class PaperWorldConfig {
+         wanderingTraderSpawnChanceMax = getInt("wandering-trader.spawn-chance-max", wanderingTraderSpawnChanceMax);
+     }
+ 
+-    public boolean fixClimbingBypassingCrammingRule = false;
++    public boolean fixClimbingBypassingCrammingRule = true;
+     private void fixClimbingBypassingCrammingRule() {
+         fixClimbingBypassingCrammingRule = getBoolean("fix-climbing-bypassing-cramming-rule", fixClimbingBypassingCrammingRule);
+     }
+@@ -112,7 +112,7 @@ public class PaperWorldConfig {
+         fixCuringZombieVillagerDiscountExploit = getBoolean("game-mechanics.fix-curing-zombie-villager-discount-exploit", fixCuringZombieVillagerDiscountExploit);
+     }
+ 
+-    public boolean disableMobSpawnerSpawnEggTransformation = false;
++    public boolean disableMobSpawnerSpawnEggTransformation = true;
+     private void disableMobSpawnerSpawnEggTransformation() {
+         disableMobSpawnerSpawnEggTransformation = getBoolean("game-mechanics.disable-mob-spawner-spawn-egg-transformation", disableMobSpawnerSpawnEggTransformation);
+     }
+@@ -138,12 +138,24 @@ public class PaperWorldConfig {
+ 
+     public Map<EntityType<?>, Integer> entityPerChunkSaveLimits = new HashMap<>();
+     private void entityPerChunkSaveLimits() {
+-        getInt("entity-per-chunk-save-limit.experience_orb", -1);
+-        getInt("entity-per-chunk-save-limit.snowball", -1);
+-        getInt("entity-per-chunk-save-limit.ender_pearl", -1);
+-        getInt("entity-per-chunk-save-limit.arrow", -1);
+-        getInt("entity-per-chunk-save-limit.fireball", -1);
+-        getInt("entity-per-chunk-save-limit.small_fireball", -1);
++        getInt("entity-per-chunk-save-limit.experience_orb", 16);
++		getInt("entity-per-chunk-save-limit.arrow", 16);
++		getInt("entity-per-chunk-save-limit.dragon_fireball", 3);
++		getInt("entity-per-chunk-save-limit.egg", 8);
++		getInt("entity-per-chunk-save-limit.ender_pearl", 8);
++		getInt("entity-per-chunk-save-limit.eye_of_ender", 8);
++		getInt("entity-per-chunk-save-limit.firework_rocket", 8);
++		getInt("entity-per-chunk-save-limit.potion", 8);
++		getInt("entity-per-chunk-save-limit.llama_spit", 3);
++		getInt("entity-per-chunk-save-limit.shulker_bullet", 8);
++		getInt("entity-per-chunk-save-limit.spectral_arrow", 16);
++		getInt("entity-per-chunk-save-limit.experience_bottle", 3);
++		getInt("entity-per-chunk-save-limit.trident", 16);
++        getInt("entity-per-chunk-save-limit.snowball", 8);
++        getInt("entity-per-chunk-save-limit.fireball", 8);
++        getInt("entity-per-chunk-save-limit.small_fireball", 8);
++		getInt("entity-per-chunk-save-limit.wither_skull", 4);
++		getInt("entity-per-chunk-save-limit.area_effect_cloud", 8);
+ 
+         addEntityPerChunkSaveLimitsFromSection(config.getConfigurationSection("world-settings.default.entity-per-chunk-save-limit"), entityPerChunkSaveLimits);
+         addEntityPerChunkSaveLimitsFromSection(config.getConfigurationSection("world-settings." + worldName + ".entity-per-chunk-save-limit"), entityPerChunkSaveLimits);
+@@ -174,9 +186,9 @@ public class PaperWorldConfig {
+         log( "Keep Spawn Loaded Range: " + (keepLoadedRange/16));
+     }
+ 
+-    public int autoSavePeriod = -1;
++    public int autoSavePeriod = 6000;
+     private void autoSavePeriod() {
+-        autoSavePeriod = getInt("auto-save-interval", -1);
++        autoSavePeriod = getInt("auto-save-interval", autoSavePeriod);
+         if (autoSavePeriod > 0) {
+             log("Auto Save Interval: " +autoSavePeriod + " (" + (autoSavePeriod / 20) + "s)");
+         } else if (autoSavePeriod < 0) {
+@@ -263,7 +275,7 @@ public class PaperWorldConfig {
+ 
+     public boolean nerfedMobsShouldJump;
+     private void nerfedMobsShouldJump() {
+-        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", false);
++        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", true);
+     }
+ 
+     public int softDespawnDistance;
+@@ -272,7 +284,7 @@ public class PaperWorldConfig {
+     public int softDespawnDistanceSq;
+     public int hardDespawnDistanceSq;
+     private void despawnDistances() {
+-        softDespawnDistance = getInt("despawn-ranges.soft", 32); // 32^2 = 1024, Minecraft Default
++        softDespawnDistance = getInt("despawn-ranges.soft", 28); // 32^2 = 1024, Minecraft Default
+         hardDespawnDistance = getInt("despawn-ranges.hard", 128); // 128^2 = 16384, Minecraft Default
+ 
+         if (softDespawnDistance > hardDespawnDistance) {
+@@ -331,7 +343,7 @@ public class PaperWorldConfig {
+ 
+     public boolean optimizeExplosions;
+     private void optimizeExplosions() {
+-        optimizeExplosions = getBoolean("optimize-explosions", false);
++        optimizeExplosions = getBoolean("optimize-explosions", true);
+         log("Optimize explosions: " + optimizeExplosions);
+     }
+ 
+@@ -352,17 +364,17 @@ public class PaperWorldConfig {
+ 
+     public int mobSpawnerTickRate;
+     private void mobSpawnerTickRate() {
+-        mobSpawnerTickRate = getInt("mob-spawner-tick-rate", 1);
++        mobSpawnerTickRate = getInt("mob-spawner-tick-rate", 2);
+     }
+ 
+     public int containerUpdateTickRate;
+     private void containerUpdateTickRate() {
+-        containerUpdateTickRate = getInt("container-update-tick-rate", 1);
++        containerUpdateTickRate = getInt("container-update-tick-rate", 3);
+     }
+ 
+     public boolean disableChestCatDetection;
+     private void disableChestCatDetection() {
+-        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", false);
++        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", true);
+     }
+ 
+     public boolean disablePlayerCrits;
+@@ -394,14 +406,14 @@ public class PaperWorldConfig {
+         nonPlayerEntitiesOnScoreboards = getBoolean("allow-non-player-entities-on-scoreboards", false);
+     }
+ 
+-    public int nonPlayerArrowDespawnRate = -1;
+-    public int creativeArrowDespawnRate = -1;
++    public int nonPlayerArrowDespawnRate = 20;
++    public int creativeArrowDespawnRate = 20;
+     private void nonPlayerArrowDespawnRate() {
+-        nonPlayerArrowDespawnRate = getInt("non-player-arrow-despawn-rate", -1);
++        nonPlayerArrowDespawnRate = getInt("non-player-arrow-despawn-rate", nonPlayerArrowDespawnRate);
+         if (nonPlayerArrowDespawnRate == -1) {
+             nonPlayerArrowDespawnRate = spigotConfig.arrowDespawnRate;
+         }
+-        creativeArrowDespawnRate = getInt("creative-arrow-despawn-rate", -1);
++        creativeArrowDespawnRate = getInt("creative-arrow-despawn-rate", creativeArrowDespawnRate);
+         if (creativeArrowDespawnRate == -1) {
+             creativeArrowDespawnRate = spigotConfig.arrowDespawnRate;
+         }
+@@ -427,7 +439,7 @@ public class PaperWorldConfig {
+         fixedInhabitedTime = getInt("fixed-chunk-inhabited-time", -1);
+     }
+ 
+-    public int grassUpdateRate = 1;
++    public int grassUpdateRate = 4;
+     private void grassUpdateRate() {
+         grassUpdateRate = Math.max(0, getInt("grass-spread-tick-rate", grassUpdateRate));
+         log("Grass Spread Tick Rate: " + grassUpdateRate);
+@@ -504,7 +516,7 @@ public class PaperWorldConfig {
+     }
+ 
+     public boolean seedBasedFeatureSearch = true;
+-    public boolean seedBasedFeatureSearchLoadsChunks = true;
++    public boolean seedBasedFeatureSearchLoadsChunks = false;
+     private void seedBasedFeatureSearch() {
+         seedBasedFeatureSearch = getBoolean("seed-based-feature-search", seedBasedFeatureSearch);
+         seedBasedFeatureSearchLoadsChunks = getBoolean("seed-based-feature-search-loads-chunks", seedBasedFeatureSearchLoadsChunks);
+@@ -513,7 +525,7 @@ public class PaperWorldConfig {
+ 
+     public int maxCollisionsPerEntity;
+     private void maxEntityCollision() {
+-        maxCollisionsPerEntity = getInt( "max-entity-collisions", this.spigotConfig.getInt("max-entity-collisions", 8) );
++        maxCollisionsPerEntity = getInt( "max-entity-collisions", this.spigotConfig.getInt("max-entity-collisions", 2) );
+         log( "Max Entity Collisions: " + maxCollisionsPerEntity );
+     }
+ 
+@@ -569,17 +581,17 @@ public class PaperWorldConfig {
+         scanForLegacyEnderDragon = getBoolean("game-mechanics.scan-for-legacy-ender-dragon", true);
+     }
+ 
+-    public boolean ironGolemsCanSpawnInAir = false;
++    public boolean ironGolemsCanSpawnInAir = true;
+     private void ironGolemsCanSpawnInAir() {
+         ironGolemsCanSpawnInAir = getBoolean("iron-golems-can-spawn-in-air", ironGolemsCanSpawnInAir);
+     }
+ 
+-    public boolean armorStandEntityLookups = true;
++    public boolean armorStandEntityLookups = false;
+     private void armorStandEntityLookups() {
+-        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", true);
++        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", false);
+     }
+ 
+-    public boolean armorStandTick = true;
++    public boolean armorStandTick = false;
+     private void armorStandTick() {
+         this.armorStandTick = this.getBoolean("armor-stands-tick", this.armorStandTick);
+         log("ArmorStand ticking is " + (this.armorStandTick ? "enabled" : "disabled") + " by default");
+@@ -591,9 +603,9 @@ public class PaperWorldConfig {
+         log("Water over lava flow speed: " + waterOverLavaFlowSpeed);
+     }
+ 
+-    public boolean preventMovingIntoUnloadedChunks = false;
++    public boolean preventMovingIntoUnloadedChunks = true;
+     private void preventMovingIntoUnloadedChunks() {
+-        preventMovingIntoUnloadedChunks = getBoolean("prevent-moving-into-unloaded-chunks", false);
++        preventMovingIntoUnloadedChunks = getBoolean("prevent-moving-into-unloaded-chunks", preventMovingIntoUnloadedChunks);
+     }
+ 
+     public enum DuplicateUUIDMode {
+@@ -742,7 +754,7 @@ public class PaperWorldConfig {
+ 
+     public long delayChunkUnloadsBy;
+     private void delayChunkUnloadsBy() {
+-        delayChunkUnloadsBy = PaperConfig.getSeconds(getString("delay-chunk-unloads-by", "10s"));
++        delayChunkUnloadsBy = PaperConfig.getSeconds(getString("delay-chunk-unloads-by", "5s"));
+         if (delayChunkUnloadsBy > 0) {
+             log("Delaying chunk unloads by " + delayChunkUnloadsBy + " seconds");
+             delayChunkUnloadsBy *= 20;
+@@ -845,14 +857,14 @@ public class PaperWorldConfig {
+         enderDragonsDeathAlwaysPlacesDragonEgg = getBoolean("ender-dragons-death-always-places-dragon-egg", enderDragonsDeathAlwaysPlacesDragonEgg);
+     }
+ 
+-    public boolean updatePathfindingOnBlockUpdate = true;
++    public boolean updatePathfindingOnBlockUpdate = false;
+     private void setUpdatePathfindingOnBlockUpdate() {
+         updatePathfindingOnBlockUpdate = getBoolean("update-pathfinding-on-block-update", this.updatePathfindingOnBlockUpdate);
+     }
+ 
+-    public boolean fixWitherTargetingBug = false;
++    public boolean fixWitherTargetingBug = true;
+     private void witherSettings() {
+-        fixWitherTargetingBug = getBoolean("fix-wither-targeting-bug", false);
++        fixWitherTargetingBug = getBoolean("fix-wither-targeting-bug", fixWitherTargetingBug);
+         log("Withers properly target players: " + fixWitherTargetingBug);
+     }
+ 
+@@ -894,8 +906,13 @@ public class PaperWorldConfig {
+     private Table<String, String, Integer> sensorTickRates;
+     private Table<String, String, Integer> behaviorTickRates;
+     private void tickRates() {
+-        config.addDefault("world-settings.default.tick-rates.sensor.villager.secondarypoisensor", 40);
+-        config.addDefault("world-settings.default.tick-rates.behavior.villager.validatenearbypoi", -1); // Example
++        config.addDefault("world-settings.default.tick-rates.sensor.villager.secondarypoisensor", 80);
++		config.addDefault("world-settings.default.tick-rates.sensor.villager.nearestbedsensor", 80);
++		config.addDefault("world-settings.default.tick-rates.sensor.villager.villagerbabiessensor", 40);
++		config.addDefault("world-settings.default.tick-rates.sensor.villager.playersensor", 40);
++		config.addDefault("world-settings.default.tick-rates.sensor.villager.nearestlivingentitysensor", 40);
++        config.addDefault("world-settings.default.tick-rates.behavior.villager.validatenearbypoi", 60);
++		config.addDefault("world-settings.default.tick-rates.behavior.villager.acquirepoi", 120);
+         log("Tick rates:");
+         sensorTickRates = loadTickRates("sensor");
+         behaviorTickRates = loadTickRates("behavior");
+@@ -934,7 +951,7 @@ public class PaperWorldConfig {
+     public it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<net.minecraft.resources.ResourceLocation> featureSeeds = new it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<>();
+     private void featureSeeds() {
+         featureSeeds.defaultReturnValue(-1);
+-        final boolean randomise = getBoolean("feature-seeds.generate-random-seeds-for-all", false);
++        final boolean randomise = getBoolean("feature-seeds.generate-random-seeds-for-all", true);
+         final ConfigurationSection defaultSection = config.getConfigurationSection("world-settings.default.feature-seeds");
+         final ConfigurationSection section = config.getConfigurationSection("world-settings." + worldName + ".feature-seeds");
+         final net.minecraft.core.Registry<net.minecraft.world.level.levelgen.feature.ConfiguredFeature<?, ?>> registry
+diff --git a/src/main/java/gg/airplane/AirplaneConfig.java b/src/main/java/gg/airplane/AirplaneConfig.java
+index 2b654e6adfe331a5fa68c1aea7d6d6cea1f3567d..49a881603d8589e0682264146c233161ea06532c 100644
+--- a/src/main/java/gg/airplane/AirplaneConfig.java
++++ b/src/main/java/gg/airplane/AirplaneConfig.java
+@@ -179,7 +179,7 @@ public class AirplaneConfig {
+ 
+     private static void projectileLoading() {
+         maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
+-        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
++        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
+ 
+         setComment("projectile", "Optimizes projectile settings");
+     }
+@@ -197,10 +197,10 @@ public class AirplaneConfig {
+                 "This value determines how far away an entity has to be",
+                 "from the player to start being effected by DEAR.");
+         startDistanceSquared = startDistance * startDistance;
+-        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 20,
++        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 30,
+                 "This value defines how often in ticks, the furthest entity",
+                 "will get their pathfinders and behaviors ticked. 20 = 1s");
+-        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 8,
++        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 7,
+                 "This value defines how much distance modifies an entity's",
+                 "tick frequency. freq = (distanceToPlayer^2) / (2^value)",
+                 "If you want further away entities to tick less often, use 7.",
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 1c335e6ae94b010bf293400b74b23a6f00a996a9..8056acfe37734e273dcafca663a48ec87b9b536e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -266,11 +266,11 @@ public final class CraftServer implements Server {
+     private final EntityMetadataStore entityMetadata = new EntityMetadataStore();
+     private final PlayerMetadataStore playerMetadata = new PlayerMetadataStore();
+     private final WorldMetadataStore worldMetadata = new WorldMetadataStore();
+-    private int monsterSpawn = -1;
+-    private int animalSpawn = -1;
+-    private int waterAnimalSpawn = -1;
+-    private int waterAmbientSpawn = -1;
+-    private int ambientSpawn = -1;
++    private int monsterSpawn = 10;
++    private int animalSpawn = 400;
++    private int waterAnimalSpawn = 400;
++    private int waterAmbientSpawn = 400;
++    private int ambientSpawn = 400;
+     private File container;
+     private WarningState warningState = WarningState.DEFAULT;
+     public String minimumAPI;
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 6f67770af753c26a7584f3d6cb85a2a3a00abca2..31523e311fe1fa771792e79a64d4e075a93868ca 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -335,7 +335,7 @@ public class SpigotConfig
+     public static boolean saveUserCacheOnStopOnly;
+     private static void saveUserCacheOnStopOnly()
+     {
+-        SpigotConfig.saveUserCacheOnStopOnly = SpigotConfig.getBoolean( "settings.save-user-cache-on-stop-only", false );
++        SpigotConfig.saveUserCacheOnStopOnly = SpigotConfig.getBoolean( "settings.save-user-cache-on-stop-only", true );
+     }
+ 
+     public static double movedWronglyThreshold;
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index c931a46650ba4857805bbfa126c75a9b86b1d707..57541cc5ae56fc6c7f4a1ca4dd986569f9e0a590 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -132,14 +132,14 @@ public class SpigotWorldConfig
+     public double itemMerge;
+     private void itemMerge()
+     {
+-        this.itemMerge = this.getDouble("merge-radius.item", 2.5 );
++        this.itemMerge = this.getDouble("merge-radius.item", 4.0 );
+         this.log( "Item Merge Radius: " + this.itemMerge );
+     }
+ 
+     public double expMerge;
+     private void expMerge()
+     {
+-        this.expMerge = this.getDouble("merge-radius.exp", 3.0 );
++        this.expMerge = this.getDouble("merge-radius.exp", 6.0 );
+         this.log( "Experience Merge Radius: " + this.expMerge );
+     }
+ 
+@@ -165,7 +165,7 @@ public class SpigotWorldConfig
+     public byte mobSpawnRange;
+     private void mobSpawnRange()
+     {
+-        this.mobSpawnRange = (byte) getInt( "mob-spawn-range", 8 ); // Paper - Vanilla
++        this.mobSpawnRange = (byte) getInt( "mob-spawn-range", 2 ); // Paper - Vanilla
+         this.log( "Mob Spawn Range: " + this.mobSpawnRange );
+     }
+ 
+@@ -176,31 +176,31 @@ public class SpigotWorldConfig
+         this.log( "Item Despawn Rate: " + this.itemDespawnRate );
+     }
+ 
+-    public int animalActivationRange = 32;
+-    public int monsterActivationRange = 32;
++    public int animalActivationRange = 16;
++    public int monsterActivationRange = 24;
+     public int raiderActivationRange = 48;
+-    public int miscActivationRange = 16;
++    public int miscActivationRange = 8;
+     // Paper start
+     public int flyingMonsterActivationRange = 32;
+-    public int waterActivationRange = 16;
+-    public int villagerActivationRange = 32;
+-    public int wakeUpInactiveAnimals = 4;
++    public int waterActivationRange = 8;
++    public int villagerActivationRange = 16;
++    public int wakeUpInactiveAnimals = 2;
+     public int wakeUpInactiveAnimalsEvery = 60*20;
+-    public int wakeUpInactiveAnimalsFor = 5*20;
+-    public int wakeUpInactiveMonsters = 8;
++    public int wakeUpInactiveAnimalsFor = 2*20;
++    public int wakeUpInactiveMonsters = 4;
+     public int wakeUpInactiveMonstersEvery = 20*20;
+-    public int wakeUpInactiveMonstersFor = 5*20;
+-    public int wakeUpInactiveVillagers = 4;
++    public int wakeUpInactiveMonstersFor = 3*20;
++    public int wakeUpInactiveVillagers = 1;
+     public int wakeUpInactiveVillagersEvery = 30*20;
+-    public int wakeUpInactiveVillagersFor = 5*20;
+-    public int wakeUpInactiveFlying = 8;
++    public int wakeUpInactiveVillagersFor = 1*20;
++    public int wakeUpInactiveFlying = 1;
+     public int wakeUpInactiveFlyingEvery = 10*20;
+-    public int wakeUpInactiveFlyingFor = 5*20;
++    public int wakeUpInactiveFlyingFor = 3*20;
+     public int villagersWorkImmunityAfter = 5*20;
+     public int villagersWorkImmunityFor = 20;
+     public boolean villagersActiveForPanic = true;
+     // Paper end
+-    public boolean tickInactiveVillagers = true;
++    public boolean tickInactiveVillagers = false;
+     private void activationRange()
+     {
+         boolean hasAnimalsConfig = config.getInt("entity-activation-range.animals", this.animalActivationRange) != this.animalActivationRange; // Paper
+@@ -272,7 +272,7 @@ public class SpigotWorldConfig
+     public int tridentDespawnRate;
+     private void arrowDespawnRate()
+     {
+-        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 1200 );
++        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 300 );
+         this.tridentDespawnRate = this.getInt( "trident-despawn-rate", this.arrowDespawnRate );
+         this.log( "Arrow Despawn Rate: " + this.arrowDespawnRate + " Trident Respawn Rate:" + this.tridentDespawnRate );
+     }
+@@ -401,8 +401,8 @@ public class SpigotWorldConfig
+     public int entityMaxTickTime;
+     private void maxTickTimes()
+     {
+-        this.tileMaxTickTime = this.getInt("max-tick-time.tile", 50);
+-        this.entityMaxTickTime = this.getInt("max-tick-time.entity", 50);
++        this.tileMaxTickTime = this.getInt("max-tick-time.tile", 1000);
++        this.entityMaxTickTime = this.getInt("max-tick-time.entity", 1000);
+         this.log("Tile Max Tick Time: " + this.tileMaxTickTime + "ms Entity max Tick Time: " + this.entityMaxTickTime + "ms");
+     }
+ 
