@@ -32,9 +32,6 @@ jobs:
       - name: Patch
         run: |
           ./gradlew clean applyPatches --stacktrace --no-daemon
-      - name: Get MC Version
-        run: echo "::set-output name=mcver::$(grep mcVersion gradle.properties | awk '{print $3;}')"
-        id: mcver
       - name: Build
         run: |
           ./gradlew paperclipJar --stacktrace --no-daemon
@@ -42,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Mirai Paperclip
-          path: build/libs/Mirai-${{ steps.mcver.outputs.mcver }}-R0.1-SNAPSHOT.jar
+          path: build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar
       - name: Prepare Github Page Files
         run: |
           mkdir -p public
