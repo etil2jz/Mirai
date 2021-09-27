@@ -51,9 +51,9 @@ index 0888a159b08b49ea333d88e1c110c0f9ea707f27..8a06c7ef1c239b4999aa58bbe95da68a
          useAlternateKeepAlive = getBoolean("settings.use-alternate-keepalive", useAlternateKeepAlive);
      }
 +	
-+	public static boolean loggerSuppressInitLegacyMaterialError = false;
-+	public static boolean loggerSuppressIgnoredAdvancementWarnings = false;
-+	public static boolean loggerSuppressUnrecognizedRecipeErrors = false;
++	public static boolean loggerSuppressInitLegacyMaterialError = true;
++	public static boolean loggerSuppressIgnoredAdvancementWarnings = true;
++	public static boolean loggerSuppressUnrecognizedRecipeErrors = true;
 +	
 +	private static void loggerSettings() {
 +        loggerSuppressInitLegacyMaterialError = getBoolean("settings.logger.suppress-init-legacy-material-errors", loggerSuppressInitLegacyMaterialError);
