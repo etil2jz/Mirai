@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 21 Sep 2021 17:19:41 +0200
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Thu, 8 Jul 2021 17:00:21 -0400
 Subject: [PATCH] (Jettpack) Better handling of async tasks
 
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
 index 6fec6a47538da4c0c5a4505e9bedf492bb3376dd..fcef1eec26a4b7d76b2e7a8676a7bf84c1cc84a3 100644

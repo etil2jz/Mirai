@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 12:26:43 +0200
+From: Aikar <aikar@aikar.co>
+Date: Wed, 20 Jun 2018 22:35:39 -0400
 Subject: [PATCH] (EMC) Tweak explosions
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
 index 132140e00865fcf84ebe03ffcbc2f30ac11a0b35..bff8b8172aaa837378c43513761e0a7cd0b9567b 100644

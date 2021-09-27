@@ -1,9 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 12:21:15 +0200
+From: Aikar <aikar@aikar.co>
+Date: Mon, 21 Dec 2020 17:24:43 -0500
 Subject: [PATCH] (EMC) Always convert Lore/Name of an item to ensure
  consistency
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
 index 3e5e358e24bd84a05785a9391526f316475e95ff..eeeee4d90c5e871eab2b2af5eea0206b61749beb 100644

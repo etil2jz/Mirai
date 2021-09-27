@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 12:08:04 +0200
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Wed, 4 Nov 2020 13:12:50 -0600
 Subject: [PATCH] (Purpur) Arrows should not reset despawn counter
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 index 6636845ea044c3810e1880aad8b679134cd33668..b9aaa712372780bdcf1905da9e497c87913f3911 100644

@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 18 Sep 2021 00:20:51 +0200
+From: Ivan Pekov <ivan@mrivanplays.com>
+Date: Mon, 4 Jan 2021 20:12:36 +0200
 Subject: [PATCH] (Yatopia) Optimised halloween checker
 
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 9c01b0b995b5be4812c77fc86ab6094e992f470a..03315bf6e95145bd91ea0ebfc1c416b76434f5a5 100644

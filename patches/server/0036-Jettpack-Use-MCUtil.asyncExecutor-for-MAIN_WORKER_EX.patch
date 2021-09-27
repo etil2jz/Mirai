@@ -1,9 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 21 Sep 2021 17:25:02 +0200
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Thu, 8 Jul 2021 17:03:31 -0400
 Subject: [PATCH] (Jettpack) Use MCUtil.asyncExecutor for MAIN_WORKER_EXECUTOR
  in SystemUtils
 
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
 index af598369e5aeae700d7d9da049f173fc51b7a370..4e8b794eb268abf2bbca83dfef1a3c33e6d0c327 100644

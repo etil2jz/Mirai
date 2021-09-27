@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 12:28:58 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 28 Mar 2020 01:51:32 -0500
 Subject: [PATCH] (Purpur) Fix vanilla command permission handler
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/com/mojang/brigadier/tree/CommandNode.java b/src/main/java/com/mojang/brigadier/tree/CommandNode.java
 index f64aa22ed6fcb4af67317b99f459ee5296392548..63af2216c383aef0809dd381b69493ec99be5d32 100644

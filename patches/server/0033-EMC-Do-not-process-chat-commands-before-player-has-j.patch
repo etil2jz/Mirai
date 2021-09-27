@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Mon, 20 Sep 2021 21:13:15 +0200
+From: chickeneer <emcchickeneer@gmail.com>
+Date: Tue, 3 Aug 2021 10:39:44 -0500
 Subject: [PATCH] (EMC) Do not process chat/commands before player has joined
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 index 5d7c47b0a302f7db95a0b2bb811c5656c6b02beb..3312de09e16d4656a2e1c39da6f9f97679541f1f 100644

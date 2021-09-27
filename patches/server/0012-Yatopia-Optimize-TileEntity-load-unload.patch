@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 18 Sep 2021 17:02:45 +0200
+From: tr7zw <tr7zw@live.de>
+Date: Wed, 5 Aug 2020 08:08:44 -0500
 Subject: [PATCH] (Yatopia) Optimize TileEntity load/unload
 
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
 index 6f4e6105aa1d6546daa2424f57972fd29db25fa3..96085df2d6a10a4592455434c52e7919803bd8f4 100644

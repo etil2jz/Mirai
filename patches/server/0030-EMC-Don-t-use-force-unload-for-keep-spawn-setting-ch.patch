@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Mon, 20 Sep 2021 20:42:00 +0200
+From: Aikar <aikar@aikar.co>
+Date: Thu, 9 Jun 2016 00:57:38 -0400
 Subject: [PATCH] (EMC) Don't use force unload for keep spawn setting change
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 index 883b2070fcf99cf10d44aef6dece0f7f84bfeeed..63f6dd93aa00b8c30478f50bd388fae805b9e3b4 100644

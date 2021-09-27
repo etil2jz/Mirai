@@ -1,8 +1,10 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 13:08:54 +0200
+From feb320471e9ab2f19ee69e041ad1415231925b59 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sun, 24 Nov 2019 23:00:58 +0100
 Subject: [PATCH] (Origami) Optimize inventory API item handling
 
+Original code by Minebench, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/Minebench/Origami
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 index 396a4ae3d5a829eda78ef98561333aea300aa722..97b1c48979075ee8a04262c654c6b2130511db79 100644

@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
+From: Simon Gardling <titaniumtown@gmail.com>
 Date: Fri, 10 Sep 2021 16:35:53 -0400
 Subject: [PATCH] (Lithium) ai.task.goat_jump
 
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
 index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..880d9897c4c0c62e4f22bd0eee7f008308c185b4 100644

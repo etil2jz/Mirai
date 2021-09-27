@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 12:05:50 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 21 Mar 2020 18:33:05 -0500
 Subject: [PATCH] (Purpur) End gateway should check if entity can use portal
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 index 782becb96b6300f14deee360b653dc99c57fdc12..eee9b13817c3c0c9fe418b337e82a1ad0d69f919 100644

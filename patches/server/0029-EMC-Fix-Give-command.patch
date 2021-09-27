@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Mon, 20 Sep 2021 20:33:51 +0200
+From: Aikar <aikar@aikar.co>
+Date: Thu, 14 Jan 2016 00:49:14 -0500
 Subject: [PATCH] (EMC) Fix Give command
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/server/commands/GiveCommand.java b/src/main/java/net/minecraft/server/commands/GiveCommand.java
 index a0dc380e90415de9068ea408d62a1605c82631df..b4d42c9e270fa1fedf76eeda4d3c4a5896fd642e 100644

@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 14:30:00 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Fri, 11 Oct 2019 00:17:39 -0500
 Subject: [PATCH] (Purpur) Alternative Keepalive Handling
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 index 3312de09e16d4656a2e1c39da6f9f97679541f1f..13d270396132edbc1101837a5b4e6631082dec00 100644

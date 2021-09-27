@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 19 Sep 2021 11:54:46 +0200
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 12:26:15 +0000
 Subject: [PATCH] (Patina) Completely remove bootstrapExecutor
 
+Original code by PatinaMC, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
 index 5c7b9ad379f3c272e15648dd16f4df9245d927da..af598369e5aeae700d7d9da049f173fc51b7a370 100644

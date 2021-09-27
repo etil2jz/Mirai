@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 18 Sep 2021 14:25:19 +0200
+From: ishland <ishlandmc@yeah.net>
+Date: Wed, 27 Jan 2021 20:16:47 +0800
 Subject: [PATCH] (Yatopia) Preload ProtocolLib EnumWrappers
 
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 03315bf6e95145bd91ea0ebfc1c416b76434f5a5..cc4b83b8d8f532fd1015a9259b67de6e34f242d7 100644

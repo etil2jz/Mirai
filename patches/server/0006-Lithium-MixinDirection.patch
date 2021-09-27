@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 18 Sep 2021 00:02:37 +0200
+From: JellySquid <jellysquid+atwork@protonmail.com>
+Date: Mon, 11 May 2020 21:00:44 +0200
 Subject: [PATCH] (Lithium) MixinDirection
 
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
 index 593d6251c75ec337175d08b85000239ba7da1af2..c2c280a45baf7e64bc822cc8ed21f9f9bea7c867 100644

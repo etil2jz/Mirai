@@ -1,8 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 19 Sep 2021 15:06:08 +0200
+From: Ivan Pekov <ivan@mrivanplays.com>
+Date: Sun, 27 Sep 2020 18:30:10 +0300
 Subject: [PATCH] (Sugarcane) Add last tick time API
 
+Co-authored-by: tr7zw <tr7zw@live.de>
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 31de069f4a5cee86eb5fa3316a031b85c8f6eb1b..a1a1aa0f4f30391cf4afb57a743c16aa8f5a4e17 100644

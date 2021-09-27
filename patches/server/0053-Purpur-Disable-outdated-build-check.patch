@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 13:15:09 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 15 Dec 2019 12:53:59 -0600
 Subject: [PATCH] (Purpur) Disable outdated build check
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
 index 5d0801fc73f5888398efd65cb5e9eabbdf7748e5..ea01acdaa727cd40fd3fdf4004a422af1f7dec10 100644

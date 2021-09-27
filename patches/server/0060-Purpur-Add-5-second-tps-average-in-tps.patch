@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 17:47:36 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 28 Jul 2019 01:27:37 -0500
 Subject: [PATCH] (Purpur) Add 5 second tps average in /tps
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
 index fa56cd09102a89692b42f1d14257990508c5c720..f9251183df72ddc56662fd3f02acf21641a2200c 100644

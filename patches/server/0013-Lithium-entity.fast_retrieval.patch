@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 18 Sep 2021 19:01:26 +0200
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Fri, 18 Jun 2021 17:23:19 -0400
 Subject: [PATCH] (Lithium) entity.fast_retrieval
 
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 index 24552500307c42f9f3dc5c4d9ba73a84a787423a..fb572ccd5f2058e1e6ccb6e745e9ad71025c8998 100644

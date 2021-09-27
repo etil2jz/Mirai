@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Mon, 20 Sep 2021 20:54:13 +0200
+From: Aikar <aikar@aikar.co>
+Date: Mon, 16 Mar 2020 03:07:02 -0400
 Subject: [PATCH] (EMC) Don't load chunks for physics
 
+Original code by Starlis LLC, licensed under MIT
+You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
 index 66e48492c2cbb4833ffda027332a81b80538d214..35cf04c0710f831eb6663a66f7de1d05d615adc1 100644

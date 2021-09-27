@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 11:55:34 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Fri, 3 May 2019 23:53:16 -0500
 Subject: [PATCH] (Purpur) Fix cow rotation when shearing mooshroom
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java b/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java
 index b2765fba362e5f6d641abcc9ee7ccc177db08eb5..a9f5d9f3ce379bb8519a6114c4962859a159c46c 100644

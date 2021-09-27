@@ -1,8 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 17 Sep 2021 23:38:06 +0200
+From: YatopiaMC <yatopiamc@gmail.com>
+Date: Fri, 23 Oct 2020 09:20:01 -0700
 Subject: [PATCH] (Yatopia) Utilities
 
+Co-authored-by: Mykyta Komarnytskyy <nkomarn@hotmail.com>
+Co-authored-by: Ivan Pekov <ivan@mrivanplays.com>
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
 index 79983b971264e8de36bfc547439f8889e2e2a5fe..b5871f179baa86668390ff0c4e4b6ef2a55c72ea 100644

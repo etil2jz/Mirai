@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 26 Sep 2021 17:41:33 +0200
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 19 Oct 2019 00:52:12 -0500
 Subject: [PATCH] (Purpur) Logger settings (suppressing pointless logs)
 
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 index 7d6dc0a8ee35274052b122bbc446bc54750de0a6..506b139a1d26dc6ec82896ce83c1b0e16f62a28e 100644

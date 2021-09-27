@@ -1,8 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 19 Sep 2021 15:37:53 +0200
+From: Ivan Pekov <ivan@mrivanplays.com>
+Date: Sun, 27 Sep 2020 18:30:10 +0300
 Subject: [PATCH] (Sugarcane) Add last tick time API
 
+Co-authored-by: tr7zw <tr7zw@live.de>
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 index d36e4bc3c3713407704b865574cba28662f17315..2b5132582c4e3b08d3fa7a5f0e4a92e09530cdd8 100644

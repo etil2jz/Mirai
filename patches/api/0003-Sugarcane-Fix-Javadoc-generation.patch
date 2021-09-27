@@ -1,8 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 17 Sep 2021 22:27:24 +0200
+From: Toffikk <slodkitofik@gmail.com>
+Date: Thu, 17 Jun 2021 14:44:11 +0200
 Subject: [PATCH] (Sugarcane) Fix Javadoc generation
 
+Original code by SugarcaneMC, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/SugarcaneMC/Sugarcane
 
 diff --git a/build.gradle.kts b/build.gradle.kts
 index 02f80c9a34a23c2285a1e05b41f53b4bafc28c5a..e9b99787cf31bc6e40e5f55dc79ed158b07f0fb6 100644

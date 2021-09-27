@@ -1,8 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 19 Sep 2021 14:56:18 +0200
+From: Hugo Planque <hookwood01@gmail.com>
+Date: Thu, 21 Jan 2021 17:56:03 +0100
 Subject: [PATCH] (Sugarcane) New NBT cache
 
+Co-authored-by: ishland <ishlandmc@yeah.net>
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index b660c853128e79334f3da8f7334125d240cf0fc6..31de069f4a5cee86eb5fa3316a031b85c8f6eb1b 100644
