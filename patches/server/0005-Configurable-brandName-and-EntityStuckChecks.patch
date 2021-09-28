@@ -69,7 +69,7 @@ index 03c7a724d42f64946b8cd01ea7065fb02dd3fb7a..126d74b4b5964b0a3e3b09abd456d274
 +	public static boolean disableEntityStuckChecks = false;
 +	
 +	private static void disableEntityStuckChecks() {
-+		disableEntityStuckChecks = getBoolean("settings.disableEntityStuckChecks", false);
++		disableEntityStuckChecks = getBoolean("settings.disable-entity-stuck-checks", false);
 +	}
 +	
 +	public static String brandName = "§bM§3i§br§3a§bi§r";
