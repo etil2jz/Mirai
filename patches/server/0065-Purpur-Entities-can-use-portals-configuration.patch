@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Mon, 17 Aug 2020 19:32:05 -0500
+Subject: [PATCH] (Purpur) Entities can use portals configuration
+
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 49e8682640a44cf2fd880551fd78672937ae908b..6abee01345f739b064f280821394e18d96fa9c56 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2721,7 +2721,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         if (this.isOnPortalCooldown()) {
+ 			if (!(xyz.arthurb.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
+             this.setPortalCooldown();
+-        } else {
++        } else if (xyz.arthurb.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer) { // Purpur
+             if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
+                 this.portalEntrancePos = pos.immutable();
+ 				portalPos = BlockPos.ZERO; // Purpur
+@@ -3354,7 +3354,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     }
+ 
+     public boolean canChangeDimensions() {
+-        return isAlive() && valid; // Paper
++        return isAlive() && valid && (xyz.arthurb.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer); // Paper // Purpur
+     }
+ 
+     public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index fddb97775b57dbf67f7acfac0d3010ec7e25b5b0..1a2b4333ae71bc328b2509433023b459a74e6f37 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -243,5 +243,11 @@ public class MiraiConfig {
+ 	private static void squidOffsetWaterCheck() {
+ 		squidOffsetWaterCheck = getDouble("settings.mobs.squid.water-offset-check", squidOffsetWaterCheck);
+ 	}
+-
++	
++	public static boolean entitiesCanUsePortals = true;
++	
++	private static void entitiesCanUsePortals() {
++		entitiesCanUsePortals = getBoolean("settings.entities-can-use-portals", entitiesCanUsePortals);
++	}
++	
+ }
+\ No newline at end of file
