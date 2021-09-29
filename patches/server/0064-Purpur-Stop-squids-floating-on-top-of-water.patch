@@ -1,0 +1,79 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Thu, 13 Aug 2020 04:00:26 -0500
+Subject: [PATCH] (Purpur) Stop squids floating on top of water
+
+Original code by pl3xgaming, licensed under MIT
+You can find the original code on https://github.com/pl3xgaming/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 36e8f89609b9b4078ab7a134b780b87400633c03..49e8682640a44cf2fd880551fd78672937ae908b 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -3836,12 +3836,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         this.xRotO = this.getXRot();
+         this.yRotO = this.getYRot();
+     }
++	
++	// Purpur start
++    public AABB getAxisForFluidCheck() {
++        return this.getBoundingBox().deflate(0.001D);
++    }
++    // Purpur end
+ 
+     public boolean updateFluidHeightAndDoFluidPushing(Tag<Fluid> tag, double d0) {
+         if (false && this.touchingUnloadedChunk()) { // Airplane - cost of a lookup here is the same cost as below, so skip
+             return false;
+         } else {
+-            AABB axisalignedbb = this.getBoundingBox().deflate(0.001D);
++            AABB axisalignedbb = getAxisForFluidCheck(); // Purpur
+             // Airplane start - rename
+             int minBlockX = Mth.floor(axisalignedbb.minX);
+             int maxBlockX = Mth.ceil(axisalignedbb.maxX);
+diff --git a/src/main/java/net/minecraft/world/entity/animal/Squid.java b/src/main/java/net/minecraft/world/entity/animal/Squid.java
+index 56838c9f214c0f75041e75c45ad1a0c72fcacc66..91650996837a6932f1b9ccef5c25e9e18d7d1df0 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/Squid.java
++++ b/src/main/java/net/minecraft/world/entity/animal/Squid.java
+@@ -327,4 +327,10 @@ public class Squid extends WaterAnimal {
+             }
+         }
+     }
++	
++	@Override
++    public net.minecraft.world.phys.AABB getAxisForFluidCheck() {
++        // Stops squids from floating just over the water
++        return super.getAxisForFluidCheck().offsetY(xyz.arthurb.mirai.MiraiConfig.squidOffsetWaterCheck);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/phys/AABB.java b/src/main/java/net/minecraft/world/phys/AABB.java
+index 68cc6f2a78a06293a29317fda72ab3ee79b3533a..432916baf7f79166a6d224ec4dc7e55ee0f03909 100644
+--- a/src/main/java/net/minecraft/world/phys/AABB.java
++++ b/src/main/java/net/minecraft/world/phys/AABB.java
+@@ -367,4 +367,10 @@ public class AABB {
+     public static AABB ofSize(Vec3 center, double dx, double dy, double dz) {
+         return new AABB(center.x - dx / 2.0D, center.y - dy / 2.0D, center.z - dz / 2.0D, center.x + dx / 2.0D, center.y + dy / 2.0D, center.z + dz / 2.0D);
+     }
++	
++	// Purpur - tuinity added method
++    public final AABB offsetY(double dy) {
++        return new AABB(this.minX, this.minY + dy, this.minZ, this.maxX, this.maxY + dy, this.maxZ);
++    }
++    // Purpur
+ }
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 05fffebec57fa28790a3daba62697baa14e6cb57..fddb97775b57dbf67f7acfac0d3010ec7e25b5b0 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -237,5 +237,11 @@ public class MiraiConfig {
+ 	private static void playerFixStuckPortal() {
+ 		playerFixStuckPortal = getBoolean("settings.fix-stuck-in-portal", playerFixStuckPortal);
+ 	}
++	
++	public static double squidOffsetWaterCheck = 0.0D;
++	
++	private static void squidOffsetWaterCheck() {
++		squidOffsetWaterCheck = getDouble("settings.mobs.squid.water-offset-check", squidOffsetWaterCheck);
++	}
+ 
+ }
+\ No newline at end of file
