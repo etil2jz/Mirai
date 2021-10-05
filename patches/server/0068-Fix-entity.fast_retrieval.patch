@@ -41,7 +41,7 @@ index fb572ccd5f2058e1e6ccb6e745e9ad71025c8998..418c3a4e8d38e6836b665f1f33306dcb
 +        }
 +    }
 +	
-+	private void forEachInColumn(int x, int minY, int maxY, int z, Consumer<EntityTrackingSection<T>> action) {
++	private void forEachInColumn(int x, int minY, int maxY, int z, Consumer<EntitySection<T>> action) {
 +        for (int y = Math.max(minY, 0); y <= maxY; y++) {
 +            this.consumeSection(x, y, z, action);
          }
@@ -52,7 +52,7 @@ index fb572ccd5f2058e1e6ccb6e745e9ad71025c8998..418c3a4e8d38e6836b665f1f33306dcb
 +    }
  
 -		// Yatopia end
-+    private void consumeSection(int x, int y, int z, Consumer<EntityTrackingSection<T>> action) {
++    private void consumeSection(int x, int y, int z, Consumer<EntitySection<T>> action) {
 +        EntityTrackingSection<T> section = this.findTrackingSection(ChunkSectionPos.asLong(x, y, z));
 +        if (section != null && section.getStatus().shouldTrack()) {
 +            action.accept(section);
