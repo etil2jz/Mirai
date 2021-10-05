@@ -53,7 +53,7 @@ index fb572ccd5f2058e1e6ccb6e745e9ad71025c8998..418c3a4e8d38e6836b665f1f33306dcb
  
 -		// Yatopia end
 +    private void consumeSection(int x, int y, int z, Consumer<EntitySection<T>> action) {
-+        EntityTrackingSection<T> section = this.findTrackingSection(ChunkSectionPos.asLong(x, y, z));
++        EntitySection<T> section = this.findTrackingSection(SectionPos.asLong(x, y, z));
 +        if (section != null && section.getStatus().shouldTrack()) {
 +            action.accept(section);
 +        }
