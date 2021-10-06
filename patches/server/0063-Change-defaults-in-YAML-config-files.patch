@@ -22,7 +22,7 @@ index a94be051d8c7aec6fe6bc00e14994c3b493cd28d..5d211fc499e9b38d29be4de2b3389b9d
          // Airplane end
          boolean verboseTimings = getBoolean("timings.verbose", true);
 -        TimingsManager.url = getString("timings.url", "https://timings.aikar.co/");
-+        TimingsManager.url = getString("timings.url", "https://timings.pl3x.net/");
++        TimingsManager.url = getString("timings.url", "https://timin.gs/");
          if (!TimingsManager.url.endsWith("/")) {
              TimingsManager.url += "/";
          }
