@@ -1,0 +1,196 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 10 Oct 2021 20:03:47 +0200
+Subject: [PATCH] Packet obfuscation and reduction
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..2ebec3ab5acd2767b9b16be6353671cb86742d62 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+@@ -21,6 +21,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
+         }
+ 
+     }
++	
++	// Mirai start
++	public ClientboundSetEntityDataPacket(int id, List<SynchedEntityData.DataItem<?>> packedItems) {
++        this.id = id;
++        this.packedItems = packedItems;
++    }
++	// Mirai end
+ 
+     public ClientboundSetEntityDataPacket(FriendlyByteBuf buf) {
+         this.id = buf.readVarInt();
+diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+index 4df12454001f0de5f358c88d876e34c35a736c42..65076434edc042041ea0ff0fc7572044a2a6cbb0 100644
+--- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
++++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+@@ -136,6 +136,12 @@ public class SynchedEntityData {
+     }
+ 
+     public <T> void set(EntityDataAccessor<T> key, T value) {
++		// Mirai start
++		set(key, value, null);
++	}
++	
++	public <T> void set(EntityDataAccessor<T> key, T value, @Nullable T foreignValue) {
++		// Mirai end
+         SynchedEntityData.DataItem<T> datawatcher_item = this.getItem(key);
+ 
+         if (ObjectUtils.notEqual(value, datawatcher_item.getValue())) {
+@@ -144,7 +150,12 @@ public class SynchedEntityData {
+             datawatcher_item.setDirty(true);
+             this.isDirty = true;
+         }
+-
++		
++		// Mirai start
++		if (foreignValue != null && ObjectUtils.notEqual(foreignValue, datawatcher_item.getForeignValue())) {
++            datawatcher_item.setForeignValue(foreignValue);
++        }
++		// Mirai end
+     }
+ 
+     // CraftBukkit start - add method from above
+@@ -199,6 +210,28 @@ public class SynchedEntityData {
+         this.isDirty = false;
+         return list;
+     }
++	
++	// Mirai start
++    @Nullable
++    public List<SynchedEntityData.DataItem<?>> packForeignDirty(List<DataItem<?>> unpackedData) {
++        List<SynchedEntityData.DataItem<?>> list = null;
++
++        for (DataItem<?> dataItem : unpackedData) {
++            DataItem<?> item = itemsById.get(dataItem.accessor.getId());
++            if (item.isDirty(true)) {
++                item.setForeignDirty(false);
++
++                if (list == null) {
++                    list = Lists.newArrayList();
++                }
++
++                list.add(item.copy(true));
++            }
++        }
++
++        return list;
++    }
++    // Mirai end
+ 
+     @Nullable
+     public List<SynchedEntityData.DataItem<?>> getAll() {
+@@ -313,11 +346,14 @@ public class SynchedEntityData {
+         final EntityDataAccessor<T> accessor;
+         T value;
+         private boolean dirty;
++		@Nullable T foreignValue = null; // Mirai
++		private boolean foreignDirty; // Mirai
+ 
+         public DataItem(EntityDataAccessor<T> data, T value) {
+             this.accessor = data;
+             this.value = value;
+             this.dirty = true;
++			this.foreignDirty = true; // Mirai
+         }
+ 
+         public EntityDataAccessor<T> getAccessor() {
+@@ -343,5 +379,33 @@ public class SynchedEntityData {
+         public SynchedEntityData.DataItem<T> copy() {
+             return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy(this.value));
+         }
++		
++		// Mirai start
++        public void setForeignValue(T foreignValue) {
++            this.foreignValue = foreignValue;
++            this.foreignDirty = true;
++        }
++
++        public @Nullable T getForeignValue() {
++            return foreignValue;
++        }
++
++        public boolean isDirty(boolean foreign) {
++            if (foreign) {
++                // There must be a foreign value in order for this to be dirty, otherwise we consider this a normal value and check the normal dirty flag
++                return foreignValue == null || this.foreignDirty;
++            }
++
++            return this.dirty;
++        }
++
++        public void setForeignDirty(boolean dirty) {
++            this.foreignDirty = dirty;
++        }
++
++        public SynchedEntityData.DataItem<T> copy(boolean foreign) {
++            return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy((foreign && this.foreignValue != null ? this.foreignValue : this.value)));
++        }
++        // Mirai end
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index d175a41fd8c24813904019e25432c4a796db0b7b..ba2beaf0689b074a6b653fdf9dfbd7ba1ac38c4d 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -387,7 +387,18 @@ public class ServerEntity {
+         SynchedEntityData datawatcher = this.entity.getEntityData();
+ 
+         if (datawatcher.isDirty()) {
+-            this.broadcastAndSend(new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false));
++            // Mirai start
++            ClientboundSetEntityDataPacket dataPacket = new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false);
++            if (this.entity instanceof ServerPlayer serverPlayer) {
++                serverPlayer.connection.send(dataPacket);
++            }
++
++            // Get the packedData that the original packet has, and then determine if any of those are changed in the foreign version. If null, nothing to notify foreign trackers about
++            List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
++            if (dirtyItems != null) {
++                this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
++            }
++            // Mirai end
+         }
+ 
+         if (this.entity instanceof LivingEntity) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index adc89ce8cf50abaceaed433092bd3ef97035fb70..80bc033a58e8cd85de066db61fbce75a92181635 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2971,7 +2971,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         if (event.isCancelled()) {
+             return;
+         }
+-        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount());
++        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount(), getMaxAirSupply()); // Mirai
+         // CraftBukkit end
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index cea92f1dc663bf0648b2bd877d86ca380a517bc9..b869f6462813839ef147b5367a42cd0c557f0f7e 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -633,7 +633,7 @@ public abstract class Player extends LivingEntity {
+     public void increaseScore(int score) {
+         int j = this.getScore();
+ 
+-        this.entityData.set(Player.DATA_SCORE_ID, j + score);
++        this.entityData.set(Player.DATA_SCORE_ID, j + score, 0); // Mirai
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 6c7cb224229fa3aa64d6cf3b25a2213e31165931..ddbeccdd3afd8eb2b515cda3c3841f6e27ddcf59 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -2003,7 +2003,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+                 this.sendHealthUpdate();
+             }
+         }
+-        this.getHandle().getEntityData().set(LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth());
++        this.getHandle().getEntityData().set(LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth(), isDead() ? 0f : 20f); // Mirai
+ 
+         this.getHandle().maxHealthCache = getMaxHealth();
+     }
