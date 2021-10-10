@@ -1,4 +1,4 @@
-From e6b12fb1c5cff6e95e7186de62ac8e4580560387 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: MeFisto94 <MeFisto94@users.noreply.github.com>
 Date: Tue, 12 May 2020 23:02:43 +0200
 Subject: [PATCH] (Paper PR) Workaround for Client Lag Spikes (MC-162253)
