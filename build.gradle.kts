@@ -4,19 +4,17 @@ plugins {
     java
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
-    id("io.papermc.paperweight.patcher") version "1.1.11"
+    id("io.papermc.paperweight.patcher") version "1.1.12"
 }
 
 repositories {
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/") {
-        content { onlyForConfigurations(PAPERCLIP_CONFIG) }
-    }
+    maven("https://papermc.io/repo/repository/maven-public/")
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.4.3")
-    decompiler("net.minecraftforge:forgeflower:1.5.498.12")
+    remapper("org.quiltmc:tiny-remapper:0.6.0")
+    decompiler("org.quiltmc:quiltflower:1.5.0")
     paperclip("io.papermc:paperclip:2.0.1")
 }
 
