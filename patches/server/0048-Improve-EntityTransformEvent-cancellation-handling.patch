@@ -5,7 +5,7 @@ Subject: [PATCH] Improve EntityTransformEvent cancellation handling
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 0f7f7aef78a1f34fe113eeb00a88fd2610351344..e9e1929750e10e9170b0051edfd43a615b8e241b 100644
+index 4904971710acbb2855ed9ed96fead4aed189c494..cd332a416bc56227d1d197ab1bc892ac90181b3a 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -858,7 +858,6 @@ public class Villager extends AbstractVillager implements ReputationEventHandler

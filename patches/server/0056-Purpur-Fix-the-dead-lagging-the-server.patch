@@ -7,22 +7,22 @@ Original code by pl3xgaming, licensed under MIT
 You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 551d5ea47ff8bbffce1affefab3c990fb5c1ac8f..b6d3e77b5ea67f9c2a35e37ac35d5f77e8436995 100644
+index fbbf36e5c71e216b357123497cbed23354635d34..0e5b670ecbde0a917af961aa7099b0a073d1d8f6 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1771,6 +1771,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
-         this.setXRot(Mth.clamp(pitch, -90.0F, 90.0F) % 360.0F);
+@@ -1772,6 +1772,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          this.yRotO = this.getYRot();
          this.xRotO = this.getXRot();
+         this.setYHeadRot(yaw); // Paper - Update head rotation
 +		if (valid && !this.isRemoved()) level.getChunk((int) Math.floor(this.getX()) >> 4, (int) Math.floor(this.getZ()) >> 4); // CraftBukkit // Paper // Purpur
      }
  
      public void absMoveTo(double x, double y, double z) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index db7ecf2bdbc684f1199e5a3179a876f212af5ec5..0b6331f333e7cbdb76f83cbc2acb027e5716bc07 100644
+index cec7b16066ed0b41209b983c4dfc3835f94ad2c3..8f6903aaac8da81c70e1fc98d5be708ca3586848 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2894,7 +2894,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2893,7 +2893,7 @@ public abstract class LivingEntity extends Entity {
              }
          }
  

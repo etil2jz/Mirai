@@ -42,7 +42,7 @@ index c71bc00973899feec0ec5530bf3d237928810cf4..d175a41fd8c24813904019e25432c4a7
      public void removePairing(ServerPlayer player) {
          this.entity.stopSeenByPlayer(player);
 diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
-index 50392b3056d1cc10d9c59353bfa8edda3bab85f4..72dad6f85c1307aa99b0506d2dfd6e376b2dd11d 100644
+index ca2aeb64b1ff8a52800fdf7279b7e2bc697472ea..696d94ebe10c16d482c8c9b072ad22f1b46db67f 100644
 --- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
 +++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
 @@ -204,5 +204,11 @@ public class MiraiConfig {

@@ -7,7 +7,7 @@ Original code by pl3xgaming, licensed under MIT
 You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
-index 06c6ed64488bb3685b9de3e05d8a1e74ebc62e37..4b671e0663693002632b8f00262961ec5e8b1d09 100644
+index 758558c1e312edc730d1f5d7ffdbc5a41356a6e5..61db9173c37cbb0f3c249658aa3487f2a08c9692 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
 @@ -200,7 +200,7 @@ public class Piglin extends AbstractPiglin implements CrossbowAttackMob, Invento

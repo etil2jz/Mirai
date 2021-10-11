@@ -7,10 +7,10 @@ Original code by Starlis LLC, licensed under MIT
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 66e48492c2cbb4833ffda027332a81b80538d214..35cf04c0710f831eb6663a66f7de1d05d615adc1 100644
+index 6236ab216f4d4c65e057ee3460451271ed88f446..5f48f2d6a05a74e5e6b1308f7e054972c7928c15 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -914,7 +914,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -916,7 +916,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
  
      public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
          if (!this.isClientSide) {

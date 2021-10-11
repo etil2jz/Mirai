@@ -5,10 +5,10 @@ Subject: [PATCH] Mirai Configuration
 
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index f153ab46a756ec51a0fe99362c65b87e1364aa10..1682b2ba00ce969954e4fc14454e10cc0fa23aba 100644
+index 1db87711dd9b67bcba42e731c8c1a81502abf56c..b6f0d1e67bb4599a603ff7ea7adffdba07759c3f 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1678,6 +1678,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1714,6 +1714,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
              throw new UnsupportedOperationException("Not supported yet.");
          }
          // Paper end

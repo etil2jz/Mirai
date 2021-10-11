@@ -20,7 +20,7 @@ index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..8d4f8de8aa9a9f8194e37b9261ee0819
      private long lastFill = -1;
      private long nextRefill = -1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c2e170e1fd84796298888e237bc8eb4f98ab1ceb..1e3185f84c3017a4f756bdf14e397604b74edf4e 100644
+index 7aeeb858e0b44008b48e26ec4c61f04a203ed288..74c6c9b6ea7f0f3564f76db4cdac1c89789434ed 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -412,7 +412,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -64,10 +64,10 @@ index a7ea776f5f8dad3dd9475de41209d8704c0886d3..277acda841ed4d7a13b4ffd64dee46a4
          double d1 = (double) (center.y - maxRange);
          double d2 = (double) (center.x + maxRange);
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 3cf32793d7de14cd7b070037896916c542008984..60409c1ece97e1f7b51a7394f048d3e676469fde 100644
+index e49603998d5af9568f37e86899f8f9c70bbf2b9c..e9fec04cc3ff23e2254172ed01849a0a837338f7 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -55,7 +55,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -53,7 +53,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
      private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger(0);
      static final Logger LOGGER = LogManager.getLogger();
      private static final int MAX_TICKS_BEFORE_LOGIN = 600;
@@ -77,7 +77,7 @@ index 3cf32793d7de14cd7b070037896916c542008984..60409c1ece97e1f7b51a7394f048d3e6
      final MinecraftServer server;
      public final Connection connection;
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c07a945d0215297a47f5928e4476615c1f0b8011..551d5ea47ff8bbffce1affefab3c990fb5c1ac8f 100644
+index 02952b2896cdccb4802c5c113bc6f0b647e11908..fbbf36e5c71e216b357123497cbed23354635d34 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -159,7 +159,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
@@ -116,7 +116,7 @@ index f8ede3588bfda9a7d4d5807311a3e9c2651fd0a3..5b2b7ff744a94493ee7598b89439553a
      private int tickDelay;
      private int spawnDelay;
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
-index 852a4edde291bf368b2396e3c94ab402e3c66622..eb165d4c64cfd5c18cc522e4a798392e3402d743 100644
+index 5c16566f59535ce61fb3f747a745255cfaa439e8..1269e34b4d5248aba57f422604747a528c283566 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 @@ -77,7 +77,7 @@ public class FishingHook extends Projectile {
@@ -181,7 +181,7 @@ index cfec89db4300bdb96a220540ee87892d22215e9d..56b54a0f784397663f951d2838b341e9
      private NonNullList<ItemStack> items;
  
 diff --git a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
-index 53001f490f374c75e0d44ec75387f4bee6ab8952..6bbd6ee76be340759eafffde2414fbad711de5e3 100644
+index 44551fc6fc5888206c1a2da3ece5baa486faa1d5..c5d490717a6fdbe7eb93d02ac672f6451800c570 100644
 --- a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
 +++ b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
 @@ -120,7 +120,7 @@ public class EndDragonFight {
@@ -212,10 +212,10 @@ index 53001f490f374c75e0d44ec75387f4bee6ab8952..6bbd6ee76be340759eafffde2414fbad
  
      private EnderDragon createNewDragon() {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 63f6dd93aa00b8c30478f50bd388fae805b9e3b4..36cc407c27a089dd7149899f8c3abef955dd013c 100644
+index 1d0c2e7b1c9c1b8e5b00c7b17ab70658172c2f0d..8ccc0bbcaf30b1cdb8450aea6bfc9740651f59ea 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -201,7 +201,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -202,7 +202,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
      }
      // Paper end
  

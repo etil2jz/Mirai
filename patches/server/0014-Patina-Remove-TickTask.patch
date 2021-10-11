@@ -7,7 +7,7 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 38dd502cd8b0e366933e5d886d367cb7458255ef..0cbbf7ee0ae6a5d4533287c56ed1e711f4ff9c56 100644
+index 48ed4ba0c4eef10e32206a066e4a22e8998449c7..c2ef14a223b9e4414c0e1a34b507a99378ddca21 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -189,7 +189,7 @@ import org.bukkit.event.server.ServerLoadEvent;

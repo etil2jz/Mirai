@@ -7,10 +7,10 @@ Original code by Starlis LLC, licensed under MIT
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 883b2070fcf99cf10d44aef6dece0f7f84bfeeed..63f6dd93aa00b8c30478f50bd388fae805b9e3b4 100644
+index 00d8b61c04ac91770b0ff3b846d3ff70bef2e8e7..1d0c2e7b1c9c1b8e5b00c7b17ab70658172c2f0d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -369,7 +369,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -370,7 +370,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
  
      @Override
      public boolean unloadChunk(int x, int z) {

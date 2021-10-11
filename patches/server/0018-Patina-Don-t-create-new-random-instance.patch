@@ -7,7 +7,7 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f0250f97d194f1ad98f8f119c80e1b24ee26a2ac..b660c853128e79334f3da8f7334125d240cf0fc6 100644
+index c2ef14a223b9e4414c0e1a34b507a99378ddca21..b5d91bdedad3c0f892e07928d35e2e1427245efa 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -647,7 +647,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -20,7 +20,7 @@ index f0250f97d194f1ad98f8f119c80e1b24ee26a2ac..b660c853128e79334f3da8f7334125d2
                  dimensionmanager = worlddimension.type();
                  chunkgenerator = worlddimension.generator();
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 9e6342ac61bdccfde371674249a5d43c692358eb..fe38270c83555fd2008f9ce873ba2964a283e6a8 100644
+index 11f46c1b8f4c8414e0667d1873542c17d6e01f2a..2bc5bb4fbfb8b354c08e00059727d96426bcdaac 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -372,7 +372,7 @@ public class ServerPlayer extends Player {
@@ -55,7 +55,7 @@ index 25ae440839f1d286550a77d0a4c61e1dc02b369d..711d5dc2a8b3a5f2a2a35cab59b5ecfd
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index ae6b32865857cc6e32c468237c25b9baa117842b..66e48492c2cbb4833ffda027332a81b80538d214 100644
+index 243e3c9b36a2606ea03dd8effebc925bcabac0c0..6236ab216f4d4c65e057ee3460451271ed88f446 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -123,13 +123,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -97,10 +97,10 @@ index 57b12ba5a24e68b0a0420d692946fe5e83974db4..75b00ee813da7447f33ba2a334e96892
          if (!s1.isEmpty()) {
              try {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 0bfced8a446fbd689680f071599a47c9527eee63..2ff372ebd8b74926c00ae470ddf79ab918036eb1 100644
+index 4e3ca2d239ef3585eb0a3dd92e78b638597b3539..8c6722cff36adf963003972cdd85e63bb21e1f9c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1173,7 +1173,7 @@ public final class CraftServer implements Server {
+@@ -1194,7 +1194,7 @@ public final class CraftServer implements Server {
  
          if (worlddimension == null) {
              dimensionmanager = (DimensionType) console.registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION);

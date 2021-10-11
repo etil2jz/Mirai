@@ -5,10 +5,10 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index e4fdc5d362b8dbef2c8b209678200f147e871db0..2cc2b916a2667d0e04bb7efd13bdb35c112fdc08 100644
+index fdc3f2390d8d0124102cbff386e8a981c6f92c22..9e9fd28a76ad6af45b9b45288a5060c6c2a1bcc4 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -32,7 +32,7 @@ repositories {
+@@ -31,7 +31,7 @@ repositories {
  }
  
  dependencies {
@@ -17,7 +17,7 @@ index e4fdc5d362b8dbef2c8b209678200f147e871db0..2cc2b916a2667d0e04bb7efd13bdb35c
      implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -93,7 +93,7 @@ tasks.jar {
+@@ -92,7 +92,7 @@ tasks.jar {
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
              "Implementation-Version" to "git-Paper-$implementationVersion",
@@ -27,7 +27,7 @@ index e4fdc5d362b8dbef2c8b209678200f147e871db0..2cc2b916a2667d0e04bb7efd13bdb35c
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f6d335b377dbf6f744e5f6ced56cf437e6e6bab3..018845c1a96fa4d0411ad12d2260a7d0d6bb5165 100644
+index c80a600b72972c2e8b7d472e2e11c312adaa06e1..34515d988d3a2db1e1e58fa4330eb731c92be305 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -40,10 +40,10 @@ index f6d335b377dbf6f744e5f6ced56cf437e6e6bab3..018845c1a96fa4d0411ad12d2260a7d0
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 28fa8e5c0d1e78d57d9cfb5ea2998740b8d700dc..0c0029fbbf593dea77e98ff309266203d3a221d1 100644
+index c987e7c46afe6c41339e8e08bf2bfabe8c1ba098..03ec1bbc0fc4354549108868e2514dd42e85ff1d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
+@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {

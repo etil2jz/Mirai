@@ -7,7 +7,7 @@ Original code by pl3xgaming, licensed under MIT
 You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index fcef1eec26a4b7d76b2e7a8676a7bf84c1cc84a3..91a2a51c767f68f9d20a6e6827109e0111c62268 100644
+index 0c473488a94a34f48d73e3bf52391bacddd6496e..f4ff6b94b95d9794b1c4c49f6fb8ea3255343dc7 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -386,6 +386,7 @@ public class Commands {

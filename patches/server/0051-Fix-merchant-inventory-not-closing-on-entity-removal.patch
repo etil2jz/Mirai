@@ -5,10 +5,10 @@ Subject: [PATCH] Fix merchant inventory not closing on entity removal
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 416f579560115caddadf6a400b80a4d1d6ebe04c..c61072657205a76a0515dfd02312a71cd4e7e4e6 100644
+index 86b6d4b4984c7dc41026bffb695fe9e573c48891..47a086bf030ed21d731dde689bd7e1b005b5df47 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -2430,6 +2430,11 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2436,6 +2436,11 @@ public class ServerLevel extends Level implements WorldGenLevel {
              // Spigot end
              // Spigot Start
              if (entity.getBukkitEntity() instanceof org.bukkit.inventory.InventoryHolder) {

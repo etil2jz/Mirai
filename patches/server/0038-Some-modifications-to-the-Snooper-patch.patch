@@ -5,7 +5,7 @@ Subject: [PATCH] Some modifications to the Snooper patch
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a1d0389f7c6126d0088734f4f7997eb202486b6e..c2e170e1fd84796298888e237bc8eb4f98ab1ceb 100644
+index 38b6595ac5d709795b8e846e6113d55481ddd79d..7aeeb858e0b44008b48e26ec4c61f04a203ed288 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -120,8 +120,8 @@ import net.minecraft.util.profiling.metrics.profiling.ServerMetricsSamplersProvi
@@ -46,10 +46,10 @@ index a1d0389f7c6126d0088734f4f7997eb202486b6e..c2e170e1fd84796298888e237bc8eb4f
  	*/
  
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index d88878bc094fa0fb2f7e9bfe288c250d14e228c7..303dff5ba819897f8c011f57d8f1e7ba7624e020 100644
+index 02973f4ac85217364a41596748dc17581ecf6bd0..d0ca92837e95483e94faf4115f5de7a4e6adbfc9 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -501,9 +501,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -512,9 +512,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          snooper.setDynamicData("whitelist_count", (Object) this.getPlayerList().getWhiteListNames().length);
          super.populateSnooper(snooper);
      }

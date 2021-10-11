@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 17 Sep 2021 22:03:40 +0200
+Date: Mon, 11 Oct 2021 21:46:23 +0200
 Subject: [PATCH] Mirai Configuration
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 2a569d05edf0f5337afbcd6803c0513d338ca55e..6081d9063bb1f10a601020d58a1ccb2f16b3c212 100644
+index e2901132b78126c0a4eb04363dfe6a0dccd1313f..2b246dd34ca0ff3da6d49a0eab2ee0af75b13642 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -6,10 +6,7 @@ import com.mojang.authlib.GameProfile;
@@ -20,7 +20,7 @@ index 2a569d05edf0f5337afbcd6803c0513d338ca55e..6081d9063bb1f10a601020d58a1ccb2f
  import java.net.InetAddress;
  import java.net.Proxy;
  import java.nio.charset.StandardCharsets;
-@@ -225,6 +222,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -236,6 +233,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          // Paper end
          gg.airplane.AirplaneConfig.load(); // Airplane - config
          gg.airplane.commands.AirplaneCommands.init(); // Airplane - command
@@ -38,17 +38,17 @@ index 2a569d05edf0f5337afbcd6803c0513d338ca55e..6081d9063bb1f10a601020d58a1ccb2f
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 55ec38f83f97494585aab451e59a8f67841b077b..edb0bcfed9d83c4d7624a28f343dd614e5ab3b3b 100644
+index 03ec1bbc0fc4354549108868e2514dd42e85ff1d..4e3ca2d239ef3585eb0a3dd92e78b638597b3539 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -892,6 +892,7 @@ public final class CraftServer implements Server {
+@@ -907,6 +907,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
 +		xyz.arthurb.mirai.MiraiConfig.init((File) console.options.valueOf("mirai-settings")); // Mirai
          for (ServerLevel world : this.console.getAllLevels()) {
-             world.serverLevelData.setDifficulty(config.difficulty);
-             world.setSpawnSettings(config.spawnMonsters, config.spawnAnimals);
+             // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
+             world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
 index 22e9dd17f62103c5061435099ce96a3d70d54808..5d0801fc73f5888398efd65cb5e9eabbdf7748e5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java

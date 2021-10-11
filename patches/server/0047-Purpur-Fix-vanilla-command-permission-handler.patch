@@ -19,10 +19,10 @@ index f64aa22ed6fcb4af67317b99f459ee5296392548..63af2216c383aef0809dd381b69493ec
      public void removeCommand(String name) {
          this.children.remove(name);
 diff --git a/src/main/java/org/bukkit/craftbukkit/command/VanillaCommandWrapper.java b/src/main/java/org/bukkit/craftbukkit/command/VanillaCommandWrapper.java
-index e9d1fb479855194da5a05e86861848158736cbb4..c5f0c4022ef1ffadc49f0224fe491d1eb1b4e48f 100644
+index 4aa1dc543950b5de64345b3403a6d0bc41c521df..23adb3b18a0fbe6b6c7cbc40d9f256495d6661f9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/command/VanillaCommandWrapper.java
 +++ b/src/main/java/org/bukkit/craftbukkit/command/VanillaCommandWrapper.java
-@@ -87,6 +87,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
+@@ -89,6 +89,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
      }
  
      public static String getPermission(CommandNode<CommandSourceStack> vanillaCommand) {

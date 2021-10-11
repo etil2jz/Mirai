@@ -9,7 +9,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b660c853128e79334f3da8f7334125d240cf0fc6..31de069f4a5cee86eb5fa3316a031b85c8f6eb1b 100644
+index b5d91bdedad3c0f892e07928d35e2e1427245efa..e0bcfe69b021ee4b676cc698d52648f7bd178ee3 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1097,7 +1097,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab

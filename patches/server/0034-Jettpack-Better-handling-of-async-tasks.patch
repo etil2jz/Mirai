@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 6fec6a47538da4c0c5a4505e9bedf492bb3376dd..fcef1eec26a4b7d76b2e7a8676a7bf84c1cc84a3 100644
+index b7c24a7ff4dc50d03f74b21a0b353d0ce559b4d4..0c473488a94a34f48d73e3bf52391bacddd6496e 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -350,9 +350,13 @@ public class Commands {
@@ -80,7 +80,7 @@ index f9701ef4162868894a81f0d1ac9b58d00d9a2d65..184b23d4a895d8feb57f707b635490d0
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a1a1aa0f4f30391cf4afb57a743c16aa8f5a4e17..a1d0389f7c6126d0088734f4f7997eb202486b6e 100644
+index 0dcffa54fd10f2dc905a95cbff41e9c207c700a2..38b6595ac5d709795b8e846e6113d55481ddd79d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -368,7 +368,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -110,10 +110,10 @@ index a1a1aa0f4f30391cf4afb57a743c16aa8f5a4e17..a1d0389f7c6126d0088734f4f7997eb2
          }
          // Paper end
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c542008984 100644
+index 494ca8fa8c742d4eac9fb11878d3b3170d850265..e49603998d5af9568f37e86899f8f9c70bbf2b9c 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -48,6 +48,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+@@ -46,6 +46,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
  import org.bukkit.event.player.PlayerPreLoginEvent;
  // CraftBukkit end
  import io.netty.buffer.Unpooled; // Paper
@@ -121,7 +121,7 @@ index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c5
  
  public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener {
  
-@@ -128,7 +129,8 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -126,7 +127,8 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
  
      }
  
@@ -131,7 +131,7 @@ index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c5
      private static final AtomicInteger threadId = new AtomicInteger(0);
      private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
              r -> {
-@@ -140,6 +142,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -138,6 +140,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              }
      );
      // Paper end
@@ -139,7 +139,7 @@ index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c5
      // Spigot start
      public void initUUID()
      {
-@@ -250,7 +253,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -247,7 +250,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              // Paper end
              // Spigot start
              // Paper start - Cache authenticator threads
@@ -148,7 +148,7 @@ index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c5
                  @Override
                  public void run() {
                      try {
-@@ -294,7 +297,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -291,7 +294,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
          }
  
          // Paper start - Cache authenticator threads
@@ -157,7 +157,7 @@ index 76c2f4b24e16c7d641ae1945b0ef94a6e854b342..3cf32793d7de14cd7b070037896916c5
              public void run() {
                  GameProfile gameprofile = ServerLoginPacketListenerImpl.this.gameProfile;
  
-@@ -428,7 +431,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -425,7 +428,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              this.gameProfile = com.destroystokyo.paper.proxy.VelocityProxy.createProfile(buf);
  
              // Proceed with login
