@@ -42,9 +42,9 @@ jobs:
           path: build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar
       - name: Prepare Github Page Files
         run: |
-          mkdir -p public
-          cp build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar public/
-          mv public/Mirai-1.17.1-R0.1-SNAPSHOT.jar public/Mirai-1.17.1-R0.1-SNAPSHOT-jdk${{ matrix.java }}.jar
+          mkdir -p jdk${{ matrix.java }}
+          cp build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar jdk${{ matrix.java }}/
+          mv jdk${{ matrix.java }}/Mirai-1.17.1-R0.1-SNAPSHOT.jar jdk${{ matrix.java }}/Mirai-1.17.1-R0.1-SNAPSHOT-jdk${{ matrix.java }}.jar
       - name: Deploy to Github Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
