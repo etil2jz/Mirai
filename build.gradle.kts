@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.6.0:fat")
-    decompiler("org.quiltmc:quiltflower:1.5.0")
+    remapper("net.fabricmc:tiny-remapper:0.6.0:fat")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.12")
     paperclip("io.papermc:paperclip:2.0.1")
 }
 
@@ -41,7 +41,7 @@ paperweight {
     serverProject.set(project(":Mirai-Server"))
 
     remapRepo.set("https://maven.quiltmc.org/repository/release/")
-    decompileRepo.set("https://maven.quiltmc.org/repository/release/")
+    decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     useStandardUpstream("Airplane") {
 		url.set(github("TECHNOVE", "Airplane"))
