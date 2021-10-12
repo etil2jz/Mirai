@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 16 ]
+        java: [ '16', '17' ]
       fail-fast: true
     steps:
       - name: Checkout Git Repository
@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Pull Gradle Cache
         uses: actions/cache@v2
         id: gradle-cache
@@ -38,12 +38,13 @@ jobs:
       - name: Archive Paperclip
         uses: actions/upload-artifact@v2
         with:
-          name: Mirai Paperclip
+          name: Mirai-Java-${{ matrix.java }}
           path: build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar
       - name: Prepare Github Page Files
         run: |
           mkdir -p public
           cp build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar public/
+          mv public/Mirai-1.17.1-R0.1-SNAPSHOT.jar public/Mirai-1.17.1-R0.1-SNAPSHOT-jdk${{ matrix.java }}.jar
       - name: Deploy to Github Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
