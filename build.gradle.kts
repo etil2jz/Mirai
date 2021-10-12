@@ -1,8 +1,5 @@
-import io.papermc.paperweight.util.constants.*
-
 plugins {
     java
-    `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
     id("io.papermc.paperweight.patcher") version "1.1.12"
 }
@@ -13,32 +10,19 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.4.3")
+    remapper("org.quiltmc:tiny-remapper:0.6.0:fat")
     decompiler("org.quiltmc:quiltflower:1.5.0")
     paperclip("io.papermc:paperclip:2.0.1")
 }
 
-allprojects {
-    apply(plugin = "java")
-    apply(plugin = "maven-publish")
-
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(16))
-        }
-    }
-}
-
 subprojects {
-    tasks.withType<JavaCompile> {
-        options.encoding = Charsets.UTF_8.name()
+    apply(plugin = "java")
+
+    java { toolchain { languageVersion.set(JavaLanguageVersion.of(16)) } }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
         options.release.set(16)
-    }
-    tasks.withType<Javadoc> {
-        options.encoding = Charsets.UTF_8.name()
-    }
-    tasks.withType<ProcessResources> {
-        filteringCharset = Charsets.UTF_8.name()
     }
 
     repositories {
@@ -49,7 +33,7 @@ subprojects {
         maven("https://repo.aikar.co/content/groups/aikar")
         maven("https://repo.md-5.net/content/repositories/releases/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-	maven("https://jitpack.io")
+        maven("https://jitpack.io")
     }
 }
 
@@ -57,7 +41,7 @@ paperweight {
     serverProject.set(project(":Mirai-Server"))
 
     remapRepo.set("https://maven.quiltmc.org/repository/release/")
-    decompileRepo.set("https://files.minecraftforge.net/maven/")
+    decompileRepo.set("https://maven.quiltmc.org/repository/release/")
 
     useStandardUpstream("Airplane") {
 		url.set(github("TECHNOVE", "Airplane"))
