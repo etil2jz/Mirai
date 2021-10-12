@@ -1,17 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: foss-mc <69294560+foss-mc@users.noreply.github.com>
-Date: Thu, 1 Jul 2021 12:07:37 +0000
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 12 Oct 2021 21:00:53 +0200
 Subject: [PATCH] (Patina) Remove VersionFetcher
 
-Original code by PatinaMC, licensed under GNU General Public License v3.0
-You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 deleted file mode 100644
-index 580bae0d414d371a07a6bfeefc41fdd989dc0083..0000000000000000000000000000000000000000
+index ece77f5ea4b14bbed7c070131b3251ea86764538..0000000000000000000000000000000000000000
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ /dev/null
-@@ -1,142 +0,0 @@
+@@ -1,149 +0,0 @@
 -package com.destroystokyo.paper;
 -
 -import com.destroystokyo.paper.util.VersionFetcher;
@@ -19,9 +17,10 @@ index 580bae0d414d371a07a6bfeefc41fdd989dc0083..00000000000000000000000000000000
 -import com.google.common.io.Resources;
 -import com.google.gson.*;
 -import net.kyori.adventure.text.Component;
--import net.kyori.adventure.text.TextComponent;
+-import net.kyori.adventure.text.event.ClickEvent;
 -import net.kyori.adventure.text.format.NamedTextColor;
 -import net.kyori.adventure.text.format.TextDecoration;
+-import net.kyori.adventure.text.TextComponent;
 -
 -import javax.annotation.Nonnull;
 -import javax.annotation.Nullable;
@@ -33,6 +32,7 @@ index 580bae0d414d371a07a6bfeefc41fdd989dc0083..00000000000000000000000000000000
 -public class PaperVersionFetcher implements VersionFetcher {
 -    private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
 -    private static final String GITHUB_BRANCH_NAME = "master";
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
 -    private static @Nullable String mcVer;
 -
 -    @Override
@@ -84,7 +84,12 @@ index 580bae0d414d371a07a6bfeefc41fdd989dc0083..00000000000000000000000000000000
 -            case -2:
 -                return Component.text("Unknown version", NamedTextColor.YELLOW);
 -            default:
--                return Component.text("You are " + distance + " version(s) behind", NamedTextColor.YELLOW);
+-                return Component.text("You are " + distance + " version(s) behind", NamedTextColor.YELLOW)
+-                        .append(Component.newline())
+-                        .append(Component.text("Download the new version at: ")
+-                                .append(Component.text(DOWNLOAD_PAGE, NamedTextColor.GOLD)
+-                                        .hoverEvent(Component.text("Click to open", NamedTextColor.WHITE))
+-                                        .clickEvent(ClickEvent.openUrl(DOWNLOAD_PAGE))));
 -        }
 -    }
 -
@@ -155,20 +160,22 @@ index 580bae0d414d371a07a6bfeefc41fdd989dc0083..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 2ad9bac4c1ae2adb50bb6291591ff4b741b3007e..dbbbe1ede16399ba32dc7f912f43c137c9fb2779 100644
+index 2ad9bac4c1ae2adb50bb6291591ff4b741b3007e..f318363be39e0ec664220cc7b89551e28fb32b8c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -392,10 +392,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -392,10 +392,14 @@ public final class CraftMagicNumbers implements UnsafeValues {
          return com.destroystokyo.paper.PaperConfig.timingsServerName;
      }
  
 -    @Override
-+    /* // Patina
++    // Patina start
++	/*
 +	@Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
          return new com.destroystokyo.paper.PaperVersionFetcher(); // Airplane // Mirai - revert VersionFetcher to Paper
      }
 +	*/
++	// Patina end
  
      @Override
      public boolean isSupportedApiVersion(String apiVersion) {
