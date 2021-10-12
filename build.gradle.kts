@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.6.0")
+    remapper("org.quiltmc:tiny-remapper:0.4.3")
     decompiler("org.quiltmc:quiltflower:1.5.0")
     paperclip("io.papermc:paperclip:2.0.1")
 }
