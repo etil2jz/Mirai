@@ -5,7 +5,7 @@ Subject: [PATCH] Change defaults in YAML config files
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index a94be051d8c7aec6fe6bc00e14994c3b493cd28d..5d211fc499e9b38d29be4de2b3389b9d86f9f638 100644
+index f404f163626959478756451d9e97a98f8f109da6..8669538a878684e71e55e50a692df93135b5f7da 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -203,7 +203,7 @@ public class PaperConfig {
@@ -74,7 +74,7 @@ index a94be051d8c7aec6fe6bc00e14994c3b493cd28d..5d211fc499e9b38d29be4de2b3389b9d
          consoleHasAllPermissions = getBoolean("settings.console-has-all-permissions", consoleHasAllPermissions);
      }
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 7db27ff19a66454a941d24d3c6fb47830e927509..13079953c62948c9f036d01f0cd216e4f9809bea 100644
+index 86edf7ddd025b54b2fc1907a306168bd56dd5396..c316ee859c466288e05e13f5d27aa6a8e26d878b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -59,9 +59,9 @@ public class PaperWorldConfig {
@@ -305,7 +305,7 @@ index 7db27ff19a66454a941d24d3c6fb47830e927509..13079953c62948c9f036d01f0cd216e4
          log("Withers properly target players: " + fixWitherTargetingBug);
      }
  
-@@ -894,8 +906,13 @@ public class PaperWorldConfig {
+@@ -899,8 +911,13 @@ public class PaperWorldConfig {
      private Table<String, String, Integer> sensorTickRates;
      private Table<String, String, Integer> behaviorTickRates;
      private void tickRates() {
@@ -321,7 +321,7 @@ index 7db27ff19a66454a941d24d3c6fb47830e927509..13079953c62948c9f036d01f0cd216e4
          log("Tick rates:");
          sensorTickRates = loadTickRates("sensor");
          behaviorTickRates = loadTickRates("behavior");
-@@ -934,7 +951,7 @@ public class PaperWorldConfig {
+@@ -939,7 +956,7 @@ public class PaperWorldConfig {
      public it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<net.minecraft.resources.ResourceLocation> featureSeeds = new it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<>();
      private void featureSeeds() {
          featureSeeds.defaultReturnValue(-1);

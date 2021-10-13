@@ -156,10 +156,10 @@ index d175a41fd8c24813904019e25432c4a796db0b7b..ba2beaf0689b074a6b653fdf9dfbd7ba
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index adc89ce8cf50abaceaed433092bd3ef97035fb70..80bc033a58e8cd85de066db61fbce75a92181635 100644
+index f39be126e53e5325518615ce37c6e25eddbc1cb3..17efaa85da02b32169d6df2bff1289cd1133035f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2971,7 +2971,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -2973,7 +2973,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          if (event.isCancelled()) {
              return;
          }
@@ -169,7 +169,7 @@ index adc89ce8cf50abaceaed433092bd3ef97035fb70..80bc033a58e8cd85de066db61fbce75a
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index cea92f1dc663bf0648b2bd877d86ca380a517bc9..b869f6462813839ef147b5367a42cd0c557f0f7e 100644
+index ce713e1857121ca52467ad561c4fbb30ae054d87..efe1c292059c6cadf4d26eac9e5a2a10f2b65a80 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -633,7 +633,7 @@ public abstract class Player extends LivingEntity {
@@ -182,7 +182,7 @@ index cea92f1dc663bf0648b2bd877d86ca380a517bc9..b869f6462813839ef147b5367a42cd0c
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 6c7cb224229fa3aa64d6cf3b25a2213e31165931..ddbeccdd3afd8eb2b515cda3c3841f6e27ddcf59 100644
+index f7b05cb6c145adadf0836ea9f7903675b002569a..1e177619330cbd3e0f83ecbeb4302612323fde44 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2003,7 +2003,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

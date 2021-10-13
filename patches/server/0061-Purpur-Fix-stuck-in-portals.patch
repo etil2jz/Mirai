@@ -7,7 +7,7 @@ Original code by pl3xgaming, licensed under MIT
 You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index fe38270c83555fd2008f9ce873ba2964a283e6a8..142ca290c1964fe78dcfe247d5e927ae5a2ddf2f 100644
+index 2bc5bb4fbfb8b354c08e00059727d96426bcdaac..71d7fb64181f626a773865f1d57f567686aaa7c0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1111,6 +1111,7 @@ public class ServerPlayer extends Player {
@@ -19,10 +19,10 @@ index fe38270c83555fd2008f9ce873ba2964a283e6a8..142ca290c1964fe78dcfe247d5e927ae
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b6d3e77b5ea67f9c2a35e37ac35d5f77e8436995..36e8f89609b9b4078ab7a134b780b87400633c03 100644
+index 0e5b670ecbde0a917af961aa7099b0a073d1d8f6..d657d63820754ef419428e672556f129ebc057fb 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2716,12 +2716,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -2718,12 +2718,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          return Vec3.directionFromRotation(this.getRotationVector());
      }
  
@@ -40,7 +40,7 @@ index b6d3e77b5ea67f9c2a35e37ac35d5f77e8436995..36e8f89609b9b4078ab7a134b780b874
  
              this.isInsidePortal = true;
 diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
-index 8a06c7ef1c239b4999aa58bbe95da68aca903a19..5b3e83d7ca76819bed73a261736949968806b332 100644
+index 99c8d1287c0a0a434911219b898a5e07cc78dcb4..05fffebec57fa28790a3daba62697baa14e6cb57 100644
 --- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
 +++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
 @@ -231,5 +231,11 @@ public class MiraiConfig {

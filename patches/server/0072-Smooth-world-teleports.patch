@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Wed, 13 Oct 2021 18:49:08 +0200
+Subject: [PATCH] Smooth world teleports
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 71d7fb64181f626a773865f1d57f567686aaa7c0..3504a24e562b30c18d4c25f126d4113a5c8b7747 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -263,6 +263,7 @@ public class ServerPlayer extends Player {
+     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+     public boolean needsChunkCenterUpdate; // Paper - no-tick view distance // Paper - public
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
++	public boolean smoothWorldTeleport; // Mirai
+ 
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 71a742704038fa7a1174ce1d118735d917095f60..2931b46638d256d0dc9f89ebb78d0d24e073f82a 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -952,11 +952,11 @@ public abstract class PlayerList {
+         }
+         // CraftBukkit start
+         LevelData worlddata = worldserver1.getLevelData();
+-        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionType(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionType(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag)); // Mirai
+         entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getLoadDistance())); // Spigot // Paper - no-tick view distance// Paper - replace old player chunk management
+         entityplayer1.setLevel(worldserver1);
+         entityplayer1.unsetRemoved();
+-        entityplayer1.connection.teleport(new Location(worldserver1.getWorld(), entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot()));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.teleport(new Location(worldserver1.getWorld(), entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot())); // Mirai
+         entityplayer1.setShiftKeyDown(false);
+ 
+         // entityplayer1.connection.b(entityplayer1.locX(), entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.getYRot(), entityplayer1.getXRot());

@@ -7,10 +7,10 @@ Original code by pl3xgaming, licensed under MIT
 You can find the original code on https://github.com/pl3xgaming/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 36e8f89609b9b4078ab7a134b780b87400633c03..49e8682640a44cf2fd880551fd78672937ae908b 100644
+index d657d63820754ef419428e672556f129ebc057fb..d1580c9b07b18c441e2b0f5bb9b3864c46f91fd2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3836,12 +3836,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -3857,12 +3857,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          this.xRotO = this.getXRot();
          this.yRotO = this.getYRot();
      }
@@ -31,7 +31,7 @@ index 36e8f89609b9b4078ab7a134b780b87400633c03..49e8682640a44cf2fd880551fd786729
              int minBlockX = Mth.floor(axisalignedbb.minX);
              int maxBlockX = Mth.ceil(axisalignedbb.maxX);
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Squid.java b/src/main/java/net/minecraft/world/entity/animal/Squid.java
-index 56838c9f214c0f75041e75c45ad1a0c72fcacc66..91650996837a6932f1b9ccef5c25e9e18d7d1df0 100644
+index 4da560f6e4da0750bda78b900b2d916d58adfccb..3c290290bc2088cfcf68a80d097dd2f7e2c796b7 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Squid.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Squid.java
 @@ -327,4 +327,10 @@ public class Squid extends WaterAnimal {
