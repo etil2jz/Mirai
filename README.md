@@ -19,6 +19,7 @@
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
 - **IP and login location** hiding feature, which adds another security layer in the logs.
+- **UPnP Port Forwarding** which helps users who can not open their ports.
 - **Removed metrics**, no one can collect data, not even us.
 - **Bugfixes** for several Minecraft issues.
 - **Safer methods** for Vanilla calls.
