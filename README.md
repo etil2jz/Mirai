@@ -25,9 +25,9 @@
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
-The latest JAR file can be downloaded from the [GitHub CI](https://github.com/etil2jz/Mirai/raw/jdk16/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar). You can also clone this repository and build it yourself.
+The latest JAR file can be downloaded from the [GitHub CI](https://github.com/etil2jz/Mirai/raw/jdk-16/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar). You can also clone this repository and build it yourself.
 
-OpenJDK 17 builds are available [here](https://github.com/etil2jz/Mirai/raw/jdk17/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar).
+OpenJDK 17 builds are available [here](https://github.com/etil2jz/Mirai/raw/jdk-17/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar).
 
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
