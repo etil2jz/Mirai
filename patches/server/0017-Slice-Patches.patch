@@ -3,6 +3,12 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Tue, 26 Oct 2021 20:33:37 +0200
 Subject: [PATCH] (Slice) Patches
 
+(Slice) Multiple Entries with Scoreboards
+(Slice) Don't send equipment updates if only durability changed
+(Slice) Don't send fire packets if player has Fire Resistance
+(Slice) Packet obfuscation and reduction
+(Slice) Smooth World Teleports
+(Slice) World Instance Flag
 
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..6029102a2e3631d563b5f1846bc2eab8268c9ac6 100644
