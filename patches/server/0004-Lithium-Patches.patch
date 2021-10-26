@@ -1,0 +1,735 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 23 Oct 2021 17:31:25 +0200
+Subject: [PATCH] (Lithium) Patches
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+(Lithium) MixinDirection
+(Lithium) HashedList
+(Lithium) entity.fast_retrieval
+(Lithium) ai.task.goat_jump
+(Lithium) Reduce allocations
+(Lithium) CompactSineLUT
+
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java b/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..99c4b66f8ff251c82d199f6e10961ad161564a81
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java
+@@ -0,0 +1,6 @@
++package me.jellysquid.mods.lithium.common.util;
++
++public class Constants {
++	public static final int[] EMPTY_ARRAY = new int[0];
++	public static final int[] ZERO_ARRAY = new int[]{0};
++}
+\ No newline at end of file
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a390c2f3426f2bd15bb5a4cd8d967188bb762bca
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
+@@ -0,0 +1,280 @@
++package me.jellysquid.mods.lithium.common.util.collections;
++
++import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
++import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
++import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
++
++import java.util.*;
++
++/**
++ * Wraps a {@link List} with a hash table which provides O(1) lookups for {@link Collection#contains(Object)}. The type
++ * contained by this list must use reference-equality semantics.
++ */
++@SuppressWarnings("SuspiciousMethodCalls")
++public class HashedList<T> implements List<T> {
++    private final ReferenceArrayList<T> list;
++    private final Reference2IntOpenHashMap<T> counter;
++
++    public HashedList(List<T> list) {
++        this.list = new ReferenceArrayList<>();
++        this.list.addAll(list);
++
++        this.counter = new Reference2IntOpenHashMap<>();
++        this.counter.defaultReturnValue(0);
++
++        for (T obj : this.list) {
++            this.counter.addTo(obj, 1);
++        }
++    }
++
++    @Override
++    public int size() {
++        return this.list.size();
++    }
++
++    @Override
++    public boolean isEmpty() {
++        return this.list.isEmpty();
++    }
++
++    @Override
++    public boolean contains(Object o) {
++        return this.counter.containsKey(o);
++    }
++
++    @Override
++    public Iterator<T> iterator() {
++        return this.listIterator();
++    }
++
++    @Override
++    public Object[] toArray() {
++        return this.list.toArray();
++    }
++
++    @SuppressWarnings("SuspiciousToArrayCall")
++    @Override
++    public <T1> T1[] toArray(T1[] a) {
++        return this.list.toArray(a);
++    }
++
++    @Override
++    public boolean add(T t) {
++        this.trackReferenceAdded(t);
++
++        return this.list.add(t);
++    }
++
++    @Override
++    public boolean remove(Object o) {
++        this.trackReferenceRemoved(o);
++
++        return this.list.remove(o);
++    }
++
++    @Override
++    public boolean containsAll(Collection<?> c) {
++        for (Object obj : c) {
++            if (!this.counter.containsKey(obj)) {
++                return false;
++            }
++        }
++
++        return true;
++    }
++
++    @Override
++    public boolean addAll(Collection<? extends T> c) {
++        for (T obj : c) {
++            this.trackReferenceAdded(obj);
++        }
++
++        return this.list.addAll(c);
++    }
++
++    @Override
++    public boolean addAll(int index, Collection<? extends T> c) {
++        for (T obj : c) {
++            this.trackReferenceAdded(obj);
++        }
++
++        return this.list.addAll(index, c);
++    }
++
++    @Override
++    public boolean removeAll(Collection<?> c) {
++        if (this.size() >= 2 && c.size() > 4 && c instanceof List) {
++            //HashList uses reference equality, so using ReferenceOpenHashSet is fine
++            c = new ReferenceOpenHashSet<>(c);
++        }
++        this.counter.keySet().removeAll(c);
++        return this.list.removeAll(c);
++    }
++
++    @Override
++    public boolean retainAll(Collection<?> c) {
++        this.counter.keySet().retainAll(c);
++        return this.list.retainAll(c);
++    }
++
++    @Override
++    public void clear() {
++        this.counter.clear();
++        this.list.clear();
++    }
++
++    @Override
++    public T get(int index) {
++        return this.list.get(index);
++    }
++
++    @Override
++    public T set(int index, T element) {
++        T prev = this.list.set(index, element);
++
++        if (prev != element) {
++            if (prev != null) {
++                this.trackReferenceRemoved(prev);
++            }
++
++            this.trackReferenceAdded(element);
++        }
++
++        return prev;
++    }
++
++    @Override
++    public void add(int index, T element) {
++        this.trackReferenceAdded(element);
++
++        this.list.add(index, element);
++    }
++
++    @Override
++    public T remove(int index) {
++        T prev = this.list.remove(index);
++
++        if (prev != null) {
++            this.trackReferenceRemoved(prev);
++        }
++
++        return prev;
++    }
++
++    @Override
++    public int indexOf(Object o) {
++        return this.list.indexOf(o);
++    }
++
++    @Override
++    public int lastIndexOf(Object o) {
++        return this.list.lastIndexOf(o);
++    }
++
++    @Override
++    public ListIterator<T> listIterator() {
++        return this.listIterator(0);
++    }
++
++    @Override
++    public ListIterator<T> listIterator(int index) {
++        return new ListIterator<>() {
++            private final ListIterator<T> inner = HashedList.this.list.listIterator(index);
++
++            @Override
++            public boolean hasNext() {
++                return this.inner.hasNext();
++            }
++
++            @Override
++            public T next() {
++                return this.inner.next();
++            }
++
++            @Override
++            public boolean hasPrevious() {
++                return this.inner.hasPrevious();
++            }
++
++            @Override
++            public T previous() {
++                return this.inner.previous();
++            }
++
++            @Override
++            public int nextIndex() {
++                return this.inner.nextIndex();
++            }
++
++            @Override
++            public int previousIndex() {
++                return this.inner.previousIndex();
++            }
++
++            @Override
++            public void remove() {
++                int last = this.previousIndex();
++
++                if (last == -1) {
++                    throw new NoSuchElementException();
++                }
++
++                T prev = HashedList.this.get(last);
++
++                if (prev != null) {
++                    HashedList.this.trackReferenceRemoved(prev);
++                }
++
++                this.inner.remove();
++            }
++
++            @Override
++            public void set(T t) {
++                int last = this.previousIndex();
++
++                if (last == -1) {
++                    throw new NoSuchElementException();
++                }
++
++                T prev = HashedList.this.get(last);
++
++                if (prev != t) {
++                    if (prev != null) {
++                        HashedList.this.trackReferenceRemoved(prev);
++                    }
++
++                    HashedList.this.trackReferenceAdded(t);
++                }
++
++                this.inner.remove();
++            }
++
++            @Override
++            public void add(T t) {
++                HashedList.this.trackReferenceAdded(t);
++
++                this.inner.add(t);
++            }
++        };
++    }
++
++    @Override
++    public List<T> subList(int fromIndex, int toIndex) {
++        return this.list.subList(fromIndex, toIndex);
++    }
++
++    private void trackReferenceAdded(T t) {
++        this.counter.addTo(t, 1);
++    }
++
++    @SuppressWarnings("unchecked")
++    private void trackReferenceRemoved(Object o) {
++        if (this.counter.addTo((T) o, -1) <= 1) {
++            this.counter.removeInt(o);
++        }
++    }
++	
++	public static <T> HashedList<T> wrapper(List<T> list) {
++		return new HashedList<>(list);
++	}
++}
+\ No newline at end of file
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4bf72802d7b19b31226f357bad9e3e246c1671ea
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
+@@ -0,0 +1,98 @@
++package me.jellysquid.mods.lithium.common.util.math;
++
++import net.minecraft.util.Mth;
++
++/**
++ * A replacement for the sine angle lookup table used in {@link Mth}, both reducing the size of LUT and improving
++ * the access patterns for common paired sin/cos operations.
++ *
++ *  sin(-x) = -sin(x)
++ *    ... to eliminate negative angles from the LUT.
++ *
++ *  sin(x) = sin(pi/2 - x)
++ *    ... to eliminate supplementary angles from the LUT.
++ *
++ * Using these identities allows us to reduce the LUT from 64K entries (256 KB) to just 16K entries (64 KB), enabling
++ * it to better fit into the CPU's caches at the expense of some cycles on the fast path. The implementation has been
++ * tightly optimized to avoid branching where possible and to use very quick integer operations.
++ *
++ * Generally speaking, reducing the size of a lookup table is always a good optimization, but since we need to spend
++ * extra CPU cycles trying to maintain parity with vanilla, there is the potential risk that this implementation ends
++ * up being slower than vanilla when the lookup table is able to be kept in cache memory.
++ *
++ * Unlike other "fast math" implementations, the values returned by this class are *bit-for-bit identical* with those
++ * from {@link Mth}. Validation is performed during runtime to ensure that the table is correct.
++ *
++ * @author coderbot16   Author of the original (and very clever) implementation in Rust:
++ *  https://gitlab.com/coderbot16/i73/-/tree/master/i73-trig/src
++ * @author jellysquid3  Additional optimizations, port to Java
++*/
++public class CompactSineLUT {
++    private static final int[] SINE_TABLE_INT = new int[16384 + 1];
++    private static final float SINE_TABLE_MIDPOINT;
++	
++	static {
++		final float[] SINE_TABLE = Mth.getSinTable();
++		// Copy the sine table, covering to raw int bits
++		for (int i = 0; i < SINE_TABLE_INT.length; i++) {
++			SINE_TABLE_INT[i] = Float.floatToRawIntBits(SINE_TABLE[i]);
++		}
++		
++		SINE_TABLE_MIDPOINT = SINE_TABLE[SINE_TABLE.length / 2];
++		
++		// Test that the lookup table is correct during runtime
++		for (int i = 0; i < SINE_TABLE.length; i++) {
++            float expected = SINE_TABLE[i];
++            float value = lookup(i);
++
++            if (expected != value) {
++                throw new IllegalArgumentException(String.format("LUT error at index %d (expected: %s, found: %s)", i, expected, value));
++            }
++        }
++    }
++	
++	// [VanillaCopy] Mth#sin(float)
++	public static float sin(float f) {
++        return lookup((int) (f * 10430.38) & 0xFFFF);
++    }
++	
++	// [VanillaCopy] Mth#cos(float)
++	public static float cos(float f) {
++        return lookup((int) (f * 10430.38 + 16384.0) & 0xFFFF);
++    }
++	
++	private static float lookup(int index) {
++		// A special case... Is there some way to eliminate this?
++		if (index == 32768) {
++            return SINE_TABLE_MIDPOINT;
++        }
++		
++		/*
++		Trigonometric identity: sin(-x) = -sin(x)
++        Given a domain of 0 <= x <= 2*pi, just negate the value if x > pi.
++        This allows the sin table size to be halved.
++		*/
++		int neg = (index & 0x8000) << 16;
++		
++		/*
++		All bits set if (pi/2 <= x), none set otherwise
++		Extracts the 15th bit from 'half'
++		*/
++		int mask = (index << 17) >> 31;
++		
++		// Trigonometric identity: sin(x) = sin(pi/2 - x)
++		int pos = (0x8001 & mask) + (index ^ mask);
++		
++		/*
++		Wrap the position in the table. Moving this down to immediately before the array access
++		seems to help the Hotspot compiler optimize the bit math better.
++		*/
++		pos &= 0x7fff;
++		
++		/*
++		Fetch the corresponding value from the LUT and invert the sign bit as needed
++		This directly manipulate the sign bit on the float bits to simplify logic
++		*/
++		return Float.intBitsToFloat(SINE_TABLE_INT[pos] ^ neg);
++	}
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
+index 593d6251c75ec337175d08b85000239ba7da1af2..9fd0ce0ebe622732a476a0ce8ee8447202610b27 100644
+--- a/src/main/java/net/minecraft/core/Direction.java
++++ b/src/main/java/net/minecraft/core/Direction.java
+@@ -171,8 +171,13 @@ public enum Direction implements StringRepresentable {
+         }
+     }
+ 
++	/**
++	 * @reason Avoid the modulo/abs operations
++	 * @author JellySquid
++	*/
++
+     public Direction getOpposite() {
+-        return from3DDataValue(this.oppositeIndex);
++        return VALUES[this.oppositeIndex];
+     }
+ 
+     public Direction getClockWise(Direction.Axis axis) {
+@@ -386,8 +391,13 @@ public enum Direction implements StringRepresentable {
+         return (float)((this.data2d & 3) * 90);
+     }
+ 
++	/**
++	 * @reason Do not allocate an excessive number of Direction arrays
++	 * @author JellySquid
++	*/
++
+     public static Direction getRandom(Random random) {
+-        return Util.getRandom(VALUES, random);
++        return VALUES[random.nextInt(VALUES.length)];
+     }
+ 
+     public static Direction getNearest(double x, double y, double z) {
+diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
+index 4f55fdbdfea42834d2b664c6ecef6406d77b1259..2bc7c351b2bf113ff8fa33949691c19a95cac3aa 100644
+--- a/src/main/java/net/minecraft/util/Mth.java
++++ b/src/main/java/net/minecraft/util/Mth.java
+@@ -8,6 +8,7 @@ import net.minecraft.core.Vec3i;
+ import net.minecraft.world.phys.AABB;
+ import net.minecraft.world.phys.Vec3;
+ import org.apache.commons.lang3.math.NumberUtils;
++import me.jellysquid.mods.lithium.common.util.math.CompactSineLUT;
+ 
+ public class Mth {
+     private static final int BIG_ENOUGH_INT = 1024;
+@@ -31,6 +32,7 @@ public class Mth {
+ 
+     });
+     private static final Random RANDOM = new Random();
++	public static float[] getSinTable() { return SIN; }
+     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+     private static final double ONE_SIXTH = 0.16666666666666666D;
+     private static final int FRAC_EXP = 8;
+@@ -40,11 +42,13 @@ public class Mth {
+     private static final double[] COS_TAB = new double[257];
+ 
+     public static float sin(float value) {
+-        return SIN[(int)(value * 10430.378F) & '\uffff'];
++        //return SIN[(int)(value * 10430.378F) & '\uffff'];
++		return CompactSineLUT.sin(value);
+     }
+ 
+     public static float cos(float value) {
+-        return SIN[(int)(value * 10430.378F + 16384.0F) & '\uffff'];
++        //return SIN[(int)(value * 10430.378F + 16384.0F) & '\uffff'];
++		return CompactSineLUT.cos(value);
+     }
+ 
+     public static float sqrt(float value) {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
+index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..bb6cc00fa95e6f15f125e35bc5bb58b44e6e93d9 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.world.entity.ai.behavior;
+ 
+ import com.google.common.collect.ImmutableMap;
++import it.unimi.dsi.fastutil.longs.LongArrayList;
++import it.unimi.dsi.fastutil.shorts.ShortArrayList;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Optional;
+@@ -40,12 +42,24 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+     private int findJumpTries;
+     private long prepareJumpStart;
+     private Function<E, SoundEvent> getJumpSound;
++	private final LongArrayList potentialTargets = new LongArrayList();
++	private final ShortArrayList potentialWeights = new ShortArrayList();
+ 
+-    public LongJumpToRandomPos(UniformInt cooldownRange, int verticalRange, int horizontalRange, float maxRange, Function<E, SoundEvent> function) {
++	private static int findIndex(ShortArrayList weights, int weightedIndex) {
++        for (int i = 0; i < weights.size(); i++) {
++            weightedIndex -= weights.getShort(i);
++            if (weightedIndex < 0) {
++                return i;
++            }
++        }
++        return -1;
++    }
++
++    public LongJumpToRandomPos(UniformInt cooldownRange, int maxLongJumpHeight, int maxLongJumpWidth, float maxRange, Function<E, SoundEvent> function) {
+         super(ImmutableMap.of(MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED, MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS, MemoryStatus.VALUE_ABSENT, MemoryModuleType.LONG_JUMP_MID_JUMP, MemoryStatus.VALUE_ABSENT), 200);
+         this.timeBetweenLongJumps = cooldownRange;
+-        this.maxLongJumpHeight = verticalRange;
+-        this.maxLongJumpWidth = horizontalRange;
++        this.maxLongJumpHeight = maxLongJumpHeight;
++        this.maxLongJumpWidth = maxLongJumpWidth;
+         this.maxJumpVelocity = maxRange;
+         this.getJumpSound = function;
+     }
+@@ -64,30 +78,63 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+ 
+         return bl;
+     }
+-
++	
++	/**
++	 * @author 2No2Name
++	 * @reason only evaluate 20+ instead of ~100 possible jumps without affecting behavior
++	 * [VanillaCopy] the whole method, commented changes
++	*/
+     @Override
+     protected void start(ServerLevel serverLevel, Mob mob, long l) {
++		this.potentialTargets.clear();
++		this.potentialWeights.clear();
++		int potentialTotalWeight = 0;
+         this.chosenJump = Optional.empty();
+-        this.findJumpTries = 20;
++        this.findJumpTries = FIND_JUMP_TRIES;
+         this.jumpCandidates.clear();
+         this.initialPosition = Optional.of(mob.position());
+-        BlockPos blockPos = mob.blockPosition();
+-        int i = blockPos.getX();
+-        int j = blockPos.getY();
+-        int k = blockPos.getZ();
+-        Iterable<BlockPos> iterable = BlockPos.betweenClosed(i - this.maxLongJumpWidth, j - this.maxLongJumpHeight, k - this.maxLongJumpWidth, i + this.maxLongJumpWidth, j + this.maxLongJumpHeight, k + this.maxLongJumpWidth);
+-        PathNavigation pathNavigation = mob.getNavigation();
+-
+-        for(BlockPos blockPos2 : iterable) {
+-            double d = blockPos2.distSqr(blockPos);
+-            if ((i != blockPos2.getX() || k != blockPos2.getZ()) && pathNavigation.isStableDestination(blockPos2) && mob.getPathfindingMalus(WalkNodeEvaluator.getBlockPathTypeStatic(mob.level, blockPos2.mutable())) == 0.0F) {
+-                Optional<Vec3> optional = this.calculateOptimalJumpVector(mob, Vec3.atCenterOf(blockPos2));
+-                optional.ifPresent((vel) -> {
+-                    this.jumpCandidates.add(new LongJumpToRandomPos.PossibleJump(new BlockPos(blockPos2), vel, Mth.ceil(d)));
+-                });
++        BlockPos goatPos = mob.blockPosition();
++        int goatX = goatPos.getX();
++        int goatY = goatPos.getY();
++        int goatZ = goatPos.getZ();
++        Iterable<BlockPos> iterable = BlockPos.betweenClosed(goatX - this.maxLongJumpWidth, goatY - this.maxLongJumpHeight, goatZ - this.maxLongJumpWidth, goatX + this.maxLongJumpWidth, goatY + this.maxLongJumpHeight, goatZ + this.maxLongJumpWidth);
++        PathNavigation entityNavigation = mob.getNavigation();
++
++        BlockPos.MutableBlockPos targetPosCopy = new BlockPos.MutableBlockPos();
++        for (BlockPos targetPos : iterable) {
++            if (goatX == targetPos.getX() && goatZ == targetPos.getZ()) {
++                continue;
++            }
++			double squaredDistance = targetPos.distSqr(goatPos);
++			
++			//Optimization: Evaluate the flight path check later (after random selection, but before world can be modified)
++			if (entityNavigation.isStableDestination(targetPos) && mob.getPathfindingMalus(WalkNodeEvaluator.getBlockPathTypeStatic(mob.level, targetPosCopy.set(targetPos))) == 0.0F) {
++                this.potentialTargets.add(targetPos.asLong());
++                int weight = Mth.ceil(squaredDistance);
++                this.potentialWeights.add((short) weight);
++                potentialTotalWeight += weight;
++            }
++        }
++		/*
++		Optimization: Do the random picking of positions before doing the expensive the jump flight path validity check.
++		up to MAX_COOLDOWN random targets can be selected in keepRunning, so only this number of targets needs to be generated
++		*/
++		while (this.jumpCandidates.size() < FIND_JUMP_TRIES) {
++            //the number of random calls will be different from vanilla, but this is not reasonably detectable (not affecting world generation)
++            if (potentialTotalWeight == 0) {
++                return; //collection is empty/fully consumed, no more possible targets available
++            }
++            int chosenIndex = findIndex(this.potentialWeights, serverLevel.random.nextInt(potentialTotalWeight));
++            long chosenPos = this.potentialTargets.getLong(chosenIndex);
++            short chosenWeight = this.potentialWeights.set(chosenIndex, (short) 0);
++            potentialTotalWeight -= chosenWeight;
++            //Very expensive method call, it shifts bounding boxes around and checks for collisions with them
++            Optional<Vec3> optional = this.calculateOptimalJumpVector(mob, Vec3.atCenterOf(targetPosCopy.set(chosenPos)));
++            if (optional.isPresent()) {
++                //the weight in Target should be unused, as the random selection already took place
++                this.jumpCandidates.add(new LongJumpToRandomPos.PossibleJump(new BlockPos(targetPosCopy), optional.get(), chosenWeight));
+             }
+         }
+-
+     }
+ 
+     @Override
+@@ -105,7 +152,12 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+             }
+         } else {
+             --this.findJumpTries;
+-            Optional<LongJumpToRandomPos.PossibleJump> optional = WeighedRandom.getRandomItem(serverLevel.random, this.jumpCandidates);
++            Optional<LongJumpToRandomPos.PossibleJump> optional;
++			if (this.jumpCandidates.isEmpty()) {
++				optional = Optional.empty();
++			} else {
++				optional = Optional.of(this.jumpCandidates.get(0));
++			}
+             if (optional.isPresent()) {
+                 this.jumpCandidates.remove(optional.get());
+                 mob.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(optional.get().getJumpTarget()));
+diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+index 4c9ae6bdb2f0358798f84928271a2d783dcba7b4..6bf94e8825beab04724c111123de6a6f0aead77a 100644
+--- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+@@ -374,7 +374,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.DOWN ? new int[]{0} : new int[0];
++            return side == Direction.DOWN ? me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY : me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
+@@ -423,7 +423,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.UP ? new int[]{0} : new int[0];
++            return side == Direction.UP ? me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY : me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
+@@ -460,7 +460,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return new int[0];
++            return me.jellysquid.mods.lithium.common.util.Constants.EMPTY_ARRAY; // Yatopia - avoid array allocation
+         }
+ 
+         @Override
+diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
+index 24552500307c42f9f3dc5c4d9ba73a84a787423a..89adf2e3d28f995567282f1c9a5eff7136b59c15 100644
+--- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
++++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
+@@ -34,31 +34,50 @@ public class EntitySectionStorage<T extends EntityAccess> {
+     }
+ 
+     public void forEachAccessibleSection(AABB box, Consumer<EntitySection<T>> action) {
+-        int i = SectionPos.posToSectionCoord(box.minX - 2.0D);
+-        int j = SectionPos.posToSectionCoord(box.minY - 2.0D);
+-        int k = SectionPos.posToSectionCoord(box.minZ - 2.0D);
+-        int l = SectionPos.posToSectionCoord(box.maxX + 2.0D);
+-        int m = SectionPos.posToSectionCoord(box.maxY + 2.0D);
+-        int n = SectionPos.posToSectionCoord(box.maxZ + 2.0D);
+-
+-        for(int o = i; o <= l; ++o) {
+-            long p = SectionPos.asLong(o, 0, 0);
+-            long q = SectionPos.asLong(o, -1, -1);
+-            LongIterator longIterator = this.sectionIds.subSet(p, q + 1L).iterator();
+-
+-            while(longIterator.hasNext()) {
+-                long r = longIterator.nextLong();
+-                int s = SectionPos.y(r);
+-                int t = SectionPos.z(r);
+-                if (s >= j && s <= m && t >= k && t <= n) {
+-                    EntitySection<T> entitySection = this.sections.get(r);
+-                    if (entitySection != null && entitySection.getStatus().isAccessible()) {
+-                        action.accept(entitySection);
+-                    }
+-                }
++        int minX = SectionPos.posToSectionCoord(box.minX - 2.0D);
++        int minY = SectionPos.posToSectionCoord(box.minY - 2.0D);
++        int minZ = SectionPos.posToSectionCoord(box.minZ - 2.0D);
++        int maxX = SectionPos.posToSectionCoord(box.maxX + 2.0D);
++        int maxY = SectionPos.posToSectionCoord(box.maxY + 2.0D);
++        int maxZ = SectionPos.posToSectionCoord(box.maxZ + 2.0D);
++		
++		/*
++		Vanilla order of the AVL long set is sorting by ascending long value. The x, y, z positions are packed into
++        a long with the x position's lowest 22 bits placed at the MSB.
++        Therefore the long is negative iff the 22th bit of the x position is set, which happens iff the x position
++        is negative. A positive x position will never have its 22th bit set, as these big coordinates are far outside
++        the world. y and z positions are treated as unsigned when sorting by ascending long value, as their sign bits
++        are placed somewhere inside the packed long
++		*/
++		
++		for (int x = minX; x <= maxX; x++) {
++            for (int z = Math.max(minZ, 0); z <= maxZ; z++) {
++                this.forEachInColumn(x, minY, maxY, z, action);
++            }
++			
++			int bound = Math.min(-1, maxZ);
++            for (int z = minZ; z <= bound; z++) {
++                this.forEachInColumn(x, minY, maxY, z, action);
+             }
+         }
+-
++    }
++	
++	private void forEachInColumn(int x, int minY, int maxY, int z, Consumer<EntitySection<T>> action) {
++		//y from negative to positive, but y is treated as unsigned
++		for (int y = Math.max(minY, 0); y <= maxY; y++) {
++            this.consumeSection(x, y, z, action);
++        }
++        int bound = Math.min(-1, maxY);
++        for (int y = minY; y <= bound; y++) {
++            this.consumeSection(x, y, z, action);
++        }
++    }
++	
++	private void consumeSection(int x, int y, int z, Consumer<EntitySection<T>> action) {
++		EntitySection<T> section = this.getSection(SectionPos.asLong(x, y, z));
++        if (section != null && section.getStatus().isAccessible()) {
++            action.accept(section);
++        }
+     }
+ 
+     public LongStream getExistingSectionPositionsInChunk(long chunkPos) {

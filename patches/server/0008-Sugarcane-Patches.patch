@@ -1,0 +1,313 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 24 Oct 2021 11:48:02 +0200
+Subject: [PATCH] (Sugarcane) Patches
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+(Sugarcane) Add NBT API as a first-class lib
+(Sugarcane) Add GameProfileLookupEvent
+(Sugarcane) Stop wasting resources on JsonList#get
+(Sugarcane) New nbt cache
+(Sugarcane) Configurable flight checks
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index f19273b511a1f9c2930104e6d39f22646b2808e7..e0077c83202e9b092bdd76c9dfbeb6f0b1c85947 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -117,6 +117,7 @@ relocation {
+     relocate("org.bukkit.craftbukkit" to "org.bukkit.craftbukkit.v$packageVersion") {
+         exclude("org.bukkit.craftbukkit.Main*")
+     }
++	relocate("de.tr7zw.changeme.nbtapi" to "de.tr7zw.nbtapi") // Sugarcane - Add NBT API as a first-class lib
+ 
+     fun cb(pack: String) = "org.bukkit.craftbukkit.libs.$pack"
+ 
+diff --git a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+index 84551164b76bc8f064a3a0c030c3a1b47f567b6f..b0f8b11ea071fa96beefcc28cab6a552c19b2405 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
++++ b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+@@ -188,9 +188,17 @@ public class CraftPlayerProfile implements PlayerProfile {
+ 
+         boolean isCompleteFromCache = this.completeFromCache(true, onlineMode);
+         if (onlineMode && (!isCompleteFromCache || textures && !hasTextures())) {
+-            GameProfile result = server.getSessionService().fillProfileProperties(profile, true);
+-            if (result != null) {
+-                copyProfileProperties(result, this.profile, true);
++            // Sugarcane start
++            org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent event = new org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profile.getId(), profile.getName());
++            org.bukkit.Bukkit.getPluginManager().callEvent(event);
++            GameProfile eventProfile = event.getGameProfile();
++            if (eventProfile != null) {
++                GameProfile result = eventProfile;
++            } else {
++                GameProfile result = server.getSessionService().fillProfileProperties(profile, true);
++                if (result != null) {
++                    copyProfileProperties(result, this.profile, true);
++                }
+             }
+             if (this.profile.isComplete()) {
+                 server.getProfileCache().add(this.profile);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index e5bc37ec44ba0225fa1a0cba6a62a7d22fd1e892..87466f40c837bba4a1a2bc52de07897226cf145a 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1103,7 +1103,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         }
+         // Spigot start
+         MCUtil.asyncExecutor.shutdown(); // Paper
++		this.playerDataStorage.executorService.shutdown(); // Sugarcane - New nbt cache
+         try { MCUtil.asyncExecutor.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS); // Paper
++			this.playerDataStorage.executorService.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS); // Sugarcane - New nbt cache
+         } catch (java.lang.InterruptedException ignored) {} // Paper
+         if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
+             MinecraftServer.LOGGER.info("Saving usercache.json");
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 029c21d9416520469548293f9a2ec0c056507d05..0352d1b1a016eb1d3426e8c0abbd960b428d6f98 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -318,7 +318,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         ++this.tickCount;
+         this.knownMovePacketCount = this.receivedMovePacketCount;
+         if (this.clientIsFloating && !this.player.isSleeping()) {
+-            if (++this.aboveGroundTickCount > 80) {
++            if (xyz.arthurb.mirai.MiraiConfig.checkFlying && ++this.aboveGroundTickCount > 80) { // Sugarcane - Configurable flight checks
+                 ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
+                 this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
+                 return;
+@@ -337,7 +337,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+             this.vehicleLastGoodY = this.lastVehicle.getY();
+             this.vehicleLastGoodZ = this.lastVehicle.getZ();
+             if (this.clientVehicleIsFloating && this.player.getRootVehicle().getControllingPassenger() == this.player) {
+-                if (++this.aboveGroundVehicleTickCount > 80) {
++                if (xyz.arthurb.mirai.MiraiConfig.checkVehicleFlying && ++this.aboveGroundVehicleTickCount > 80) { // Sugarcane - Configurable flight checks
+                     ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating a vehicle too long!", this.player.getName().getString());
+                     this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
+                     return;
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 335bd288ddf965870b7ed6f189593ccd30ccec0c..adf3efb2c884fc1c738a0494471a2a12fae74d8a 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -745,13 +745,19 @@ public abstract class PlayerList {
+         if (getBans().isBanned(gameprofile) && (gameprofilebanentry = getBans().get(gameprofile)) != null) {
+             // Paper end
+ 
+-            chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
++            if (!gameprofilebanentry.hasExpired()) { // Sugarcane - Stop wasting resources on JsonList#get
++			chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
+             if (gameprofilebanentry.getExpires() != null) {
+                 chatmessage.append(new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())}));
+             }
+ 
+             // return chatmessage;
++			// Sugarcane start - Stop wasting resources on JsonList#get
+             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
++			} else {
++				getBans().remove(gameprofile);
++            }
++            // Sugarcane end
+         } else if (!this.isWhitelisted(gameprofile, event)) { // Paper
+             //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
+             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
+diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
+index 9152c6c9e7e5c8fdb9183c2b4f088a810621b333..2d44cbce364c77a153ee885e6b64f0d64bad05c2 100644
+--- a/src/main/java/net/minecraft/server/players/StoredUserList.java
++++ b/src/main/java/net/minecraft/server/players/StoredUserList.java
+@@ -73,9 +73,14 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+         // Paper start
+         // this.g();
+         // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
++		// Sugarcane start - only remove if it expires and has been requested (Stop wasting resources on JsonList#get)
++        return this.map.get(this.getKeyForUser(key));
++        /*
+         return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
+             return v.hasExpired() ? null : v;
+         });
++		*/
++		// Sugarcane end
+         // Paper end
+     }
+ 
+@@ -150,6 +155,8 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+     public void save() throws IOException {
+         this.removeExpired(); // Paper - remove expired values before saving
+         JsonArray jsonarray = new JsonArray();
++		// Sugarcane start - we're nuking streams wherever possible (Stop wasting resources on JsonList#get)
++		/*
+         Stream<JsonObject> stream = this.map.values().stream().map((jsonlistentry) -> { // CraftBukkit - decompile error
+             JsonObject jsonobject = new JsonObject();
+ 
+@@ -159,6 +166,13 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+ 
+         Objects.requireNonNull(jsonarray);
+         stream.forEach(jsonarray::add);
++		*/
++		for (V value : this.map.values()) {
++            JsonObject obj = new JsonObject();
++            value.serialize(obj);
++            jsonarray.add(obj);
++        }
++        // Sugarcane end
+         BufferedWriter bufferedwriter = Files.newWriter(this.file, StandardCharsets.UTF_8);
+ 
+         try {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
+index f61c313195c3d16d996721b2f8cd0d9a10ce1aaf..affd0619e89a93a5bed94ef2b4c236bded999831 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
+@@ -154,7 +154,15 @@ public class SkullBlockEntity extends BlockEntity {
+                     Util.ifElse(profile, (profilex) -> {
+                         Property property = Iterables.getFirst(profilex.getProperties().get("textures"), (Property)null);
+                         if (property == null) {
+-                            profilex = sessionService.fillProfileProperties(profilex, true);
++                            // Sugarcane start
++							org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent event = new org.sugarcanemc.sugarcane.api.events.GameProfileLookupEvent(!org.bukkit.Bukkit.isPrimaryThread(), profilex.getId(), profilex.getName());
++							org.bukkit.Bukkit.getPluginManager().callEvent(event);
++							GameProfile eventProfile = event.getGameProfile();
++							if (eventProfile != null) {
++								profilex = eventProfile;
++							} else {
++								profilex = sessionService.fillProfileProperties(profilex, true);
++							}
+                         }
+ 
+                         GameProfile gameProfile = profilex;
+diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+index 8ce6d386a67687207966a9c577cff9046f45193e..3ed57331ba6f6f2ade08fc8950c5dc83f84c2545 100644
+--- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+@@ -24,6 +24,10 @@ public class PlayerDataStorage {
+     private static final Logger LOGGER = LogManager.getLogger();
+     private final File playerDir;
+     protected final DataFixer fixerUpper;
++	// Sugarcane start - NBT Cache system
++    private final org.sugarcanemc.sugarcane.cache.NBTCache dataCache = new org.sugarcanemc.sugarcane.cache.NBTCache();
++    public final java.util.concurrent.ExecutorService executorService = java.util.concurrent.Executors.newSingleThreadExecutor(new com.google.common.util.concurrent.ThreadFactoryBuilder().setDaemon(true).setPriority(Thread.NORM_PRIORITY - 1).build());
++    // Sugarcane end
+ 
+     public PlayerDataStorage(LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer) {
+         this.fixerUpper = dataFixer;
+@@ -37,11 +41,24 @@ public class PlayerDataStorage {
+             CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
+             File file = File.createTempFile(player.getStringUUID() + "-", ".dat", this.playerDir);
+ 
+-            NbtIo.writeCompressed(nbttagcompound, file);
+-            File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
+-            File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
+-
+-            Util.safeReplaceFile(file1, file, file2);
++            // NbtIo.writeCompressed(nbttagcompound, file); // Sugarcane
++            // Sugarcane start - NBT Cache system
++            Runnable task = () -> {
++                try {
++                    NbtIo.writeCompressed(nbttagcompound, file);
++                    File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
++                    File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
++
++                    Util.safeReplaceFile(file1, file, file2);
++                } catch (Exception exception) {
++                    PlayerDataStorage.LOGGER.error("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
++                }
++                };
++            synchronized (this.dataCache){
++                this.dataCache.put(file, nbttagcompound);
++            }
++            this.executorService.execute(task);
++            // Sugarcane end
+         } catch (Exception exception) {
+             PlayerDataStorage.LOGGER.warn("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
+         }
+@@ -57,9 +74,18 @@ public class PlayerDataStorage {
+             // Spigot Start
+             boolean usingWrongFile = false;
+             boolean normalFile = file.exists() && file.isFile(); // Akarin - ensures normal file
+-			if ( org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file
++			// if ( org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file
++			// Sugarcane start - NBT Cache system
++            CompoundTag playerData;
++            synchronized (this.dataCache){
++                playerData = this.dataCache.get(file);
++            }
++            if (playerData == null && org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file // Sugarcane
+             {
+                 file = new File( this.playerDir, java.util.UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + player.getScoreboardName() ).getBytes( "UTF-8" ) ).toString() + ".dat");
++				synchronized (this.dataCache){
++                    playerData = this.dataCache.get(file);
++                }
+                 if ( file.exists() )
+                 {
+                     usingWrongFile = true;
+@@ -68,9 +94,15 @@ public class PlayerDataStorage {
+             }
+             // Spigot End
+ 
+-            if (normalFile) { // Akarin - avoid double I/O operation
++            // if (normalFile) { // Akarin - avoid double I/O operation
++			if (playerData != null) {
++                nbttagcompound = playerData;
++            } else if (normalFile) { // Akarin - avoid double I/O operation
++
++            // if (file.exists() && file.isFile()) {
+                 nbttagcompound = NbtIo.readCompressed(file);
+             }
++			// Sugarcane end
+             // Spigot Start
+             if ( usingWrongFile )
+             {
+diff --git a/src/main/java/org/sugarcanemc/sugarcane/cache/NBTCache.java b/src/main/java/org/sugarcanemc/sugarcane/cache/NBTCache.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a0098ad1716ed8821d4b30dafdaac0ac655ad152
+--- /dev/null
++++ b/src/main/java/org/sugarcanemc/sugarcane/cache/NBTCache.java
+@@ -0,0 +1,32 @@
++package org.sugarcanemc.sugarcane.cache;
++
++import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.nbt.CompoundTag;
++
++import java.io.File;
++
++public class NBTCache extends Object2ObjectLinkedOpenCustomHashMap<File, CompoundTag> {
++
++    public NBTCache() {
++        super(100, 0.75F, new Strategy<File>() {
++            @Override
++            public int hashCode(File k) {
++                return k.hashCode();
++            }
++
++            @Override
++            public boolean equals(File k, File k1) {
++                return k.equals(k1);
++            }
++        });
++    }
++
++    @Override
++    public CompoundTag put(File k, CompoundTag v) {
++        if (this.size() > MinecraftServer.getServer().getPlayerCount()) {
++            this.removeLast();
++        }
++        return super.putAndMoveToFirst(k, v);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 35646ca1c13b30a40bec09b9ef1aa7ab75616e38..452de6f89f12ceddd3afa57c3eb1412bedd05272 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -197,4 +197,11 @@ public class MiraiConfig {
+ 		logPlayerLoginLoc = getBoolean("settings.log-player-login-location", logPlayerLoginLoc);
+ 	}
+ 	
++	public static boolean checkFlying = true;
++	public static boolean checkVehicleFlying = true;
++	private static void flightChecks() {
++		checkFlying = getBoolean("settings.checks.flight", checkFlying);
++		checkVehicleFlying = getBoolean("settings.checks.vehicle-flight", checkVehicleFlying);
++	}
++	
+ }
+\ No newline at end of file

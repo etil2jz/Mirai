@@ -1,0 +1,471 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 26 Oct 2021 20:33:37 +0200
+Subject: [PATCH] (Slice) Patches
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..6029102a2e3631d563b5f1846bc2eab8268c9ac6 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+@@ -21,6 +21,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
+         }
+ 
+     }
++	
++	// Slice start
++    public ClientboundSetEntityDataPacket(int id, List<SynchedEntityData.DataItem<?>> packedItems) {
++        this.id = id;
++        this.packedItems = packedItems;
++    }
++    // Slice end
+ 
+     public ClientboundSetEntityDataPacket(FriendlyByteBuf buf) {
+         this.id = buf.readVarInt();
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetPlayerTeamPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetPlayerTeamPacket.java
+index 4c9660176e783999301565790b8cf6f47b0d02a2..2741e4f58ab0c239f791d00aa813cde4d378feea 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetPlayerTeamPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetPlayerTeamPacket.java
+@@ -41,6 +41,12 @@ public class ClientboundSetPlayerTeamPacket implements Packet<ClientGamePacketLi
+     public static ClientboundSetPlayerTeamPacket createPlayerPacket(PlayerTeam team, String playerName, ClientboundSetPlayerTeamPacket.Action operation) {
+         return new ClientboundSetPlayerTeamPacket(team.getName(), operation == ClientboundSetPlayerTeamPacket.Action.ADD ? 3 : 4, Optional.empty(), ImmutableList.of(playerName));
+     }
++	
++	// Slice start
++    public static ClientboundSetPlayerTeamPacket createMultiplePlayerPacket(PlayerTeam team, Collection<String> players, ClientboundSetPlayerTeamPacket.Action operation) {
++        return new ClientboundSetPlayerTeamPacket(team.getName(), operation == ClientboundSetPlayerTeamPacket.Action.ADD ? 3 : 4, Optional.empty(), players);
++    }
++    // Slice end
+ 
+     public ClientboundSetPlayerTeamPacket(FriendlyByteBuf buf) {
+         this.name = buf.readUtf(16);
+diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+index 4df12454001f0de5f358c88d876e34c35a736c42..3a9b301e0c696f08a2b677f592f31444d967fe17 100644
+--- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
++++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+@@ -136,6 +136,12 @@ public class SynchedEntityData {
+     }
+ 
+     public <T> void set(EntityDataAccessor<T> key, T value) {
++		// Slice start
++		set(key, value, null);
++	}
++	
++	public <T> void set(EntityDataAccessor<T> key, T value, @Nullable T foreignValue) {
++		// Slice end
+         SynchedEntityData.DataItem<T> datawatcher_item = this.getItem(key);
+ 
+         if (ObjectUtils.notEqual(value, datawatcher_item.getValue())) {
+@@ -145,6 +151,11 @@ public class SynchedEntityData {
+             this.isDirty = true;
+         }
+ 
++		// Slice start
++        if (foreignValue != null && ObjectUtils.notEqual(foreignValue, datawatcher_item.getForeignValue())) {
++            datawatcher_item.setForeignValue(foreignValue);
++        }
++        // Slice end
+     }
+ 
+     // CraftBukkit start - add method from above
+@@ -199,6 +210,28 @@ public class SynchedEntityData {
+         this.isDirty = false;
+         return list;
+     }
++	
++	// Slice start
++    @Nullable
++    public List<SynchedEntityData.DataItem<?>> packForeignDirty(List<DataItem<?>> unpackedData) {
++        List<SynchedEntityData.DataItem<?>> list = null;
++
++        for (DataItem<?> dataItem : unpackedData) {
++            DataItem<?> item = itemsById.get(dataItem.accessor.getId());
++            if (item.isDirty(true)) {
++                item.setForeignDirty(false);
++
++                if (list == null) {
++                    list = Lists.newArrayList();
++                }
++
++                list.add(item.copy(true));
++            }
++        }
++
++        return list;
++    }
++    // Slice end
+ 
+     @Nullable
+     public List<SynchedEntityData.DataItem<?>> getAll() {
+@@ -313,11 +346,14 @@ public class SynchedEntityData {
+         final EntityDataAccessor<T> accessor;
+         T value;
+         private boolean dirty;
++		@Nullable T foreignValue = null; // Slice
++		private boolean foreignDirty; // Slice
+ 
+         public DataItem(EntityDataAccessor<T> data, T value) {
+             this.accessor = data;
+             this.value = value;
+             this.dirty = true;
++			this.foreignDirty = true; // Slice
+         }
+ 
+         public EntityDataAccessor<T> getAccessor() {
+@@ -343,5 +379,34 @@ public class SynchedEntityData {
+         public SynchedEntityData.DataItem<T> copy() {
+             return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy(this.value));
+         }
++		
++		// Slice start
++        public void setForeignValue(T foreignValue) {
++            this.foreignValue = foreignValue;
++            this.foreignDirty = true;
++        }
++
++        public @Nullable T getForeignValue() {
++            return foreignValue;
++        }
++
++        public boolean isDirty(boolean foreign) {
++            if (foreign) {
++                //There must be a foreign value in order for this to be dirty, otherwise we consider this a normal
++                //value and check the normal dirty flag.
++                return foreignValue == null || this.foreignDirty;
++            }
++
++            return this.dirty;
++        }
++
++        public void setForeignDirty(boolean dirty) {
++            this.foreignDirty = dirty;
++        }
++
++        public SynchedEntityData.DataItem<T> copy(boolean foreign) {
++            return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy((foreign && this.foreignValue != null ? this.foreignValue : this.value)));
++        }
++        // Slice end
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/ServerScoreboard.java b/src/main/java/net/minecraft/server/ServerScoreboard.java
+index 130a928f156961bae9ca184b3ca31004dbba1012..063e4f9f140a39c519b1d4892bfa331d1265755c 100644
+--- a/src/main/java/net/minecraft/server/ServerScoreboard.java
++++ b/src/main/java/net/minecraft/server/ServerScoreboard.java
+@@ -3,6 +3,7 @@ package net.minecraft.server;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Sets;
+ import java.util.Iterator;
++import java.util.Collection; // Slice
+ import java.util.List;
+ import java.util.Objects;
+ import java.util.Set;
+@@ -91,6 +92,19 @@ public class ServerScoreboard extends Scoreboard {
+             return false;
+         }
+     }
++	
++	// Slice start
++    @Override
++    public boolean addPlayersToTeam(Collection<String> players, PlayerTeam team) {
++        if (super.addPlayersToTeam(players, team)) {
++            this.sendAll(ClientboundSetPlayerTeamPacket.createMultiplePlayerPacket(team, players, ClientboundSetPlayerTeamPacket.Action.ADD));
++            this.setDirty();
++            return true;
++        } else {
++            return false;
++        }
++    }
++    // Slice end
+ 
+     @Override
+     public void removePlayerFromTeam(String playerName, PlayerTeam team) {
+@@ -98,6 +112,19 @@ public class ServerScoreboard extends Scoreboard {
+         this.sendAll(ClientboundSetPlayerTeamPacket.createPlayerPacket(team, playerName, ClientboundSetPlayerTeamPacket.Action.REMOVE));
+         this.setDirty();
+     }
++	
++	// Slice start
++    @Override
++    public boolean removePlayersFromTeam(Collection<String> players, PlayerTeam team) {
++        if (super.removePlayersFromTeam(players, team)) {
++            this.sendAll(ClientboundSetPlayerTeamPacket.createMultiplePlayerPacket(team, players, ClientboundSetPlayerTeamPacket.Action.REMOVE));
++            this.setDirty();
++            return true;
++        } else {
++            return false;
++        }
++    }
++    // Slice end
+ 
+     @Override
+     public void onObjectiveAdded(Objective objective) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index d175a41fd8c24813904019e25432c4a796db0b7b..4490cde745033d0cb138144e7921ed60f406b16c 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -387,7 +387,19 @@ public class ServerEntity {
+         SynchedEntityData datawatcher = this.entity.getEntityData();
+ 
+         if (datawatcher.isDirty()) {
+-            this.broadcastAndSend(new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false));
++            // Slice start
++            ClientboundSetEntityDataPacket dataPacket = new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false);
++            if (this.entity instanceof ServerPlayer serverPlayer) {
++                serverPlayer.connection.send(dataPacket);
++            }
++
++            //Get the packedData that the original packet has, and then determine if any of those are changed in
++            //the foreign version. If null, nothing to notify foreign trackers about.
++            List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
++            if (dirtyItems != null) {
++                this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
++            }
++            // Slice end
+         }
+ 
+         if (this.entity instanceof LivingEntity) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 1ae7a10df7460f223413c38ac6bd85dba15fb347..e9fb961f20486f522a679e35d1fe4c586e379420 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -200,6 +200,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     public final UUID uuid;
+     public boolean hasPhysicsEvent = true; // Paper
+     public boolean hasEntityMoveEvent = false; // Paper
++	public boolean instance; // Slice
+     public static Throwable getAddToWorldStackTrace(Entity entity) {
+         return new Throwable(entity + " Added to world at " + new java.util.Date());
+     }
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 71d7fb64181f626a773865f1d57f567686aaa7c0..2025d5bef46cafbbd4534df8cb2ee06dbc93d856 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -263,6 +263,7 @@ public class ServerPlayer extends Player {
+     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+     public boolean needsChunkCenterUpdate; // Paper - no-tick view distance // Paper - public
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
++	public boolean smoothWorldTeleport; // Slice
+ 
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index ea1536aa368a87f946191716eee4dac04e2f2a81..5964a1a75d95dbef3c5aae96c60b5b64e5a86bb1 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -952,11 +952,11 @@ public abstract class PlayerList {
+         }
+         // CraftBukkit start
+         LevelData worlddata = worldserver1.getLevelData();
+-        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionType(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionType(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag));
+         entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getLoadDistance())); // Spigot // Paper - no-tick view distance// Paper - replace old player chunk management
+         entityplayer1.setLevel(worldserver1);
+         entityplayer1.unsetRemoved();
+-        entityplayer1.connection.teleport(new Location(worldserver1.getWorld(), entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot()));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.teleport(new Location(worldserver1.getWorld(), entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot()));
+         entityplayer1.setShiftKeyDown(false);
+ 
+         // entityplayer1.connection.b(entityplayer1.locX(), entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd131db901..99d515e5973edb92dfbd93f96ee3b0400bb54e06 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -787,7 +787,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+ 
+         this.checkOutOfWorld();
+         if (!this.level.isClientSide) {
+-            this.setSharedFlagOnFire(this.remainingFireTicks > 0);
++            // Slice start
++			if (this instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
++				this.setSharedFlagOnFire(this.remainingFireTicks > 0 && !livingEntity.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE));
++			} else {
++				this.setSharedFlagOnFire(this.remainingFireTicks > 0);
++			}
++			// Slice end
+         }
+ 
+         this.firstTick = false;
+@@ -2969,7 +2975,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         if (event.isCancelled()) {
+             return;
+         }
+-        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount());
++        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount(), getMaxAirSupply()); // Slice
+         // CraftBukkit end
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 92fc1c12e45761b5f7718e2795596c899a31b096..93f55366e78e514369b767ba739ddf1050ad446f 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3022,7 +3022,7 @@ public abstract class LivingEntity extends Entity {
+ 
+             ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
+ 
+-            if (!ItemStack.matches(itemstack1, itemstack)) {
++            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) { // Slice
+                 // Paper start - PlayerArmorChangeEvent
+                 if (this instanceof ServerPlayer && enumitemslot.getType() == EquipmentSlot.Type.ARMOR) {
+                     final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 94e76e295dbd0f3bac4b30a3e7338cd56a971207..4484c6dc092f5fc8e1a33b0e7096f618e45df879 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -633,7 +633,7 @@ public abstract class Player extends LivingEntity {
+     public void increaseScore(int score) {
+         int j = this.getScore();
+ 
+-        this.entityData.set(Player.DATA_SCORE_ID, j + score);
++        this.entityData.set(Player.DATA_SCORE_ID, j + score, 0); // Slice
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/scores/Scoreboard.java b/src/main/java/net/minecraft/world/scores/Scoreboard.java
+index 3e75ea4d5a6c83ca570b29e3c1a5d51fb132379a..8a55e56a3aa1a8aa4c0780f46a98110c7b931155 100644
+--- a/src/main/java/net/minecraft/world/scores/Scoreboard.java
++++ b/src/main/java/net/minecraft/world/scores/Scoreboard.java
+@@ -223,6 +223,28 @@ public class Scoreboard {
+             return team.getPlayers().add(playerName);
+         }
+     }
++	
++	// Slice start
++    public boolean addPlayersToTeam(Collection<String> players, PlayerTeam team) {
++        boolean anyAdded = false;
++        for (String playerName : players) {
++            if (playerName.length() > 40) {
++                net.minecraft.server.MinecraftServer.LOGGER.warn("The player name '" + playerName + "' is too long!");
++            } else {
++                if (this.getPlayersTeam(playerName) != null) {
++                    this.removePlayerFromTeam(playerName);
++                }
++
++                this.teamsByPlayer.put(playerName, team);
++                if (team.getPlayers().add(playerName)) {
++                    anyAdded = true;
++                }
++            }
++        }
++
++        return anyAdded;
++    }
++    // Slice end
+ 
+     public boolean removePlayerFromTeam(String playerName) {
+         PlayerTeam playerTeam = this.getPlayersTeam(playerName);
+@@ -242,6 +264,24 @@ public class Scoreboard {
+             team.getPlayers().remove(playerName);
+         }
+     }
++	
++	// Slice start
++    public boolean removePlayersFromTeam(Collection<String> players, PlayerTeam team) {
++        boolean anyRemoved = false;
++        for (String playerName : players) {
++            if (this.getPlayersTeam(playerName) != team) {
++                net.minecraft.server.MinecraftServer.LOGGER.warn("Player " + playerName + " is either on another team or not on any team. Cannot remove from team '" + team.getName() + "'.");
++            } else {
++                this.teamsByPlayer.remove(playerName);
++                if (team.getPlayers().remove(playerName)) {
++                    anyRemoved = true;
++                }
++            }
++        }
++
++        return anyRemoved;
++    }
++    // Slice end
+ 
+     public Collection<String> getTeamNames() {
+         return this.teamsByName.keySet();
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 3b386ecc7630ab50cac1ae6fcb3141d444a74434..c7a33c379b29a39db8cfcfd4c6298b26fc4663e6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -1195,6 +1195,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+     public void setAutoSave(boolean value) {
+         world.noSave = !value;
+     }
++	
++	// Slice start
++    @Override
++    public boolean isInstance() {
++        return world.instance;
++    }
++
++    @Override
++    public void setInstance(boolean value) {
++        world.instance = value;
++    }
++    // Slice end
+ 
+     @Override
+     public void setDifficulty(Difficulty difficulty) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 24c435ab908e12b558e5895348e4bb691c6063b2..8263bcd9e17600e13751f611384475cf0dd773fb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -2003,7 +2003,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+                 this.sendHealthUpdate();
+             }
+         }
+-        this.getHandle().getEntityData().set(LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth());
++        this.getHandle().getEntityData().set(LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth(), isDead() ? 0f : 20f); // Slice
+ 
+         this.getHandle().maxHealthCache = getMaxHealth();
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
+index 2b87a652798cb632fe76bf20e9e7f8cb8bfb3b7b..1b10b3628e09b6c831e4907bf79e87a503e92dcf 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
++++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
+@@ -1,6 +1,7 @@
+ package org.bukkit.craftbukkit.scoreboard;
+ 
+ import com.google.common.collect.ImmutableSet;
++import java.util.Collection; // Slice
+ import java.util.Set;
+ import net.minecraft.world.scores.PlayerTeam;
+ import net.minecraft.world.scores.Team.Visibility;
+@@ -225,6 +226,16 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+ 
+         scoreboard.board.addPlayerToTeam(entry, team);
+     }
++	
++	// Slice start
++    @Override
++    public void addEntries(Collection<String> entries) throws IllegalStateException, IllegalArgumentException {
++        Validate.notNull(entries, "Entries cannot be null");
++        CraftScoreboard scoreboard = checkState();
++
++        scoreboard.board.addPlayersToTeam(entries, team);
++    }
++    // Slice end
+ 
+     @Override
+     public boolean removePlayer(OfflinePlayer player) throws IllegalStateException, IllegalArgumentException {
+@@ -244,6 +255,25 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+         scoreboard.board.removePlayerFromTeam(entry, team);
+         return true;
+     }
++	
++	// Slice start
++    @Override
++    public boolean removeEntries(Collection<String> entries) throws IllegalStateException, IllegalArgumentException {
++        Validate.notNull(entries, "Entry cannot be null");
++        CraftScoreboard scoreboard = this.checkState();
++
++        boolean anyRemoved = false;
++        Collection<String> teamPlayers = this.team.getPlayers();
++        for (String entry : entries) {
++            if (teamPlayers.remove(entry)) {
++                anyRemoved = true;
++            }
++        }
++
++        scoreboard.board.removePlayersFromTeam(entries, team);
++        return anyRemoved;
++    }
++    // Slice end
+ 
+     @Override
+     public boolean hasPlayer(OfflinePlayer player) throws IllegalArgumentException, IllegalStateException {

@@ -1,0 +1,850 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 23 Oct 2021 18:27:31 +0200
+Subject: [PATCH] (Yatopia) Patches
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+(Yatopia) Utilities
+(Yatopia) Preload ProtocolLib EnumWrappers
+(Yatopia) add config for logging login location
+(Yatopia) Optimize TileEntity load/unload
+(Yatopia) Global Eula file
+(Yatopia) Use faster random implementation
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 5d31aecd7290ad30de745acc01252582adb64428..f19273b511a1f9c2930104e6d39f22646b2808e7 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -43,6 +43,7 @@ dependencies {
+     implementation("org.apache.logging.log4j:log4j-api:2.14.1") // Paper
+     implementation("org.ow2.asm:asm:9.2")
+     implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
++	implementation("org.apache.commons:commons-rng-core:1.4") // Yatopia - Faster random implementation
+     implementation("com.googlecode.json-simple:json-simple:1.1.1") {
+         // This includes junit transitively for whatever reason
+         isTransitive = false
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..5cadd485b3987eec21743f3315cd226930646eac 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+@@ -13,7 +13,7 @@ import java.util.UUID;
+ 
+ public class PaperLootableInventoryData {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
+ 
+     private long lastFill = -1;
+     private long nextRefill = -1;
+diff --git a/src/main/java/net/minecraft/server/Eula.java b/src/main/java/net/minecraft/server/Eula.java
+index a1d5c0f8fe2adb2ee56f3217e089211ec7c61eb0..ae2335e030599062a2a4b562506bb28f450e2bbd 100644
+--- a/src/main/java/net/minecraft/server/Eula.java
++++ b/src/main/java/net/minecraft/server/Eula.java
+@@ -16,12 +16,26 @@ public class Eula {
+ 
+     public Eula(Path eulaFile) {
+         this.file = eulaFile;
+-        this.agreed = SharedConstants.IS_RUNNING_IN_IDE || this.readFile();
++        this.agreed = SharedConstants.IS_RUNNING_IN_IDE || globalEula() || this.readFile(eulaFile);
+     }
+ 
+-    private boolean readFile() {
++    // Yatopia start - global eula file
++	private boolean globalEula() {
++        java.io.File globalEula = new java.io.File(System.getProperty("user.home"), "eula.txt");
++
++        if (globalEula.exists()) {
++            System.out.println("Loaded global eula file from " + globalEula.getAbsolutePath());
++            return readFile(globalEula.toPath());
++        } else {
++            System.out.println("No global eula file found at " + globalEula.getAbsolutePath());
++        }
++        return false;
++    }
++    // Yatopia end
++
++    private boolean readFile(java.nio.file.Path path) {
+         try {
+-            InputStream inputStream = Files.newInputStream(this.file);
++            InputStream inputStream = Files.newInputStream(path);
+ 
+             boolean var3;
+             try {
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index afff56c48b54d4cade1460d7e153f1581938e049..018fc89f2eabef86d5d5d5175940f1af931f9429 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -411,7 +411,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         this.onMetricsRecordingFinished = (path) -> {
+         };
+         this.status = new ServerStatus();
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.port = -1;
+         this.levels = Maps.newLinkedHashMap(); // CraftBukkit - keep order, k+v already use identity methods
+         this.running = true;
+@@ -652,7 +652,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+             if (worlddimension == null) {
+                 dimensionmanager = (DimensionType) this.registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION);
+-                chunkgenerator = WorldGenSettings.makeDefaultOverworld(this.registryHolder.registryOrThrow(Registry.BIOME_REGISTRY), this.registryHolder.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY), (new Random()).nextLong());
++                chunkgenerator = WorldGenSettings.makeDefaultOverworld(this.registryHolder.registryOrThrow(Registry.BIOME_REGISTRY), this.registryHolder.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY), (new org.yatopiamc.yatopia.server.util.FastRandom()).nextLong());
+             } else {
+                 dimensionmanager = worlddimension.type();
+                 chunkgenerator = worlddimension.generator();
+@@ -778,7 +778,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             // Paper start - moved down
+             // CraftBukkit start
+             if (world.generator != null) {
+-                Random rand = new Random(world.getSeed());
++                Random rand = new org.yatopiamc.yatopia.server.util.FastRandom(world.getSeed());
+                 org.bukkit.Location spawn = world.generator.getFixedSpawnLocation(world.getWorld(), rand);
+ 
+                 if (spawn != null) {
+@@ -794,7 +794,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             // Paper start - if the generator created a spawn for us, then there is no need for us to also create a spawn -
+             // only do it if the generator did not
+             BiomeSource worldchunkmanager = chunkgenerator.getBiomeSource();
+-            Random random = new Random(world.getSeed());
++            Random random = new org.yatopiamc.yatopia.server.util.FastRandom(world.getSeed());
+             BlockPos blockposition = worldchunkmanager.findBiomeHorizontal(0, world.getSeaLevel(), 0, 256, (biomebase) -> {
+                 return biomebase.getMobSettings().playerSpawnFriendly();
+             }, random);
+@@ -1231,6 +1231,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 String doneTime = String.format(java.util.Locale.ROOT, "%.3fs", (double) (Util.getNanos() - serverStartTime) / 1.0E9D);
+                 LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
+                 // Paper end
++				if (xyz.arthurb.mirai.MiraiConfig.fixProtocolLib) org.yatopiamc.yatopia.server.util.YatopiaPreloadProtocolLib.run(); // Yatopia - Preload ProtocolLib Enum Wrappers
+ 
+                 org.spigotmc.WatchdogThread.tick(); // Paper
+                 org.spigotmc.WatchdogThread.hasStarted = true; // Paper
+diff --git a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+index a7ea776f5f8dad3dd9475de41209d8704c0886d3..141d0143d3fd71a8e9e26c46af41df8757d51c00 100644
+--- a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
++++ b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+@@ -56,7 +56,7 @@ public class SpreadPlayersCommand {
+     }
+ 
+     private static int spreadPlayers(CommandSourceStack source, Vec2 center, float spreadDistance, float maxRange, int maxY, boolean respectTeams, Collection<? extends Entity> players) throws CommandSyntaxException {
+-        Random random = new Random();
++        Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         double d0 = (double) (center.x - maxRange);
+         double d1 = (double) (center.y - maxRange);
+         double d2 = (double) (center.x + maxRange);
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 11f46c1b8f4c8414e0667d1873542c17d6e01f2a..3c1e1957418903d8d505817736a633d85167f817 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -372,7 +372,7 @@ public class ServerPlayer extends Player {
+             long l = k * k;
+             int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
+             int j1 = this.getCoprime(i1);
+-            int k1 = (new Random()).nextInt(i1);
++            int k1 = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextInt(i1);
+ 
+             for (int l1 = 0; l1 < i1; ++l1) {
+                 int i2 = (k1 + j1 * l1) % i1;
+@@ -409,7 +409,7 @@ public class ServerPlayer extends Player {
+             long l = k * k;
+             int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
+             int j1 = this.getCoprime(i1);
+-            int k1 = (new Random()).nextInt(i1);
++            int k1 = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextInt(i1);
+ 
+             for (int l1 = 0; l1 < i1; ++l1) {
+                 int i2 = (k1 + j1 * l1) % i1;
+diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+index 494ca8fa8c742d4eac9fb11878d3b3170d850265..5dd89126a7529277a89c6a9e914bb29032f709ff 100644
+--- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+@@ -52,7 +52,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+     private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger(0);
+     static final Logger LOGGER = LogManager.getLogger();
+     private static final int MAX_TICKS_BEFORE_LOGIN = 600;
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private final byte[] nonce = new byte[4];
+     final MinecraftServer server;
+     public final Connection connection;
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..335bd288ddf965870b7ed6f189593ccd30ccec0c 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -269,7 +269,7 @@ public abstract class PlayerList {
+         // Spigot - view distance
+         playerconnection.send(new ClientboundLoginPacket(player.getId(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), worlddata.isHardcore(), this.server.levelKeys(), this.registryHolder, worldserver1.dimensionType(), worldserver1.dimension(), this.getMaxPlayers(), worldserver1.getChunkSource().chunkMap.playerChunkManager.getLoadDistance(), flag1, !flag, worldserver1.isDebug(), worldserver1.isFlat())); // Paper - no-tick view distance // Paper - replace old player chunk management
+         player.getBukkitEntity().sendSupportedChannels(); // CraftBukkit
+-        playerconnection.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
++        playerconnection.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf((xyz.arthurb.mirai.MiraiConfig.f3Name)))); // Yatopia
+         playerconnection.send(new ClientboundChangeDifficultyPacket(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
+         playerconnection.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
+         playerconnection.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
+@@ -484,7 +484,13 @@ public abstract class PlayerList {
+         }
+         // Paper end
+         // CraftBukkit - Moved from above, added world
+-        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        // Yatopia start - log player login location
++		if (xyz.arthurb.mirai.MiraiConfig.logPlayerLoginLoc) {
++			PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++		} else {
++			PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
++		}
++		// Yatopia end
+     }
+ 
+     public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
+diff --git a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
+index 25ae440839f1d286550a77d0a4c61e1dc02b369d..b0cbe7d42eef1865e84211844b351027a26a5956 100644
+--- a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
++++ b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
+@@ -348,7 +348,7 @@ public class QueryThreadGs4 extends GenericThread {
+             this.identBytes[2] = bs[5];
+             this.identBytes[3] = bs[6];
+             this.ident = new String(this.identBytes, StandardCharsets.UTF_8);
+-            this.challenge = (new Random()).nextInt(16777216);
++            this.challenge = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextInt(16777216);
+             this.challengeBytes = String.format("\t%s%d\u0000", this.ident, this.challenge).getBytes(StandardCharsets.UTF_8);
+         }
+ 
+diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
+index 2bc7c351b2bf113ff8fa33949691c19a95cac3aa..8823d793f331c159a2b65e8b7528131ff0c0960e 100644
+--- a/src/main/java/net/minecraft/util/Mth.java
++++ b/src/main/java/net/minecraft/util/Mth.java
+@@ -31,7 +31,7 @@ public class Mth {
+         }
+ 
+     });
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
+ 	public static float[] getSinTable() { return SIN; }
+     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+     private static final double ONE_SIXTH = 0.16666666666666666D;
+@@ -740,7 +740,7 @@ public class Mth {
+     }
+ 
+     public static double wobble(double d) {
+-        return d + (2.0D * (new Random((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D;
++        return d + (2.0D * (new org.yatopiamc.yatopia.server.util.FastRandom((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D;
+     }
+ 
+     public static int roundToward(int value, int divisor) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index c77b9348cc313ccb0fa7d5fbd2d80a3381cc565d..9f1bf26f72011bc22c2851e73da48837be354295 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -159,7 +159,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     }
+ 
+     // Paper start
+-    public static Random SHARED_RANDOM = new Random() {
++    public static Random SHARED_RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom() {
+         private boolean locked = false;
+         @Override
+         public synchronized void setSeed(long seed) {
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 71fefe3956c1e4458dd4b441f90902a3ed0cdf24..46d75cd28fbf6f5768bb115a02a2d377a2c181b7 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -392,17 +392,19 @@ public abstract class LivingEntity extends Entity {
+         this.level.getProfiler().push("livingEntityBaseTick");
+         boolean flag = this instanceof net.minecraft.world.entity.player.Player;
+ 
+-        if (this.isAlive()) {
+-            if (this.isInWall()) {
+-                this.hurt(DamageSource.IN_WALL, 1.0F);
+-            } else if (flag && !this.level.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
+-                double d0 = this.level.getWorldBorder().getDistanceToBorder((Entity) this) + this.level.getWorldBorder().getDamageSafeZone();
+-
+-                if (d0 < 0.0D) {
+-                    double d1 = this.level.getWorldBorder().getDamagePerBlock();
+-
+-                    if (d1 > 0.0D) {
+-                        this.hurt(DamageSource.IN_WALL, (float) Math.max(1, Mth.floor(-d0 * d1)));
++        if (!xyz.arthurb.mirai.MiraiConfig.disableEntityStuckChecks) { // Yatopia
++            if (this.isAlive()) {
++                if (this.isInWall()) {
++                    this.hurt(DamageSource.IN_WALL, 1.0F);
++                } else if (flag && !this.level.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
++                    double d0 = this.level.getWorldBorder().getDistanceToBorder((Entity) this) + this.level.getWorldBorder().getDamageSafeZone();
++
++                    if (d0 < 0.0D) {
++                        double d1 = this.level.getWorldBorder().getDamagePerBlock();
++
++                        if (d1 > 0.0D) {
++                            this.hurt(DamageSource.IN_WALL, (float) Math.max(1, Mth.floor(-d0 * d1)));
++                        }
+                     }
+                 }
+             }
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
+index aaff4038867820ab2694f036dcd3c419657be6b8..e2194d9feadeef4857b7cff4aea9d0b252dc90c5 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
+@@ -13,7 +13,7 @@ import java.util.stream.Stream;
+ 
+ public class ShufflingList<U> {
+     public final List<ShufflingList.WeightedEntry<U>> entries; // Paper - public
+-    private final Random random = new Random();
++    private final Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private final boolean isUnsafe; // Paper
+ 
+     public ShufflingList() {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+index 87f804e35e2f124f5ee73d9d9a4fd4b3069b00d0..bbc76d73e00e2629ff9193d690e429731ee32844 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
++++ b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+ 
+ public abstract class Sensor<E extends LivingEntity> {
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private static final int DEFAULT_SCAN_RATE = 20;
+     protected static final int TARGETING_RANGE = 16;
+     private static final TargetingConditions TARGET_CONDITIONS = TargetingConditions.forNonCombat().range(16.0D);
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+index 7fa5cde9c26c21d4d800f720f373a8b702f4fcb5..0e14e48473ef7bd8d05a793b0f94ed1d1407cb9c 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+@@ -378,7 +378,7 @@ public class PiglinAi {
+     }
+ 
+     private static boolean wantsToDance(LivingEntity piglin, LivingEntity target) {
+-        return target.getType() != EntityType.HOGLIN ? false : (new Random(piglin.level.getGameTime())).nextFloat() < 0.1F;
++        return target.getType() != EntityType.HOGLIN ? false : (new org.yatopiamc.yatopia.server.util.FastRandom(piglin.level.getGameTime())).nextFloat() < 0.1F;
+     }
+ 
+     protected static boolean wantsToPickup(Piglin piglin, ItemStack stack) {
+diff --git a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+index f8ede3588bfda9a7d4d5807311a3e9c2651fd0a3..4380acce5adb9513035de495923b715398c414ee 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
++++ b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+@@ -35,7 +35,7 @@ public class WanderingTraderSpawner implements CustomSpawner {
+     private static final int SPAWN_CHANCE_INCREASE = 25;
+     private static final int SPAWN_ONE_IN_X_CHANCE = 10;
+     private static final int NUMBER_OF_SPAWN_ATTEMPTS = 10;
+-    private final Random random = new Random();
++    private final Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private final ServerLevelData serverLevelData;
+     private int tickDelay;
+     private int spawnDelay;
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+index 5c16566f59535ce61fb3f747a745255cfaa439e8..c266ee11f915f1c317fe001ca1967723c1937069 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+@@ -77,7 +77,7 @@ public class FishingHook extends Projectile {
+ 
+     private FishingHook(EntityType<? extends FishingHook> type, Level world, int lureLevel, int luckOfTheSeaLevel) {
+         super(type, world);
+-        this.syncronizedRandom = new Random();
++        this.syncronizedRandom = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.openWater = true;
+         this.currentState = FishingHook.FishHookState.FLYING;
+         this.noCulling = true;
+diff --git a/src/main/java/net/minecraft/world/entity/raid/Raid.java b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+index a79ba23ecf887ecbb6e095140f019ebb6fd0a6f7..92848c65b72fb4f0ef75e0455bd64d8edd74dc5d 100644
+--- a/src/main/java/net/minecraft/world/entity/raid/Raid.java
++++ b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+@@ -110,7 +110,7 @@ public class Raid {
+ 
+     public Raid(int id, ServerLevel world, BlockPos pos) {
+         this.raidEvent = new ServerBossEvent(Raid.RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.waveSpawnPos = Optional.empty();
+         this.id = id;
+         this.level = world;
+@@ -124,7 +124,7 @@ public class Raid {
+ 
+     public Raid(ServerLevel world, CompoundTag nbt) {
+         this.raidEvent = new ServerBossEvent(Raid.RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.waveSpawnPos = Optional.empty();
+         this.level = world;
+         this.id = nbt.getInt("Id");
+diff --git a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+index 717b101bd2492037a9ca1d65d8cb3cebb7d6d4fe..0e49ded124da9487937b35f612e8b5a7760800a4 100644
+--- a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+@@ -68,7 +68,7 @@ public class EnchantmentMenu extends AbstractContainerMenu {
+             }
+             // CraftBukkit end
+         };
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.enchantmentSeed = DataSlot.standalone();
+         this.costs = new int[3];
+         this.enchantClue = new int[]{-1, -1, -1};
+diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+index c601b8b12756682a4cb300be8ebed4319902c5b5..4e19580281f3df1c125ba29f57faba0c94d5395d 100644
+--- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
++++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+@@ -57,7 +57,7 @@ public abstract class BaseSpawner {
+         this.maxNearbyEntities = 6;
+         this.requiredPlayerRange = 16;
+         this.spawnRange = 4;
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     }
+ 
+     @Nullable
+diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
+index 132140e00865fcf84ebe03ffcbc2f30ac11a0b35..cd44f8d724a1f3ea3b4a1e52933016790649bbd4 100644
+--- a/src/main/java/net/minecraft/world/level/Explosion.java
++++ b/src/main/java/net/minecraft/world/level/Explosion.java
+@@ -90,7 +90,7 @@ public class Explosion {
+     }
+ 
+     public Explosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType) {
+-        this.random = new Random();
++        this.random = new org.yatopiamc.yatopia.server.util.FastRandom();
+         this.toBlow = Lists.newArrayList();
+         this.hitPlayers = Maps.newHashMap();
+         this.level = world;
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index 24d772c18d5a448154909e4a51964ba29485a5c2..bb5b45abd35c04eb6e34c3324d5417bf6728cd6b 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -115,19 +115,21 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public static final int TICKS_PER_DAY = 24000;
+     public static final int MAX_ENTITY_SPAWN_Y = 20000000;
+     public static final int MIN_ENTITY_SPAWN_Y = -20000000;
+-    protected final List<TickingBlockEntity> blockEntityTickers = Lists.newArrayList(); public final int getTotalTileEntityTickers() { return this.blockEntityTickers.size(); } // Paper
+-    private final List<TickingBlockEntity> pendingBlockEntityTickers = Lists.newArrayList();
++    //protected final List<TickingBlockEntity> blockEntityTickers = Lists.newArrayList(); public final int getTotalTileEntityTickers() { return this.blockEntityTickers.size(); } // Paper
++    //private final List<TickingBlockEntity> pendingBlockEntityTickers = Lists.newArrayList();
++	public final List<TickingBlockEntity> blockEntityTickers = me.jellysquid.mods.lithium.common.util.collections.HashedList.wrapper(Lists.newArrayList()); public final int getTotalTileEntityTickers() { return this.blockEntityTickers.size(); } // Paper // Yatopia
++	private final List<TickingBlockEntity> pendingBlockEntityTickers = me.jellysquid.mods.lithium.common.util.collections.HashedList.wrapper(Lists.newArrayList()); // Yatopia
+     private boolean tickingBlockEntities;
+     public final Thread thread;
+     private final boolean isDebug;
+     private int skyDarken;
+-    protected int randValue = (new Random()).nextInt();
++    protected int randValue = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextInt();
+     protected final int addend = 1013904223;
+     protected float oRainLevel;
+     public float rainLevel;
+     protected float oThunderLevel;
+     public float thunderLevel;
+-    public final Random random = new Random();
++    public final Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private final DimensionType dimensionType;
+     public final WritableLevelData levelData;
+     private final Supplier<ProfilerFiller> profiler;
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+index cfec89db4300bdb96a220540ee87892d22215e9d..950da60dce94b587ddfb7ad0e37eaceb369941bd 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+@@ -22,7 +22,7 @@ import org.bukkit.entity.HumanEntity;
+ 
+ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
+     public static final int CONTAINER_SIZE = 9;
+     private NonNullList<ItemStack> items;
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+index 0b238666a506816b8948d1db7397c26ca50b89d3..02b0b7b0c396f7a2af199261a262dc52235c6754 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+@@ -267,7 +267,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
+         if (blockposition1 == null) {
+             blockposition1 = new BlockPos(vec3d.x + 0.5D, 75.0D, vec3d.z + 0.5D);
+             TheEndGatewayBlockEntity.LOGGER.debug("Failed to find a suitable block to teleport to, spawning an island on {}", blockposition1);
+-            Features.END_ISLAND.place(world, world.getChunkSource().getGenerator(), new Random(blockposition1.asLong()), blockposition1);
++            Features.END_ISLAND.place(world, world.getChunkSource().getGenerator(), new org.yatopiamc.yatopia.server.util.FastRandom(blockposition1.asLong()), blockposition1);
+         } else {
+             TheEndGatewayBlockEntity.LOGGER.debug("Found suitable block to teleport to: {}", blockposition1);
+         }
+@@ -355,7 +355,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
+     }
+ 
+     private static void spawnGatewayPortal(ServerLevel world, BlockPos pos, EndGatewayConfiguration config) {
+-        Feature.END_GATEWAY.configured(config).place(world, world.getChunkSource().getGenerator(), new Random(), pos); // CraftBukkit - decompile error
++        Feature.END_GATEWAY.configured(config).place(world, world.getChunkSource().getGenerator(), new org.yatopiamc.yatopia.server.util.FastRandom(), pos); // CraftBukkit - decompile error
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+index fde436065aeeb47cd177656a7c9fe8dc34178e87..6c67c5caba0d43229f601252c798a2a4b013d112 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+@@ -100,7 +100,7 @@ public abstract class ChunkGenerator {
+                 int i = structuresettingsstronghold.distance();
+                 int j = structuresettingsstronghold.count();
+                 int k = structuresettingsstronghold.spread();
+-                Random random = new Random();
++                Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+ 
+                 random.setSeed(this.strongholdSeed);
+                 double d0 = random.nextDouble() * 3.141592653589793D * 2.0D;
+diff --git a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
+index 44551fc6fc5888206c1a2da3ece5baa486faa1d5..dc9a59da823b8df7f3812590dbddc0ca0145ee6f 100644
+--- a/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
++++ b/src/main/java/net/minecraft/world/level/dimension/end/EndDragonFight.java
+@@ -120,7 +120,7 @@ public class EndDragonFight {
+             }
+         } else {
+             this.gateways.addAll(ContiguousSet.create(Range.closedOpen(0, 20), DiscreteDomain.integers()));
+-            Collections.shuffle(this.gateways, new Random(gatewaysSeed));
++            Collections.shuffle(this.gateways, new org.yatopiamc.yatopia.server.util.FastRandom(gatewaysSeed));
+         }
+ 
+         this.exitPortalPattern = BlockPatternBuilder.start().aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("       ", "       ", "       ", "   #   ", "       ", "       ", "       ").aisle("  ###  ", " #   # ", "#     #", "#  #  #", "#     #", " #   # ", "  ###  ").aisle("       ", "  ###  ", " ##### ", " ##### ", " ##### ", "  ###  ", "       ").where('#', BlockInWorld.hasState(BlockPredicate.forBlock(Blocks.BEDROCK))).build();
+@@ -399,7 +399,7 @@ public class EndDragonFight {
+ 
+     private void spawnNewGateway(BlockPos pos) {
+         this.level.levelEvent(3000, pos, 0);
+-        Features.END_GATEWAY_DELAYED.place(this.level, this.level.getChunkSource().getGenerator(), new Random(), pos);
++        Features.END_GATEWAY_DELAYED.place(this.level, this.level.getChunkSource().getGenerator(), new org.yatopiamc.yatopia.server.util.FastRandom(), pos);
+     }
+ 
+     public void spawnExitPortal(boolean previouslyKilled) {
+@@ -415,7 +415,7 @@ public class EndDragonFight {
+         }
+         // Paper end
+ 
+-        endPodiumFeature.configured(FeatureConfiguration.NONE).place(this.level, this.level.getChunkSource().getGenerator(), new Random(), this.portalLocation);
++        endPodiumFeature.configured(FeatureConfiguration.NONE).place(this.level, this.level.getChunkSource().getGenerator(), new org.yatopiamc.yatopia.server.util.FastRandom(), this.portalLocation);
+     }
+ 
+     private EnderDragon createNewDragon() {
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/WorldGenSettings.java b/src/main/java/net/minecraft/world/level/levelgen/WorldGenSettings.java
+index 57b12ba5a24e68b0a0420d692946fe5e83974db4..67fbfe5da8e7aea591f6cda52da881b7f6a30c53 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/WorldGenSettings.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/WorldGenSettings.java
+@@ -89,7 +89,7 @@ public class WorldGenSettings {
+     }
+ 
+     public static WorldGenSettings makeDefault(Registry<DimensionType> iregistry, Registry<Biome> iregistry1, Registry<NoiseGeneratorSettings> iregistry2) {
+-        long i = (new Random()).nextLong();
++        long i = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextLong();
+ 
+         return new WorldGenSettings(i, true, false, WorldGenSettings.withOverworld(iregistry, DimensionType.defaultDimensions(iregistry, iregistry1, iregistry2, i), (ChunkGenerator) WorldGenSettings.makeDefaultOverworld(iregistry1, iregistry2, i)));
+     }
+@@ -200,7 +200,7 @@ public class WorldGenSettings {
+         }).orElse("default");
+ 
+         properties.put("level-type", s4);
+-        long i = (new Random()).nextLong();
++        long i = (new org.yatopiamc.yatopia.server.util.FastRandom()).nextLong();
+ 
+         if (!s1.isEmpty()) {
+             try {
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
+index c03bf5bdb67b00c75f9fcfead882c4d944282244..300c994cd3cc0995eeb4914590afce8b6ad1d92b 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
+@@ -36,7 +36,7 @@ public class SpikeFeature extends Feature<SpikeConfiguration> {
+     }
+ 
+     public static List<SpikeFeature.EndSpike> getSpikesForLevel(WorldGenLevel world) {
+-        Random random = new Random(world.getSeed());
++        Random random = new org.yatopiamc.yatopia.server.util.FastRandom(world.getSeed());
+         long l = random.nextLong() & 65535L;
+         return SPIKE_CACHE.getUnchecked(l);
+     }
+@@ -167,7 +167,7 @@ public class SpikeFeature extends Feature<SpikeConfiguration> {
+         @Override
+         public List<SpikeFeature.EndSpike> load(Long long_) {
+             List<Integer> list = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+-            Collections.shuffle(list, new Random(long_));
++            Collections.shuffle(list, new org.yatopiamc.yatopia.server.util.FastRandom(long_));
+             List<SpikeFeature.EndSpike> list2 = Lists.newArrayList();
+ 
+             for(int i = 0; i < 10; ++i) {
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings.java b/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings.java
+index ae099f1a47b0e64827cffceb6093a5e4f1390cb6..337352f967c51391dbbc89090c15c6422e80c5c0 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings.java
+@@ -122,7 +122,7 @@ public class StructurePlaceSettings {
+     }
+ 
+     public Random getRandom(@Nullable BlockPos pos) {
+-        return this.random != null ? this.random : (pos == null ? new Random(Util.getMillis()) : new Random(Mth.getSeed((Vec3i) pos)));
++        return this.random != null ? this.random : (pos == null ? new org.yatopiamc.yatopia.server.util.FastRandom(Util.getMillis()) : new org.yatopiamc.yatopia.server.util.FastRandom(Mth.getSeed((Vec3i) pos)));
+     }
+ 
+     public boolean isIgnoreEntities() {
+diff --git a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
+index 39e941a6a315e2a9fc0f47eb39ef9d2b58069f90..7adfd7d03a57e1b55a8fbf77ef53c9a6800513b2 100644
+--- a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
++++ b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
+@@ -127,7 +127,7 @@ public class LootContext {
+ 
+         public LootContext.Builder withOptionalRandomSeed(long seed) {
+             if (seed != 0L) {
+-                this.random = new Random(seed);
++                this.random = new org.yatopiamc.yatopia.server.util.FastRandom(seed);
+             }
+ 
+             return this;
+@@ -137,7 +137,7 @@ public class LootContext {
+             if (seed == 0L) {
+                 this.random = random;
+             } else {
+-                this.random = new Random(seed);
++                this.random = new org.yatopiamc.yatopia.server.util.FastRandom(seed);
+             }
+ 
+             return this;
+@@ -201,7 +201,7 @@ public class LootContext {
+                 } else {
+                     Random random = this.random;
+                     if (random == null) {
+-                        random = new Random();
++                        random = new org.yatopiamc.yatopia.server.util.FastRandom();
+                     }
+ 
+                     MinecraftServer minecraftServer = this.level.getServer();
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 06b410e43ecfe20d25d50346d76a3d58fe19a058..d5cc4eec126a865a655820d6e96ce754e1cb79c2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1211,7 +1211,7 @@ public final class CraftServer implements Server {
+ 
+         if (worlddimension == null) {
+             dimensionmanager = (DimensionType) console.registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION);
+-            chunkgenerator = WorldGenSettings.makeDefaultOverworld(console.registryHolder.registryOrThrow(Registry.BIOME_REGISTRY), console.registryHolder.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY), (new Random()).nextLong());
++            chunkgenerator = WorldGenSettings.makeDefaultOverworld(console.registryHolder.registryOrThrow(Registry.BIOME_REGISTRY), console.registryHolder.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY), (new org.yatopiamc.yatopia.server.util.FastRandom()).nextLong());
+         } else {
+             dimensionmanager = worlddimension.type();
+             chunkgenerator = worlddimension.generator();
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 00d8b61c04ac91770b0ff3b846d3ff70bef2e8e7..8be1588152d29ddb7a13412a8a8c749d7c871678 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -202,7 +202,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+     }
+     // Paper end
+ 
+-    private static final Random rand = new Random();
++    private static final Random rand = new org.yatopiamc.yatopia.server.util.FastRandom();
+ 
+     public CraftWorld(ServerLevel world, ChunkGenerator gen, BiomeProvider biomeProvider, Environment env) {
+         this.world = world;
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+index be86114eac3975b82ca74d4d6ed3f0402a642e8a..e369d3a67c375e39c9ca58b44b71ab3963943c1f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
+ 
+ public class CraftFirework extends CraftProjectile implements Firework {
+ 
+-    private final Random random = new Random();
++    private final Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private final CraftItemStack item;
+ 
+     public CraftFirework(CraftServer server, FireworkRocketEntity entity) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java b/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
+index 1b05bb78eaee548806df8ebfff1a1401e30d52e0..95abd5e307f5b3c53dc267d7ad3413be372f9730 100644
+--- a/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
++++ b/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
+@@ -41,7 +41,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
+     public final net.minecraft.world.level.chunk.ChunkGenerator delegate;
+     private final ChunkGenerator generator;
+     private final ServerLevel world;
+-    private final Random random = new Random();
++    private final Random random = new org.yatopiamc.yatopia.server.util.FastRandom();
+     private boolean newApi;
+     private boolean implementBaseHeight = true;
+ 
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..181d47b4f0598231caa3f45b8d28e06947a6d16a
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
+@@ -0,0 +1,64 @@
++package org.yatopiamc.yatopia.server.util;
++
++import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
++
++import java.util.Random;
++import java.util.SplittableRandom;
++
++public class FastRandom extends Random {
++	
++	private XoRoShiRo128PlusPlus random;
++	
++	public FastRandom() {
++        super();
++        SplittableRandom randomseed = new SplittableRandom();
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++	
++	public FastRandom(long seed) {
++        super(seed);
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++	
++	@Override
++	public boolean nextBoolean() {
++		return random.nextBoolean();
++	}
++	
++	@Override
++	public int nextInt() {
++		return random.nextInt();
++	}
++	
++	@Override
++	public float nextFloat() {
++		return (float) random.nextDouble();
++	}
++	
++	@Override
++	public double nextDouble() {
++		return random.nextDouble();
++	}
++	
++	@Override
++	public synchronized void setSeed(long seed) {
++		SplittableRandom randomseed = new SplittableRandom(seed);
++		this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++	}
++	
++	@Override
++	public void nextBytes(byte[] bytes) {
++		random.nextBytes(bytes);
++	}
++	
++	@Override
++	public int nextInt(int bound) {
++		return random.nextInt(bound);
++	}
++	
++	@Override
++	public long nextLong() {
++		return random.nextLong();
++	}
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java b/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..bb023bcb4b1e1ab5261c83358ce0951cc35ba16d
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java
+@@ -0,0 +1,27 @@
++package org.yatopiamc.yatopia.server.util;
++
++import java.util.concurrent.TimeUnit;
++
++public class TimeUtils {
++
++    public static String getFriendlyName(TimeUnit unit) {
++        switch (unit) {
++            case NANOSECONDS:
++                return "ns";
++            case MILLISECONDS:
++                return "ms";
++            case MICROSECONDS:
++                return "micros";
++            case SECONDS:
++                return "s";
++            case MINUTES:
++                return "m";
++            case DAYS:
++                return "d";
++            case HOURS:
++                return "h";
++            default:
++                throw new AssertionError();
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java b/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..f7c7122b871fee50f55dbd6ec663d416a3c23dec
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java
+@@ -0,0 +1,28 @@
++package org.yatopiamc.yatopia.server.util;
++
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.Bukkit;
++import org.bukkit.plugin.Plugin;
++import org.bukkit.plugin.SimplePluginManager;
++
++import java.lang.reflect.Method;
++
++public class YatopiaPreloadProtocolLib {
++
++    public synchronized static void run() {
++        try {
++            final SimplePluginManager pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
++            final Plugin protocolLib = pluginManager.getPlugin("ProtocolLib");
++            if(protocolLib != null && protocolLib.isEnabled()) {
++                MinecraftServer.LOGGER.info("Mirai: Fixing ProtocolLib");
++                final Method initialize = Class.forName("com.comphenix.protocol.wrappers.EnumWrappers", true, protocolLib.getClass().getClassLoader()).getDeclaredMethod("initialize");
++                initialize.setAccessible(true);
++                initialize.invoke(null);
++                synchronized (YatopiaPreloadProtocolLib.class) {
++                }
++            }
++        } catch (Throwable t) {
++            MinecraftServer.LOGGER.warn("Mirai: Unable to fix ProtocolLib", t);
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 4c92005a52589b9056d76c435d60fe1581dd9c48..35646ca1c13b30a40bec09b9ef1aa7ab75616e38 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -113,18 +113,11 @@ public class MiraiConfig {
+             num = 0D;
+         }
+         switch (unit) {
+-            case 'd':
+-                num *= (double) 60 * 60 * 24;
+-                break;
+-            case 'h':
+-                num *= (double) 60 * 60;
+-                break;
+-            case 'm':
+-                num *= (double) 60;
+-                break;
+-            default:
+-            case 's':
+-                break;
++            case 'd': num *= (double) 60 * 60 * 24;
++            case 'h': num *= (double) 60 * 60;
++            case 'm': num *= 60;
++            case 's': break;
++			default: break;
+         }
+         return (int) num;
+     }
+@@ -184,6 +177,24 @@ public class MiraiConfig {
+ 	
+ 	// Mirai - settings below
+ 	
++	public static boolean fixProtocolLib = true;
++	private static void fixProtocolLib() {
++		fixProtocolLib = getBoolean("settings.fix-protocollib", fixProtocolLib);
++	}
+ 	
++	public static boolean disableEntityStuckChecks = false;
++	private static void disableEntityStuckChecks() {
++		disableEntityStuckChecks = getBoolean("settings.disable-entity-stuck-checks", false);
++	}
++	
++	public static String f3Name = "§bM§3i§br§3a§bi§r";
++	private static void f3Name() {
++		f3Name = getString("settings.f3-name", f3Name);
++	}
++	
++	public static boolean logPlayerLoginLoc = true;
++	private static void logPlayerLoginLoc() {
++		logPlayerLoginLoc = getBoolean("settings.log-player-login-location", logPlayerLoginLoc);
++	}
+ 	
+ }
+\ No newline at end of file

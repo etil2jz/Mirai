@@ -1,0 +1,264 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 24 Oct 2021 11:36:13 +0200
+Subject: [PATCH] (Sugarcane) Patches
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+(Sugarcane) Fix Javadoc generation
+(Sugarcane) Add GameProfileLookupEvent
+(Sugarcane) Disable reload command
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index bdc96e07768006066d2248488775428d48ed635a..76c6abe033f93fa36c332873120db37f2f7f46f1 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -3,6 +3,7 @@ import java.util.Locale
+ plugins {
+     `java-library`
+     `maven-publish`
++	id("com.github.johnrengelman.shadow")
+ }
+ 
+ java {
+@@ -39,6 +40,7 @@ dependencies {
+     apiAndDocs("net.kyori:adventure-text-serializer-plain")
+     api("org.apache.logging.log4j:log4j-api:2.14.1") // Paper
+     api("org.slf4j:slf4j-api:1.7.30") // Paper
++	api("de.tr7zw:item-nbt-api:2.8.0") // Sugarcane
+ 
+     implementation("org.ow2.asm:asm:9.1")
+     implementation("org.ow2.asm:asm-commons:9.1")
+@@ -47,6 +49,7 @@ dependencies {
+     compileOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.0")
+     compileOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.0")
+     compileOnly("com.google.code.findbugs:jsr305:1.3.9") // Paper
++	compileOnly("com.mojang:authlib:2.3.31") // Sugarcane
+ 
+     val annotations = "org.jetbrains:annotations:21.0.1" // Paper - we don't want Java 5 annotations...
+     compileOnly(annotations)
+@@ -89,6 +92,9 @@ tasks.jar {
+     }
+ }
+ 
++tasks.shadowJar {
++    relocate("de.tr7zw.changeme.nbtapi", "de.tr7zw.nbtapi")
++}
+ tasks.withType<Javadoc>().configureEach {
+     (options as CoreJavadocOptions).addStringOption("sourcepath", apiAndDocs.resolvedConfiguration.files.joinToString(separator = File.pathSeparator, transform = File::getPath))
+ 	(options as StandardJavadocDocletOptions).encoding = "UTF-8"
+diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
+index 5a4884db36d448c885e49c965ae329a0638dd628..a2fcd12090c501eb4df7051b28e49d20068facf1 100644
+--- a/src/main/java/org/bukkit/Chunk.java
++++ b/src/main/java/org/bukkit/Chunk.java
+@@ -283,4 +283,16 @@ public interface Chunk extends PersistentDataHolder {
+      * @return if the block is contained within
+      */
+     boolean contains(@NotNull BlockData block);
++	
++	// Sugarcane start
++    /**
++     * Returns a custom tag container of this chunk.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return new de.tr7zw.changeme.nbtapi.NBTChunk(this).getPersistentDataContainer();
++    }
++    // Sugarcane end
+ }
+diff --git a/src/main/java/org/bukkit/block/TileState.java b/src/main/java/org/bukkit/block/TileState.java
+index 3b10fcc13893403b29f0260b8605144679e89b82..4297941459aec01c73b3bc8ebeac13db9db39dbb 100644
+--- a/src/main/java/org/bukkit/block/TileState.java
++++ b/src/main/java/org/bukkit/block/TileState.java
+@@ -36,4 +36,26 @@ public interface TileState extends BlockState, PersistentDataHolder {
+     @NotNull
+     @Override
+     PersistentDataContainer getPersistentDataContainer();
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this tile entity.
++     *
++     * @return vanilla NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTTileEntity getNBT() {
++        return new de.tr7zw.changeme.nbtapi.NBTTileEntity(this);
++    }
++
++    /**
++     * Returns a custom tag container of this tile entity.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return getNBT().getPersistentDataContainer();
++    }
++    // Sugarcane end
+ }
+diff --git a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
+index 0c7ba0718de2b93d013968ca0fec34ffd423990f..a7d9898b2cddb86bc2c562b80cb6ca0a39bbf558 100644
+--- a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
+@@ -21,6 +21,17 @@ public class ReloadCommand extends BukkitCommand {
+     @Override
+     public boolean execute(@NotNull CommandSender sender, @NotNull String currentAlias, @NotNull String[] args) { // Paper
+         if (!testPermission(sender)) return true;
++		// Sugarcane start - disable reload command
++        if (Boolean.parseBoolean(System.getProperty("Mirai.DisableReloadCommand", "true"))) {
++            sender.sendMessage(ChatColor.RED + "Operation denied.");
++            sender.sendMessage(ChatColor.YELLOW + "Reload command SHOULD NEVER EVER EVER be used in whatever circumstances.");
++            sender.sendMessage(ChatColor.YELLOW + "Mirai has intentionally disabled it in order to stop you using it, instead of restarting your server.");
++            sender.sendMessage(ChatColor.GREEN + "---------------------------------------------");
++            sender.sendMessage(ChatColor.YELLOW + "RESTART YOUR SERVER AND NEVER USE /reload");
++            sender.sendMessage(ChatColor.YELLOW + "For plugin developers: learn what a HOTSWAP AGENT is and stop using /reload");
++            return true;
++        }
++        // Sugarcane end
+ 
+         // Paper start - Reload permissions.yml & require confirm
+         boolean confirmed = System.getProperty("LetMeReload") != null;
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index b02704b0535522c5535b560105eec2885fdd3e77..e28370444dcd9d52cfa3c70017360534962661cf 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -189,6 +189,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+         return future;
+     }
+     // Paper end
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this entity.
++     *
++     * @return vanilla NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTEntity getNBT() {
++        return new de.tr7zw.changeme.nbtapi.NBTEntity(this);
++    }
++
++    /**
++     * Returns a custom tag container of this entity.
++     *
++     * @return custom NBT tags container
++     */
++    @NotNull
++    default de.tr7zw.changeme.nbtapi.NBTCompound getNBTC() {
++        return getNBT().getPersistentDataContainer();
++    }
++    // Sugarcane end
+ 
+     /**
+      * Returns a list of entities within a bounding box centered around this
+diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/org/bukkit/inventory/ItemStack.java
+index 56072cb4d32ca8a09023be08a5a832c2c108379a..a5d3c63b7e815621f8c4054a7a3acd94d29926e6 100644
+--- a/src/main/java/org/bukkit/inventory/ItemStack.java
++++ b/src/main/java/org/bukkit/inventory/ItemStack.java
+@@ -586,6 +586,44 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor
+         return false;
+     }
+     // Paper end
++	
++	// Sugarcane start
++    /**
++     * Returns NBT representation of this item. The ItemStack will be cloned!
++     *
++     * @return item's NBT tags container
++     */
++    @NotNull
++    public de.tr7zw.changeme.nbtapi.NBTItem getNBT() {
++        return getNBT(false);
++    }
++
++    /**
++    * Returns NBT representation of this item. If directApply is true,
++    * all changes will be mapped to the original item. Changes to the NBTItem will
++    * overwrite changes done to the original item in that case.
++    *
++    * @param directApply if true, changes to NBTItem will affect this ItemStack
++    * @return item's NBT tags container
++    */
++    @NotNull
++    public de.tr7zw.changeme.nbtapi.NBTItem getNBT(boolean directApply) {
++        return new de.tr7zw.changeme.nbtapi.NBTItem(this, directApply);
++    }
++
++    /**
++     * Applies NBT data from the provided NBT item.
++     *
++     * @param nbt ItemStack's NBT container
++     */
++    public void setNBT(@NotNull de.tr7zw.changeme.nbtapi.NBTItem nbt) {
++        ItemStack nbtItem = nbt.getItem();
++        setType(nbtItem.getType());
++        setAmount(nbtItem.getAmount());
++        setData(nbtItem.getData());
++        setItemMeta(nbtItem.getItemMeta());
++    }
++    // Sugarcane end
+ 
+     /**
+      * Get a copy of this ItemStack's {@link ItemMeta}.
+diff --git a/src/main/java/org/sugarcanemc/sugarcane/api/events/GameProfileLookupEvent.java b/src/main/java/org/sugarcanemc/sugarcane/api/events/GameProfileLookupEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e032dd27769d4e40c8e3353cab1c33cb5090d27a
+--- /dev/null
++++ b/src/main/java/org/sugarcanemc/sugarcane/api/events/GameProfileLookupEvent.java
+@@ -0,0 +1,51 @@
++package org.sugarcanemc.sugarcane.api.events;
++
++import com.mojang.authlib.GameProfile;
++import java.util.UUID;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++public class GameProfileLookupEvent extends Event {
++    private static final HandlerList handlers = new HandlerList();
++    private GameProfile gameProfile = null;
++    private final UUID uuid;
++    private final String name;
++
++    public GameProfileLookupEvent(boolean async, @NotNull UUID uuid, @NotNull String name) {
++        super(async);
++        this.uuid = uuid;
++        this.name = name;
++    }
++
++    @Nullable
++    public GameProfile getGameProfile() {
++        return gameProfile;
++    }
++
++    public void setGameProfile(@Nullable GameProfile gameProfile) {
++        this.gameProfile = gameProfile;
++    }
++
++    @NotNull
++    public UUID getUuid() {
++        return uuid;
++    }
++
++    @NotNull
++    public String getName() {
++        return name;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file

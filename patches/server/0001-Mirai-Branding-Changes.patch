@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Mon, 27 Sep 2021 11:58:34 +0200
+Date: Fri, 22 Oct 2021 14:44:08 +0200
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index fdc3f2390d8d0124102cbff386e8a981c6f92c22..9e9fd28a76ad6af45b9b45288a5060c6c2a1bcc4 100644
+index 0bd09bd56968660437a94ec078a13ee78339fa0e..5d31aecd7290ad30de745acc01252582adb64428 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -31,7 +31,7 @@ repositories {
+@@ -25,7 +25,7 @@ repositories {
  }
  
  dependencies {
@@ -17,20 +17,184 @@ index fdc3f2390d8d0124102cbff386e8a981c6f92c22..9e9fd28a76ad6af45b9b45288a5060c6
      implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -92,7 +92,7 @@ tasks.jar {
+@@ -86,7 +86,6 @@ tasks.jar {
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
              "Implementation-Version" to "git-Paper-$implementationVersion",
 -            "Implementation-Version" to "git-Airplane-$implementationVersion", // Airplane
-+            "Implementation-Version" to "git-Mirai-$implementationVersion", // Mirai // Airplane
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index f5d01bce4d5547b4aeca96b7962b2090f47ea541..ea34cb63a624f70f48ec9012999607fe88af8166 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -593,7 +593,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
++                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai - add Paper metrics system back (so we can disable it after >:D)
+ 
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+@@ -603,7 +603,7 @@ public class Metrics {
+ 
+                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
+-                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
++                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Mirai - add Paper metrics system back (so we can disable it after >:D)
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/gg/airplane/AirplaneVersionFetcher.java b/src/main/java/gg/airplane/AirplaneVersionFetcher.java
+deleted file mode 100644
+index e79ec7919e6cf160fec1cb981d85f0f33c316b41..0000000000000000000000000000000000000000
+--- a/src/main/java/gg/airplane/AirplaneVersionFetcher.java
++++ /dev/null
+@@ -1,137 +0,0 @@
+-package gg.airplane;
+-
+-import com.destroystokyo.paper.VersionHistoryManager;
+-import com.destroystokyo.paper.util.VersionFetcher;
+-import com.google.gson.Gson;
+-import com.google.gson.JsonObject;
+-import net.kyori.adventure.text.Component;
+-import net.kyori.adventure.text.JoinConfiguration;
+-import net.kyori.adventure.text.format.NamedTextColor;
+-import net.kyori.adventure.text.format.TextDecoration;
+-import org.bukkit.craftbukkit.CraftServer;
+-import org.jetbrains.annotations.NotNull;
+-import org.jetbrains.annotations.Nullable;
+-
+-import java.io.IOException;
+-import java.net.URI;
+-import java.net.http.HttpClient;
+-import java.net.http.HttpRequest;
+-import java.net.http.HttpResponse;
+-import java.nio.charset.StandardCharsets;
+-import java.util.concurrent.TimeUnit;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-
+-import static net.kyori.adventure.text.Component.text;
+-import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
+-import static net.kyori.adventure.text.format.NamedTextColor.RED;
+-
+-public class AirplaneVersionFetcher implements VersionFetcher {
+-
+-    private static final Logger LOGGER = Logger.getLogger("AirplaneVersionFetcher");
+-    private static final HttpClient client = HttpClient.newHttpClient();
+-
+-    private static final URI JENKINS_URI = URI.create("https://ci.tivy.ca/job/Airplane-1.17/lastSuccessfulBuild/buildNumber");
+-    private static final String GITHUB_FORMAT = "https://api.github.com/repos/TECHNOVE/Airplane/compare/ver/1.17...%s";
+-
+-    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers.mapping(
+-            HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
+-            string -> new Gson().fromJson(string, JsonObject.class)
+-    );
+-
+-    @Override
+-    public long getCacheTime() {
+-        return TimeUnit.MINUTES.toMillis(30);
+-    }
+-
+-    @Override
+-    public @NotNull Component getVersionMessage(final @NotNull String serverVersion) {
+-        final String[] parts = CraftServer.class.getPackage().getImplementationVersion().split("-");
+-        @NotNull Component component;
+-
+-        if (parts.length != 3) {
+-            component = text("Unknown server version.", RED);
+-        } else {
+-            final String versionString = parts[2];
+-
+-            try {
+-                component = this.fetchJenkinsVersion(Integer.parseInt(versionString));
+-            } catch (NumberFormatException e) {
+-                component = this.fetchGithubVersion(versionString.substring(1, versionString.length() - 1));
+-            }
+-        }
+-
+-        final @Nullable Component history = this.getHistory();
+-        return history != null ? Component.join(JoinConfiguration.noSeparators(), component, Component.newline(), this.getHistory()) : component;
+-    }
+-
+-    private @NotNull Component fetchJenkinsVersion(final int versionNumber) {
+-        final HttpRequest request = HttpRequest.newBuilder(JENKINS_URI).build();
+-        try {
+-            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+-            if (response.statusCode() != 200) {
+-                return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
+-            }
+-
+-            int latestVersionNumber;
+-            try {
+-                latestVersionNumber = Integer.parseInt(response.body());
+-            } catch (NumberFormatException e) {
+-                LOGGER.log(Level.WARNING, "Received invalid response from Jenkins \"" + response.body() + "\".");
+-                return text("Received invalid response from server.", RED);
+-            }
+-
+-            final int versionDiff = latestVersionNumber - versionNumber;
+-            return this.getResponseMessage(versionDiff);
+-        } catch (IOException | InterruptedException e) {
+-            LOGGER.log(Level.WARNING, "Failed to look up version from Jenkins", e);
+-            return text("Failed to retrieve version from server.", RED);
+-        }
+-    }
+-
+-    // Based off code contributed by Techcable <Techcable@outlook.com> in Paper/GH-65
+-    private @NotNull Component fetchGithubVersion(final @NotNull String hash) {
+-        final URI uri = URI.create(String.format(GITHUB_FORMAT, hash));
+-        final HttpRequest request = HttpRequest.newBuilder(uri).build();
+-        try {
+-            final HttpResponse<JsonObject> response = client.send(request, JSON_OBJECT_BODY_HANDLER);
+-            if (response.statusCode() != 200) {
+-                return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
+-            }
+-
+-            final JsonObject obj = response.body();
+-            final int versionDiff = obj.get("behind_by").getAsInt();
+-
+-            return this.getResponseMessage(versionDiff);
+-        } catch (IOException | InterruptedException e) {
+-            LOGGER.log(Level.WARNING, "Failed to look up version from GitHub", e);
+-            return text("Failed to retrieve version from server.", RED);
+-        }
+-    }
+-
+-    private @NotNull Component getResponseMessage(final int versionDiff) {
+-        return switch (Math.max(-1, Math.min(1, versionDiff))) {
+-            case -1 ->
+-                text("You are running an unsupported version of Airplane.", RED);
+-            case 0 ->
+-                text("You are on the latest version!", GREEN);
+-            default ->
+-                text("You are running " + versionDiff + " version" + (versionDiff == 1 ? "" : "s") + " beyond. " +
+-                    "Please update your server when possible to maintain stability, security, and receive the latest optimizations.", RED);
+-        };
+-    }
+-
+-    private @Nullable Component getHistory() {
+-        final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
+-        if (data == null) {
+-            return null;
+-        }
+-
+-        final String oldVersion = data.getOldVersion();
+-        if (oldVersion == null) {
+-            return null;
+-        }
+-
+-        return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
+-    }
+-}
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c80a600b72972c2e8b7d472e2e11c312adaa06e1..34515d988d3a2db1e1e58fa4330eb731c92be305 100644
+index 49821f441886b4de2cac5b1b13981e2161992f98..afff56c48b54d4cade1460d7e153f1581938e049 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1726,7 +1726,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -40,7 +204,7 @@ index c80a600b72972c2e8b7d472e2e11c312adaa06e1..34515d988d3a2db1e1e58fa4330eb731
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c987e7c46afe6c41339e8e08bf2bfabe8c1ba098..03ec1bbc0fc4354549108868e2514dd42e85ff1d 100644
+index ae2c4388eddef529fba5d5eae354ee15c6e36c9d..411ce299dd0a05b76f1a1af18051985a58ce8806 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
@@ -53,7 +217,7 @@ index c987e7c46afe6c41339e8e08bf2bfabe8c1ba098..03ec1bbc0fc4354549108868e2514dd4
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index efbe385b3a78f4bd0dee6b63d78999513433b79b..2ad9bac4c1ae2adb50bb6291591ff4b741b3007e 100644
+index 25bb190bf7e08539a3590ee35a01f1d816e48d83..60855b993e712354af68578b58933ca1e5f7875e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -61,15 +225,23 @@ index efbe385b3a78f4bd0dee6b63d78999513433b79b..2ad9bac4c1ae2adb50bb6291591ff4b7
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
 -        return new gg.airplane.AirplaneVersionFetcher(); // Airplane
-+        return new com.destroystokyo.paper.PaperVersionFetcher(); // Airplane // Mirai - revert VersionFetcher to Paper
++        return new com.destroystokyo.paper.PaperVersionFetcher(); // Mirai
      }
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 1788d79ea489e446d3d9f541693d4ba3dfc26015..4253c9e1f416bc5fd55ea1e1b4aa54023da9f829 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..945d99ff112ffec3019afec88773a518649cd11d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-@@ -9,21 +9,6 @@ import org.bukkit.Bukkit;
+@@ -1,29 +1,9 @@
+ package org.bukkit.craftbukkit.util;
+ 
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.util.Properties;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+ import org.bukkit.Bukkit;
  
  public final class Versioning {
      public static String getBukkitVersion() {
@@ -89,6 +261,6 @@ index 1788d79ea489e446d3d9f541693d4ba3dfc26015..4253c9e1f416bc5fd55ea1e1b4aa5402
 -        }
 -
 -        return result;
-+        return "1.17.1-R0.1-SNAPSHOT"; // Mirai - hardcode version
++        return "1.17.1-R0.1-SNAPSHOT"; // Mirai - hardcode version. No need to check it, it's 1.17.1 obviously.
      }
  }
