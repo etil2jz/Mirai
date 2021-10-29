@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 26 Oct 2021 20:33:37 +0200
+Date: Fri, 29 Oct 2021 20:03:15 +0200
 Subject: [PATCH] (Slice) Patches
 
 (Slice) Multiple Entries with Scoreboards
@@ -9,6 +9,7 @@ Subject: [PATCH] (Slice) Patches
 (Slice) Packet obfuscation and reduction
 (Slice) Smooth World Teleports
 (Slice) World Instance Flag
+(Slice) Block Mob Spawns globally by EntityType
 
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..6029102a2e3631d563b5f1846bc2eab8268c9ac6 100644
@@ -46,7 +47,7 @@ index 4c9660176e783999301565790b8cf6f47b0d02a2..2741e4f58ab0c239f791d00aa813cde4
      public ClientboundSetPlayerTeamPacket(FriendlyByteBuf buf) {
          this.name = buf.readUtf(16);
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 4df12454001f0de5f358c88d876e34c35a736c42..3a9b301e0c696f08a2b677f592f31444d967fe17 100644
+index 4df12454001f0de5f358c88d876e34c35a736c42..a26f3538e286407f655f075f6aa63033b3b748c6 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -136,6 +136,12 @@ public class SynchedEntityData {
@@ -62,10 +63,12 @@ index 4df12454001f0de5f358c88d876e34c35a736c42..3a9b301e0c696f08a2b677f592f31444
          SynchedEntityData.DataItem<T> datawatcher_item = this.getItem(key);
  
          if (ObjectUtils.notEqual(value, datawatcher_item.getValue())) {
-@@ -145,6 +151,11 @@ public class SynchedEntityData {
+@@ -144,7 +150,12 @@ public class SynchedEntityData {
+             datawatcher_item.setDirty(true);
              this.isDirty = true;
          }
- 
+-
++		
 +		// Slice start
 +        if (foreignValue != null && ObjectUtils.notEqual(foreignValue, datawatcher_item.getForeignValue())) {
 +            datawatcher_item.setForeignValue(foreignValue);
@@ -135,8 +138,8 @@ index 4df12454001f0de5f358c88d876e34c35a736c42..3a9b301e0c696f08a2b677f592f31444
 +
 +        public boolean isDirty(boolean foreign) {
 +            if (foreign) {
-+                //There must be a foreign value in order for this to be dirty, otherwise we consider this a normal
-+                //value and check the normal dirty flag.
++                // There must be a foreign value in order for this to be dirty, otherwise we consider this a normal
++                // value and check the normal dirty flag.
 +                return foreignValue == null || this.foreignDirty;
 +            }
 +
@@ -206,7 +209,7 @@ index 130a928f156961bae9ca184b3ca31004dbba1012..063e4f9f140a39c519b1d4892bfa331d
      @Override
      public void onObjectiveAdded(Objective objective) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index d175a41fd8c24813904019e25432c4a796db0b7b..4490cde745033d0cb138144e7921ed60f406b16c 100644
+index d175a41fd8c24813904019e25432c4a796db0b7b..fb785c2581c5f1548a2e10d48cc5d3340c74c9fd 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -387,7 +387,19 @@ public class ServerEntity {
@@ -220,8 +223,8 @@ index d175a41fd8c24813904019e25432c4a796db0b7b..4490cde745033d0cb138144e7921ed60
 +                serverPlayer.connection.send(dataPacket);
 +            }
 +
-+            //Get the packedData that the original packet has, and then determine if any of those are changed in
-+            //the foreign version. If null, nothing to notify foreign trackers about.
++            // Get the packedData that the original packet has, and then determine if any of those are changed in
++            // the foreign version. If null, nothing to notify foreign trackers about.
 +            List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
 +            if (dirtyItems != null) {
 +                this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
@@ -273,25 +276,23 @@ index ea1536aa368a87f946191716eee4dac04e2f2a81..5964a1a75d95dbef3c5aae96c60b5b64
  
          // entityplayer1.connection.b(entityplayer1.locX(), entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd131db901..99d515e5973edb92dfbd93f96ee3b0400bb54e06 100644
+index 6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd131db901..1baa208924e13bc1df723ce2be36fe72b8f4108f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -787,7 +787,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -787,7 +787,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
  
          this.checkOutOfWorld();
          if (!this.level.isClientSide) {
 -            this.setSharedFlagOnFire(this.remainingFireTicks > 0);
-+            // Slice start
-+			if (this instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
-+				this.setSharedFlagOnFire(this.remainingFireTicks > 0 && !livingEntity.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE));
-+			} else {
-+				this.setSharedFlagOnFire(this.remainingFireTicks > 0);
-+			}
-+			// Slice end
++            if (this instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
++                this.setSharedFlagOnFire(this.remainingFireTicks > 0 && !livingEntity.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE));
++            } else {
++                this.setSharedFlagOnFire(this.remainingFireTicks > 0);
++            }
          }
  
          this.firstTick = false;
-@@ -2969,7 +2975,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -2969,7 +2973,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          if (event.isCancelled()) {
              return;
          }
@@ -301,7 +302,7 @@ index 6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd131db901..99d515e5973edb92dfbd93f96ee3b040
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 92fc1c12e45761b5f7718e2795596c899a31b096..93f55366e78e514369b767ba739ddf1050ad446f 100644
+index 92fc1c12e45761b5f7718e2795596c899a31b096..6395585f36228550fc160197012087b410979560 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3022,7 +3022,7 @@ public abstract class LivingEntity extends Entity {
@@ -309,7 +310,7 @@ index 92fc1c12e45761b5f7718e2795596c899a31b096..93f55366e78e514369b767ba739ddf10
              ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
  
 -            if (!ItemStack.matches(itemstack1, itemstack)) {
-+            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) { // Slice
++            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) {
                  // Paper start - PlayerArmorChangeEvent
                  if (this instanceof ServerPlayer && enumitemslot.getType() == EquipmentSlot.Type.ARMOR) {
                      final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
@@ -326,6 +327,74 @@ index 94e76e295dbd0f3bac4b30a3e7338cd56a971207..4484c6dc092f5fc8e1a33b0e7096f618
      }
  
      @Override
+diff --git a/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java b/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
+index 86528ff031014e788d72a8bf7c1c9443512096bb..96d0f5cd9f1f10df033c881d4dec1782570a1659 100644
+--- a/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
++++ b/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
+@@ -41,9 +41,10 @@ public class MobSpawnSettings {
+         }), Codec.BOOL.fieldOf("player_spawn_friendly").orElse(false).forGetter(MobSpawnSettings::playerSpawnFriendly)).apply(instance, MobSpawnSettings::new);
+     });
+     private final float creatureGenerationProbability;
+-    private final Map<MobCategory, WeightedRandomList<MobSpawnSettings.SpawnerData>> spawners;
+-    private final Map<EntityType<?>, MobSpawnSettings.MobSpawnCost> mobSpawnCosts;
++    private Map<MobCategory, WeightedRandomList<MobSpawnSettings.SpawnerData>> spawners; // Slice
++    private Map<EntityType<?>, MobSpawnSettings.MobSpawnCost> mobSpawnCosts; // Slice
+     private final boolean playerSpawnFriendly;
++	private boolean stripped; // Slice
+ 
+     MobSpawnSettings(float creatureSpawnProbability, Map<MobCategory, WeightedRandomList<MobSpawnSettings.SpawnerData>> spawners, Map<EntityType<?>, MobSpawnSettings.MobSpawnCost> spawnCosts, boolean playerSpawnFriendly) {
+         this.creatureGenerationProbability = creatureSpawnProbability;
+@@ -51,13 +52,50 @@ public class MobSpawnSettings {
+         this.mobSpawnCosts = ImmutableMap.copyOf(spawnCosts);
+         this.playerSpawnFriendly = playerSpawnFriendly;
+     }
++	
++	// Slice start
++    // This very stupid thing is because Mob Spawning Biome data is statically registered before CraftServer
++    // is even created. As a result, we need to lazily rebuild our spawning data here which is very cool and very
++    // stupid. But it should only really happen once up front, so isn't the end of the world
++    private void stripSpawnData() {
++        if (xyz.arthurb.mirai.MiraiConfig.globalBlockedMobSpawnTypes.isEmpty()) {
++            stripped = true;
++            return;
++        }
++
++        Map<EntityType<?>, MobSpawnSettings.MobSpawnCost> finalMobSpawnCosts = new java.util.HashMap<>();
++        for (Entry<EntityType<?>, MobSpawnSettings.MobSpawnCost> entry : mobSpawnCosts.entrySet()) {
++            if (!xyz.arthurb.mirai.MiraiConfig.globalBlockedMobSpawnTypes.contains(entry.getKey())) {
++                finalMobSpawnCosts.put(entry.getKey(), entry.getValue());
++            }
++        }
++        this.mobSpawnCosts = ImmutableMap.copyOf(finalMobSpawnCosts);
++
++        Map<MobCategory, WeightedRandomList<MobSpawnSettings.SpawnerData>> finalSpawners = new java.util.HashMap<>();
++        for (Entry<MobCategory, WeightedRandomList<SpawnerData>> entry : spawners.entrySet()) {
++            List<SpawnerData> finalSpawnerData = new java.util.ArrayList<>();
++            for (SpawnerData spawnerData : entry.getValue().unwrap()) {
++                if (!xyz.arthurb.mirai.MiraiConfig.globalBlockedMobSpawnTypes.contains(spawnerData.type)) {
++                    finalSpawnerData.add(spawnerData);
++                }
++            }
++
++            finalSpawners.put(entry.getKey(), finalSpawnerData.isEmpty() ? EMPTY_MOB_LIST : WeightedRandomList.create(finalSpawnerData));
++        }
++
++        this.spawners = ImmutableMap.copyOf(finalSpawners);
++        stripped = true;
++    }
++    // Slice end
+ 
+     public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobs(MobCategory spawnGroup) {
++		if (!stripped) stripSpawnData(); // Slice
+         return this.spawners.getOrDefault(spawnGroup, EMPTY_MOB_LIST);
+     }
+ 
+     @Nullable
+     public MobSpawnSettings.MobSpawnCost getMobSpawnCost(EntityType<?> entityType) {
++		if (!stripped) stripSpawnData(); // Slice
+         return this.mobSpawnCosts.get(entityType);
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/scores/Scoreboard.java b/src/main/java/net/minecraft/world/scores/Scoreboard.java
 index 3e75ea4d5a6c83ca570b29e3c1a5d51fb132379a..8a55e56a3aa1a8aa4c0780f46a98110c7b931155 100644
 --- a/src/main/java/net/minecraft/world/scores/Scoreboard.java
@@ -475,3 +544,22 @@ index 2b87a652798cb632fe76bf20e9e7f8cb8bfb3b7b..1b10b3628e09b6c831e4907bf79e87a5
  
      @Override
      public boolean hasPlayer(OfflinePlayer player) throws IllegalArgumentException, IllegalStateException {
+diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+index 6b75316279246f26ed76bed0aa096802fda04da8..1d844dd248ebd62261a83b3d353a82390c14f0c9 100644
+--- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+@@ -243,4 +243,13 @@ public class MiraiConfig {
+ 		entitiesCanUsePortals = getBoolean("settings.entities-can-use-portals", entitiesCanUsePortals);
+ 	}
+ 	
++    public static java.util.Set<net.minecraft.world.entity.EntityType<?>> globalBlockedMobSpawnTypes = new java.util.HashSet<>();
++    private static void globalBlockedMobSpawnTypes() {
++        java.util.List<String> list = getList("settings.global-blocked-mobspawn-types", java.util.Collections.emptyList());
++        for (String type : list) {
++            java.util.Optional<net.minecraft.world.entity.EntityType<?>> entityType = net.minecraft.world.entity.EntityType.byString(type.toLowerCase());
++            entityType.ifPresent(eType -> globalBlockedMobSpawnTypes.add(eType));
++        }
++    }
++	
+ }
+\ No newline at end of file
