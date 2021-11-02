@@ -19,7 +19,7 @@ index af598369e5aeae700d7d9da049f173fc51b7a370..850edad60a6677904487039d2977170d
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import java.util.concurrent.AbstractExecutorService;
-+import xyz.arthurb.mirai.server.util.ServerWorkerWrapper;
++import wtf.etil.mirai.server.util.ServerWorkerWrapper;
 +import net.minecraft.server.MCUtil;
 +import java.util.Collections;
 +
@@ -381,13 +381,13 @@ index bee38307494188800886a1622fed229b88dbd8f1..b3db65c1088888a8d6ae2395273239e8
              //
              // Paper start
              Logger log = Bukkit.getServer().getLogger();
-diff --git a/src/main/java/xyz/arthurb/mirai/server/util/ServerWorkerWrapper.java b/src/main/java/xyz/arthurb/mirai/server/util/ServerWorkerWrapper.java
+diff --git a/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java b/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..f13ed35d4a808667e6a3a58c285f5a1d9006d6bf
 --- /dev/null
-+++ b/src/main/java/xyz/arthurb/mirai/server/util/ServerWorkerWrapper.java
++++ b/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java
 @@ -0,0 +1,24 @@
-+package xyz.arthurb.mirai.server.util;
++package wtf.etil.mirai.server.util;
 +
 +import com.google.common.base.Preconditions;
 +import net.minecraft.Util;

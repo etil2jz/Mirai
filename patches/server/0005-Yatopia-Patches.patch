@@ -116,7 +116,7 @@ index afff56c48b54d4cade1460d7e153f1581938e049..018fc89f2eabef86d5d5d5175940f1af
                  String doneTime = String.format(java.util.Locale.ROOT, "%.3fs", (double) (Util.getNanos() - serverStartTime) / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
                  // Paper end
-+				if (xyz.arthurb.mirai.MiraiConfig.fixProtocolLib) org.yatopiamc.yatopia.server.util.YatopiaPreloadProtocolLib.run(); // Yatopia - Preload ProtocolLib Enum Wrappers
++				if (wtf.etil.mirai.MiraiConfig.fixProtocolLib) org.yatopiamc.yatopia.server.util.YatopiaPreloadProtocolLib.run(); // Yatopia - Preload ProtocolLib Enum Wrappers
  
                  org.spigotmc.WatchdogThread.tick(); // Paper
                  org.spigotmc.WatchdogThread.hasStarted = true; // Paper
@@ -177,7 +177,7 @@ index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..335bd288ddf965870b7ed6f189593ccd
          playerconnection.send(new ClientboundLoginPacket(player.getId(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), worlddata.isHardcore(), this.server.levelKeys(), this.registryHolder, worldserver1.dimensionType(), worldserver1.dimension(), this.getMaxPlayers(), worldserver1.getChunkSource().chunkMap.playerChunkManager.getLoadDistance(), flag1, !flag, worldserver1.isDebug(), worldserver1.isFlat())); // Paper - no-tick view distance // Paper - replace old player chunk management
          player.getBukkitEntity().sendSupportedChannels(); // CraftBukkit
 -        playerconnection.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
-+        playerconnection.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf((xyz.arthurb.mirai.MiraiConfig.f3Name)))); // Yatopia
++        playerconnection.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf((wtf.etil.mirai.MiraiConfig.f3Name)))); // Yatopia
          playerconnection.send(new ClientboundChangeDifficultyPacket(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
          playerconnection.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
          playerconnection.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
@@ -187,7 +187,7 @@ index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..335bd288ddf965870b7ed6f189593ccd
          // CraftBukkit - Moved from above, added world
 -        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
 +        // Yatopia start - log player login location
-+		if (xyz.arthurb.mirai.MiraiConfig.logPlayerLoginLoc) {
++		if (wtf.etil.mirai.MiraiConfig.logPlayerLoginLoc) {
 +			PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
 +		} else {
 +			PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
@@ -263,7 +263,7 @@ index 71fefe3956c1e4458dd4b441f90902a3ed0cdf24..46d75cd28fbf6f5768bb115a02a2d377
 -
 -                    if (d1 > 0.0D) {
 -                        this.hurt(DamageSource.IN_WALL, (float) Math.max(1, Mth.floor(-d0 * d1)));
-+        if (!xyz.arthurb.mirai.MiraiConfig.disableEntityStuckChecks) { // Yatopia
++        if (!wtf.etil.mirai.MiraiConfig.disableEntityStuckChecks) { // Yatopia
 +            if (this.isAlive()) {
 +                if (this.isInWall()) {
 +                    this.hurt(DamageSource.IN_WALL, 1.0F);
@@ -794,10 +794,10 @@ index 0000000000000000000000000000000000000000..f7c7122b871fee50f55dbd6ec663d416
 +    }
 +}
 \ No newline at end of file
-diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 4c92005a52589b9056d76c435d60fe1581dd9c48..35646ca1c13b30a40bec09b9ef1aa7ab75616e38 100644
---- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
-+++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -113,18 +113,11 @@ public class MiraiConfig {
              num = 0D;
          }

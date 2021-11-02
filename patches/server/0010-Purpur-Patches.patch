@@ -145,7 +145,7 @@ index 7d6dc0a8ee35274052b122bbc446bc54750de0a6..506b139a1d26dc6ec82896ce83c1b0e1
                          if (advancement == null) {
                              // CraftBukkit start
                              if (entry.getKey().getNamespace().equals("minecraft")) {
-+								if (!xyz.arthurb.mirai.MiraiConfig.loggerSuppressIgnoredAdvancementWarnings) // Purpur
++								if (!wtf.etil.mirai.MiraiConfig.loggerSuppressIgnoredAdvancementWarnings) // Purpur
                                  PlayerAdvancements.LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", entry.getKey(), this.file);
                              }
                              // CraftBukkit end
@@ -157,7 +157,7 @@ index c71bc00973899feec0ec5530bf3d237928810cf4..d175a41fd8c24813904019e25432c4a7
                          this.teleportDelay = 0;
                          packet1 = new ClientboundTeleportEntityPacket(this.entity);
                      }
-+					if (xyz.arthurb.mirai.MiraiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
++					if (wtf.etil.mirai.MiraiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
                  }
  
                  if ((this.trackDelta || this.entity.hasImpulse || this.entity instanceof LivingEntity && ((LivingEntity) this.entity).isFallFlying()) && this.tickCount > 0) {
@@ -213,7 +213,7 @@ index b199663866f1c2344da4fadb75e7f469ca1d0451..9dce6408c20574795b3b41851a0a35d4
          long elapsedTime = currentTime - this.keepAliveTime;
  
 +		// Purpur start
-+        if (xyz.arthurb.mirai.MiraiConfig.useAlternateKeepAlive) {
++        if (wtf.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
 +            if (elapsedTime >= 1000L) { // 1 second
 +                if (!processedDisconnect && keepAlives.size() > KEEPALIVE_LIMIT) {
 +                    LOGGER.warn("{} was kicked due to keepalive timeout!", player.getName());
@@ -235,7 +235,7 @@ index b199663866f1c2344da4fadb75e7f469ca1d0451..9dce6408c20574795b3b41851a0a35d4
      @Override
      public void handleKeepAlive(ServerboundKeepAlivePacket packet) {
 +		// Purpur start
-+        if (xyz.arthurb.mirai.MiraiConfig.useAlternateKeepAlive) {
++        if (wtf.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
 +            long id = packet.getId();
 +            if (keepAlives.size() > 0 && keepAlives.contains(id)) {
 +                int ping = (int) (Util.getMillis() - id);
@@ -306,7 +306,7 @@ index 63a4fa2408edf84b490ca39e824977135d78eff0..1054bbedb323244a2b5749f7526a8495
                  Optional<? extends Recipe<?>> optional = recipeManager.byKey(minecraftkey);
  
                  if (!optional.isPresent()) {
-+					if (!xyz.arthurb.mirai.MiraiConfig.loggerSuppressUnrecognizedRecipeErrors) // Purpur
++					if (!wtf.etil.mirai.MiraiConfig.loggerSuppressUnrecognizedRecipeErrors) // Purpur
                      ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", minecraftkey);
                  } else {
                      handler.accept((Recipe) optional.get());
@@ -332,9 +332,9 @@ index 1463e0f028c450d550d7e7cc0c165470a655f430..6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd
          if (this.isOnPortalCooldown()) {
 -            this.setPortalCooldown();
 -        } else {
-+            if (!(xyz.arthurb.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
++            if (!(wtf.etil.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
 +			this.setPortalCooldown();
-+        } else if (xyz.arthurb.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer) { // Purpur
++        } else if (wtf.etil.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer) { // Purpur
              if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
                  this.portalEntrancePos = pos.immutable();
 +				portalPos = BlockPos.ZERO; // Purpur
@@ -346,7 +346,7 @@ index 1463e0f028c450d550d7e7cc0c165470a655f430..6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd
  
      public boolean canChangeDimensions() {
 -        return isAlive() && valid; // Paper
-+        return isAlive() && valid && (xyz.arthurb.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer); // Paper // Purpur
++        return isAlive() && valid && (wtf.etil.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer); // Paper // Purpur
      }
  
      public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
@@ -413,7 +413,7 @@ index 4da560f6e4da0750bda78b900b2d916d58adfccb..67f0001ec6a75d9245f04086721d3316
 +	@Override
 +    public net.minecraft.world.phys.AABB getAxisForFluidCheck() {
 +        // Stops squids from floating just over the water
-+        return super.getAxisForFluidCheck().offsetY(xyz.arthurb.mirai.MiraiConfig.squidOffsetWaterCheck);
++        return super.getAxisForFluidCheck().offsetY(wtf.etil.mirai.MiraiConfig.squidOffsetWaterCheck);
 +    }
 +	
  }
@@ -537,7 +537,7 @@ index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..db010b5c9a9b457020dbe4b64a8fc9b4
      }
  
      static {
-+		if (!xyz.arthurb.mirai.MiraiConfig.loggerSuppressInitLegacyMaterialError) // Purpur
++		if (!wtf.etil.mirai.MiraiConfig.loggerSuppressInitLegacyMaterialError) // Purpur
          System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
          if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
              new Exception().printStackTrace();
@@ -554,12 +554,12 @@ index 9bede6a26c08ede063c7a38f1149c811df14b258..088239d17aa8178cf8af09ec23cfd4de
          if (args.length > 0 && args[0].equals("mem") && sender.hasPermission("bukkit.command.tpsmemory")) {
              sender.sendMessage(ChatColor.GOLD + "Current Memory Usage: " + ChatColor.GREEN + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "/" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + " mb (Max: " + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + " mb)");
              if (!hasShownMemoryWarning) {
-diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 452de6f89f12ceddd3afa57c3eb1412bedd05272..6b75316279246f26ed76bed0aa096802fda04da8 100644
---- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
-+++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -1,10 +1,15 @@
- package xyz.arthurb.mirai;
+ package wtf.etil.mirai;
  
 +import co.aikar.timings.TimingsManager;
  import com.destroystokyo.paper.PaperCommand;

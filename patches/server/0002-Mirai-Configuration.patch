@@ -15,12 +15,12 @@ index e2901132b78126c0a4eb04363dfe6a0dccd1313f..53308e50aad07b1486ade34284baf72a
 +		
 +		// Mirai start
 +		try {
-+			xyz.arthurb.mirai.MiraiConfig.init((java.io.File) options.valueOf("mirai-settings"));
++			wtf.etil.mirai.MiraiConfig.init((java.io.File) options.valueOf("mirai-settings"));
 +		} catch (Exception e) {
 +			DedicatedServer.LOGGER.error("Unable to load server configuration", e);
 +			return false;
 +		}
-+		xyz.arthurb.mirai.MiraiConfig.registerCommands();
++		wtf.etil.mirai.MiraiConfig.registerCommands();
 +		// Mirai end
  
          this.setPvpAllowed(dedicatedserverproperties.pvp);
@@ -33,7 +33,7 @@ index 411ce299dd0a05b76f1a1af18051985a58ce8806..06b410e43ecfe20d25d50346d76a3d58
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
-+		xyz.arthurb.mirai.MiraiConfig.init((File) console.options.valueOf("mirai-settings")); // Mirai
++		wtf.etil.mirai.MiraiConfig.init((File) console.options.valueOf("mirai-settings")); // Mirai
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
@@ -56,13 +56,13 @@ index 22e9dd17f62103c5061435099ce96a3d70d54808..5d0801fc73f5888398efd65cb5e9eabb
              }
          };
  
-diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..4c92005a52589b9056d76c435d60fe1581dd9c48
 --- /dev/null
-+++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -0,0 +1,189 @@
-+package xyz.arthurb.mirai;
++package wtf.etil.mirai;
 +
 +import com.destroystokyo.paper.PaperCommand;
 +import com.google.common.base.Throwables;

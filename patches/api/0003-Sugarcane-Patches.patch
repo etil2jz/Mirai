@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 24 Oct 2021 11:36:13 +0200
+Date: Tue, 2 Nov 2021 12:07:24 +0100
 Subject: [PATCH] (Sugarcane) Patches
 
 Original code by YatopiaMC, licensed under MIT
@@ -11,7 +11,7 @@ You can find the original code on https://github.com/YatopiaMC/Yatopia
 (Sugarcane) Disable reload command
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index bdc96e07768006066d2248488775428d48ed635a..76c6abe033f93fa36c332873120db37f2f7f46f1 100644
+index fdc94c58570d7eaf430e9c6023abf91a4df61397..d262538316c403f8166e66c3c512de226d8fa9c7 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -3,6 +3,7 @@ import java.util.Locale
@@ -38,16 +38,17 @@ index bdc96e07768006066d2248488775428d48ed635a..76c6abe033f93fa36c332873120db37f
  
      val annotations = "org.jetbrains:annotations:21.0.1" // Paper - we don't want Java 5 annotations...
      compileOnly(annotations)
-@@ -89,6 +92,9 @@ tasks.jar {
+@@ -90,6 +93,10 @@ tasks.jar {
      }
  }
  
 +tasks.shadowJar {
-+    relocate("de.tr7zw.changeme.nbtapi", "de.tr7zw.nbtapi")
++	relocate("de.tr7zw.changeme.nbtapi", "de.tr7zw.nbtapi")
 +}
- tasks.withType<Javadoc>().configureEach {
-     (options as CoreJavadocOptions).addStringOption("sourcepath", apiAndDocs.resolvedConfiguration.files.joinToString(separator = File.pathSeparator, transform = File::getPath))
++
+ tasks.withType<Javadoc> {
  	(options as StandardJavadocDocletOptions).encoding = "UTF-8"
+ 	(options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
 diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
 index 5a4884db36d448c885e49c965ae329a0638dd628..a2fcd12090c501eb4df7051b28e49d20068facf1 100644
 --- a/src/main/java/org/bukkit/Chunk.java

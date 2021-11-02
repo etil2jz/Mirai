@@ -1,24 +1,24 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 23 Oct 2021 19:27:28 +0200
+Date: Tue, 2 Nov 2021 11:58:49 +0100
 Subject: [PATCH] (Patina) Patches
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 5f823837c749e98dece7af6a3d2a18cb1ba2aced..bdc96e07768006066d2248488775428d48ed635a 100644
+index 92b612126a6bac0b89198a92bbb73b742ec9d064..fdc94c58570d7eaf430e9c6023abf91a4df61397 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -91,6 +91,8 @@ tasks.jar {
+ }
  
- tasks.withType<Javadoc>().configureEach {
-     (options as CoreJavadocOptions).addStringOption("sourcepath", apiAndDocs.resolvedConfiguration.files.joinToString(separator = File.pathSeparator, transform = File::getPath))
+ tasks.withType<Javadoc> {
 +	(options as StandardJavadocDocletOptions).encoding = "UTF-8"
 +	(options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
-     (options as StandardJavadocDocletOptions).links(
-         "https://guava.dev/releases/21.0/api/docs/",
-         "https://javadoc.io/doc/org.yaml/snakeyaml/1.28/",
+     inputs.files(apiAndDocs)
+         .ignoreEmptyDirectories()
+         .withPropertyName(apiAndDocs.name + "-configuration")
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 57a21495843f3a144cd73473cdc8781d6129b7ca..f57be47d67162da9c6fe02461a7938d78053ec19 100644
+index 57a21495843f3a144cd73473cdc8781d6129b7ca..321c3ce52b60004304bb48e815501cf762c1bd0c 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -1,6 +1,6 @@
@@ -47,18 +47,17 @@ index 57a21495843f3a144cd73473cdc8781d6129b7ca..f57be47d67162da9c6fe02461a7938d7
  
      public VersionCommand(@NotNull String name) {
          super(name);
-@@ -51,8 +53,8 @@ public class VersionCommand extends BukkitCommand {
-         if (!testPermission(sender)) return true;
+@@ -52,7 +54,8 @@ public class VersionCommand extends BukkitCommand {
  
          if (args.length == 0) {
--            //sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")"); // Paper - moved to setVersionMessage
+             //sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")"); // Paper - moved to setVersionMessage
 -            sendVersion(sender);
-+            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")"); // Paper - moved to setVersionMessage // Patina
-+            //sendVersion(sender); // Patina
++            //sendVersion(sender);
++			sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
          } else {
              StringBuilder name = new StringBuilder();
  
-@@ -155,7 +157,8 @@ public class VersionCommand extends BukkitCommand {
+@@ -155,7 +158,8 @@ public class VersionCommand extends BukkitCommand {
          return ImmutableList.of();
      }
  
@@ -68,19 +67,17 @@ index 57a21495843f3a144cd73473cdc8781d6129b7ca..f57be47d67162da9c6fe02461a7938d7
      private boolean hasVersion = false;
      private Component versionMessage = null; // Paper
      private final Set<CommandSender> versionWaiters = new HashSet<CommandSender>();
-@@ -235,7 +238,8 @@ public class VersionCommand extends BukkitCommand {
+@@ -235,6 +239,7 @@ public class VersionCommand extends BukkitCommand {
          }
           */
          // Paper end
--    }
-+    /*
-+	}
++	/*
+     }
  
      // Paper start
-     private void setVersionMessage(final @NotNull Component msg) {
-@@ -284,4 +288,5 @@ public class VersionCommand extends BukkitCommand {
+@@ -284,4 +289,5 @@ public class VersionCommand extends BukkitCommand {
              return -1;
          }
      }
-+	*/ // Patina - remove
++	*/
  }

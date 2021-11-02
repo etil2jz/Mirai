@@ -72,7 +72,7 @@ index 029c21d9416520469548293f9a2ec0c056507d05..0352d1b1a016eb1d3426e8c0abbd960b
          this.knownMovePacketCount = this.receivedMovePacketCount;
          if (this.clientIsFloating && !this.player.isSleeping()) {
 -            if (++this.aboveGroundTickCount > 80) {
-+            if (xyz.arthurb.mirai.MiraiConfig.checkFlying && ++this.aboveGroundTickCount > 80) { // Sugarcane - Configurable flight checks
++            if (wtf.etil.mirai.MiraiConfig.checkFlying && ++this.aboveGroundTickCount > 80) { // Sugarcane - Configurable flight checks
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
                  this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
                  return;
@@ -81,7 +81,7 @@ index 029c21d9416520469548293f9a2ec0c056507d05..0352d1b1a016eb1d3426e8c0abbd960b
              this.vehicleLastGoodZ = this.lastVehicle.getZ();
              if (this.clientVehicleIsFloating && this.player.getRootVehicle().getControllingPassenger() == this.player) {
 -                if (++this.aboveGroundVehicleTickCount > 80) {
-+                if (xyz.arthurb.mirai.MiraiConfig.checkVehicleFlying && ++this.aboveGroundVehicleTickCount > 80) { // Sugarcane - Configurable flight checks
++                if (wtf.etil.mirai.MiraiConfig.checkVehicleFlying && ++this.aboveGroundVehicleTickCount > 80) { // Sugarcane - Configurable flight checks
                      ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating a vehicle too long!", this.player.getName().getString());
                      this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                      return;
@@ -294,10 +294,10 @@ index 0000000000000000000000000000000000000000..a0098ad1716ed8821d4b30dafdaac0ac
 +    }
 +}
 \ No newline at end of file
-diff --git a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 35646ca1c13b30a40bec09b9ef1aa7ab75616e38..452de6f89f12ceddd3afa57c3eb1412bedd05272 100644
---- a/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
-+++ b/src/main/java/xyz/arthurb/mirai/MiraiConfig.java
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -197,4 +197,11 @@ public class MiraiConfig {
  		logPlayerLoginLoc = getBoolean("settings.log-player-login-location", logPlayerLoginLoc);
  	}
