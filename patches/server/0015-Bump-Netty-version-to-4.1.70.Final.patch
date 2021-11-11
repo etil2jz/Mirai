@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 11 Nov 2021 11:57:52 +0100
+Subject: [PATCH] Bump Netty version to 4.1.70.Final
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 5fde6b03fcccef4f9cc5c84c3701e45b27bc4471..d48b6a9c7816ba5f18a63e247aa814f986456465 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -52,7 +52,7 @@ dependencies {
+     runtimeOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.0")
+     runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.0")
+ 
+-    implementation("io.netty:netty-all:4.1.65.Final") // Paper
++    implementation("io.netty:netty-all:4.1.70.Final") // Paper // Mirai
+ 
+     implementation("net.fabricmc:mapping-io:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
+     implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") // Paper
