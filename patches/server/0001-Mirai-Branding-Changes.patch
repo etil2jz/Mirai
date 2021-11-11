@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 22 Oct 2021 14:44:08 +0200
+Date: Thu, 11 Nov 2021 11:52:38 +0100
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 0bd09bd56968660437a94ec078a13ee78339fa0e..5d31aecd7290ad30de745acc01252582adb64428 100644
+index fd3528be3d90733e826bcbeae967b95cedf92dfe..5fde6b03fcccef4f9cc5c84c3701e45b27bc4471 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -25,7 +25,7 @@ repositories {
+@@ -22,7 +22,7 @@ repositories {
  }
  
  dependencies {
@@ -16,8 +16,8 @@ index 0bd09bd56968660437a94ec078a13ee78339fa0e..5d31aecd7290ad30de745acc01252582
 +    implementation(project(":Mirai-API")) // Mirai // Airplane // Paper
      implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
      // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -86,7 +86,6 @@ tasks.jar {
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+@@ -82,7 +82,6 @@ tasks.jar {
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
              "Implementation-Version" to "git-Paper-$implementationVersion",
@@ -26,24 +26,26 @@ index 0bd09bd56968660437a94ec078a13ee78339fa0e..5d31aecd7290ad30de745acc01252582
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index f5d01bce4d5547b4aeca96b7962b2090f47ea541..ea34cb63a624f70f48ec9012999607fe88af8166 100644
+index f5d01bce4d5547b4aeca96b7962b2090f47ea541..d6e94f28e1accb15749ba1aea21e7c5ac27a83a2 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -593,7 +593,7 @@ public class Metrics {
+@@ -593,7 +593,8 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
-+                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai - add Paper metrics system back (so we can disable it after >:D)
++                //Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
++				Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai - add Paper metrics system back (so we can disable it after >:D)
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
-@@ -603,7 +603,7 @@ public class Metrics {
+@@ -603,7 +604,8 @@ public class Metrics {
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
                  metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
 -                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
-+                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Mirai - add Paper metrics system back (so we can disable it after >:D)
++                //metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
++				metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Mirai - add Paper metrics system back (so we can disable it after >:D)
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -191,7 +193,7 @@ index e79ec7919e6cf160fec1cb981d85f0f33c316b41..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 49821f441886b4de2cac5b1b13981e2161992f98..afff56c48b54d4cade1460d7e153f1581938e049 100644
+index ee0c53740cf412c1275f229a321e2f22dff38113..b36a7c71664f289f1328de5381c2ec359426d657 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1726,7 +1726,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -204,7 +206,7 @@ index 49821f441886b4de2cac5b1b13981e2161992f98..afff56c48b54d4cade1460d7e153f158
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index ae2c4388eddef529fba5d5eae354ee15c6e36c9d..411ce299dd0a05b76f1a1af18051985a58ce8806 100644
+index c3a256d0ccb9fb44a5a1f9ffa2d48542ef4e857b..72b5ced855c316898c8eda6081073ff0a4f56c4f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
@@ -217,7 +219,7 @@ index ae2c4388eddef529fba5d5eae354ee15c6e36c9d..411ce299dd0a05b76f1a1af18051985a
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 25bb190bf7e08539a3590ee35a01f1d816e48d83..60855b993e712354af68578b58933ca1e5f7875e 100644
+index bb4ce5c8451a90efd1fa5c301ac4a09c8941529a..01122f754477044c2a7a04b2cd2a400ce94e5c9f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -230,7 +232,7 @@ index 25bb190bf7e08539a3590ee35a01f1d816e48d83..60855b993e712354af68578b58933ca1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 1788d79ea489e446d3d9f541693d4ba3dfc26015..945d99ff112ffec3019afec88773a518649cd11d 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..406c83f50fd9c8f777f1e89e0ce22b9ece06765f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -1,29 +1,9 @@
@@ -261,6 +263,8 @@ index 1788d79ea489e446d3d9f541693d4ba3dfc26015..945d99ff112ffec3019afec88773a518
 -        }
 -
 -        return result;
-+        return "1.17.1-R0.1-SNAPSHOT"; // Mirai - hardcode version. No need to check it, it's 1.17.1 obviously.
++        return "1.17.1-R0.1-SNAPSHOT"; // Mirai - hardcode version. No need to check it, it's obviously 1.17.1;
      }
- }
+-}
++}
+\ No newline at end of file
