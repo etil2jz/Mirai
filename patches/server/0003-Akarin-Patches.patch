@@ -1,16 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 23 Oct 2021 16:22:26 +0200
-Subject: [PATCH] (Akarin) Patches
+Date: Fri, 12 Nov 2021 15:41:31 +0100
+Subject: [PATCH] Akarin Patches
 
-Original code by Akarin-project, licensed under GNU General Public License v3.0
-You can find the original code on https://github.com/Akarin-project/Akarin
-
-(Akarin) Swap the predicate order of collision
-(Akarin) Avoid double I/O operation on load player file
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d35cdcf2ee7568ad5caf52588db54e9c6f607d4b..c77b9348cc313ccb0fa7d5fbd2d80a3381cc565d 100644
+index aac9dd19237d0708990960d03328e7530cd7bc8e..9b714d156878a82e853403be870d8d1fd67cb967 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1859,8 +1859,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n

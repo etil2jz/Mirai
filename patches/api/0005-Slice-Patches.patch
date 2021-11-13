@@ -1,10 +1,8 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 26 Oct 2021 20:01:57 +0200
-Subject: [PATCH] (Slice) Patches
+Date: Fri, 12 Nov 2021 17:53:59 +0100
+Subject: [PATCH] Slice Patches
 
-(Slice) Multiple Entries with Scoreboards
-(Slice) World Instance Flag
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
 index 4f673e9123145dc78564dc3eef0edf75795dafc2..13a387086bb30b316eb4e761dd4383cdd500e363 100644
@@ -23,13 +21,13 @@ index 4f673e9123145dc78564dc3eef0edf75795dafc2..13a387086bb30b316eb4e761dd4383cd
      /**
       * Sets the Difficulty of the world.
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index d5b39fb4fc16a342b5661e08df1506858168d20d..e6245053023ef0a6bc374d50edfc5d30c7cf9bf6 100644
+index d5b39fb4fc16a342b5661e08df1506858168d20d..7e7a22aeacf007d08b691c3f5e0101df08d22002 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
 @@ -1,5 +1,6 @@
  package org.bukkit.scoreboard;
  
-+import java.util.Collection; // Paper
++import java.util.Collection; // Slice
  import java.util.Set;
  import org.bukkit.ChatColor;
  import org.bukkit.OfflinePlayer;

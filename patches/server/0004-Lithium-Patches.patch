@@ -1,29 +1,20 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 23 Oct 2021 17:31:25 +0200
-Subject: [PATCH] (Lithium) Patches
+Date: Fri, 12 Nov 2021 17:03:47 +0100
+Subject: [PATCH] Lithium Patches
 
-Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
-You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
-(Lithium) MixinDirection
-(Lithium) HashedList
-(Lithium) entity.fast_retrieval
-(Lithium) ai.task.goat_jump
-(Lithium) Reduce allocations
-(Lithium) CompactSineLUT
-
-diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java b/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java b/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..99c4b66f8ff251c82d199f6e10961ad161564a81
+index 0000000000000000000000000000000000000000..8f25942818346b5bfc800cf7bbbe4b52233ce1ef
 --- /dev/null
-+++ b/src/main/java/me/jellysquid/mods/lithium/common/util/Constants.java
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java
 @@ -0,0 +1,6 @@
 +package me.jellysquid.mods.lithium.common.util;
 +
-+public class Constants {
-+	public static final int[] EMPTY_ARRAY = new int[0];
-+	public static final int[] ZERO_ARRAY = new int[]{0};
++public class ArrayConstants {
++	public static final int[] EMPTY = new int[0];
++	public static final int[] ZERO = new int[]{0};
 +}
 \ No newline at end of file
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
@@ -419,33 +410,35 @@ index 0000000000000000000000000000000000000000..4bf72802d7b19b31226f357bad9e3e24
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
-index 593d6251c75ec337175d08b85000239ba7da1af2..9fd0ce0ebe622732a476a0ce8ee8447202610b27 100644
+index 593d6251c75ec337175d08b85000239ba7da1af2..f7a6c68cb2c6da475a750b677a5a587d2faa04ba 100644
 --- a/src/main/java/net/minecraft/core/Direction.java
 +++ b/src/main/java/net/minecraft/core/Direction.java
-@@ -171,8 +171,13 @@ public enum Direction implements StringRepresentable {
+@@ -170,9 +170,14 @@ public enum Direction implements StringRepresentable {
+             return entity.getViewXRot(1.0F) < 0.0F ? UP : DOWN;
          }
      }
- 
++	
 +	/**
 +	 * @reason Avoid the modulo/abs operations
 +	 * @author JellySquid
 +	*/
-+
+ 
      public Direction getOpposite() {
 -        return from3DDataValue(this.oppositeIndex);
 +        return VALUES[this.oppositeIndex];
      }
  
      public Direction getClockWise(Direction.Axis axis) {
-@@ -386,8 +391,13 @@ public enum Direction implements StringRepresentable {
+@@ -385,9 +390,14 @@ public enum Direction implements StringRepresentable {
+     public float toYRot() {
          return (float)((this.data2d & 3) * 90);
      }
- 
++	
 +	/**
 +	 * @reason Do not allocate an excessive number of Direction arrays
 +	 * @author JellySquid
 +	*/
-+
+ 
      public static Direction getRandom(Random random) {
 -        return Util.getRandom(VALUES, random);
 +        return VALUES[random.nextInt(VALUES.length)];
@@ -488,8 +481,27 @@ index 4f55fdbdfea42834d2b664c6ecef6406d77b1259..2bc7c351b2bf113ff8fa33949691c19a
      }
  
      public static float sqrt(float value) {
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index df12ba04df24e1c70c43e00283ea2a78ae2ca422..546f3f33c3f3d00a00bf0c6ff23b5e02888b8dda 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -2996,11 +2996,13 @@ public abstract class LivingEntity extends Entity {
+         }
+ 
+     }
++	
++	private static final EquipmentSlot[] SLOTS = EquipmentSlot.values();
+ 
+     @Nullable
+     private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
+         Map<EquipmentSlot, ItemStack> map = null;
+-        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++        EquipmentSlot[] aenumitemslot = SLOTS;
+         int i = aenumitemslot.length;
+ 
+         for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
-index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..bb6cc00fa95e6f15f125e35bc5bb58b44e6e93d9 100644
+index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..4afe0c4db087042c661fec5619600d82917c6196 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
 @@ -1,6 +1,8 @@
@@ -509,37 +521,37 @@ index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..bb6cc00fa95e6f15f125e35bc5bb58b4
 +	private final ShortArrayList potentialWeights = new ShortArrayList();
  
 -    public LongJumpToRandomPos(UniformInt cooldownRange, int verticalRange, int horizontalRange, float maxRange, Function<E, SoundEvent> function) {
-+	private static int findIndex(ShortArrayList weights, int weightedIndex) {
-+        for (int i = 0; i < weights.size(); i++) {
-+            weightedIndex -= weights.getShort(i);
-+            if (weightedIndex < 0) {
-+                return i;
-+            }
-+        }
-+        return -1;
-+    }
-+
-+    public LongJumpToRandomPos(UniformInt cooldownRange, int maxLongJumpHeight, int maxLongJumpWidth, float maxRange, Function<E, SoundEvent> function) {
++    private static int findIndex(ShortArrayList weights, int weightedIndex) {
++		for (int i = 0; i < weights.size(); i++) {
++			weightedIndex -= weights.getShort(i);
++			if (weightedIndex < 0) {
++				return i;
++			}
++		}
++		return -1;
++	}
++	
++	public LongJumpToRandomPos(UniformInt cooldownRange, int maxLongJumpHeight, int maxLongJumpWidth, float maxRange, Function<E, SoundEvent> function) {
          super(ImmutableMap.of(MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED, MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS, MemoryStatus.VALUE_ABSENT, MemoryModuleType.LONG_JUMP_MID_JUMP, MemoryStatus.VALUE_ABSENT), 200);
          this.timeBetweenLongJumps = cooldownRange;
 -        this.maxLongJumpHeight = verticalRange;
 -        this.maxLongJumpWidth = horizontalRange;
-+        this.maxLongJumpHeight = maxLongJumpHeight;
-+        this.maxLongJumpWidth = maxLongJumpWidth;
++		this.maxLongJumpHeight = maxLongJumpHeight;
++		this.maxLongJumpWidth = maxLongJumpWidth;
          this.maxJumpVelocity = maxRange;
          this.getJumpSound = function;
      }
-@@ -64,30 +78,63 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+@@ -64,30 +78,64 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
  
          return bl;
      }
--
 +	
 +	/**
 +	 * @author 2No2Name
 +	 * @reason only evaluate 20+ instead of ~100 possible jumps without affecting behavior
 +	 * [VanillaCopy] the whole method, commented changes
 +	*/
+ 
      @Override
      protected void start(ServerLevel serverLevel, Mob mob, long l) {
 +		this.potentialTargets.clear();
@@ -610,7 +622,7 @@ index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..bb6cc00fa95e6f15f125e35bc5bb58b4
      }
  
      @Override
-@@ -105,7 +152,12 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+@@ -105,7 +153,12 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
              }
          } else {
              --this.findJumpTries;
@@ -624,39 +636,87 @@ index d28dd4cf6b6042fcb0a79da1427861d5d3ef10f8..bb6cc00fa95e6f15f125e35bc5bb58b4
              if (optional.isPresent()) {
                  this.jumpCandidates.remove(optional.get());
                  mob.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(optional.get().getJumpTarget()));
+diff --git a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
+index 02dddc66a1b2859f24ea22993de61ef336f6a162..67d463b5dbf9a09919f431647bcb00aef8235d99 100644
+--- a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
++++ b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
+@@ -15,9 +15,15 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula
+ 
+     @Override
+     public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+-        return super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState).map((float_) -> {
+-            return this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, float_);
+-        });
++        Optional<Float> optionalBlastResistance = super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState);
++        if (optionalBlastResistance.isPresent()) {
++            float blastResistance = optionalBlastResistance.get();
++            float effectiveExplosionResistance = this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, blastResistance);
++            if (effectiveExplosionResistance != blastResistance) {
++                return Optional.of(effectiveExplosionResistance);
++            }
++        }
++        return optionalBlastResistance;
+     }
+ 
+     @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-index 4c9ae6bdb2f0358798f84928271a2d783dcba7b4..6bf94e8825beab04724c111123de6a6f0aead77a 100644
+index 4c9ae6bdb2f0358798f84928271a2d783dcba7b4..62df788ce650c34f9197b201c932071dd96eddc8 100644
 --- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-@@ -374,7 +374,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+@@ -42,6 +42,7 @@ import net.minecraft.world.entity.player.Player;
+ import org.bukkit.craftbukkit.inventory.CraftBlockInventoryHolder;
+ import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
+ // CraftBukkit end
++import me.jellysquid.mods.lithium.common.util.ArrayConstants;
+ 
+ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+@@ -374,7 +375,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
  
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return side == Direction.DOWN ? new int[]{0} : new int[0];
-+            return side == Direction.DOWN ? me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY : me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
++            return side == Direction.DOWN ? ArrayConstants.ZERO : ArrayConstants.EMPTY;
          }
  
          @Override
-@@ -423,7 +423,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+@@ -423,7 +424,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
  
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return side == Direction.UP ? new int[]{0} : new int[0];
-+            return side == Direction.UP ? me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY : me.jellysquid.mods.lithium.common.util.Constants.ZERO_ARRAY; // Yatopia - avoid array allocation
++            return side == Direction.UP ? ArrayConstants.ZERO : ArrayConstants.EMPTY;
          }
  
          @Override
-@@ -460,7 +460,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+@@ -460,7 +461,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
  
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return new int[0];
-+            return me.jellysquid.mods.lithium.common.util.Constants.EMPTY_ARRAY; // Yatopia - avoid array allocation
++            return ArrayConstants.EMPTY;
          }
  
          @Override
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+index d770649a9e9e9bb28b52d00cd082b87de5814593..4d5f68ce1b3fe1181a8555b101969cee8234a700 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+@@ -162,9 +162,11 @@ public class PistonBaseBlock extends DirectionalBlock {
+         }
+ 
+     }
++	
++	private static final Direction[] DIRECTIONS = Direction.values();
+ 
+     private boolean getNeighborSignal(Level world, BlockPos pos, Direction pistonFace) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = DIRECTIONS;
+         int i = aenumdirection.length;
+ 
+         int j;
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-index 24552500307c42f9f3dc5c4d9ba73a84a787423a..89adf2e3d28f995567282f1c9a5eff7136b59c15 100644
+index 24552500307c42f9f3dc5c4d9ba73a84a787423a..122728aef47547bf765f80a816cea5beb6352285 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 @@ -34,31 +34,50 @@ public class EntitySectionStorage<T extends EntityAccess> {
@@ -712,7 +772,7 @@ index 24552500307c42f9f3dc5c4d9ba73a84a787423a..89adf2e3d28f995567282f1c9a5eff71
              }
          }
 -
-+    }
++	}
 +	
 +	private void forEachInColumn(int x, int minY, int maxY, int z, Consumer<EntitySection<T>> action) {
 +		//y from negative to positive, but y is treated as unsigned

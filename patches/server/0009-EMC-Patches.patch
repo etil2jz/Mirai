@@ -1,20 +1,8 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 24 Oct 2021 12:14:52 +0200
-Subject: [PATCH] (EMC) Patches
+Date: Fri, 12 Nov 2021 19:45:40 +0100
+Subject: [PATCH] EMC Patches
 
-Original code by Starlis LLC, licensed under MIT
-You can find the original code on https://github.com/starlis/empirecraft
-
-(EMC) Don't save Fireworks
-(EMC) Fix Give command
-(EMC) Don't use force unload for keep spawn setting change
-(EMC) Don't trigger Lootable Refresh for non player interaction
-(EMC) Don't load chunks for physics
-(EMC) Do not process chat/commands before player has joined
-(EMC) Always convert Lore/Name of an item to ensure consistency
-(EMC) Bound villager trade maxUses by 16
-(EMC) Tweak explosions
 
 diff --git a/src/main/java/net/minecraft/server/commands/GiveCommand.java b/src/main/java/net/minecraft/server/commands/GiveCommand.java
 index a0dc380e90415de9068ea408d62a1605c82631df..b4d42c9e270fa1fedf76eeda4d3c4a5896fd642e 100644
@@ -29,7 +17,7 @@ index a0dc380e90415de9068ea408d62a1605c82631df..b4d42c9e270fa1fedf76eeda4d3c4a58
                          itemStack.setCount(1);
                          ItemEntity itemEntity2 = serverPlayer.drop(itemStack, false, false, true); // Paper - Fix duplicating /give items on item drop cancel
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 0352d1b1a016eb1d3426e8c0abbd960b428d6f98..b199663866f1c2344da4fadb75e7f469ca1d0451 100644
+index d268068bf4ac977250f428d17a2bec2393cb7dad..209509622e9b19538627a11a7a205a35d6cc41b1 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -2061,6 +2061,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -272,7 +260,7 @@ index ac564148956beb984650341c5c0994573f4f7225..a192495cf8c97ec4ec7c224b7b0d654f
              LootTable lootTable = this.level.getServer().getLootTables().get(this.lootTable);
              if (player instanceof ServerPlayer) {
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index d87f8d106834678364f8720447d671de60c2454e..e0ca3a33aa1a053ce5597ee386006fe9d2957a47 100644
+index 83d813025efca5846538e36508a5d4fe38b02108..e14ad16a506a253ed19724580de6dafe26820648 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 @@ -889,7 +889,8 @@ public abstract class BlockBehaviour {

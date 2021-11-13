@@ -1,26 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 24 Oct 2021 10:57:49 +0200
-Subject: [PATCH] (Patina) Patches
+Date: Fri, 12 Nov 2021 18:52:51 +0100
+Subject: [PATCH] Patina Patches
 
-Original code by PatinaMC, licensed under GNU General Public License v3.0
-You can find the original code on https://github.com/PatinaMC/Patina
-
-(Patina) completely remove snooper
-(Patina) remove TickTask
-(Patina) completely remove Metrics
-(Patina) Remove VersionFetcher
-(Patina) Remove unnecessary `LogManager.getLogger()`
-(Patina) make a field final
-(Patina) don't create new random instance
-(Patina) completely remove bootstrapExecutor
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
 deleted file mode 100644
-index ea34cb63a624f70f48ec9012999607fe88af8166..0000000000000000000000000000000000000000
+index d6e94f28e1accb15749ba1aea21e7c5ac27a83a2..0000000000000000000000000000000000000000
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ /dev/null
-@@ -1,675 +0,0 @@
+@@ -1,677 +0,0 @@
 -package com.destroystokyo.paper;
 -
 -import net.minecraft.server.MinecraftServer;
@@ -616,7 +605,8 @@ index ea34cb63a624f70f48ec9012999607fe88af8166..00000000000000000000000000000000
 -            boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
 -            // Only start Metrics, if it's enabled in the config
 -            if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai - add Paper metrics system back (so we can disable it after >:D)
+-                //Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
+-				Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai - add Paper metrics system back (so we can disable it after >:D)
 -
 -                metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
 -                    String minecraftVersion = Bukkit.getVersion();
@@ -626,7 +616,8 @@ index ea34cb63a624f70f48ec9012999607fe88af8166..00000000000000000000000000000000
 -
 -                metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
 -                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
--                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Mirai - add Paper metrics system back (so we can disable it after >:D)
+-                //metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
+-				metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Mirai - add Paper metrics system back (so we can disable it after >:D)
 -
 -                metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
 -                    Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -879,7 +870,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 5c7b9ad379f3c272e15648dd16f4df9245d927da..af598369e5aeae700d7d9da049f173fc51b7a370 100644
+index 5c7b9ad379f3c272e15648dd16f4df9245d927da..eedbbc74b25bcde01a1e6faba4b4d7a50464eaf0 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
 @@ -65,7 +65,7 @@ import org.apache.logging.log4j.Logger;
@@ -887,7 +878,7 @@ index 5c7b9ad379f3c272e15648dd16f4df9245d927da..af598369e5aeae700d7d9da049f173fc
  public class Util {
      private static final AtomicInteger WORKER_COUNT = new AtomicInteger(1);
 -    private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority
-+    //private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority // Patina
++    //private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
      // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
@@ -905,7 +896,7 @@ index 5c7b9ad379f3c272e15648dd16f4df9245d927da..af598369e5aeae700d7d9da049f173fc
      public static Executor backgroundExecutor() {
          return BACKGROUND_EXECUTOR;
 diff --git a/src/main/java/net/minecraft/commands/CommandSourceStack.java b/src/main/java/net/minecraft/commands/CommandSourceStack.java
-index 71e29d29ed5c2d61832e2f124967bb223708406f..8025b87e8f99e305e5c2e4d3b9f6d831d5f752d1 100644
+index 71e29d29ed5c2d61832e2f124967bb223708406f..6332ecc3daab9395512b4e2eaafe3e2f0c7c723c 100644
 --- a/src/main/java/net/minecraft/commands/CommandSourceStack.java
 +++ b/src/main/java/net/minecraft/commands/CommandSourceStack.java
 @@ -56,7 +56,7 @@ public class CommandSourceStack implements SharedSuggestionProvider, com.destroy
@@ -913,12 +904,12 @@ index 71e29d29ed5c2d61832e2f124967bb223708406f..8025b87e8f99e305e5c2e4d3b9f6d831
      private final EntityAnchorArgument.Anchor anchor;
      private final Vec2 rotation;
 -    public Map<Thread, CommandNode> currentCommand = new ConcurrentHashMap<>(); // CraftBukkit // Paper
-+    public final Map<Thread, CommandNode> currentCommand = new ConcurrentHashMap<>(); // CraftBukkit // Paper
++    public final Map<Thread, CommandNode> currentCommand = new ConcurrentHashMap<>(); // CraftBukkit // Paper // Patina
  
      public CommandSourceStack(CommandSource output, Vec3 pos, Vec2 rot, ServerLevel world, int level, String name, Component displayName, MinecraftServer server, @Nullable Entity entity) {
          this(output, pos, rot, world, level, name, displayName, server, entity, false, (commandcontext, flag, j) -> {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 018fc89f2eabef86d5d5d5175940f1af931f9429..31916c18ca01b6a47e1914d016e032587b55fd88 100644
+index c302012df0b2bbd6cf13ff28ba102f4ddb71a3dc..5192a1d5d0a823b670992b5ee166261d21a625c9 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -120,8 +120,8 @@ import net.minecraft.util.profiling.metrics.profiling.ServerMetricsSamplersProvi
@@ -1072,7 +1063,7 @@ index 018fc89f2eabef86d5d5d5175940f1af931f9429..31916c18ca01b6a47e1914d016e03258
      public int getSpawnProtectionRadius() {
          return 16;
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 53308e50aad07b1486ade34284baf72a0e8d7eca..664261aaa61ee12215d34d54be8b737b0069f776 100644
+index 46db063cda90b83805b45fbe6348e32ee4b3b929..870a9afb4e98d0988c470e64b0b21cdf453b7664 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -508,7 +508,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -1140,7 +1131,7 @@ index 35f27e9a7c82eaec5b4a1a71696dac8485b2cd6d..14cf1956ef31f49684195292bed2d891
          @Override
          protected boolean scheduleExecutables() {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3c1e1957418903d8d505817736a633d85167f817..2bc5bb4fbfb8b354c08e00059727d96426bcdaac 100644
+index 6e61028079d29fbb13c146b595c49cf2f7da2f20..5635b7fbfbc27e2042eaf4af1fe139bde514e7ab 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -372,7 +372,7 @@ public class ServerPlayer extends Player {
@@ -1220,7 +1211,7 @@ index dcce05d2f4ab16424db4ab103a12188e207a457b..540aa5e12bb6b44d510c701f2867f541
          } else {
              this.doRunTask(this.pendingRunnables.remove());
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 9f1bf26f72011bc22c2851e73da48837be354295..1463e0f028c450d550d7e7cc0c165470a655f430 100644
+index ddf71f9903f9a2030fe9bc0e97bfe03d374cb131..8572412803738bb9ff31d07c470cd19b7ccd085f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -164,7 +164,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
@@ -1284,7 +1275,7 @@ index 67fbfe5da8e7aea591f6cda52da881b7f6a30c53..75b00ee813da7447f33ba2a334e96892
          if (!s1.isEmpty()) {
              try {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d5cc4eec126a865a655820d6e96ce754e1cb79c2..42d227aa8496c3a00584ccef02958793279c4e93 100644
+index 1ba8d7c9a99ffde69fe6a86e3faa97c9196ce2ef..e6d72a63ed0290f73f2808cbf45d4eaa04f8966a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1211,7 +1211,7 @@ public final class CraftServer implements Server {
@@ -1297,7 +1288,7 @@ index d5cc4eec126a865a655820d6e96ce754e1cb79c2..42d227aa8496c3a00584ccef02958793
              dimensionmanager = worlddimension.type();
              chunkgenerator = worlddimension.generator();
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 60855b993e712354af68578b58933ca1e5f7875e..7b014567928d10d0d734341c7c3bebe0c30bdb09 100644
+index 01122f754477044c2a7a04b2cd2a400ce94e5c9f..6c8a50d08f732c77de77075fdeaa9b00ce8d8ec8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -392,10 +392,12 @@ public final class CraftMagicNumbers implements UnsafeValues {

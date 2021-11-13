@@ -1,14 +1,8 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 2 Nov 2021 12:07:24 +0100
-Subject: [PATCH] (Sugarcane) Patches
+Date: Fri, 12 Nov 2021 17:29:23 +0100
+Subject: [PATCH] Sugarcane Patches
 
-Original code by YatopiaMC, licensed under MIT
-You can find the original code on https://github.com/YatopiaMC/Yatopia
-
-(Sugarcane) Fix Javadoc generation
-(Sugarcane) Add GameProfileLookupEvent
-(Sugarcane) Disable reload command
 
 diff --git a/build.gradle.kts b/build.gradle.kts
 index fdc94c58570d7eaf430e9c6023abf91a4df61397..d262538316c403f8166e66c3c512de226d8fa9c7 100644

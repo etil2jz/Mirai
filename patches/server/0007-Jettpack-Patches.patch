@@ -1,20 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 24 Oct 2021 11:20:09 +0200
-Subject: [PATCH] (Jettpack) Patches
+Date: Fri, 12 Nov 2021 19:16:20 +0100
+Subject: [PATCH] Jettpack Patches
 
-Original code by Titaniumtown, licensed under GNU General Public License v3.0
-You can find the original code on https://gitlab.com/Titaniumtown/JettPack
-
-(Jettpack) Use LinkedBlockingDeque in IAsyncTaskHandler
-(Jettpack) Better handling of async tasks
-(Jettpack) Use MCUtil.asyncExecutor for MAIN_WORKER_EXECUTOR in SystemUtils
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index af598369e5aeae700d7d9da049f173fc51b7a370..850edad60a6677904487039d2977170d1a5fb11c 100644
+index eedbbc74b25bcde01a1e6faba4b4d7a50464eaf0..e314b6cf093f88da218068ef1f2b238a0b23d1c6 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -62,6 +62,11 @@ import net.minecraft.world.level.block.state.properties.Property;
+@@ -62,6 +62,10 @@ import net.minecraft.world.level.block.state.properties.Property;
  import org.apache.commons.io.IOUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -22,11 +16,10 @@ index af598369e5aeae700d7d9da049f173fc51b7a370..850edad60a6677904487039d2977170d
 +import wtf.etil.mirai.server.util.ServerWorkerWrapper;
 +import net.minecraft.server.MCUtil;
 +import java.util.Collections;
-+
  
  public class Util {
      private static final AtomicInteger WORKER_COUNT = new AtomicInteger(1);
-@@ -139,7 +144,44 @@ public class Util {
+@@ -139,7 +143,44 @@ public class Util {
          if (i <= 0) {
              executorService = MoreExecutors.newDirectExecutorService();
          } else {
@@ -93,10 +86,10 @@ index b7c24a7ff4dc50d03f74b21a0b353d0ce559b4d4..065bd28349982bb7af97182c6cecff43
  
      private void sendAsync(ServerPlayer player) {
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index f9701ef4162868894a81f0d1ac9b58d00d9a2d65..3a81e1c901326abf15c7c000e8b0a03ffa722cb2 100644
+index b5be0486d1cffe60808948b4b0bfd709664b2ae4..f12181bf8a97c458149ae92b8ff443bb923ba82f 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
-@@ -52,11 +52,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
+@@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.function.BiConsumer;
  import java.util.function.Consumer;
  import java.util.function.Supplier;
@@ -113,7 +106,7 @@ index f9701ef4162868894a81f0d1ac9b58d00d9a2d65..3a81e1c901326abf15c7c000e8b0a03f
          new ThreadFactoryBuilder().setNameFormat("Paper Async Task Handler Thread - %1$d").build()
      );
      public static final ThreadPoolExecutor cleanerExecutor = new ThreadPoolExecutor(
-@@ -67,6 +70,30 @@ public final class MCUtil {
+@@ -68,6 +71,30 @@ public final class MCUtil {
  
      public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
  
@@ -145,7 +138,7 @@ index f9701ef4162868894a81f0d1ac9b58d00d9a2d65..3a81e1c901326abf15c7c000e8b0a03f
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 31916c18ca01b6a47e1914d016e032587b55fd88..e5bc37ec44ba0225fa1a0cba6a62a7d22fd1e892 100644
+index 5192a1d5d0a823b670992b5ee166261d21a625c9..7544dbd0c9303a822f11b6f9db126058a67e07e8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -368,7 +368,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -166,14 +159,16 @@ index 31916c18ca01b6a47e1914d016e032587b55fd88..e5bc37ec44ba0225fa1a0cba6a62a7d2
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1539,6 +1541,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1539,7 +1541,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
  
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
-+			MCUtil.flushAsyncTasks();
-             this.runAllTasks();
+-            this.runAllTasks();
++            MCUtil.flushAsyncTasks();
++			this.runAllTasks();
          }
          // Paper end
+ 
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 index 5dd89126a7529277a89c6a9e914bb29032f709ff..0282b1082c104f18b548abd47e1745467874ad4c 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
@@ -383,7 +378,7 @@ index bee38307494188800886a1622fed229b88dbd8f1..b3db65c1088888a8d6ae2395273239e8
              Logger log = Bukkit.getServer().getLogger();
 diff --git a/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java b/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f13ed35d4a808667e6a3a58c285f5a1d9006d6bf
+index 0000000000000000000000000000000000000000..4633764f3d806c7e29cbda6e85db5a3432ad0c29
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/server/util/ServerWorkerWrapper.java
 @@ -0,0 +1,24 @@
@@ -411,3 +406,4 @@ index 0000000000000000000000000000000000000000..f13ed35d4a808667e6a3a58c285f5a1d
 +        }
 +    }
 +}
+\ No newline at end of file

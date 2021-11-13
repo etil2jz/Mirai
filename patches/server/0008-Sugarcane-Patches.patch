@@ -1,22 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 24 Oct 2021 11:48:02 +0200
-Subject: [PATCH] (Sugarcane) Patches
+Date: Fri, 12 Nov 2021 22:51:41 +0100
+Subject: [PATCH] Sugarcane Patches
 
-Original code by YatopiaMC, licensed under MIT
-You can find the original code on https://github.com/YatopiaMC/Yatopia
-
-(Sugarcane) Add NBT API as a first-class lib
-(Sugarcane) Add GameProfileLookupEvent
-(Sugarcane) Stop wasting resources on JsonList#get
-(Sugarcane) New nbt cache
-(Sugarcane) Configurable flight checks
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index f19273b511a1f9c2930104e6d39f22646b2808e7..e0077c83202e9b092bdd76c9dfbeb6f0b1c85947 100644
+index 4d83a464bf40d5aab9b7e3f2bafba47434c1a945..c76ddc77c09e39d2476a91de39ca55a1e737379c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -117,6 +117,7 @@ relocation {
+@@ -113,6 +113,7 @@ relocation {
      relocate("org.bukkit.craftbukkit" to "org.bukkit.craftbukkit.v$packageVersion") {
          exclude("org.bukkit.craftbukkit.Main*")
      }
@@ -50,7 +42,7 @@ index 84551164b76bc8f064a3a0c030c3a1b47f567b6f..b0f8b11ea071fa96beefcc28cab6a552
              if (this.profile.isComplete()) {
                  server.getProfileCache().add(this.profile);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e5bc37ec44ba0225fa1a0cba6a62a7d22fd1e892..87466f40c837bba4a1a2bc52de07897226cf145a 100644
+index 7544dbd0c9303a822f11b6f9db126058a67e07e8..3d23dc1bebe66ceb00dd2937befdd2a015dacaa5 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1103,7 +1103,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -64,7 +56,7 @@ index e5bc37ec44ba0225fa1a0cba6a62a7d22fd1e892..87466f40c837bba4a1a2bc52de078972
          if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
              MinecraftServer.LOGGER.info("Saving usercache.json");
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 029c21d9416520469548293f9a2ec0c056507d05..0352d1b1a016eb1d3426e8c0abbd960b428d6f98 100644
+index 744f7b717f14a070d5a4be0b35e7f422694fb407..d268068bf4ac977250f428d17a2bec2393cb7dad 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -318,7 +318,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -86,7 +78,7 @@ index 029c21d9416520469548293f9a2ec0c056507d05..0352d1b1a016eb1d3426e8c0abbd960b
                      this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                      return;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 335bd288ddf965870b7ed6f189593ccd30ccec0c..adf3efb2c884fc1c738a0494471a2a12fae74d8a 100644
+index 4df81adf0f0ffc93f9fe812681b04e2240008cf6..6e8581a42074e159d09320f4a0a941775160f2f5 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -745,13 +745,19 @@ public abstract class PlayerList {
@@ -94,24 +86,30 @@ index 335bd288ddf965870b7ed6f189593ccd30ccec0c..adf3efb2c884fc1c738a0494471a2a12
              // Paper end
  
 -            chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
+-            if (gameprofilebanentry.getExpires() != null) {
+-                chatmessage.append(new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())}));
+-            }
+-
+-            // return chatmessage;
+-            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
 +            if (!gameprofilebanentry.hasExpired()) { // Sugarcane - Stop wasting resources on JsonList#get
-+			chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
-             if (gameprofilebanentry.getExpires() != null) {
-                 chatmessage.append(new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())}));
-             }
- 
-             // return chatmessage;
-+			// Sugarcane start - Stop wasting resources on JsonList#get
-             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
++				chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
++				if (gameprofilebanentry.getExpires() != null) {
++					chatmessage.append(new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())}));
++				}
++
++				// return chatmessage;
++				// Sugarcane start - Stop wasting resources on JsonList#get
++				event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
 +			} else {
 +				getBans().remove(gameprofile);
-+            }
-+            // Sugarcane end
++			}
++			// Sugarcane end
          } else if (!this.isWhitelisted(gameprofile, event)) { // Paper
              //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
              //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
 diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
-index 9152c6c9e7e5c8fdb9183c2b4f088a810621b333..2d44cbce364c77a153ee885e6b64f0d64bad05c2 100644
+index 9152c6c9e7e5c8fdb9183c2b4f088a810621b333..51e1588fb1f89db2e5d787893718631e569108b0 100644
 --- a/src/main/java/net/minecraft/server/players/StoredUserList.java
 +++ b/src/main/java/net/minecraft/server/players/StoredUserList.java
 @@ -73,9 +73,14 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
@@ -119,8 +117,8 @@ index 9152c6c9e7e5c8fdb9183c2b4f088a810621b333..2d44cbce364c77a153ee885e6b64f0d6
          // this.g();
          // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
 +		// Sugarcane start - only remove if it expires and has been requested (Stop wasting resources on JsonList#get)
-+        return this.map.get(this.getKeyForUser(key));
-+        /*
++		return this.map.get(this.getKeyForUser(key));
++		/*
          return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
              return v.hasExpired() ? null : v;
          });
@@ -174,7 +172,7 @@ index f61c313195c3d16d996721b2f8cd0d9a10ce1aaf..affd0619e89a93a5bed94ef2b4c236bd
  
                          GameProfile gameProfile = profilex;
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 8ce6d386a67687207966a9c577cff9046f45193e..3ed57331ba6f6f2ade08fc8950c5dc83f84c2545 100644
+index 8ce6d386a67687207966a9c577cff9046f45193e..e89f73bf7863ea1bd458a470a82147593989f18c 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -24,6 +24,10 @@ public class PlayerDataStorage {
@@ -209,7 +207,7 @@ index 8ce6d386a67687207966a9c577cff9046f45193e..3ed57331ba6f6f2ade08fc8950c5dc83
 +                } catch (Exception exception) {
 +                    PlayerDataStorage.LOGGER.error("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
 +                }
-+                };
++            };
 +            synchronized (this.dataCache){
 +                this.dataCache.put(file, nbttagcompound);
 +            }
@@ -295,7 +293,7 @@ index 0000000000000000000000000000000000000000..a0098ad1716ed8821d4b30dafdaac0ac
 +}
 \ No newline at end of file
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 35646ca1c13b30a40bec09b9ef1aa7ab75616e38..452de6f89f12ceddd3afa57c3eb1412bedd05272 100644
+index 9fa663198ddb793f1aa8fe4e1991b6e794a270a6..8a90c513687651846758d846cae7f3386f462e70 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -197,4 +197,11 @@ public class MiraiConfig {

@@ -1,28 +1,8 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Tue, 26 Oct 2021 17:39:56 +0200
-Subject: [PATCH] (Purpur) Patches
+Date: Fri, 12 Nov 2021 20:27:06 +0100
+Subject: [PATCH] Purpur Patches
 
-Original code by pl3xgaming, licensed under MIT
-You can find the original code on https://github.com/pl3xgaming/Purpur
-
-(Purpur) Fix cow rotation when shearing mooshroom
-(Purpur) End gateway should check if entity can use portal
-(Purpur) Arrows should not reset despawn counter
-(Purpur) Spread out and optimise player list ticksSpread out and optimise player list ticks
-(Purpur) Fix SPIGOT-6278
-(Purpur) Fix vanilla command permission handler
-(Purpur) Disable outdated build check
-(Purpur) Fix `outdated server` showing in ping before server fully boots
-(Purpur) Don't send useless entity packets
-(Purpur) Skip events if there's no listeners
-(Purpur) Fix the dead lagging the server
-(Purpur) Alternative Keepalive Handling
-(Purpur) Logger settings (suppressing pointless logs)
-(Purpur) Add 5 second tps average in /tps
-(Purpur) Fix stuck in portals
-(Purpur) Stop squids floating on top of water
-(Purpur) Entities can use portals configuration
 
 diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
 index fa56cd09102a89692b42f1d14257990508c5c720..f9251183df72ddc56662fd3f02acf21641a2200c 100644
@@ -59,7 +39,7 @@ index f64aa22ed6fcb4af67317b99f459ee5296392548..63af2216c383aef0809dd381b69493ec
      public void removeCommand(String name) {
          this.children.remove(name);
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 065bd28349982bb7af97182c6cecff43c714bf65..2cbd1ee2757728c37e486768dc35c278f3382043 100644
+index 065bd28349982bb7af97182c6cecff43c714bf65..5770e7694791b223c19674143b21e096fc024401 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -386,18 +386,20 @@ public class Commands {
@@ -78,7 +58,7 @@ index 065bd28349982bb7af97182c6cecff43c714bf65..2cbd1ee2757728c37e486768dc35c278
 -            }
 -        }
 -        // CraftBukkit end
-+		if (PlayerCommandSendEvent.getHandlerList().getRegisteredListeners().length > 0) { // Purpur - skip all this crap if there's nothing listening
++        if (PlayerCommandSendEvent.getHandlerList().getRegisteredListeners().length > 0) { // Purpur - skip all this crap if there's nothing listening
 +			// Paper end - Async command map building
 +			new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandSourceStack>(player.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
 +			PlayerCommandSendEvent event = new PlayerCommandSendEvent(player.getBukkitEntity(), new LinkedHashSet<>(bukkit));
@@ -96,7 +76,7 @@ index 065bd28349982bb7af97182c6cecff43c714bf65..2cbd1ee2757728c37e486768dc35c278
      }
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 87466f40c837bba4a1a2bc52de07897226cf145a..ea9539c111f20fa97bed00d1158a64e5c5884816 100644
+index 3d23dc1bebe66ceb00dd2937befdd2a015dacaa5..90a89a686dbba6ffad1733dade0b8bc45091a69f 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -305,7 +305,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -138,7 +118,7 @@ index 87466f40c837bba4a1a2bc52de07897226cf145a..ea9539c111f20fa97bed00d1158a64e5
                          tickSection = curTime;
                      }
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index 7d6dc0a8ee35274052b122bbc446bc54750de0a6..506b139a1d26dc6ec82896ce83c1b0e16f62a28e 100644
+index f7959fe8d5247504dd79a18010470d98781c7cfe..351bf7fcd607046e31488f3ae55cc32fc7df780b 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 @@ -186,6 +186,7 @@ public class PlayerAdvancements {
@@ -150,7 +130,7 @@ index 7d6dc0a8ee35274052b122bbc446bc54750de0a6..506b139a1d26dc6ec82896ce83c1b0e1
                              }
                              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index c71bc00973899feec0ec5530bf3d237928810cf4..d175a41fd8c24813904019e25432c4a796db0b7b 100644
+index a453aac607f9b38f0bf90038ff2d8071687c4bae..96b11907d99e058041e81a29f8727465e3fa6723 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -190,6 +190,7 @@ public class ServerEntity {
@@ -185,7 +165,7 @@ index c71bc00973899feec0ec5530bf3d237928810cf4..d175a41fd8c24813904019e25432c4a7
      public void removePairing(ServerPlayer player) {
          this.entity.stopSeenByPlayer(player);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 2bc5bb4fbfb8b354c08e00059727d96426bcdaac..71d7fb64181f626a773865f1d57f567686aaa7c0 100644
+index 5635b7fbfbc27e2042eaf4af1fe139bde514e7ab..24a8c047b717c26b6efb4cd67c061527bc6c9cd4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1111,6 +1111,7 @@ public class ServerPlayer extends Player {
@@ -197,7 +177,7 @@ index 2bc5bb4fbfb8b354c08e00059727d96426bcdaac..71d7fb64181f626a773865f1d57f5676
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index b199663866f1c2344da4fadb75e7f469ca1d0451..9dce6408c20574795b3b41851a0a35d4e15e14b0 100644
+index 209509622e9b19538627a11a7a205a35d6cc41b1..21903a06334a9f7a25fddf838e67df1d2c4cd27a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -228,6 +228,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -260,7 +240,7 @@ index d65191a50349ec86fe35df4ac1070f94fbb77b4c..84344527d2141b227f8881ea95ed545a
              // Paper end
          }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index adf3efb2c884fc1c738a0494471a2a12fae74d8a..ea1536aa368a87f946191716eee4dac04e2f2a81 100644
+index 7a864ead3864886064f53f285b33af8ae0369e88..4caef00726f3e421cec2ef955c3db8d074348c49 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1022,22 +1022,21 @@ public abstract class PlayerList {
@@ -299,7 +279,7 @@ index adf3efb2c884fc1c738a0494471a2a12fae74d8a..ea1536aa368a87f946191716eee4dac0
  
      public void broadcastAll(Packet<?> packet) {
 diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-index 63a4fa2408edf84b490ca39e824977135d78eff0..1054bbedb323244a2b5749f7526a8495cddf4c50 100644
+index 63a4fa2408edf84b490ca39e824977135d78eff0..fc0f4055cc8f681e6040c64396c847d8802fb1ac 100644
 --- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 +++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 @@ -122,6 +122,7 @@ public class ServerRecipeBook extends RecipeBook {
@@ -311,7 +291,7 @@ index 63a4fa2408edf84b490ca39e824977135d78eff0..1054bbedb323244a2b5749f7526a8495
                  } else {
                      handler.accept((Recipe) optional.get());
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 1463e0f028c450d550d7e7cc0c165470a655f430..6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd131db901 100644
+index 8572412803738bb9ff31d07c470cd19b7ccd085f..4e5a8be29816b96ce1738e6cedffd99b00909036 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1772,6 +1772,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
@@ -350,16 +330,17 @@ index 1463e0f028c450d550d7e7cc0c165470a655f430..6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd
      }
  
      public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
-@@ -3854,11 +3858,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -3853,12 +3857,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         this.xRotO = this.getXRot();
          this.yRotO = this.getYRot();
      }
- 
++	
 +	// Purpur start
 +    public AABB getAxisForFluidCheck() {
 +        return this.getBoundingBox().deflate(0.001D);
 +    }
 +    // Purpur end
-+
+ 
      public boolean updateFluidHeightAndDoFluidPushing(Tag<Fluid> tag, double d0) {
          if (false && this.touchingUnloadedChunk()) { // Airplane - cost of a lookup here is the same cost as below, so skip
              return false;
@@ -370,7 +351,7 @@ index 1463e0f028c450d550d7e7cc0c165470a655f430..6a3c5cb6c96f3ec7dd3c7df0b6fbd5cd
              int minBlockX = Mth.floor(axisalignedbb.minX);
              int maxBlockX = Mth.ceil(axisalignedbb.maxX);
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 46d75cd28fbf6f5768bb115a02a2d377a2c181b7..92fc1c12e45761b5f7718e2795596c899a31b096 100644
+index 926204633911f68c8437f11404b90de1c446fda7..8576d7f4acba258a9d42218e7d50cc3067236b52 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -2905,7 +2905,7 @@ public abstract class LivingEntity extends Entity {
@@ -402,7 +383,7 @@ index b2765fba362e5f6d641abcc9ee7ccc177db08eb5..a9f5d9f3ce379bb8519a6114c4962859
                  entitycow.setCustomName(this.getCustomName());
                  entitycow.setCustomNameVisible(this.isCustomNameVisible());
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Squid.java b/src/main/java/net/minecraft/world/entity/animal/Squid.java
-index 4da560f6e4da0750bda78b900b2d916d58adfccb..67f0001ec6a75d9245f04086721d3316e1550772 100644
+index 4da560f6e4da0750bda78b900b2d916d58adfccb..c3aed0f2aceadc22376c537c599453536bc0fa7d 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Squid.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Squid.java
 @@ -327,4 +327,11 @@ public class Squid extends WaterAnimal {
@@ -472,7 +453,7 @@ index 68cc6f2a78a06293a29317fda72ab3ee79b3533a..22019fa6cdc7882c4d34116548fc567c
 +	
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 42d227aa8496c3a00584ccef02958793279c4e93..6e96c2f4c9886339ba4db32d18c177996c9b8f3d 100644
+index e6d72a63ed0290f73f2808cbf45d4eaa04f8966a..56a1a9fe2f3089738c5293c35704dd007f2174ca 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -2526,6 +2526,7 @@ public final class CraftServer implements Server {
@@ -509,10 +490,10 @@ index 4aa1dc543950b5de64345b3403a6d0bc41c521df..23adb3b18a0fbe6b6c7cbc40d9f25649
          final String commandName;
          if (vanillaCommand.getRedirect() == null) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index c64911651f3d736c83cc83996de04920b091cc57..24c435ab908e12b558e5895348e4bb691c6063b2 100644
+index 755e3bcc4d620d5550cbfd7ba56e83816d270498..2176269aa602049d69ec65bb1c1629a6680ccfa2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1565,8 +1565,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1572,8 +1572,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public boolean canSee(Player player) {
@@ -530,7 +511,7 @@ index c64911651f3d736c83cc83996de04920b091cc57..24c435ab908e12b558e5895348e4bb69
      @Override
      public Map<String, Object> serialize() {
 diff --git a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
-index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..db010b5c9a9b457020dbe4b64a8fc9b402999687 100644
+index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..513ee5e1129302e40b558f9ad4c4a7b5b30dc04c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
 +++ b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
 @@ -255,6 +255,7 @@ public final class CraftLegacy {
@@ -555,7 +536,7 @@ index 9bede6a26c08ede063c7a38f1149c811df14b258..088239d17aa8178cf8af09ec23cfd4de
              sender.sendMessage(ChatColor.GOLD + "Current Memory Usage: " + ChatColor.GREEN + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "/" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + " mb (Max: " + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + " mb)");
              if (!hasShownMemoryWarning) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 452de6f89f12ceddd3afa57c3eb1412bedd05272..6b75316279246f26ed76bed0aa096802fda04da8 100644
+index 8a90c513687651846758d846cae7f3386f462e70..ca61a8b5621f6e5d925bcab997950029e56a6813 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -1,10 +1,15 @@

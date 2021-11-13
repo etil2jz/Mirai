@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 23 Oct 2021 19:54:59 +0200
-Subject: [PATCH] (Yatopia) Patches
+Date: Fri, 12 Nov 2021 17:46:58 +0100
+Subject: [PATCH] Yatopia Patches
 
 
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 1366496271c4c7f72d1e5f990e51775b1c371f99..1b166ee9a965b2ce014c9161f7ba56ff06b6bfc4 100644
+index 1366496271c4c7f72d1e5f990e51775b1c371f99..5563bf335308ae939f1769eb662fb07e179bbda2 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 @@ -581,7 +581,11 @@ public final class SimplePluginManager implements PluginManager {
@@ -34,10 +34,12 @@ index 1366496271c4c7f72d1e5f990e51775b1c371f99..1b166ee9a965b2ce014c9161f7ba56ff
                  if (!(event instanceof ServerExceptionEvent)) { // We don't want to cause an endless event loop
                      callEvent(new ServerExceptionEvent(new ServerEventException(msg, ex, registration.getPlugin(), registration.getListener(), event)));
                  }
-@@ -927,4 +935,10 @@ public final class SimplePluginManager implements PluginManager {
+@@ -926,5 +934,11 @@ public final class SimplePluginManager implements PluginManager {
+         defaultPerms.get(false).clear();
      }
      // Paper end
- 
+-
++	
 +	// Yatopia start - Accessor
 +    @NotNull
 +    public Collection<PluginLoader> getPluginLoaders() {

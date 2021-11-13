@@ -1,23 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sat, 23 Oct 2021 18:27:31 +0200
-Subject: [PATCH] (Yatopia) Patches
+Date: Fri, 12 Nov 2021 18:33:14 +0100
+Subject: [PATCH] Yatopia Patches
 
-Original code by YatopiaMC, licensed under MIT
-You can find the original code on https://github.com/YatopiaMC/Yatopia
-
-(Yatopia) Utilities
-(Yatopia) Preload ProtocolLib EnumWrappers
-(Yatopia) add config for logging login location
-(Yatopia) Optimize TileEntity load/unload
-(Yatopia) Global Eula file
-(Yatopia) Use faster random implementation
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 5d31aecd7290ad30de745acc01252582adb64428..f19273b511a1f9c2930104e6d39f22646b2808e7 100644
+index 5fde6b03fcccef4f9cc5c84c3701e45b27bc4471..4d83a464bf40d5aab9b7e3f2bafba47434c1a945 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -43,6 +43,7 @@ dependencies {
+@@ -40,6 +40,7 @@ dependencies {
      implementation("org.apache.logging.log4j:log4j-api:2.14.1") // Paper
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
@@ -73,7 +64,7 @@ index a1d5c0f8fe2adb2ee56f3217e089211ec7c61eb0..ae2335e030599062a2a4b562506bb28f
              boolean var3;
              try {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index afff56c48b54d4cade1460d7e153f1581938e049..018fc89f2eabef86d5d5d5175940f1af931f9429 100644
+index b36a7c71664f289f1328de5381c2ec359426d657..c302012df0b2bbd6cf13ff28ba102f4ddb71a3dc 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -411,7 +411,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -134,7 +125,7 @@ index a7ea776f5f8dad3dd9475de41209d8704c0886d3..141d0143d3fd71a8e9e26c46af41df87
          double d1 = (double) (center.y - maxRange);
          double d2 = (double) (center.x + maxRange);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 11f46c1b8f4c8414e0667d1873542c17d6e01f2a..3c1e1957418903d8d505817736a633d85167f817 100644
+index 78fda0c982810b8b881a87099f355247566e513a..6e61028079d29fbb13c146b595c49cf2f7da2f20 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -372,7 +372,7 @@ public class ServerPlayer extends Player {
@@ -169,7 +160,7 @@ index 494ca8fa8c742d4eac9fb11878d3b3170d850265..5dd89126a7529277a89c6a9e914bb290
      final MinecraftServer server;
      public final Connection connection;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..335bd288ddf965870b7ed6f189593ccd30ccec0c 100644
+index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..4df81adf0f0ffc93f9fe812681b04e2240008cf6 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -269,7 +269,7 @@ public abstract class PlayerList {
@@ -232,7 +223,7 @@ index 2bc7c351b2bf113ff8fa33949691c19a95cac3aa..8823d793f331c159a2b65e8b7528131f
  
      public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c77b9348cc313ccb0fa7d5fbd2d80a3381cc565d..9f1bf26f72011bc22c2851e73da48837be354295 100644
+index 9b714d156878a82e853403be870d8d1fd67cb967..ddf71f9903f9a2030fe9bc0e97bfe03d374cb131 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -159,7 +159,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
@@ -245,7 +236,7 @@ index c77b9348cc313ccb0fa7d5fbd2d80a3381cc565d..9f1bf26f72011bc22c2851e73da48837
          @Override
          public synchronized void setSeed(long seed) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 71fefe3956c1e4458dd4b441f90902a3ed0cdf24..46d75cd28fbf6f5768bb115a02a2d377a2c181b7 100644
+index 546f3f33c3f3d00a00bf0c6ff23b5e02888b8dda..926204633911f68c8437f11404b90de1c446fda7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -392,17 +392,19 @@ public abstract class LivingEntity extends Entity {
@@ -306,7 +297,7 @@ index 87f804e35e2f124f5ee73d9d9a4fd4b3069b00d0..bbc76d73e00e2629ff9193d690e42973
      protected static final int TARGETING_RANGE = 16;
      private static final TargetingConditions TARGET_CONDITIONS = TargetingConditions.forNonCombat().range(16.0D);
 diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
-index 7fa5cde9c26c21d4d800f720f373a8b702f4fcb5..0e14e48473ef7bd8d05a793b0f94ed1d1407cb9c 100644
+index 7fa5cde9c26c21d4d800f720f373a8b702f4fcb5..4806ef08ff9374cc7c04d8b0bfec8fc6ca982882 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
 @@ -378,7 +378,7 @@ public class PiglinAi {
@@ -380,7 +371,7 @@ index 717b101bd2492037a9ca1d65d8cb3cebb7d6d4fe..0e49ded124da9487937b35f612e8b5a7
          this.costs = new int[3];
          this.enchantClue = new int[]{-1, -1, -1};
 diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
-index c601b8b12756682a4cb300be8ebed4319902c5b5..4e19580281f3df1c125ba29f57faba0c94d5395d 100644
+index 56d3867f748d92a55976820215d9b8316989677b..7bf38137fa3f799a0bc5b22fea057078a5343f66 100644
 --- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
 @@ -57,7 +57,7 @@ public abstract class BaseSpawner {
@@ -603,7 +594,7 @@ index 39e941a6a315e2a9fc0f47eb39ef9d2b58069f90..7adfd7d03a57e1b55a8fbf77ef53c9a6
  
                      MinecraftServer minecraftServer = this.level.getServer();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 06b410e43ecfe20d25d50346d76a3d58fe19a058..d5cc4eec126a865a655820d6e96ce754e1cb79c2 100644
+index 2e2aff40f5a8205f804fa264a469be1dcfee163b..1ba8d7c9a99ffde69fe6a86e3faa97c9196ce2ef 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1211,7 +1211,7 @@ public final class CraftServer implements Server {
@@ -795,7 +786,7 @@ index 0000000000000000000000000000000000000000..f7c7122b871fee50f55dbd6ec663d416
 +}
 \ No newline at end of file
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 4c92005a52589b9056d76c435d60fe1581dd9c48..35646ca1c13b30a40bec09b9ef1aa7ab75616e38 100644
+index e65b1d300df06cb7f08caea3e08b196656223e7b..9fa663198ddb793f1aa8fe4e1991b6e794a270a6 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -113,18 +113,11 @@ public class MiraiConfig {
