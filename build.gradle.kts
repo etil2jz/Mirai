@@ -1,7 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.1.0" apply false
-    id("io.papermc.paperweight.patcher") version "1.3.0"
+    id("io.papermc.paperweight.patcher") version "1.2.0"
 }
 
 repositories {
@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    paramMappings("org.quiltmc:yarn:1.17.1+build.1:mergedv2")
     remapper("net.fabricmc:tiny-remapper:0.6.0:fat")
     decompiler("net.minecraftforge:forgeflower:1.5.498.12")
     paperclip("io.papermc:paperclip:2.0.1")
@@ -34,13 +35,14 @@ subprojects {
         maven("https://repo.md-5.net/content/repositories/releases/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://jitpack.io")
-		maven("https://repo.codemc.org/repository/maven-public/")
+	maven("https://repo.codemc.org/repository/maven-public/")
     }
 }
 
 paperweight {
     serverProject.set(project(":Mirai-Server"))
 
+    paramMappingsRepo.set("https://maven.quiltmc.org/repository/release/")
     remapRepo.set("https://maven.quiltmc.org/repository/release/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
