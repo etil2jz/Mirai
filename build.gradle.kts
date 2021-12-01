@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    paramMappings("org.quiltmc:yarn:1.17.1+build.1:mergedv2")
     remapper("net.fabricmc:tiny-remapper:0.6.0:fat")
     decompiler("net.minecraftforge:forgeflower:1.5.498.12")
     paperclip("io.papermc:paperclip:2.0.1")
@@ -42,7 +41,6 @@ subprojects {
 paperweight {
     serverProject.set(project(":Mirai-Server"))
 
-    paramMappingsRepo.set("https://maven.quiltmc.org/repository/release/")
     remapRepo.set("https://maven.quiltmc.org/repository/release/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
