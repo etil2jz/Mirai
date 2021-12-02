@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '16', '17' ]
+        java: [ '17' ]
       fail-fast: true
     steps:
       - name: Checkout Git Repository
@@ -38,7 +38,7 @@ jobs:
       - name: Archive Paperclip
         uses: actions/upload-artifact@v2
         with:
-          name: Mirai-Java-${{ matrix.java }}
+          name: Mirai-Java17
           path: build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar
       - name: Prepare Github Page Files
         run: |
@@ -50,4 +50,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          publish_branch: jdk-${{ matrix.java }}/1.17
+          publish_branch: build/1.17
