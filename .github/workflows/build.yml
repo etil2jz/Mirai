@@ -29,9 +29,12 @@ jobs:
         run: |
           git config --global user.email "no-reply@github.com"
           git config --global user.name "Github Actions"
+      - name: Clean cache
+        run: |
+          ./gradlew cleanCache --stacktrace --no-daemon
       - name: Patch
         run: |
-          ./gradlew clean applyPatches --stacktrace --no-daemon
+          ./gradlew applyPatches --stacktrace --no-daemon
       - name: Build
         run: |
           ./gradlew createReobfBundlerJar --stacktrace --no-daemon
