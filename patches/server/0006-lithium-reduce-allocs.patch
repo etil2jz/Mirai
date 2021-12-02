@@ -1,0 +1,119 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 2 Dec 2021 16:55:37 +0100
+Subject: [PATCH] lithium: reduce allocs
+
+
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java b/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d341fcb89c8744aa1bd8cb3ef6af93e7d585c0b7
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/ArrayConstants.java
+@@ -0,0 +1,6 @@
++package me.jellysquid.mods.lithium.common.util;
++
++public class ArrayConstants {
++    public static final int[] EMPTY = new int[0];
++    public static final int[] ZERO = new int[]{0};
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 0c9169423f9093594ea6d242ed5492ffc22c241f..489d60f34af09b2b7fe8d0cc0cc3fc820886d3a6 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3005,10 +3005,12 @@ public abstract class LivingEntity extends Entity {
+ 
+     }
+ 
++    private static final EquipmentSlot[] SLOTS = EquipmentSlot.values(); // Lithium
++
+     @Nullable
+     private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
+         Map<EquipmentSlot, ItemStack> map = null;
+-        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++        EquipmentSlot[] aenumitemslot = SLOTS; // Lithium
+         int i = aenumitemslot.length;
+ 
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
+index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..bea593c31b59920c2c4cb86c2dd116435578afeb 100644
+--- a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
++++ b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
+@@ -15,10 +15,19 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula
+ 
+     @Override
+     public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+-        return super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState).map((max) -> {
+-            return this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, max);
+-        });
++        // Lithium start
++        Optional<Float> optionalBlastResistance = super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState);
++        if (optionalBlastResistance.isPresent()) {
++            float blastResistance = optionalBlastResistance.get();
++            float effectiveExplosionResistance = this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, blastResistance);
++            if (effectiveExplosionResistance != blastResistance) {
++                return Optional.of(effectiveExplosionResistance);
++            }
++        }
++        return optionalBlastResistance;
++        // Lithium end
+     }
++    
+ 
+     @Override
+     public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
+diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaaaa138b36 100644
+--- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+@@ -41,6 +41,7 @@ import net.minecraft.world.entity.player.Player;
+ import org.bukkit.craftbukkit.inventory.CraftBlockInventoryHolder;
+ import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
+ // CraftBukkit end
++import me.jellysquid.mods.lithium.common.util.ArrayConstants; // Lithium
+ 
+ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+@@ -373,7 +374,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.DOWN ? new int[]{0} : new int[0];
++            return side == Direction.DOWN ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Lithium
+         }
+ 
+         @Override
+@@ -422,7 +423,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return side == Direction.UP ? new int[]{0} : new int[0];
++            return side == Direction.UP ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Lithium
+         }
+ 
+         @Override
+@@ -459,7 +460,7 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+         @Override
+         public int[] getSlotsForFace(Direction side) {
+-            return new int[0];
++            return ArrayConstants.EMPTY; // Lithium
+         }
+ 
+         @Override
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+index 28256f1f0aeb7718a5866add4ec40ce0198c36b9..eb01e28c23eb25e25382dfb4658c294cc3694dc4 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+@@ -162,8 +162,10 @@ public class PistonBaseBlock extends DirectionalBlock {
+ 
+     }
+ 
++    private static final Direction[] DIRECTIONS = Direction.values(); // Lithium
++
+     private boolean getNeighborSignal(Level world, BlockPos pos, Direction pistonFace) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = DIRECTIONS; // Lithium
+         int i = aenumdirection.length;
+ 
+         int j;

@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 2 Dec 2021 16:25:37 +0100
+Subject: [PATCH] Swaps the predicate order of collision
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 401a20fb67e232d1e33b8d9167ba2ba609f4dba9..2e28df553c10e8a1174aed97a378358575b0d3fa 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1763,37 +1763,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+     public void playerTouch(Player player) {}
+ 
+     public void push(Entity entity) {
+-        if (!this.isPassengerOfSameVehicle(entity)) {
+-            if (!entity.noPhysics && !this.noPhysics) {
+-                if (this.level.paperConfig.onlyPlayersCollide && !(entity instanceof ServerPlayer || this instanceof ServerPlayer)) return; // Paper
+-                double d0 = entity.getX() - this.getX();
+-                double d1 = entity.getZ() - this.getZ();
+-                double d2 = Mth.absMax(d0, d1);
+-
+-                if (d2 >= 0.009999999776482582D) {
+-                    d2 = Math.sqrt(d2);
+-                    d0 /= d2;
+-                    d1 /= d2;
+-                    double d3 = 1.0D / d2;
+-
+-                    if (d3 > 1.0D) {
+-                        d3 = 1.0D;
+-                    }
+-
+-                    d0 *= d3;
+-                    d1 *= d3;
+-                    d0 *= 0.05000000074505806D;
+-                    d1 *= 0.05000000074505806D;
+-                    if (!this.isVehicle()) {
+-                        this.push(-d0, 0.0D, -d1);
+-                    }
++        if (!entity.noPhysics && !this.noPhysics && !this.isPassengerOfSameVehicle(entity)) { // Akarin - Swap the predicate order of collision
++            if (this.level.paperConfig.onlyPlayersCollide && !(entity instanceof ServerPlayer || this instanceof ServerPlayer)) return; // Paper
++            double d0 = entity.getX() - this.getX();
++            double d1 = entity.getZ() - this.getZ();
++            double d2 = Mth.absMax(d0, d1);
++
++            if (d2 >= 0.009999999776482582D) {
++                d2 = Math.sqrt(d2);
++                d0 /= d2;
++                d1 /= d2;
++                double d3 = 1.0D / d2;
++
++                if (d3 > 1.0D) {
++                    d3 = 1.0D;
++                }
+ 
+-                    if (!entity.isVehicle()) {
+-                        entity.push(d0, 0.0D, d1);
+-                    }
++                d0 *= d3;
++                d1 *= d3;
++                d0 *= 0.05000000074505806D;
++                d1 *= 0.05000000074505806D;
++                if (!this.isVehicle()) {
++                    this.push(-d0, 0.0D, -d1);
+                 }
+ 
++                if (!entity.isVehicle()) {
++                    entity.push(d0, 0.0D, d1);
++                }
+             }
++
+         }
+     }
+ 

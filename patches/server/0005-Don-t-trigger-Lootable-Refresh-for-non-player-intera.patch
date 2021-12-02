@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 2 Dec 2021 16:28:51 +0100
+Subject: [PATCH] Don't trigger Lootable Refresh for non player interaction
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
+index da00f75ccc9f8c2e2174d4450479202a50844245..9168e4981692e20def127deec9cbf21767588507 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
+@@ -69,6 +69,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
+     }
+ 
+     public void unpackLootTable(@Nullable Player player) {
++        if (player == null) return; // Akarin - Don't trigger Lootable Refresh for non player interaction
+         if (this.lootableData.shouldReplenish(player) && this.level.getServer() != null) { // Paper
+             LootTable lootTable = this.level.getServer().getLootTables().get(this.lootTable);
+             if (player instanceof ServerPlayer) {
