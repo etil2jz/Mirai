@@ -39,15 +39,15 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Mirai-Java17
-          path: build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar
+          path: build/libs/Mirai-1.18-R0.1-SNAPSHOT.jar
       - name: Prepare Github Page Files
         run: |
           mkdir -p public
-          cp build/libs/Mirai-1.17.1-R0.1-SNAPSHOT.jar public/
+          cp build/libs/Mirai-1.18-R0.1-SNAPSHOT.jar public/
       - name: Deploy to Github Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          publish_branch: build/1.17
+          publish_branch: build/1.18
