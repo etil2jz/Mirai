@@ -28,7 +28,7 @@ index fdc94c58570d7eaf430e9c6023abf91a4df61397..d262538316c403f8166e66c3c512de22
      compileOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.0")
      compileOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.0")
      compileOnly("com.google.code.findbugs:jsr305:1.3.9") // Paper
-+	compileOnly("com.mojang:authlib:2.3.31") // Sugarcane
++	compileOnly("com.mojang:authlib:3.2.38") // Sugarcane
  
      val annotations = "org.jetbrains:annotations:21.0.1" // Paper - we don't want Java 5 annotations...
      compileOnly(annotations)
