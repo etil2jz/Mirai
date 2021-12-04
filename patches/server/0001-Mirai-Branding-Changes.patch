@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 2 Dec 2021 14:01:22 +0100
+Date: Fri, 3 Dec 2021 21:38:56 +0100
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 837fc22be8961bc539f91f1f353c11f5ee6e7f11..1f2d9a2857a7d7e9e079d86188bb683a96df7ab0 100644
+index bc42301d161b49eead1d5408183bb04d7f617153..d3fdca4fe0de48446987f8fae650daab6665ae17 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -14,29 +14,27 @@ index 837fc22be8961bc539f91f1f353c11f5ee6e7f11..1f2d9a2857a7d7e9e079d86188bb683a
  dependencies {
 -    implementation(project(":pufferfish-api")) // Pufferfish // Paper
 +    implementation(project(":Mirai-API")) // Mirai // Pufferfish // Paper
-     implementation("io.papermc.paper:paper-mojangapi:1.18-R0.1-SNAPSHOT") // Pufferfish
-     // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.21.0")
-@@ -75,7 +75,7 @@ tasks.jar {
+     // Pufferfish start
+     implementation("io.papermc.paper:paper-mojangapi:1.18-R0.1-SNAPSHOT") {
+         exclude("io.papermc.paper", "paper-api")
+@@ -79,7 +79,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Pufferfish-$implementationVersion", // Pufferfish
-+            "Implementation-Version" to "git-Mirai-$implementationVersion", // Mirai // Pufferfish
++            "Implementation-Version" to "git-Mirai-$implementationVersion", // Pufferfish
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..f2d0704c91e535d3d36fb9dab2798b930c0b6a43 100644
+index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..e0a96811e6d14283c096fa2a0e63d92f96a6f6c7 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -592,8 +592,8 @@ public class Metrics {
-             String serverUUID = config.getString("serverUuid");
+@@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
--            if (config.getBoolean("enabled", true)) {
+             if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Pufferfish", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
-+            if (config.getBoolean("enabled", false)) {
 +                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
@@ -194,10 +192,10 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 01600a295ac1f63c14dfee5e3acd34604b721deb..a2c4121486a5487f24633ae632c675639c980f20 100644
+index 1e7ae166a1d53fce28297e2eaebd11ec28a57a55..819fc4b53b5f2f9dc9c25641be644218d3d4f460 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1710,7 +1710,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1711,7 +1711,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -207,10 +205,10 @@ index 01600a295ac1f63c14dfee5e3acd34604b721deb..a2c4121486a5487f24633ae632c67563
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index be3c2034764b0c58512ad8671301f8013f556803..0534d630556bef53afc10f44ef0a5347d5ad2314 100644
+index d42aa5c6a5bdb00893a134946ec07ec513e53991..6576026980ff20e7ae7d5450aa3bb54347572701 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -255,7 +255,7 @@ import javax.annotation.Nullable; // Paper
+@@ -253,7 +253,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -220,7 +218,7 @@ index be3c2034764b0c58512ad8671301f8013f556803..0534d630556bef53afc10f44ef0a5347
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index ba0377642f09a0d57cc806a1bf8904faaa6cf7bd..d51c63496b55d64ac7ee6175bc364012df897891 100644
+index ba0377642f09a0d57cc806a1bf8904faaa6cf7bd..489932059dae0970e63d223a1c84b64688f09eee 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -228,7 +226,7 @@ index ba0377642f09a0d57cc806a1bf8904faaa6cf7bd..d51c63496b55d64ac7ee6175bc364012
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
 -        return new gg.pufferfish.pufferfish.PufferfishVersionFetcher(); // Pufferfish
-+        return new com.destroystokyo.paper.PaperVersionFetcher();
++        return new com.destroystokyo.paper.PaperVersionFetcher(); // Mirai
      }
  
      @Override
