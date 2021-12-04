@@ -21,9 +21,9 @@
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
-The latest JAR file can be downloaded from the [GitHub CI](https://github.com/etil2jz/Mirai/raw/jdk-17/1.17/Mirai-1.17.1-R0.1-SNAPSHOT.jar). You can also clone this repository and build it yourself.
+The latest JAR file can be downloaded from the [Releases](https://github.com/etil2jz/Mirai/releases) page. You can also clone this repository and build it yourself.
 
-**Builds require at least Java 17!**
+**It requires at least Java 17 to run.**
 
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
@@ -32,7 +32,7 @@ If you are interested in making a fork, check out this template [there](https://
 In order to distribute and use this server software, you need a paperclip file:
 
 ```bash
-./gradlew clean applyPatches && ./gradlew paperclipJar
+./gradlew applyPatches && ./gradlew createReobfPaperclipJar
 ```
 
 ## License
