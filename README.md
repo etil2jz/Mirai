@@ -32,7 +32,7 @@ If you are interested in making a fork, check out this template [there](https://
 In order to distribute and use this server software, you need a paperclip file:
 
 ```bash
-./gradlew applyPatches && ./gradlew createReobfPaperclipJar
+./gradlew clean applyPatches && ./gradlew createReobfPaperclipJar
 ```
 
 ## License
