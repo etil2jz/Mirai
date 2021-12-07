@@ -1,0 +1,123 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 4 Dec 2021 22:52:50 +0100
+Subject: [PATCH] Utilities
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index d3fdca4fe0de48446987f8fae650daab6665ae17..20b4c362d0ea1f6396df51423ce654a4f66959fe 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -39,6 +39,7 @@ dependencies {
+     implementation("org.apache.logging.log4j:log4j-iostreams:2.14.1") // Paper
+     implementation("org.ow2.asm:asm:9.2")
+     implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
++    implementation("org.apache.commons:commons-rng-core:1.4") // Yatopia
+     runtimeOnly("org.xerial:sqlite-jdbc:3.36.0.3")
+     runtimeOnly("mysql:mysql-connector-java:8.0.27")
+     runtimeOnly("com.lmax:disruptor:3.4.4") // Paper
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..03e5260bd50c8af3db4ed71f6748fbb89267309e
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
+@@ -0,0 +1,64 @@
++package org.yatopiamc.yatopia.server.util;
++
++import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
++
++import java.util.Random;
++import java.util.SplittableRandom;
++
++public class FastRandom extends Random {
++
++    private XoRoShiRo128PlusPlus random;
++
++    public FastRandom() {
++        super();
++        SplittableRandom randomseed = new SplittableRandom();
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    public FastRandom(long seed) {
++        super(seed);
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    @Override
++    public boolean nextBoolean() {
++        return random.nextBoolean();
++    }
++
++    @Override
++    public int nextInt() {
++        return random.nextInt();
++    }
++
++    @Override
++    public float nextFloat() {
++        return (float) random.nextDouble();
++    }
++
++    @Override
++    public double nextDouble() {
++        return random.nextDouble();
++    }
++
++    @Override
++    public synchronized void setSeed(long seed) {
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++        }
++
++    @Override
++    public void nextBytes(byte[] bytes) {
++        random.nextBytes(bytes);
++    }
++
++    @Override
++    public int nextInt(int bound) {
++        return random.nextInt(bound);
++    }
++
++    @Override
++    public long nextLong() {
++        return random.nextLong();
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java b/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..bb023bcb4b1e1ab5261c83358ce0951cc35ba16d
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/TimeUtils.java
+@@ -0,0 +1,27 @@
++package org.yatopiamc.yatopia.server.util;
++
++import java.util.concurrent.TimeUnit;
++
++public class TimeUtils {
++
++    public static String getFriendlyName(TimeUnit unit) {
++        switch (unit) {
++            case NANOSECONDS:
++                return "ns";
++            case MILLISECONDS:
++                return "ms";
++            case MICROSECONDS:
++                return "micros";
++            case SECONDS:
++                return "s";
++            case MINUTES:
++                return "m";
++            case DAYS:
++                return "d";
++            case HOURS:
++                return "h";
++            default:
++                throw new AssertionError();
++        }
++    }
++}
+\ No newline at end of file

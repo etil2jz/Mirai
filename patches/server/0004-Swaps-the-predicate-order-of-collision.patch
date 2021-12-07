@@ -5,10 +5,10 @@ Subject: [PATCH] Swaps the predicate order of collision
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 401a20fb67e232d1e33b8d9167ba2ba609f4dba9..2e28df553c10e8a1174aed97a378358575b0d3fa 100644
+index 2bbb547e9f96984b50554e5783fc9ad2601eb52b..6513716ba8eef2c586a8af54ce9d314bf23c7ed4 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1763,37 +1763,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1769,37 +1769,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
      public void playerTouch(Player player) {}
  
      public void push(Entity entity) {
