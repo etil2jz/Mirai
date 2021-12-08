@@ -10,7 +10,7 @@
 
 ## Features
 
-- **Based on [Airplane](https://github.com/TECHNOVE/Airplane)**
+- **Based on [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)**
 - **Reduced bandwidth consumption** from avoiding sending useless packets in certain situations.
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
