@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 18:04:30 +0100
+Subject: [PATCH] Remove VersionFetcher
+
+Original code by PatinaMC, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/PatinaMC/Patina
+
+diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
+index 57a21495843f3a144cd73473cdc8781d6129b7ca..c42d73c1844dd7c00723496586e72df0ff10c447 100644
+--- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
+@@ -1,6 +1,6 @@
+ package org.bukkit.command.defaults;
+ 
+-import com.destroystokyo.paper.util.VersionFetcher; // Paper - version supplier
++//import com.destroystokyo.paper.util.VersionFetcher; // Paper - version supplier // Patina - remove
+ import com.google.common.base.Charsets;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.io.Resources;
+@@ -28,6 +28,7 @@ import org.bukkit.util.StringUtil;
+ import org.jetbrains.annotations.NotNull;
+ 
+ public class VersionCommand extends BukkitCommand {
++    /* // Patina
+     private VersionFetcher versionFetcher;
+     private VersionFetcher getVersionFetcher() { // lazy load because unsafe isn't available at command registration
+         if (versionFetcher == null) {
+@@ -36,6 +37,7 @@ public class VersionCommand extends BukkitCommand {
+ 
+         return versionFetcher;
+     }
++    */
+ 
+     public VersionCommand(@NotNull String name) {
+         super(name);
+@@ -51,8 +53,8 @@ public class VersionCommand extends BukkitCommand {
+         if (!testPermission(sender)) return true;
+ 
+         if (args.length == 0) {
+-            //sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")"); // Paper - moved to setVersionMessage
+-            sendVersion(sender);
++            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")"); // Paper - moved to setVersionMessage // Patina
++            //sendVersion(sender); // Patina
+         } else {
+             StringBuilder name = new StringBuilder();
+ 
+@@ -155,6 +157,7 @@ public class VersionCommand extends BukkitCommand {
+         return ImmutableList.of();
+     }
+ 
++    /* // Patina - remove
+     private final ReentrantLock versionLock = new ReentrantLock();
+     private boolean hasVersion = false;
+     private Component versionMessage = null; // Paper
+@@ -233,7 +236,7 @@ public class VersionCommand extends BukkitCommand {
+         } else {
+             setVersionMessage("Unknown version, custom build?");
+         }
+-         */
++
+         // Paper end
+     }
+ 
+@@ -284,4 +287,5 @@ public class VersionCommand extends BukkitCommand {
+             return -1;
+         }
+     }
++    */
+ }
