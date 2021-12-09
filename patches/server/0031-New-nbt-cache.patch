@@ -1,0 +1,141 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 17:46:23 +0100
+Subject: [PATCH] New nbt cache
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index bde44438a2af1f7faaa655191c45ed2b4a6b8da0..aa1d8f84772aa3b5d329f899900ecd4a13ca24a9 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1088,7 +1088,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         }
+         // Spigot start
+         MCUtil.asyncExecutor.shutdown(); // Paper
++        this.playerDataStorage.executorService.shutdown(); // Yatopia
+         try { MCUtil.asyncExecutor.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS); // Paper
++        this.playerDataStorage.executorService.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS); // Yatopia - New async nbt cache
+         } catch (java.lang.InterruptedException ignored) {} // Paper
+         if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
+             MinecraftServer.LOGGER.info("Saving usercache.json");
+diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+index 331ed6aa983714d6fc3596526fc7df0ab993062c..cc63322d73519840352ae1de8e20eda84b840f6b 100644
+--- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+@@ -24,6 +24,10 @@ public class PlayerDataStorage {
+     private static final Logger LOGGER = LogManager.getLogger();
+     private final File playerDir;
+     protected final DataFixer fixerUpper;
++    // Yatopia start - NBT Cache system
++    private final wtf.etil.mirai.server.cache.NBTCache dataCache = new wtf.etil.mirai.server.cache.NBTCache();
++    public final java.util.concurrent.ExecutorService executorService = java.util.concurrent.Executors.newSingleThreadExecutor(new com.google.common.util.concurrent.ThreadFactoryBuilder().setDaemon(true).setPriority(Thread.NORM_PRIORITY - 1).build());
++    // Yatopia end
+ 
+     public PlayerDataStorage(LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer) {
+         this.fixerUpper = dataFixer;
+@@ -37,11 +41,25 @@ public class PlayerDataStorage {
+             CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
+             File file = File.createTempFile(player.getStringUUID() + "-", ".dat", this.playerDir);
+ 
+-            NbtIo.writeCompressed(nbttagcompound, file);
+-            File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
+-            File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
++            // NbtIo.writeCompressed(nbttagcompound, file); // Yatopia
++            // Yatopia start - NBT Cache system
++            Runnable task = () -> {
++                try {
++                    NbtIo.writeCompressed(nbttagcompound, file);
++                    File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
++                    File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
++
++                    Util.safeReplaceFile(file1, file, file2);
++                } catch (Exception exception) {
++                    PlayerDataStorage.LOGGER.error("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
++                }
++                };
++            synchronized (this.dataCache){
++                this.dataCache.put(file, nbttagcompound);
++            }
++            this.executorService.execute(task);
++            // Yatopia end
+ 
+-            Util.safeReplaceFile(file1, file, file2);
+         } catch (Exception exception) {
+             PlayerDataStorage.LOGGER.warn("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
+         }
+@@ -57,9 +75,18 @@ public class PlayerDataStorage {
+             // Spigot Start
+             boolean usingWrongFile = false;
+             boolean normalFile = file.exists() && file.isFile(); // Akarin - ensures normal file
+-            if ( org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file
++            //if ( org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file
++            // Yatopia start - NBT Cache system
++            CompoundTag playerData;
++            synchronized (this.dataCache){
++                playerData = this.dataCache.get(file);
++            }
++            if (playerData == null && org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first // Akarin - ensures normal file // Yatopia
+             {
+                 file = new File( this.playerDir, java.util.UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + player.getScoreboardName() ).getBytes( "UTF-8" ) ).toString() + ".dat");
++                synchronized (this.dataCache){
++                    playerData = this.dataCache.get(file);
++                }
+                 if ( file.exists() )
+                 {
+                     usingWrongFile = true;
+@@ -68,9 +95,13 @@ public class PlayerDataStorage {
+             }
+             // Spigot End
+ 
+-            if (normalFile) { // Akarin - avoid double I/O operation
++            //if (normalFile) { // Akarin - avoid double I/O operation
++            if (playerData != null) {
++                nbttagcompound = playerData;
++            } else if (normalFile) { // Akarin - avoid double I/O operation
+                 nbttagcompound = NbtIo.readCompressed(file);
+             }
++            // Yatopia end
+             // Spigot Start
+             if ( usingWrongFile )
+             {
+diff --git a/src/main/java/wtf/etil/mirai/server/cache/NBTCache.java b/src/main/java/wtf/etil/mirai/server/cache/NBTCache.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..10be297ed6e7aaa963d5bdcd40a589e877884cf7
+--- /dev/null
++++ b/src/main/java/wtf/etil/mirai/server/cache/NBTCache.java
+@@ -0,0 +1,32 @@
++package wtf.etil.mirai.server.cache;
++
++import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.nbt.CompoundTag;
++
++import java.io.File;
++
++public class NBTCache extends Object2ObjectLinkedOpenCustomHashMap<File, CompoundTag> {
++
++    public NBTCache() {
++        super(100, 0.75F, new Strategy<File>() {
++            @Override
++            public int hashCode(File k) {
++                return k.hashCode();
++            }
++
++            @Override
++            public boolean equals(File k, File k1) {
++                return k.equals(k1);
++            }
++        });
++    }
++
++    @Override
++    public CompoundTag put(File k, CompoundTag v) {
++        if (this.size() > MinecraftServer.getServer().getPlayerCount()) {
++            this.removeLast();
++        }
++        return super.putAndMoveToFirst(k, v);
++    }
++}
+\ No newline at end of file
