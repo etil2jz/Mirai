@@ -3,9 +3,11 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Sat, 4 Dec 2021 22:52:50 +0100
 Subject: [PATCH] Utilities
 
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index d3fdca4fe0de48446987f8fae650daab6665ae17..20b4c362d0ea1f6396df51423ce654a4f66959fe 100644
+index 6a16c5843bc2c585dde268b6dacef7f54a13d4fb..2e69e4875f22b2cb695ebfa851ae545e580c8b9c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -39,6 +39,7 @@ dependencies {

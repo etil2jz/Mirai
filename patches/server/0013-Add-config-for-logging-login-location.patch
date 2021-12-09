@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 14:08:05 +0100
+Subject: [PATCH] Add config for logging login location
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 042be2cf60a9d01698808d84f2e537a5eb952079..456bfb666238c9384b1fd70f85c4467449fc214a 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -483,7 +483,13 @@ public abstract class PlayerList {
+         }
+         // Paper end
+         // CraftBukkit - Moved from above, added world
+-        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        // Yatopia start - configurable logging of player login location
++        if (wtf.etil.mirai.MiraiConfig.logPlayerLoginLoc) {
++            PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        } else {
++            PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
++        }
++        // Yatopia end - configurable logging of player login location
+     }
+ 
+     public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 8f07fceba57bf49d8a2e0d9c1dedf91d23bb3932..9f775115d5120d3fc514d9c0cea98272feecbb49 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -189,6 +189,11 @@ public class MiraiConfig {
+         fixProtocolLib = getBoolean("fix-protocollib", fixProtocolLib);
+     }
+ 
++    public static boolean logPlayerLoginLoc = true;
++    private static void logPlayerLoc() {
++        logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
++    }
++
+ 
+ 
+ }
+\ No newline at end of file

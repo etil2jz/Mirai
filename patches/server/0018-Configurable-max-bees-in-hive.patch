@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 15:39:29 +0100
+Subject: [PATCH] Configurable max bees in hive
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+index 9fcd835d219aafbe113ebb1b796052e07bf2b046..5d04fedb428d5bfd59bfc47ace42006be3f58737 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+@@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+     private final List<BeehiveBlockEntity.BeeData> stored = Lists.newArrayList();
+     @Nullable
+     public BlockPos savedFlowerPos;
+-    public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
++    public int maxBees = wtf.etil.mirai.MiraiConfig.maxBees; // CraftBukkit - allow setting max amount of bees a hive can hold // Mirai - configurable max bees in hive
+ 
+     public BeehiveBlockEntity(BlockPos pos, BlockState state) {
+         super(BlockEntityType.BEEHIVE, pos, state);
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 9f775115d5120d3fc514d9c0cea98272feecbb49..458d7aedfd8279f0e581415f350e867672718027 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -194,6 +194,9 @@ public class MiraiConfig {
+         logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
+     }
+ 
+-
++    public static int maxBees = 3;
++    private static void maximumBees() {
++        maxBees = getInt("max-bees-in-hive", maxBees);
++    }
+ 
+ }
+\ No newline at end of file

@@ -3,6 +3,8 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Thu, 2 Dec 2021 16:22:24 +0100
 Subject: [PATCH] Avoid double I/O operation on load player file
 
+Original code by Akarin-project, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/Akarin-project/Akarin
 
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 index 35c39aed9583275ef25d32c783715798b52bdb63..331ed6aa983714d6fc3596526fc7df0ab993062c 100644

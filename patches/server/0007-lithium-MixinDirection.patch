@@ -3,6 +3,8 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Thu, 2 Dec 2021 17:00:23 +0100
 Subject: [PATCH] lithium: MixinDirection
 
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
 index 6d883db5c04cbcf454952c0f361029ecbfe4f037..53d853a4e9d8e3de4747a75f08f42545b048bbbb 100644

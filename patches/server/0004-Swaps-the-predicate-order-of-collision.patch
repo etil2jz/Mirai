@@ -3,12 +3,14 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Thu, 2 Dec 2021 16:25:37 +0100
 Subject: [PATCH] Swaps the predicate order of collision
 
+Original code by Akarin-project, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/Akarin-project/Akarin
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 2bbb547e9f96984b50554e5783fc9ad2601eb52b..6513716ba8eef2c586a8af54ce9d314bf23c7ed4 100644
+index 3d973c5a62a2985a472c89c0a64aa7edc395aba2..ed2a684deccedf85ffbee01baeaa922c71bfb435 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1769,37 +1769,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1850,37 +1850,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
      public void playerTouch(Player player) {}
  
      public void push(Entity entity) {

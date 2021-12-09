@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 15:07:13 +0100
+Subject: [PATCH] Stop wasting resources on JsonList#get
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 456bfb666238c9384b1fd70f85c4467449fc214a..dc53441ce82240f8cf7bb35afe01b40743777cd5 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -743,13 +743,19 @@ public abstract class PlayerList {
+         if (getBans().isBanned(gameprofile) && (gameprofilebanentry = getBans().get(gameprofile)) != null) {
+             // Paper end
+ 
++            if (!gameprofilebanentry.hasExpired()) { // Yatopia
+             chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
+             if (gameprofilebanentry.getExpires() != null) {
+                 chatmessage.append((Component) (new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())})));
+             }
+ 
+             // return chatmessage;
++            // Yatopia start - Stop wasting resources on JsonList#get
+             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
++        } else {
++            getBans().remove(gameprofile);
++        }
++        // Yatopia end
+         } else if (!this.isWhitelisted(gameprofile, event)) { // Paper
+             //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
+             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
+diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
+index 8982562721c3a5a5a3305e90bd8b5bc21585a425..db22fc485e6091bd81c0c369f302c6ffb4157448 100644
+--- a/src/main/java/net/minecraft/server/players/StoredUserList.java
++++ b/src/main/java/net/minecraft/server/players/StoredUserList.java
+@@ -73,9 +73,14 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+         // Paper start
+         // this.g();
+         // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
++        // Yatopia start - only remove if it expires and has been requested (Stop wasting resources on JsonList#get)
++        return this.map.get(this.getKeyForUser(key));
++        /*
+         return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
+             return v.hasExpired() ? null : v;
+         });
++        */
++        // Sugarcane end
+         // Paper end
+     }
+ 
+@@ -150,6 +155,8 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+     public void save() throws IOException {
+         this.removeExpired(); // Paper - remove expired values before saving
+         JsonArray jsonarray = new JsonArray();
++        // Yatopia start - we're nuking streams wherever possible (Stop wasting resources on JsonList#get)
++        /*
+         Stream<JsonObject> stream = this.map.values().stream().map((jsonlistentry) -> { // CraftBukkit - decompile error
+             JsonObject jsonobject = new JsonObject();
+ 
+@@ -159,6 +166,13 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+ 
+         Objects.requireNonNull(jsonarray);
+         stream.forEach(jsonarray::add);
++        */
++        for (V value : this.map.values()) {
++            JsonObject obj = new JsonObject();
++            value.serialize(obj);
++            jsonarray.add(obj);
++        }
++        // Yatopia end
+         BufferedWriter bufferedwriter = Files.newWriter(this.file, StandardCharsets.UTF_8);
+ 
+         try {

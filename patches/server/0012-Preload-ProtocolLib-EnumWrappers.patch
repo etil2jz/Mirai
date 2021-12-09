@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 9 Dec 2021 13:52:16 +0100
+Subject: [PATCH] Preload ProtocolLib EnumWrappers
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 819fc4b53b5f2f9dc9c25641be644218d3d4f460..40fe4111a52ab754094d462b0d1889e740797d4d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1219,6 +1219,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
+                 // Paper end
+ 
++                if (wtf.etil.mirai.MiraiConfig.fixProtocolLib) org.yatopiamc.yatopia.server.util.YatopiaPreloadProtocolLib.run(); // Yatopia - Preload ProtocolLib's Enum Wrappers
+                 org.spigotmc.WatchdogThread.tick(); // Paper
+                 org.spigotmc.WatchdogThread.hasStarted = true; // Paper
+                 Arrays.fill( recentTps, 20 );
+diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java b/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..663017bc4645b87897c82cb858e1e7d761858868
+--- /dev/null
++++ b/src/main/java/org/yatopiamc/yatopia/server/util/YatopiaPreloadProtocolLib.java
+@@ -0,0 +1,28 @@
++package org.yatopiamc.yatopia.server.util;
++
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.Bukkit;
++import org.bukkit.plugin.Plugin;
++import org.bukkit.plugin.SimplePluginManager;
++
++import java.lang.reflect.Method;
++
++public class YatopiaPreloadProtocolLib {
++
++    public synchronized static void run() {
++        try {
++            final SimplePluginManager pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
++            final Plugin protocolLib = pluginManager.getPlugin("ProtocolLib");
++            if(protocolLib != null && protocolLib.isEnabled()) {
++                MinecraftServer.LOGGER.info("Mirai: Attempting to preload ProtocolLib's EnumWrappers");
++                final Method initialize = Class.forName("com.comphenix.protocol.wrappers.EnumWrappers", true, protocolLib.getClass().getClassLoader()).getDeclaredMethod("initialize");
++                initialize.setAccessible(true);
++                initialize.invoke(null);
++                synchronized (YatopiaPreloadProtocolLib.class) {
++                }
++            }
++        } catch (Throwable t) {
++            MinecraftServer.LOGGER.warn("Mirai: Failed to preload ProtocolLib's EnumWrappers", t);
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 5b30b329959811f99f13f32166574f90e765bcb1..8f07fceba57bf49d8a2e0d9c1dedf91d23bb3932 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -184,6 +184,11 @@ public class MiraiConfig {
+ 
+     // Mirai - settings below
+ 
+-    
++    public static boolean fixProtocolLib = true;
++    private static void protocolLib() {
++        fixProtocolLib = getBoolean("fix-protocollib", fixProtocolLib);
++    }
++
++
+ 
+ }
+\ No newline at end of file

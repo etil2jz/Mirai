@@ -3,6 +3,8 @@ From: Etil <81570777+etil2jz@users.noreply.github.com>
 Date: Thu, 2 Dec 2021 17:09:27 +0100
 Subject: [PATCH] lithium: HashedList
 
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
 new file mode 100644
