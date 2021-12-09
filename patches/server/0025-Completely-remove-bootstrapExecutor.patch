@@ -50,7 +50,7 @@ index b08d32bc80b4a65ebb980366a3e717c3b0e1bdab..9e31e12203dcfa0836e38ee32bad33bf
  
          DataFixers.addFixers(datafixerbuilder);
 -        return datafixerbuilder.build(Util.bootstrapExecutor());
-+        DATA_FIXER = datafixerbuilder.build(Util.bootstrapExecutor()); // Patina
++        DATA_FIXER = datafixerbuilder.build(Util.backgroundExecutor()); // Patina
      }
  
      public static DataFixer getDataFixer() {
