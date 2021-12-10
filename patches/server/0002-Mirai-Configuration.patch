@@ -26,7 +26,7 @@ index aae2dadabedb075fd1bc712f0226882b85f4551d..0178460888a2273e4a7f75b1330ce853
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6576026980ff20e7ae7d5450aa3bb54347572701..9ad3d54593c6d7bc7c918ef9bcd52f5c54cc984e 100644
+index cdb95e4070f7069e2f1eb0b115d6803db1ead22f..e8b256c947f7638496fdc8dd29b88298e3e003eb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -931,6 +931,7 @@ public final class CraftServer implements Server {
@@ -38,10 +38,10 @@ index 6576026980ff20e7ae7d5450aa3bb54347572701..9ad3d54593c6d7bc7c918ef9bcd52f5c
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 450518903c0a10301b177d8dd7fe05aca3b8b37e..b944e9344713866987d29599e329213e279f816c 100644
+index deb33456b5b194a662cbdbacf17752c87f2cecaf..3db00cf0143ca4422ab686f0bea8224766edd5df 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -153,6 +153,14 @@ public class Main {
+@@ -155,6 +155,14 @@ public class Main {
                          .describedAs("Jar file");
                  // Paper end
  

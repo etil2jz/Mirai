@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Fri, 10 Dec 2021 22:13:13 +0100
+Subject: [PATCH] Don't load chunks for physics
+
+Original code by Starlis, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/starlis/empirecraft
+
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index 426b006ba49bf244b048a3a0f3a3b5b577041cd3..2eb8ce55cdca9bcc2e9178c498c750dca9e9939b 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -896,7 +896,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+ 
+     public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
+         if (!this.isClientSide) {
+-            BlockState iblockdata = this.getBlockState(pos);
++            BlockState iblockdata = this.getBlockStateIfLoaded(pos); // EMC
++            if (iblockdata == null) return; // EMC
+ 
+             try {
+                 // CraftBukkit start
+diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
+index 05c46f3b3bce5225b819d86e6e06729a5093e092..450202b29726df7ddbe9422836a2ed2fdcbc52df 100644
+--- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
++++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
+@@ -930,7 +930,8 @@ public abstract class BlockBehaviour {
+                 Direction enumdirection = aenumdirection[l];
+ 
+                 blockposition_mutableblockposition.setWithOffset(pos, enumdirection);
+-                BlockState iblockdata = world.getBlockState(blockposition_mutableblockposition);
++                BlockState iblockdata = world.getBlockStateIfLoaded(blockposition_mutableblockposition); // EMC
++                if (iblockdata == null) { continue; } // EMC
+                 BlockState iblockdata1 = iblockdata.updateShape(enumdirection.getOpposite(), this.asState(), world, blockposition_mutableblockposition, pos);
+ 
+                 Block.updateOrDestroy(iblockdata, iblockdata1, world, blockposition_mutableblockposition, flags, maxUpdateDepth);

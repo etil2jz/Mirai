@@ -32,7 +32,7 @@ index 32a4b7554677609691e23f833a5ec76d1d437ff0..13085533dba61cf526cf77bac44e3235
      public static ExecutorService backgroundExecutor() {
          return BACKGROUND_EXECUTOR;
 diff --git a/src/main/java/net/minecraft/util/datafix/DataFixers.java b/src/main/java/net/minecraft/util/datafix/DataFixers.java
-index b08d32bc80b4a65ebb980366a3e717c3b0e1bdab..9e31e12203dcfa0836e38ee32bad33bf34caa688 100644
+index b08d32bc80b4a65ebb980366a3e717c3b0e1bdab..a4ff80ec773e3a33238d444966054bd9a48a60d8 100644
 --- a/src/main/java/net/minecraft/util/datafix/DataFixers.java
 +++ b/src/main/java/net/minecraft/util/datafix/DataFixers.java
 @@ -78,15 +78,15 @@ public class DataFixers {

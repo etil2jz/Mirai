@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable max bees in hive
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 9fcd835d219aafbe113ebb1b796052e07bf2b046..5d04fedb428d5bfd59bfc47ace42006be3f58737 100644
+index 9fcd835d219aafbe113ebb1b796052e07bf2b046..ffd89bb615b0e64f961a8f37f1d279c0fb6f43d1 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {

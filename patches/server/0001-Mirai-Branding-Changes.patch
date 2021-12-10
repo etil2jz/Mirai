@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index bc42301d161b49eead1d5408183bb04d7f617153..d3fdca4fe0de48446987f8fae650daab6665ae17 100644
+index 088e1e6f76774350066ce1021f6aed4eb3e27c2d..228d6d8a892e14f57b642125e2cb02984825d2c4 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -17,7 +17,7 @@ index bc42301d161b49eead1d5408183bb04d7f617153..d3fdca4fe0de48446987f8fae650daab
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.18-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -79,7 +79,7 @@ tasks.jar {
+@@ -80,7 +80,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -205,7 +205,7 @@ index 1e7ae166a1d53fce28297e2eaebd11ec28a57a55..819fc4b53b5f2f9dc9c25641be644218
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d42aa5c6a5bdb00893a134946ec07ec513e53991..6576026980ff20e7ae7d5450aa3bb54347572701 100644
+index 70007282d5fbb243d1d76d46713e3dcbc2411677..cdb95e4070f7069e2f1eb0b115d6803db1ead22f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -253,7 +253,7 @@ import javax.annotation.Nullable; // Paper
