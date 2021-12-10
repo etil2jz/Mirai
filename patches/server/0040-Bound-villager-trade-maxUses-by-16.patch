@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Fri, 10 Dec 2021 22:29:10 +0100
+Subject: [PATCH] Bound villager trade maxUses by 16
+
+Original code by Starlis, licensed under GNU General Public License v3.0
+You can find the original code on https://github.com/starlis/empirecraft
+
+diff --git a/src/main/java/net/minecraft/world/item/trading/MerchantOffer.java b/src/main/java/net/minecraft/world/item/trading/MerchantOffer.java
+index 12354b2fd411c57fd14dfca92cd2f1522fa6f050..8a0818aa346fa20414d669a72d42d27458c4a9ba 100644
+--- a/src/main/java/net/minecraft/world/item/trading/MerchantOffer.java
++++ b/src/main/java/net/minecraft/world/item/trading/MerchantOffer.java
+@@ -46,7 +46,7 @@ public class MerchantOffer {
+         this.result = ItemStack.of(nbt.getCompound("sell"));
+         this.uses = nbt.getInt("uses");
+         if (nbt.contains("maxUses", 99)) {
+-            this.maxUses = nbt.getInt("maxUses");
++            this.maxUses = Math.min(16, nbt.getInt("maxUses")); // EMC
+         } else {
+             this.maxUses = 4;
+         }
