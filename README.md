@@ -5,7 +5,6 @@
   <h4>Mirai is ❗under heavy development❗ and contributions are welcome!</h4>
   <h5><b>This project is experimental, its usage in production environment is discouraged if you are not ready to face possible bugs.</b></h5>
 
-[![Actions](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build)](https://github.com/etil2jz/Mirai/actions)
 </div>
 
 ## Features
@@ -21,10 +20,12 @@
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
-The latest JAR file can be downloaded from the [Releases](https://github.com/etil2jz/Mirai/releases) page. You can also clone this repository and build it yourself.
+The latest JAR file can be downloaded here:
+[Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/releases/download/mc1.18.1/Mirai-1.18.1-R0.1-SNAPSHOT.jar)
 
-**It requires at least Java 17 to run.**
+**Please note Java 17 is required.**
 
+You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
 ## Building
