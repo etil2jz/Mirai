@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 11 Dec 2021 11:38:18 +0100
+Subject: [PATCH] Fix SPIGOT-6278
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
+index d850f1f57fc7560738f7bd82b37ec888e8e9301c..a1a64791ae03446ce4c15de89a494f0ada2c081c 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
+@@ -199,7 +199,7 @@ public class Piglin extends AbstractPiglin implements CrossbowAttackMob, Invento
+ 
+     @Override
+     public boolean removeWhenFarAway(double distanceSquared) {
+-        return !this.isPersistenceRequired();
++        return true || !this.isPersistenceRequired(); // Purpur - fix SPIGOT-6278
+     }
+ 
+     @Override

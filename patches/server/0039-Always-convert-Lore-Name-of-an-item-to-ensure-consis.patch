@@ -1,16 +1,16 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 22:26:16 +0100
+Date: Sun, 12 Dec 2021 21:42:57 +0100
 Subject: [PATCH] Always convert Lore/Name of an item to ensure consistency
 
 Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index f9b7292c2eb2588c9769fcd8f56cc8da5259e7ce..4f115fc79a2d50bad2afa00363d56ec19645d926 100644
+index 66f808cabcf6a9a6584849b285f1c60133adc7b4..c38be29d0d9f42181e5c7bcbed68b2bdb8bc5a16 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -175,9 +175,9 @@ public final class ItemStack {
+@@ -174,9 +174,9 @@ public final class ItemStack {
          if (display != null) {
              if (display.contains("Name", 8)) {
                  String json = display.getString("Name");
@@ -19,10 +19,10 @@ index f9b7292c2eb2588c9769fcd8f56cc8da5259e7ce..4f115fc79a2d50bad2afa00363d56ec1
                      try {
 -                        display.put("Name", convert(json));
 +                        display.put("Name", convert(json)); // Paper
-                     } catch (JsonParseException jsonparseexception) {
+                     } catch (com.google.gson.JsonParseException jsonparseexception) {
                          display.remove("Name");
                      }
-@@ -187,7 +187,7 @@ public final class ItemStack {
+@@ -186,7 +186,7 @@ public final class ItemStack {
                  ListTag list = display.getList("Lore", 8);
                  for (int index = 0; index < list.size(); index++) {
                      String json = list.getString(index);
@@ -30,8 +30,8 @@ index f9b7292c2eb2588c9769fcd8f56cc8da5259e7ce..4f115fc79a2d50bad2afa00363d56ec1
 +                    if (true || json != null && json.contains("\u00A7")) { // Only try if it has legacy in the unparsed json // Paper
                          try {
                              list.set(index, convert(json));
-                         } catch (JsonParseException e) {
-@@ -204,6 +204,9 @@ public final class ItemStack {
+                         } catch (com.google.gson.JsonParseException e) {
+@@ -203,6 +203,9 @@ public final class ItemStack {
          if (component instanceof TextComponent && component.getContents().contains("\u00A7") && component.getSiblings().isEmpty()) {
              // Only convert if the root component is a single comp with legacy in it, don't convert already normal components
              component = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(component.getContents())[0];

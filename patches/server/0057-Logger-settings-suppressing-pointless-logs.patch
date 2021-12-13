@@ -1,0 +1,65 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 12 Dec 2021 22:44:56 +0100
+Subject: [PATCH] Logger settings (suppressing pointless logs)
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+index f7959fe8d5247504dd79a18010470d98781c7cfe..63316861bcc36d72923be4837faa9f0b8e6bea67 100644
+--- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
++++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+@@ -186,6 +186,7 @@ public class PlayerAdvancements {
+                         if (advancement == null) {
+                             // CraftBukkit start
+                             if (entry.getKey().getNamespace().equals("minecraft")) {
++                                if (!wtf.etil.mirai.MiraiConfig.loggerSuppressIgnoredAdvancementWarnings) // Purpur
+                                 PlayerAdvancements.LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", entry.getKey(), this.file);
+                             }
+                             // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
+index ecdac349efbea9e05ac66200c5d0f0385ad1349b..4c810fb37ecd67a38532643d6176ced278b826b0 100644
+--- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
++++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
+@@ -122,6 +122,7 @@ public class ServerRecipeBook extends RecipeBook {
+                 Optional<? extends Recipe<?>> optional = recipeManager.byKey(minecraftkey);
+ 
+                 if (!optional.isPresent()) {
++                    if (!wtf.etil.mirai.MiraiConfig.loggerSuppressUnrecognizedRecipeErrors) // Purpur
+                     ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", minecraftkey);
+                 } else {
+                     handler.accept((Recipe) optional.get());
+diff --git a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..d243af83f3159d8a4d56d08dab022b317cc5687e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
++++ b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+@@ -255,6 +255,7 @@ public final class CraftLegacy {
+     }
+ 
+     static {
++        if (!wtf.etil.mirai.MiraiConfig.loggerSuppressInitLegacyMaterialError) // Purpur
+         System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
+         if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
+             new Exception().printStackTrace();
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 6b229fef229e136fff7598b9efab974997d48116..d2a5547b58c09245214d9722a07e0164ba921ddc 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -216,6 +216,15 @@ public class MiraiConfig {
+         useAlternateKeepAlive = getBoolean("use-alternate-keepalive", useAlternateKeepAlive);
+     }
+ 
++    public static boolean loggerSuppressInitLegacyMaterialError = true;
++    public static boolean loggerSuppressIgnoredAdvancementWarnings = true;
++    public static boolean loggerSuppressUnrecognizedRecipeErrors = true;
++    private static void loggerSettings() {
++        loggerSuppressInitLegacyMaterialError = getBoolean("logger.suppress-init-legacy-material-errors", loggerSuppressInitLegacyMaterialError);
++        loggerSuppressIgnoredAdvancementWarnings = getBoolean("logger.suppress-ignored-advancement-warnings", loggerSuppressIgnoredAdvancementWarnings);
++        loggerSuppressUnrecognizedRecipeErrors = getBoolean("logger.suppress-unrecognized-recipe-errors", loggerSuppressUnrecognizedRecipeErrors);
++    }
++
+ 
+ 
+ }
+\ No newline at end of file

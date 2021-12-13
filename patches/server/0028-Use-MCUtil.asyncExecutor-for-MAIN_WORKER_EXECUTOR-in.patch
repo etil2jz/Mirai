@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:27:28 +0100
+Date: Sat, 11 Dec 2021 12:04:08 +0100
 Subject: [PATCH] Use MCUtil.asyncExecutor for MAIN_WORKER_EXECUTOR in
  SystemUtils
 
@@ -8,13 +8,13 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 13085533dba61cf526cf77bac44e32358b592c7e..d7a50c55d58d8b0b284cb2d9ee7a7d84f38996d8 100644
+index 9f7316f4d05058f9af99166b168360e613730384..414e323d7c9762ee5d2626aff57fd710fd19684c 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -61,6 +61,10 @@ import net.minecraft.world.level.block.state.properties.Property;
- import org.apache.commons.io.IOUtils;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
+@@ -67,6 +67,10 @@ import org.apache.logging.log4j.core.LoggerContext;
+ import org.apache.logging.log4j.core.config.Configuration;
+ import org.apache.logging.log4j.core.lookup.StrLookup;
+ import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 +import java.util.concurrent.AbstractExecutorService;
 +import wtf.etil.mirai.server.util.ServerWorkerWrapper;
 +import net.minecraft.server.MCUtil;
@@ -22,35 +22,35 @@ index 13085533dba61cf526cf77bac44e32358b592c7e..d7a50c55d58d8b0b284cb2d9ee7a7d84
  
  public class Util {
      static final Logger LOGGER = LogManager.getLogger();
-@@ -142,7 +146,43 @@ public class Util {
+@@ -151,7 +155,43 @@ public class Util {
          if (i <= 0) {
              executorService = MoreExecutors.newDirectExecutorService();
          } else {
 -            executorService = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new net.minecraft.server.ServerWorkerThread(target, s, priorityModifier));
 +            executorService = Integer.getInteger("Paper.WorkerThreadCount", i) <= 0 ? MoreExecutors.newDirectExecutorService() : new AbstractExecutorService(){
 +                    private volatile boolean shutdown = false;
-+                
++
 +                    @Override
 +                    public final List<Runnable> shutdownNow() {
 +                        this.shutdown = true;
 +                        return Collections.emptyList();
 +                    }
-+                
++
 +                    @Override
 +                    public final void shutdown() {
 +                        this.shutdown = true;
 +                    }
-+                
++
 +                    @Override
 +                    public final boolean isShutdown() {
 +                        return this.shutdown;
 +                    }
-+                
++
 +                    @Override
 +                    public final boolean isTerminated() {
 +                        return this.shutdown;
 +                    }
-+                
++
 +                    @Override
 +                    public final boolean awaitTermination(long l2, TimeUnit timeUnit) throws InterruptedException {
 +                        if (!this.shutdown) {
@@ -58,7 +58,7 @@ index 13085533dba61cf526cf77bac44e32358b592c7e..d7a50c55d58d8b0b284cb2d9ee7a7d84
 +                        }
 +                        return true;
 +                    }
-+                
++
 +                    @Override
 +                    public final void execute(Runnable runnable) {
 +                        MCUtil.asyncExecutor.execute(new ServerWorkerWrapper(runnable));

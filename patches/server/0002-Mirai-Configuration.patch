@@ -38,10 +38,10 @@ index cdb95e4070f7069e2f1eb0b115d6803db1ead22f..e8b256c947f7638496fdc8dd29b88298
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index deb33456b5b194a662cbdbacf17752c87f2cecaf..3db00cf0143ca4422ab686f0bea8224766edd5df 100644
+index 55bae3efbc630be6d40d415509de4c3e744a5004..836ce7ec6a1b001ee5bb92cc98fd740a49d70c3b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -155,6 +155,14 @@ public class Main {
+@@ -153,6 +153,14 @@ public class Main {
                          .describedAs("Jar file");
                  // Paper end
  

@@ -218,7 +218,7 @@ index 70007282d5fbb243d1d76d46713e3dcbc2411677..cdb95e4070f7069e2f1eb0b115d6803d
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index ba0377642f09a0d57cc806a1bf8904faaa6cf7bd..489932059dae0970e63d223a1c84b64688f09eee 100644
+index cfa4b75b042e2a82e10e5dc95d4c71d39f5a8d60..54bac87a6bbf5a0a7ea65a4314e10e28a7e0be7a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -231,7 +231,7 @@ index ba0377642f09a0d57cc806a1bf8904faaa6cf7bd..489932059dae0970e63d223a1c84b646
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 80553face9c70c2a3d897681e7761df85b22d464..b1f61ce7f832f177d571e4598ceeb0eb0b667afd 100644
+index 80553face9c70c2a3d897681e7761df85b22d464..ce2d17a9756f0375a96bbf7c56c3032c73d503f3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -1,29 +1,9 @@
@@ -262,6 +262,6 @@ index 80553face9c70c2a3d897681e7761df85b22d464..b1f61ce7f832f177d571e4598ceeb0eb
 -        }
 -
 -        return result;
-+        return "1.18-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18
++        return "1.18.1-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.1
      }
  }
