@@ -37,33 +37,6 @@ index af9c58944b38e8aeeca5dca75c9f97e49f2895f2..a1550515a34ea448f7246d3f90c746bf
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-diff --git a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..bea593c31b59920c2c4cb86c2dd116435578afeb 100644
---- a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-+++ b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-@@ -15,10 +15,19 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula
- 
-     @Override
-     public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState) {
--        return super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState).map((max) -> {
--            return this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, max);
--        });
-+        // Lithium start
-+        Optional<Float> optionalBlastResistance = super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState);
-+        if (optionalBlastResistance.isPresent()) {
-+            float blastResistance = optionalBlastResistance.get();
-+            float effectiveExplosionResistance = this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, blastResistance);
-+            if (effectiveExplosionResistance != blastResistance) {
-+                return Optional.of(effectiveExplosionResistance);
-+            }
-+        }
-+        return optionalBlastResistance;
-+        // Lithium end
-     }
-+    
- 
-     @Override
-     public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
 diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaaaa138b36 100644
 --- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java

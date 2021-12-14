@@ -18,36 +18,6 @@ index f763a3ea5796737304e0c1f41349622e1d7adadf..26c5c3c6e7c51ad6ccc9bac05e2af497
      public static final PlainComponentSerializer PLAIN = PlainComponentSerializer.builder().flattener(FLATTENER).build();
      public static final GsonComponentSerializer GSON = GsonComponentSerializer.builder()
          .legacyHoverEventSerializer(NBTLegacyHoverEventSerializer.INSTANCE)
-diff --git a/src/main/java/net/minecraft/world/level/block/SignBlock.java b/src/main/java/net/minecraft/world/level/block/SignBlock.java
-index ed3d78494735ceda14ad0ea23adeadc374f3b35e..88cc2da0e22c6449b260bc70b411926a63bbd49e 100644
---- a/src/main/java/net/minecraft/world/level/block/SignBlock.java
-+++ b/src/main/java/net/minecraft/world/level/block/SignBlock.java
-@@ -14,6 +14,7 @@ import net.minecraft.world.item.DyeItem;
- import net.minecraft.world.item.Item;
- import net.minecraft.world.item.ItemStack;
- import net.minecraft.world.item.Items;
-+import net.minecraft.world.item.SignItem;
- import net.minecraft.world.level.BlockGetter;
- import net.minecraft.world.level.Level;
- import net.minecraft.world.level.LevelAccessor;
-@@ -108,6 +109,17 @@ public abstract class SignBlock extends BaseEntityBlock implements SimpleWaterlo
-                         }
-                     }
- 
-+                    // Purpur start - right click to open sign editor
-+                    if (wtf.etil.mirai.MiraiConfig.signRightClickEdit && itemStack.getItem() instanceof SignItem &&
-+                        !player.isCrouching() && player.getAbilities().mayBuild &&
-+                        player.getBukkitEntity().hasPermission("purpur.sign.edit")) {
-+                        signBlockEntity.setEditable(true);
-+                        signBlockEntity.setAllowedPlayerEditor(player.getUUID());
-+                        player.openTextEdit(signBlockEntity);
-+                        return InteractionResult.SUCCESS;
-+                    }
-+                    // Purpur end
-+
-                     return signBlockEntity.executeClickCommands((ServerPlayer)player) ? InteractionResult.SUCCESS : InteractionResult.PASS;
-                 } else {
-                     return InteractionResult.PASS;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 5605a084ff5a9d3c68fd1ad67bd6a0d07d239851..c105a9c58eacf9baf74c67f76fce2b4ef5879e0f 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java

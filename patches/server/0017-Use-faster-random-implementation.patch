@@ -111,28 +111,6 @@ index 25ae440839f1d286550a77d0a4c61e1dc02b369d..b0cbe7d42eef1865e84211844b351027
              this.challengeBytes = String.format("\t%s%d\u0000", this.ident, this.challenge).getBytes(StandardCharsets.UTF_8);
          }
  
-diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index 19f77e377342ee461f0da8bc5378f2002fb9e94a..e6799eb40ec5e8c9f58aaafb7841a9066ac299c8 100644
---- a/src/main/java/net/minecraft/util/Mth.java
-+++ b/src/main/java/net/minecraft/util/Mth.java
-@@ -31,7 +31,7 @@ public class Mth {
-         }
- 
-     });
--    private static final Random RANDOM = new Random();
-+    private static final Random RANDOM = new org.yatopiamc.yatopia.server.util.FastRandom();
-     public static float[] getSinTable() { return SIN; }
-     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
-     private static final double ONE_SIXTH = 0.16666666666666666D;
-@@ -758,7 +758,7 @@ public class Mth {
-     }
- 
-     public static double wobble(double d) {
--        return d + (2.0D * (new Random((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D;
-+        return d + (2.0D * (new org.yatopiamc.yatopia.server.util.FastRandom((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D;
-     }
- 
-     public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
 index ed2a684deccedf85ffbee01baeaa922c71bfb435..762927080ac2201fd74519d24989092902d4c78d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java

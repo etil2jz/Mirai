@@ -6,6 +6,9 @@ Subject: [PATCH] World Instance Flag
 Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
+	modified:   src/main/java/net/minecraft/server/level/ServerLevel.java
+	modified:   src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
 index c7229e120d601619d2ea869d7aa506fb3b78cde4..6fd345bfb43818e23d63bfe14328f0a54d212c5c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java

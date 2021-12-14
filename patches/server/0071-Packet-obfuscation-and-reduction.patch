@@ -6,24 +6,6 @@ Subject: [PATCH] Packet obfuscation and reduction
 Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
-diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725fcb902848 100644
---- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-+++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-@@ -22,6 +22,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
- 
-     }
- 
-+    // Slice start
-+    public ClientboundSetEntityDataPacket(int id, List<SynchedEntityData.DataItem<?>> packedItems) {
-+        this.id = id;
-+        this.packedItems = packedItems;
-+    }
-+    // Slice end
-+
-     public ClientboundSetEntityDataPacket(FriendlyByteBuf buf) {
-         this.id = buf.readVarInt();
-         this.packedItems = SynchedEntityData.unpack(buf);
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..e97d4081e37b82019dbc90ae6c53b8688a865c8a 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
