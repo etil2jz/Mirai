@@ -46,7 +46,7 @@ out/
 # other stuff
 run/
 
-ForkTest-Server
-ForkTest-API
+Mirai-Server
+Mirai-API
 
 !gradle/wrapper/gradle-wrapper.jar
