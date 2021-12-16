@@ -62,24 +62,16 @@ paperweight {
     remapRepo.set("https://maven.fabricmc.net/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
-    useStandardUpstream("pufferfish") {
-        remapRepo.set("https://maven.fabricmc.net/")
-        decompileRepo.set("https://maven.quiltmc.org")
+    useStandardUpstream("Pufferfish") {
+		url.set(github("pufferfish-gg", "Pufferfish"))
+		ref.set(providers.gradleProperty("pufferfishRef"))
+		
+        withStandardPatcher {
+			baseName("Pufferfish")
+			
+            apiOutputDir.set(layout.projectDirectory.dir("Mirai-API"))
 
-        url.set(github("pufferfish-gg", "Pufferfish"))
-        ref.set(providers.gradleProperty("pufferfishRef"))
-
-        patchTasks {
-            register("api") {
-                upstreamDirPath.set("pufferfish-api")
-                patchDir.set(layout.projectDirectory.dir("patches/api"))
-                outputDir.set(layout.projectDirectory.dir("Mirai-API"))
-            }
-            register("server") {
-                upstreamDirPath.set("pufferfish-server")
-                patchDir.set(layout.projectDirectory.dir("patches/server"))
-                outputDir.set(layout.projectDirectory.dir("Mirai-Server"))
-            }
+            serverOutputDir.set(layout.projectDirectory.dir("Mirai-Server"))
         }
     }
 }

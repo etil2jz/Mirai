@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 2 Dec 2021 16:55:37 +0100
+Date: Thu, 16 Dec 2021 23:28:09 +0100
 Subject: [PATCH] lithium: reduce allocs
 
 Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
@@ -19,36 +19,242 @@ index 0000000000000000000000000000000000000000..d341fcb89c8744aa1bd8cb3ef6af93e7
 +    public static final int[] ZERO = new int[]{0};
 +}
 \ No newline at end of file
-diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index af9c58944b38e8aeeca5dca75c9f97e49f2895f2..a1550515a34ea448f7246d3f90c746bf22acc608 100644
---- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
-+++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3019,10 +3019,12 @@ public abstract class LivingEntity extends Entity {
+diff --git a/src/main/java/me/titaniumtown/Constants.java b/src/main/java/me/titaniumtown/Constants.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d68a22f4b4ad4499a226cad362c608123e2f965f
+--- /dev/null
++++ b/src/main/java/me/titaniumtown/Constants.java
+@@ -0,0 +1,14 @@
++package me.titaniumtown;
++
++import net.minecraft.core.Direction;
++import net.minecraft.world.entity.EquipmentSlot;
++
++
++public final class Constants {
++
++    public static final Direction[] ALL_Direction = Direction.values();
++    public static final Direction[] VERTICAL_Direction = {Direction.DOWN, Direction.UP};
++    public static final Direction[] HORIZONTAL_Direction = {Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH};
++
++    public static final EquipmentSlot[] ALL_EquipmentSlot = EquipmentSlot.values();
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 406bfe20a7b8786bbc6bee46151be91dadec6180..ce807ea169d02a1035776a7453e560c510e6ab40 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -76,6 +76,8 @@ public class ServerChunkCache extends ChunkSource {
+     final com.destroystokyo.paper.util.concurrent.WeakSeqLock loadedChunkMapSeqLock = new com.destroystokyo.paper.util.concurrent.WeakSeqLock();
+     final Long2ObjectOpenHashMap<LevelChunk> loadedChunkMap = new Long2ObjectOpenHashMap<>(8192, 0.5f);
  
++    private final java.util.ArrayList<LevelChunk> cachedChunkList = new java.util.ArrayList<>(); // JettPack - lithium: reduce allocs
++
+     private final LevelChunk[] lastLoadedChunks = new LevelChunk[4 * 4];
+     
+     public boolean firstRunSpawnCounts = true; // Pufferfish
+@@ -933,6 +935,16 @@ public class ServerChunkCache extends ChunkSource {
+         this.clearCache();
      }
  
-+    private static final EquipmentSlot[] SLOTS = EquipmentSlot.values(); // Lithium
++    // JettPack start - lithium: reduce allocs
++    private java.util.ArrayList<LevelChunk> redirectChunksListClone(int initialArraySize) {
++        java.util.ArrayList<LevelChunk> list = this.cachedChunkList;
++        list.clear(); // Ensure the list is empty before re-using it
++        list.ensureCapacity(initialArraySize);
 +
++        return list;
++    }
++    // JettPack end
++
+     private void tickChunks() {
+         long i = this.level.getGameTime();
+         long j = i - this.lastInhabitedUpdate;
+@@ -1028,7 +1040,7 @@ public class ServerChunkCache extends ChunkSource {
+                 iterator1 = this.entityTickingChunks.iterator();
+             } else {
+                 iterator1 = this.entityTickingChunks.unsafeIterator();
+-                List<LevelChunk> shuffled = Lists.newArrayListWithCapacity(this.entityTickingChunks.size());
++                java.util.ArrayList<LevelChunk> shuffled = this.redirectChunksListClone(this.entityTickingChunks.size()); // JettPack - lithium: reduce allocs
+                 while (iterator1.hasNext()) {
+                     shuffled.add(iterator1.next());
+                 }
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index e80176708db486190dd527e3ade5fc690ceb39f7..40e5fc691d2621bc01f63de3acca0e2a5d7a1b7d 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -313,7 +313,7 @@ public class ServerEntity {
+ 
+         if (this.entity instanceof LivingEntity) {
+             List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++            EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot;
+             int i = aenumitemslot.length;
+ 
+             for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index c7229e120d601619d2ea869d7aa506fb3b78cde4..ebe1b7a0fa893fb0e41f1ed43ac1388a6a96ca88 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -846,7 +846,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                     BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
+                     BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
+ 
+-                    iblockdata.randomTick(this, blockposition2, this.randomTickRandom);
++                    iblockdata.randomTick(this, blockposition2.immutable(), this.randomTickRandom); // JettPack - lithium: reduce allocs
+                     // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
+                     // TODO CHECK ON UPDATE
+                 }
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+index 3125af569ec2bb1cd613a9dd96c3a181d723006d..9c49739566d0f34b0b8d2a3494f84fe2137aad4b 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+@@ -220,7 +220,7 @@ public class ServerPlayerGameMode {
+                 if (event.isCancelled()) {
+                     // Let the client know the block still exists
+                     // Paper start - brute force neighbor blocks for any attached blocks
+-                    for (Direction dir : Direction.values()) {
++                    for (Direction dir : me.titaniumtown.Constants.ALL_Direction) {
+                         this.player.connection.send(new ClientboundBlockUpdatePacket(level, pos.relative(dir)));
+                     }
+                     // Paper end
+@@ -407,7 +407,7 @@ public class ServerPlayerGameMode {
+                 this.player.connection.send(new ClientboundBlockUpdatePacket(this.level, pos));
+ 
+                 // Brute force all possible updates
+-                for (Direction dir : Direction.values()) {
++                for (Direction dir : me.titaniumtown.Constants.ALL_Direction) {
+                     this.player.connection.send(new ClientboundBlockUpdatePacket(this.level, pos.relative(dir)));
+                 }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index af9c58944b38e8aeeca5dca75c9f97e49f2895f2..33670ff2369962836783feb37804532bed7b2857 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3022,7 +3022,7 @@ public abstract class LivingEntity extends Entity {
      @Nullable
      private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
          Map<EquipmentSlot, ItemStack> map = null;
 -        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
-+        EquipmentSlot[] aenumitemslot = SLOTS; // Lithium
++        EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // Jettpack
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index 4e8b3f94dc990cd05d69e74db6c706e290dca702..7e0d653eaf459430459a1c19dc86a787ef12bd63 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -1009,7 +1009,7 @@ public abstract class Mob extends LivingEntity {
+     @Override
+     protected void dropCustomDeathLoot(DamageSource source, int lootingMultiplier, boolean allowDrops) {
+         super.dropCustomDeathLoot(source, lootingMultiplier, allowDrops);
+-        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++        EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // JettPack - reduce allocs
+         int j = aenumitemslot.length;
+ 
+         for (int k = 0; k < j; ++k) {
+@@ -1067,7 +1067,7 @@ public abstract class Mob extends LivingEntity {
+             }
+ 
+             boolean flag = true;
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++            EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // JettPack - reduce allocs
+             int j = aenumitemslot.length;
+ 
+             for (int k = 0; k < j; ++k) {
+@@ -1154,7 +1154,7 @@ public abstract class Mob extends LivingEntity {
+         float f = difficulty.getSpecialMultiplier();
+ 
+         this.enchantSpawnedWeapon(f);
+-        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++        EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // JettPack - reduce allocs
+         int i = aenumitemslot.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -1365,7 +1365,7 @@ public abstract class Mob extends LivingEntity {
+             t0.setInvulnerable(this.isInvulnerable());
+             if (flag) {
+                 t0.setCanPickUpLoot(this.canPickUpLoot());
+-                EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++                EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // JettPack - reduce allocs
+                 int i = aenumitemslot.length;
+ 
+                 for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Shulker.java b/src/main/java/net/minecraft/world/entity/monster/Shulker.java
+index a9dfe190f46230077e2e1bf9aacbf5375651f216..11d1786c4098b24d2768bbd3c1efa3430d0eded7 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Shulker.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Shulker.java
+@@ -355,7 +355,7 @@ public class Shulker extends AbstractGolem implements Enemy {
+ 
+     @Nullable
+     protected Direction findAttachableSurface(BlockPos pos) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
+index 415c8a8142867974dfc4722bac933257a28efc1b..e9113bfc2f90b019bd96b3e81778a6c4f59e505d 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
++++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
+@@ -226,7 +226,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
+             return;
+         }
+         // CraftBukkit end
+-        EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++        EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot; // JettPack - lithium: reduce allocs
+         int i = aenumitemslot.length;
+ 
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 66f808cabcf6a9a6584849b285f1c60133adc7b4..dff393175ac9c75d5a811718c087e5db7af031c7 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -387,7 +387,7 @@ public final class ItemStack {
+ 
+                     // Brute force all possible updates
+                     BlockPos placedPos = ((CraftBlock) placeEvent.getBlock()).getPosition();
+-                    for (Direction dir : Direction.values()) {
++                    for (Direction dir : me.titaniumtown.Constants.ALL_Direction) {
+                         ((ServerPlayer) entityhuman).connection.send(new ClientboundBlockUpdatePacket(world, placedPos.relative(dir)));
+                     }
+                     SignItem.openSign = null; // SPIGOT-6758 - Reset on early return
+@@ -946,7 +946,7 @@ public final class ItemStack {
+         int k;
+ 
+         if (ItemStack.shouldShowInTooltip(i, ItemStack.TooltipPart.MODIFIERS)) {
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++            EquipmentSlot[] aenumitemslot = me.titaniumtown.Constants.ALL_EquipmentSlot;
+ 
+             k = aenumitemslot.length;
+ 
+diff --git a/src/main/java/net/minecraft/world/item/enchantment/Enchantments.java b/src/main/java/net/minecraft/world/item/enchantment/Enchantments.java
+index ef36f0a9b1849dd3152c0a1c81cded5c4f06aa3c..a8ad9aae2d986a33ba9d8db90f2aa68fdeacecb4 100644
+--- a/src/main/java/net/minecraft/world/item/enchantment/Enchantments.java
++++ b/src/main/java/net/minecraft/world/item/enchantment/Enchantments.java
+@@ -42,8 +42,8 @@ public class Enchantments {
+     public static final Enchantment MULTISHOT = Enchantments.register("multishot", new MultiShotEnchantment(Enchantment.Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
+     public static final Enchantment QUICK_CHARGE = Enchantments.register("quick_charge", new QuickChargeEnchantment(Enchantment.Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
+     public static final Enchantment PIERCING = Enchantments.register("piercing", new ArrowPiercingEnchantment(Enchantment.Rarity.COMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
+-    public static final Enchantment MENDING = Enchantments.register("mending", new MendingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.values()));
+-    public static final Enchantment VANISHING_CURSE = Enchantments.register("vanishing_curse", new VanishingCurseEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlot.values()));
++    public static final Enchantment MENDING = Enchantments.register("mending", new MendingEnchantment(Enchantment.Rarity.RARE, me.titaniumtown.Constants.ALL_EquipmentSlot));
++    public static final Enchantment VANISHING_CURSE = Enchantments.register("vanishing_curse", new VanishingCurseEnchantment(Enchantment.Rarity.VERY_RARE, me.titaniumtown.Constants.ALL_EquipmentSlot));
+ 
+     // CraftBukkit start
+     static {
 diff --git a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..bea593c31b59920c2c4cb86c2dd116435578afeb 100644
+index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..06fef5d7f0822ecf770bc1373e2f033bb3e42eaa 100644
 --- a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
 +++ b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-@@ -15,10 +15,19 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula
+@@ -15,10 +15,18 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula
  
      @Override
      public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState) {
 -        return super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState).map((max) -> {
 -            return this.source.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState, max);
 -        });
-+        // Lithium start
++    // Jettpack start
 +        Optional<Float> optionalBlastResistance = super.getBlockExplosionResistance(explosion, world, pos, blockState, fluidState);
 +        if (optionalBlastResistance.isPresent()) {
 +            float blastResistance = optionalBlastResistance.get();
@@ -58,21 +264,59 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..bea593c31b59920c2c4cb86c2dd11643
 +            }
 +        }
 +        return optionalBlastResistance;
-+        // Lithium end
      }
-+    
++    // Jettpack end
  
      @Override
      public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..0ff7eae17c04c446fb2074a88a9ca43d1ee938ac 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -111,7 +111,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public static final int MAX_LEVEL_SIZE = 30000000;
+     public static final int LONG_PARTICLE_CLIP_RANGE = 512;
+     public static final int SHORT_PARTICLE_CLIP_RANGE = 32;
+-    private static final Direction[] DIRECTIONS = Direction.values();
++    private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction;
+     public static final int MAX_BRIGHTNESS = 15;
+     public static final int TICKS_PER_DAY = 24000;
+     public static final int MAX_ENTITY_SPAWN_Y = 20000000;
+diff --git a/src/main/java/net/minecraft/world/level/block/BaseFireBlock.java b/src/main/java/net/minecraft/world/level/block/BaseFireBlock.java
+index 4d1f94c576b65e067efce95d5ef8c0078453b494..a7365f9f4cec0609e4b278c865d9b099fd841836 100644
+--- a/src/main/java/net/minecraft/world/level/block/BaseFireBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/BaseFireBlock.java
+@@ -191,7 +191,7 @@ public abstract class BaseFireBlock extends Block {
+         } else {
+             BlockPos.MutableBlockPos blockposition_mutableblockposition = pos.mutable();
+             boolean flag = false;
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+             int i = aenumdirection.length;
+ 
+             for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
+index 02fc3ede12eadbf72e26e31b1c475c7f5b2ad73a..66c22fa2ee4f33813661e0b6306f5e0986d3faf5 100644
+--- a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
+@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.PushReaction;
+ public class BuddingAmethystBlock extends AmethystBlock {
+ 
+     public static final int GROWTH_CHANCE = 5;
+-    private static final Direction[] DIRECTIONS = Direction.values();
++    private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction;
+ 
+     public BuddingAmethystBlock(BlockBehaviour.Properties settings) {
+         super(settings);
 diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaaaa138b36 100644
+index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..43557bf1d653d5c644ea9ccfee620ebfda551132 100644
 --- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 @@ -41,6 +41,7 @@ import net.minecraft.world.entity.player.Player;
  import org.bukkit.craftbukkit.inventory.CraftBlockInventoryHolder;
  import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
  // CraftBukkit end
-+import me.jellysquid.mods.lithium.common.util.ArrayConstants; // Lithium
++import me.jellysquid.mods.lithium.common.util.ArrayConstants; // Jettpack
  
  public class ComposterBlock extends Block implements WorldlyContainerHolder {
  
@@ -81,7 +325,7 @@ index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaa
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return side == Direction.DOWN ? new int[]{0} : new int[0];
-+            return side == Direction.DOWN ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Lithium
++            return side == Direction.DOWN ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Jettpack
          }
  
          @Override
@@ -90,7 +334,7 @@ index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaa
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return side == Direction.UP ? new int[]{0} : new int[0];
-+            return side == Direction.UP ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Lithium
++            return side == Direction.UP ? ArrayConstants.ZERO : ArrayConstants.EMPTY; // Jettpack
          }
  
          @Override
@@ -99,23 +343,382 @@ index fb8b8a9733ac50096d8406487ab1ae167ef5f7b1..58ea7ce6093aaa6793d198332e60ceaa
          @Override
          public int[] getSlotsForFace(Direction side) {
 -            return new int[0];
-+            return ArrayConstants.EMPTY; // Lithium
++            return ArrayConstants.EMPTY; // Jettpack
          }
  
          @Override
-diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
-index 28256f1f0aeb7718a5866add4ec40ce0198c36b9..eb01e28c23eb25e25382dfb4658c294cc3694dc4 100644
---- a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
-+++ b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
-@@ -162,8 +162,10 @@ public class PistonBaseBlock extends DirectionalBlock {
+diff --git a/src/main/java/net/minecraft/world/level/block/ConcretePowderBlock.java b/src/main/java/net/minecraft/world/level/block/ConcretePowderBlock.java
+index 0ccdcf43d208e3d35b5e6fcd04245b29012d828c..7634c07b3b040e317f9c9b0ac363d1db767ecd09 100644
+--- a/src/main/java/net/minecraft/world/level/block/ConcretePowderBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ConcretePowderBlock.java
+@@ -67,7 +67,7 @@ public class ConcretePowderBlock extends FallingBlock {
+     private static boolean touchesLiquid(BlockGetter world, BlockPos pos) {
+         boolean flag = false;
+         BlockPos.MutableBlockPos blockposition_mutableblockposition = pos.mutable();
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
  
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/CoralBlock.java b/src/main/java/net/minecraft/world/level/block/CoralBlock.java
+index 3b1dd57d266bdaa617ec4013b39ebbf608e08f1f..3dc7d409e34cf23a09bf40b64f6a9ea501ba88ba 100644
+--- a/src/main/java/net/minecraft/world/level/block/CoralBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/CoralBlock.java
+@@ -46,7 +46,7 @@ public class CoralBlock extends Block {
      }
  
-+    private static final Direction[] DIRECTIONS = Direction.values(); // Lithium
-+
+     protected boolean scanForWater(BlockGetter world, BlockPos pos) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/DiodeBlock.java b/src/main/java/net/minecraft/world/level/block/DiodeBlock.java
+index 9c764d2273d70b8dffcaa7f324544cb48f12acc3..a4a7b3021b70573be1eaed9b4b96332ac023ad6d 100644
+--- a/src/main/java/net/minecraft/world/level/block/DiodeBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/DiodeBlock.java
+@@ -86,7 +86,7 @@ public abstract class DiodeBlock extends HorizontalDirectionalBlock {
+ 
+             dropResources(state, world, pos, tileentity);
+             world.removeBlock(pos, false);
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int i = aenumdirection.length;
+ 
+             for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/FireBlock.java b/src/main/java/net/minecraft/world/level/block/FireBlock.java
+index d8e4fda2d501545e5f891bca317e2aa5f9368f47..25b172fe7cff0c52a022d6ff704c58023be45271 100644
+--- a/src/main/java/net/minecraft/world/level/block/FireBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/FireBlock.java
+@@ -137,7 +137,7 @@ public class FireBlock extends BaseFireBlock {
+ 
+         if (!this.canBurn(iblockdata) && !iblockdata.isFaceSturdy(world, blockposition1, Direction.UP)) {
+             BlockState iblockdata1 = this.defaultBlockState();
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int i = aenumdirection.length;
+ 
+             for (int j = 0; j < i; ++j) {
+@@ -320,7 +320,7 @@ public class FireBlock extends BaseFireBlock {
+     }
+ 
+     private boolean isValidFireLocation(BlockGetter world, BlockPos pos) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -339,7 +339,7 @@ public class FireBlock extends BaseFireBlock {
+             return 0;
+         } else {
+             int i = 0;
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int j = aenumdirection.length;
+ 
+             for (int k = 0; k < j; ++k) {
+diff --git a/src/main/java/net/minecraft/world/level/block/FrostedIceBlock.java b/src/main/java/net/minecraft/world/level/block/FrostedIceBlock.java
+index 4f27969196fe21b38e81d070fe5c0a999dd320dc..79c0f31ec7e46b5ba8f0c00336f50ff43e627a47 100644
+--- a/src/main/java/net/minecraft/world/level/block/FrostedIceBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/FrostedIceBlock.java
+@@ -36,7 +36,7 @@ public class FrostedIceBlock extends IceBlock {
+         if ((random.nextInt(3) == 0 || this.fewerNeigboursThan(world, pos, 4)) && world.getMaxLocalRawBrightness(pos) > 11 - state.getValue(AGE) - state.getLightBlock(world, pos) && this.slightlyMelt(state, world, pos)) {
+             BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+ 
+-            for(Direction direction : Direction.values()) {
++            for(Direction direction : me.titaniumtown.Constants.ALL_Direction) { // JettPack - lithium: reduce allocs
+                 mutableBlockPos.setWithOffset(pos, direction);
+                 BlockState blockState = world.getBlockStateIfLoaded(mutableBlockPos); // Paper
+                 if (blockState == null) { continue; } // Paper
+@@ -74,7 +74,7 @@ public class FrostedIceBlock extends IceBlock {
+         int i = 0;
+         BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+ 
+-        for(Direction direction : Direction.values()) {
++        for(Direction direction : me.titaniumtown.Constants.ALL_Direction) { // JettPack - lithium: reduce allocs
+             mutableBlockPos.setWithOffset(pos, direction);
+             // Paper start
+             BlockState blockState = world.getBlockStateIfLoaded(mutableBlockPos);
+diff --git a/src/main/java/net/minecraft/world/level/block/LeavesBlock.java b/src/main/java/net/minecraft/world/level/block/LeavesBlock.java
+index 0ce900235fd083545a208132079510b5ca3c9cab..befad7fa00ceb700a93e187a6952339f6c435591 100644
+--- a/src/main/java/net/minecraft/world/level/block/LeavesBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/LeavesBlock.java
+@@ -84,7 +84,7 @@ public class LeavesBlock extends Block {
+     private static BlockState updateDistance(BlockState state, LevelAccessor world, BlockPos pos) {
+         int i = 7;
+         BlockPos.MutableBlockPos blockposition_mutableblockposition = new BlockPos.MutableBlockPos();
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int j = aenumdirection.length;
+ 
+         for (int k = 0; k < j; ++k) {
+diff --git a/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java b/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
+index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..91fdd732aed61790bcd22c2838c8ca16168f86fa 100644
+--- a/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
+@@ -52,7 +52,6 @@ public class MultifaceBlock extends Block {
+         enummap.put(Direction.UP, MultifaceBlock.UP_AABB);
+         enummap.put(Direction.DOWN, MultifaceBlock.DOWN_AABB);
+     });
+-    protected static final Direction[] DIRECTIONS = Direction.values();
+     private final ImmutableMap<BlockState, VoxelShape> shapesCache;
+     private final boolean canRotate;
+     private final boolean canMirrorX;
+@@ -73,7 +72,7 @@ public class MultifaceBlock extends Block {
+ 
+     @Override
+     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+-        Direction[] aenumdirection = MultifaceBlock.DIRECTIONS;
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -99,7 +98,7 @@ public class MultifaceBlock extends Block {
+     @Override
+     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+         boolean flag = false;
+-        Direction[] aenumdirection = MultifaceBlock.DIRECTIONS;
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -185,7 +184,7 @@ public class MultifaceBlock extends Block {
+ 
+     private BlockState mapDirections(BlockState state, Function<Direction, Direction> mirror) {
+         BlockState iblockdata1 = state;
+-        Direction[] aenumdirection = MultifaceBlock.DIRECTIONS;
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -200,7 +199,7 @@ public class MultifaceBlock extends Block {
+     }
+ 
+     public boolean spreadFromRandomFaceTowardRandomDirection(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+-        List<Direction> list = Lists.newArrayList(MultifaceBlock.DIRECTIONS);
++        List<Direction> list = Lists.newArrayList(me.titaniumtown.Constants.ALL_Direction);
+ 
+         Collections.shuffle(list);
+         return list.stream().filter((enumdirection) -> {
+@@ -211,7 +210,7 @@ public class MultifaceBlock extends Block {
+     }
+ 
+     public boolean spreadFromFaceTowardRandomDirection(BlockState state, LevelAccessor world, BlockPos pos, Direction from, Random random, boolean postProcess) {
+-        List<Direction> list = Arrays.asList(MultifaceBlock.DIRECTIONS);
++        List<Direction> list = Arrays.asList(me.titaniumtown.Constants.ALL_Direction);
+ 
+         Collections.shuffle(list, random);
+         return list.stream().anyMatch((enumdirection1) -> {
+@@ -232,7 +231,7 @@ public class MultifaceBlock extends Block {
+     }
+ 
+     protected boolean canSpread(BlockState state, BlockGetter world, BlockPos pos, Direction from) {
+-        return Stream.of(MultifaceBlock.DIRECTIONS).anyMatch((enumdirection1) -> {
++        return Stream.of(me.titaniumtown.Constants.ALL_Direction).anyMatch((enumdirection1) -> {
+             return this.getSpreadFromFaceTowardDirection(state, world, pos, from, enumdirection1).isPresent();
+         });
+     }
+@@ -330,7 +329,7 @@ public class MultifaceBlock extends Block {
+ 
+     private static VoxelShape calculateMultifaceShape(BlockState state) {
+         VoxelShape voxelshape = Shapes.empty();
+-        Direction[] aenumdirection = MultifaceBlock.DIRECTIONS;
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction;
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -345,13 +344,13 @@ public class MultifaceBlock extends Block {
+     }
+ 
+     protected static boolean hasAnyFace(BlockState state) {
+-        return Arrays.stream(MultifaceBlock.DIRECTIONS).anyMatch((enumdirection) -> {
++        return Arrays.stream(me.titaniumtown.Constants.ALL_Direction).anyMatch((enumdirection) -> {
+             return MultifaceBlock.hasFace(state, enumdirection);
+         });
+     }
+ 
+     private static boolean hasAnyVacantFace(BlockState state) {
+-        return Arrays.stream(MultifaceBlock.DIRECTIONS).anyMatch((enumdirection) -> {
++        return Arrays.stream(me.titaniumtown.Constants.ALL_Direction).anyMatch((enumdirection) -> {
+             return !MultifaceBlock.hasFace(state, enumdirection);
+         });
+     }
+diff --git a/src/main/java/net/minecraft/world/level/block/RedStoneOreBlock.java b/src/main/java/net/minecraft/world/level/block/RedStoneOreBlock.java
+index 0bea8d5be72c08236841e7313e20751af8ddb83a..7b202202c34ca3fc1f0e5c205bc0db001e022e95 100644
+--- a/src/main/java/net/minecraft/world/level/block/RedStoneOreBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/RedStoneOreBlock.java
+@@ -136,7 +136,7 @@ public class RedStoneOreBlock extends Block {
+     private static void spawnParticles(Level world, BlockPos pos) {
+         double d0 = 0.5625D;
+         Random random = world.random;
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java b/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
+index 037330bcb10039c013b2ed5fd68dee16ede20fbe..88344b7bf481554a31f0928cb984add6c0837314 100644
+--- a/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
+@@ -392,7 +392,7 @@ public class RedStoneWireBlock extends Block {
+             Set<BlockPos> set = Sets.newHashSet();
+ 
+             set.add(pos);
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int j = aenumdirection.length;
+ 
+             for (int k = 0; k < j; ++k) {
+@@ -449,7 +449,7 @@ public class RedStoneWireBlock extends Block {
+     private void checkCornerChangeAt(Level world, BlockPos pos) {
+         if (world.getBlockState(pos).is((Block) this)) {
+             world.updateNeighborsAt(pos, this);
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int i = aenumdirection.length;
+ 
+             for (int j = 0; j < i; ++j) {
+@@ -482,7 +482,7 @@ public class RedStoneWireBlock extends Block {
+         if (!moved && !state.is(newState.getBlock())) {
+             super.onRemove(state, world, pos, newState, moved);
+             if (!world.isClientSide) {
+-                Direction[] aenumdirection = Direction.values();
++                Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+                 int i = aenumdirection.length;
+ 
+                 for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/RedstoneTorchBlock.java b/src/main/java/net/minecraft/world/level/block/RedstoneTorchBlock.java
+index 954b86bea345a8e0e3a8dd425f356db6f5cd496f..8a294d62ef4642ae3a1358b45a84a53f375af63a 100644
+--- a/src/main/java/net/minecraft/world/level/block/RedstoneTorchBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/RedstoneTorchBlock.java
+@@ -34,7 +34,7 @@ public class RedstoneTorchBlock extends TorchBlock {
+ 
+     @Override
+     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -48,7 +48,7 @@ public class RedstoneTorchBlock extends TorchBlock {
+     @Override
+     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+         if (!moved) {
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int i = aenumdirection.length;
+ 
+             for (int j = 0; j < i; ++j) {
+diff --git a/src/main/java/net/minecraft/world/level/block/SpongeBlock.java b/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
+index 842997ea9f25a05d74a2e8300e44cc39a7e9cd96..74e25cf28408fd5ac9d790dc6336e69dfbfc430c 100644
+--- a/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
+@@ -62,7 +62,7 @@ public class SpongeBlock extends Block {
+             Tuple<BlockPos, Integer> tuple = (Tuple) queue.poll();
+             BlockPos blockposition1 = (BlockPos) tuple.getA();
+             int j = (Integer) tuple.getB();
+-            Direction[] aenumdirection = Direction.values();
++            Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             int k = aenumdirection.length;
+ 
+             for (int l = 0; l < k; ++l) {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+index bc028de0ac71e69e8d714db5f65286f306544bf1..a644b0706d64ecbd2f09f8cc34a65d861863fc8a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+@@ -363,7 +363,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
+ 
+     public int getParticleAmount() {
+         int i = 0;
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int j = aenumdirection.length;
+ 
+         for (int k = 0; k < j; ++k) {
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+index 28256f1f0aeb7718a5866add4ec40ce0198c36b9..f0936463908cdb54c10d9954029152a0997e9df8 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonBaseBlock.java
+@@ -163,7 +163,7 @@ public class PistonBaseBlock extends DirectionalBlock {
+     }
+ 
      private boolean getNeighborSignal(Level world, BlockPos pos, Direction pistonFace) {
 -        Direction[] aenumdirection = Direction.values();
-+        Direction[] aenumdirection = DIRECTIONS; // Lithium
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
          int i = aenumdirection.length;
  
          int j;
+@@ -180,7 +180,7 @@ public class PistonBaseBlock extends DirectionalBlock {
+             return true;
+         } else {
+             BlockPos blockposition1 = pos.above();
+-            Direction[] aenumdirection1 = Direction.values();
++            Direction[] aenumdirection1 = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+ 
+             j = aenumdirection1.length;
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
+index 05c46f3b3bce5225b819d86e6e06729a5093e092..0de0ef4d50bc080cd56e4fb4f74ffccc00a28825 100644
+--- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
++++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
+@@ -1080,7 +1080,7 @@ public abstract class BlockBehaviour {
+ 
+         private static final class Cache {
+ 
+-            private static final Direction[] DIRECTIONS = Direction.values();
++            private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+             private static final int SUPPORT_TYPE_COUNT = SupportType.values().length;
+             protected final boolean solidRender;
+             final boolean propagatesSkylightDown;
+diff --git a/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java b/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java
+index 37d7165dfd17da03428f8dbbbf95aa8005be289c..c69808a8f1cff8048e6b2912a3fbfd79ddcc1282 100644
+--- a/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java
++++ b/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java
+@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
+ import org.apache.commons.lang3.mutable.MutableInt;
+ 
+ public final class BlockLightEngine extends LayerLightEngine<BlockLightSectionStorage.BlockDataLayerStorageMap, BlockLightSectionStorage> {
+-    private static final Direction[] DIRECTIONS = Direction.values();
++    private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+     private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+     private final MutableInt mutableInt = new MutableInt(); // Paper
+ 
+diff --git a/src/main/java/net/minecraft/world/level/lighting/LayerLightSectionStorage.java b/src/main/java/net/minecraft/world/level/lighting/LayerLightSectionStorage.java
+index 4f7b63f2cc8a69fa8efb3a84f6abc3d3dcf05b49..3625748f23b6ded58a06d56ba0fba5493596b1e5 100644
+--- a/src/main/java/net/minecraft/world/level/lighting/LayerLightSectionStorage.java
++++ b/src/main/java/net/minecraft/world/level/lighting/LayerLightSectionStorage.java
+@@ -22,7 +22,7 @@ public abstract class LayerLightSectionStorage<M extends DataLayerStorageMap<M>>
+     protected static final int LIGHT_ONLY = 1;
+     protected static final int EMPTY = 2;
+     protected static final DataLayer EMPTY_DATA = new DataLayer();
+-    private static final Direction[] DIRECTIONS = Direction.values();
++    private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+     private final LightLayer layer;
+     private final LightChunkGetter chunkSource;
+     protected final LongSet dataSectionSet = new LongOpenHashSet();
+diff --git a/src/main/java/net/minecraft/world/level/lighting/SkyLightEngine.java b/src/main/java/net/minecraft/world/level/lighting/SkyLightEngine.java
+index d122475c1a9d340046c478087d3ff5bf1ff8932c..d37f7dff4202f7ee6bfc0df5e33e24a210fa7bf5 100644
+--- a/src/main/java/net/minecraft/world/level/lighting/SkyLightEngine.java
++++ b/src/main/java/net/minecraft/world/level/lighting/SkyLightEngine.java
+@@ -12,7 +12,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
+ import org.apache.commons.lang3.mutable.MutableInt;
+ 
+ public final class SkyLightEngine extends LayerLightEngine<SkyLightSectionStorage.SkyDataLayerStorageMap, SkyLightSectionStorage> {
+-    private static final Direction[] DIRECTIONS = Direction.values();
++    private static final Direction[] DIRECTIONS = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+     private final MutableInt mutableInt = new MutableInt(); // Paper
+ 
+diff --git a/src/main/java/net/minecraft/world/level/material/LavaFluid.java b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
+index 8e15976c83c71b8f335511e6747d56d3c8ff6856..aefe576a0c6e0b808973bad83bb1e7d626b95bc4 100644
+--- a/src/main/java/net/minecraft/world/level/material/LavaFluid.java
++++ b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
+@@ -125,7 +125,7 @@ public abstract class LavaFluid extends FlowingFluid {
+     }
+ 
+     private boolean hasFlammableNeighbours(LevelReader world, BlockPos pos) {
+-        Direction[] aenumdirection = Direction.values();
++        Direction[] aenumdirection = me.titaniumtown.Constants.ALL_Direction; // JettPack - lithium: reduce allocs
+         int i = aenumdirection.length;
+ 
+         for (int j = 0; j < i; ++j) {

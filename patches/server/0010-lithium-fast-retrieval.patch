@@ -1,18 +1,20 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 3 Dec 2021 22:28:16 +0100
-Subject: [PATCH] lithium: entity.fast_retrieval
+Date: Thu, 16 Dec 2021 23:37:54 +0100
+Subject: [PATCH] lithium: fast retrieval
 
 Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-index 74210dc2eef63da7360b1f833bb59b278419fb2b..18b96bac2382084f1c8f77fe610ff5c9f3b0ed36 100644
+index 74210dc2eef63da7360b1f833bb59b278419fb2b..aae1f6d5d0e47363042657d755f6bfeea2420347 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-@@ -33,33 +33,56 @@ public class EntitySectionStorage<T extends EntityAccess> {
+@@ -32,33 +32,44 @@ public class EntitySectionStorage<T extends EntityAccess> {
+         this.intialSectionVisibility = chunkStatusDiscriminator;
      }
  
++    // JettPack start - lithium: fast retrieval
      public void forEachAccessibleNonEmptySection(AABB box, Consumer<EntitySection<T>> action) {
 -        int i = SectionPos.posToSectionCoord(box.minX - 2.0D);
 -        int j = SectionPos.posToSectionCoord(box.minY - 2.0D);
@@ -36,22 +38,12 @@ index 74210dc2eef63da7360b1f833bb59b278419fb2b..18b96bac2382084f1c8f77fe610ff5c9
 -                        action.accept(entitySection);
 -                    }
 -                }
-+        // Lithium start
 +        int minX = SectionPos.posToSectionCoord(box.minX - 2.0D);
 +        int minY = SectionPos.posToSectionCoord(box.minY - 2.0D);
 +        int minZ = SectionPos.posToSectionCoord(box.minZ - 2.0D);
 +        int maxX = SectionPos.posToSectionCoord(box.maxX + 2.0D);
 +        int maxY = SectionPos.posToSectionCoord(box.maxY + 2.0D);
 +        int maxZ = SectionPos.posToSectionCoord(box.maxZ + 2.0D);
-+
-+        /*
-+        Vanilla order of the AVL long set is sorting by ascending long value. The x, y, z positions are packed into
-+        a long with the x position's lowest 22 bits placed at the MSB.
-+        Therefore the long is negative iff the 22th bit of the x position is set, which happens iff the x position
-+        is negative. A positive x position will never have its 22th bit set, as these big coordinates are far outside
-+        the world. y and z positions are treated as unsigned when sorting by ascending long value, as their sign bits
-+        are placed somewhere inside the packed long
-+        */
 +
 +        for (int x = minX; x <= maxX; x++) {
 +            for (int z = Math.max(minZ, 0); z <= maxZ; z++) {
@@ -63,29 +55,25 @@ index 74210dc2eef63da7360b1f833bb59b278419fb2b..18b96bac2382084f1c8f77fe610ff5c9
 +                this.forEachInColumn(x, minY, maxY, z, action);
 +            }
 +        }
-+
 +    }
 +
 +    private void forEachInColumn(int x, int minY, int maxY, int z, Consumer<EntitySection<T>> action) {
-+        //y from negative to positive, but y is treated as unsigned
 +        for (int y = Math.max(minY, 0); y <= maxY; y++) {
 +            this.consumeSection(x, y, z, action);
-         }
- 
++        }
 +        int bound = Math.min(-1, maxY);
 +        for (int y = minY; y <= bound; y++) {
 +            this.consumeSection(x, y, z, action);
-+        }
-     }
+         }
++    }
  
 +    private void consumeSection(int x, int y, int z, Consumer<EntitySection<T>> action) {
 +        EntitySection<T> section = this.getSection(SectionPos.asLong(x, y, z));
 +        if (section != null && section.getStatus().isAccessible()) {
 +            action.accept(section);
 +        }
-+    } // Lithium end
-+
-+
+     }
++    // JettPack end
+ 
      public LongStream getExistingSectionPositionsInChunk(long chunkPos) {
          int i = ChunkPos.getX(chunkPos);
-         int j = ChunkPos.getZ(chunkPos);
