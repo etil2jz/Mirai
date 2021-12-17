@@ -31,7 +31,7 @@ jobs:
           git config --global user.name "Github Actions"
       - name: Patch
         run: |
-          ./gradlew clean applyPatches --stacktrace --no-daemon
+          ./gradlew applyPatches --stacktrace --no-daemon
       - name: Build
         run: |
           ./gradlew createReobfPaperclipJar --stacktrace --no-daemon
@@ -39,11 +39,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Mirai-1.18.1
-          path: build/libs/Mirai-paperclip-1.18.1-R0.1-SNAPSHOT-reobf.jar
+          path: build/libs/mirai-paperclip-1.18.1-R0.1-SNAPSHOT-reobf.jar
       - name: Prepare Github Page Files
         run: |
           mkdir -p public
-          cp build/libs/Mirai-paperclip-1.18.1-R0.1-SNAPSHOT-reobf.jar public/Mirai-1.18.1-R0.1-SNAPSHOT.jar
+          cp build/libs/mirai-paperclip-1.18.1-R0.1-SNAPSHOT-reobf.jar public/Mirai-1.18.1-R0.1-SNAPSHOT.jar
       - name: Deploy to Github Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
