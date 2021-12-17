@@ -67,16 +67,17 @@ paperweight {
         url.set(github("pufferfish-gg", "Pufferfish"))
         ref.set(providers.gradleProperty("pufferfishRef"))
         
-    patchTasks {
-        register("api") {
-            upstreamDirPath.set("pufferfish-api")
-            apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("mirai-api"))
-        }
-        register("server") {
-            upstreamDirPath.set("pufferfish-server")
-            serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("mirai-server"))
+        patchTasks {
+            register("api") {
+                upstreamDirPath.set("pufferfish-api")
+                apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
+                apiOutputDir.set(layout.projectDirectory.dir("mirai-api"))
+            }
+            register("server") {
+                upstreamDirPath.set("pufferfish-server")
+                serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
+                serverOutputDir.set(layout.projectDirectory.dir("mirai-server"))
+            }
         }
     }
 }
