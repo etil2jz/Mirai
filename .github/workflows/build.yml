@@ -14,11 +14,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - name: Set up JDK (GraalVM)
+        uses: DeLaGuardo/setup-graalvm@master
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          # GraalVM version, no pattern syntax available atm
+          graalvm: '21.3.0'
+          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
+          java: 'java17'
+          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
+          arch: 'amd64'
       - name: Pull Gradle Cache
         uses: actions/cache@v2
         id: gradle-cache
@@ -31,10 +35,10 @@ jobs:
           git config --global user.name "Github Actions"
       - name: Patch
         run: |
-          ./gradlew applyPatches --stacktrace --no-daemon
+          ./gradlew -Dorg.gradle.jvmargs="-Dfile.encoding=UTF-8 -Djdk.nio.maxCachedBufferSize=262144 -Dgraal.CompilerConfiguration=community -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.WriteableCodeCache=true --add-modules jdk.incubator.vector" applyPatches --stacktrace --no-daemon
       - name: Build
         run: |
-          ./gradlew createReobfPaperclipJar --stacktrace --no-daemon
+          ./gradlew -Dorg.gradle.jvmargs="-Dfile.encoding=UTF-8 -Djdk.nio.maxCachedBufferSize=262144 -Dgraal.CompilerConfiguration=community -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.WriteableCodeCache=true --add-modules jdk.incubator.vector" createReobfPaperclipJar --stacktrace --no-daemon
       - name: Archive Paperclip
         uses: actions/upload-artifact@v2
         with:
