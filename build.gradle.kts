@@ -10,7 +10,7 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/") {
-        content { onlyForConfigurations(PAPERCLIP_CONFIG) }
+        content { onlyForConfigurations("paperclip") }
     }
 }
 
@@ -29,9 +29,7 @@ subprojects {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
-}
 
-subprojects {
     tasks.withType<JavaCompile> {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -65,18 +63,16 @@ paperweight {
     useStandardUpstream("pufferfish") {
         url.set(github("pufferfish-gg", "Pufferfish"))
         ref.set(providers.gradleProperty("pufferfishRef"))
-        
-        patchTasks {
-            register("api") {
-                upstreamDirPath.set("pufferfish-api")
-                apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-                apiOutputDir.set(layout.projectDirectory.dir("mirai-api"))
-            }
-            register("server") {
-                upstreamDirPath.set("pufferfish-server")
-                serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-                serverOutputDir.set(layout.projectDirectory.dir("mirai-server"))
-            }
+
+        withStandardPatcher {
+            apiSourceDirPath.set("pufferfish-api")
+            serverSourceDirPath.set("pufferfish-server")
+
+            apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
+            serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
+
+            apiOutputDir.set(layout.projectDirectory.dir("mirai-api"))
+            serverOutputDir.set(layout.projectDirectory.dir("mirai-server"))
         }
     }
 }
