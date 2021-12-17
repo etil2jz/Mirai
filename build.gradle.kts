@@ -63,7 +63,6 @@ paperweight {
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     useStandardUpstream("pufferfish") {
-        baseName("pufferfish")
         url.set(github("pufferfish-gg", "Pufferfish"))
         ref.set(providers.gradleProperty("pufferfishRef"))
         
