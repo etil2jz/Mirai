@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 16:51:55 +0100
+Date: Fri, 17 Dec 2021 20:04:13 +0100
 Subject: [PATCH] Completely remove Metrics
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0
@@ -8,7 +8,7 @@ You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
 deleted file mode 100644
-index e0a96811e6d14283c096fa2a0e63d92f96a6f6c7..0000000000000000000000000000000000000000
+index 9045cb54813d26aba9f47dc999eb1d676cfb705b..0000000000000000000000000000000000000000
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ /dev/null
 @@ -1,675 +0,0 @@
@@ -607,7 +607,7 @@ index e0a96811e6d14283c096fa2a0e63d92f96a6f6c7..00000000000000000000000000000000
 -            boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
 -            // Only start Metrics, if it's enabled in the config
 -            if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai
+-                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
 -
 -                metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
 -                    String minecraftVersion = Bukkit.getVersion();

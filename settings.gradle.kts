@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Mirai"
+rootProject.name = "mirai"
 
-include("Mirai-API", "Mirai-Server")
+include("mirai-api", "mirai-server")

@@ -20,7 +20,7 @@ dependencies {
     paperclip("io.papermc:paperclip:3.0.2")
 }
 
-allprojects {
+subprojects {
     apply(plugin = "java")
     apply(plugin = "maven-publish")
 
@@ -57,29 +57,23 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":Mirai-Server"))
+    serverProject.set(project(":mirai-server"))
 
     remapRepo.set("https://maven.fabricmc.net/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     useStandardUpstream("pufferfish") {
-        remapRepo.set("https://maven.fabricmc.net/")
-        decompileRepo.set("https://maven.quiltmc.org")
-
         url.set(github("pufferfish-gg", "Pufferfish"))
         ref.set(providers.gradleProperty("pufferfishRef"))
+        
 
-        patchTasks {
-            register("api") {
-                upstreamDirPath.set("pufferfish-api")
-                patchDir.set(layout.projectDirectory.dir("patches/api"))
-                outputDir.set(layout.projectDirectory.dir("Mirai-API"))
-            }
-            register("server") {
-                upstreamDirPath.set("pufferfish-server")
-                patchDir.set(layout.projectDirectory.dir("patches/server"))
-                outputDir.set(layout.projectDirectory.dir("Mirai-Server"))
-            }
+        withStandardPatcher {
+            baseName("pufferfish")
+            apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
+            apiOutputDir.set(layout.projectDirectory.dir("mirai-api"))
+
+            serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
+            serverOutputDir.set(layout.projectDirectory.dir("mirai-server"))
         }
     }
 }

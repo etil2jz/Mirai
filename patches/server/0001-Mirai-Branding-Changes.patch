@@ -1,25 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 16 Dec 2021 22:46:09 +0100
+Date: Fri, 17 Dec 2021 19:30:47 +0100
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 0ccb1848e4b717d2d16c02c955e78a3e48b65dfa..73a74adf7fd14ff0b87f68930beb5c3ee465e0ec 100644
+index 6ab5780bfd7aab71968ea8ba55187a5cce8c4c2c..d46b1c3d321e38fc42e6805500eae13e750ed9d7 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -18,9 +18,9 @@ repositories {
+@@ -18,7 +18,7 @@ repositories {
  }
  
  dependencies {
 -    implementation(project(":pufferfish-api")) // Pufferfish // Paper
-+    implementation(project(":Mirai-API")) // Mirai // Pufferfish // Paper
++    implementation(project(":mirai-api")) // Mirai // Pufferfish // Paper
      // Pufferfish start
--    implementation("io.papermc.paper:paper-mojangapi:1.18-R0.1-SNAPSHOT") {
-+    implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") { // Fix paper-mojangapi
+     implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-     }
-     // Pufferfish end
 @@ -80,7 +80,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
@@ -30,7 +27,7 @@ index 0ccb1848e4b717d2d16c02c955e78a3e48b65dfa..73a74adf7fd14ff0b87f68930beb5c3e
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..e0a96811e6d14283c096fa2a0e63d92f96a6f6c7 100644
+index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..9045cb54813d26aba9f47dc999eb1d676cfb705b 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
@@ -38,7 +35,7 @@ index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..e0a96811e6d14283c096fa2a0e63d92f
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Pufferfish", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
-+                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai
++                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();

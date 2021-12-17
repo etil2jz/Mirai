@@ -46,7 +46,7 @@ out/
 # other stuff
 run/
 
-Mirai-Server
-Mirai-API
+mirai-server
+mirai-api
 
 !gradle/wrapper/gradle-wrapper.jar
