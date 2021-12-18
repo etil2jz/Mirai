@@ -4,7 +4,8 @@
   <h3>A powerful Minecraft Server Software coming from the future</h3>
   <h4>Mirai is ❗under heavy development❗ and contributions are welcome!</h4>
   <h5><b>This project is experimental, its usage in production environment is discouraged if you are not ready to face possible bugs.</b></h5>
-
+  
+  ![Build status](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build/ver/1.18?style=flat-square)
 </div>
 
 ## Features
