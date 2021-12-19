@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 19 Dec 2021 13:49:51 +0100
+Subject: [PATCH] lithium: chunk structure storage
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+index 5aeaaae6f15050a2da271fe196d0a234ecafc8a1..15b645403bb3d5125a02c75d608e83b48c8bbd4d 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+@@ -51,6 +51,8 @@ import net.minecraft.world.ticks.SerializableTickContainer;
+ import net.minecraft.world.ticks.TickContainerAccess;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import java.util.HashMap; // JettPack
++import it.unimi.dsi.fastutil.longs.LongSets; // JettPack
+ 
+ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiomeSource, FeatureAccess {
+ 
+@@ -71,7 +73,7 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+     protected BlendingData blendingData;
+     public final Map<Heightmap.Types, Heightmap> heightmaps = Maps.newEnumMap(Heightmap.Types.class);
+     private final Map<StructureFeature<?>, StructureStart<?>> structureStarts = Maps.newHashMap();
+-    private final Map<StructureFeature<?>, LongSet> structuresRefences = Maps.newHashMap();
++    private final Map<StructureFeature<?>, LongSet> structureReferences = Maps.newHashMap(); // JettPack - fix typo in mojmap
+     protected final Map<BlockPos, CompoundTag> pendingBlockEntities = Maps.newHashMap();
+     public final Map<BlockPos, BlockEntity> blockEntities = Maps.newHashMap();
+     protected final LevelHeightAccessor levelHeightAccessor;
+@@ -258,6 +260,11 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+     }
+ 
+     public void setAllStarts(Map<StructureFeature<?>, StructureStart<?>> structureStarts) {
++        // JettPack start - lithium: chunk.structure_storage
++        if (structureStarts instanceof HashMap) {
++            structureStarts.values().removeIf(structureStart -> structureStart == null || structureStart == StructureStart.INVALID_START);
++        }
++        // JettPack end
+         this.structureStarts.clear();
+         this.structureStarts.putAll(structureStarts);
+         this.unsaved = true;
+@@ -265,14 +272,12 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+ 
+     @Override
+     public LongSet getReferencesForFeature(StructureFeature<?> structure) {
+-        return (LongSet) this.structuresRefences.computeIfAbsent(structure, (structuregenerator1) -> {
+-            return new LongOpenHashSet();
+-        });
++        return this.structureReferences.getOrDefault(structure, LongSets.EMPTY_SET); // JettPack - lithium: chunk.structure_storage
+     }
+ 
+     @Override
+     public void addReferenceForFeature(StructureFeature<?> structure, long reference) {
+-        ((LongSet) this.structuresRefences.computeIfAbsent(structure, (structuregenerator1) -> {
++        ((LongSet) this.structureReferences.computeIfAbsent(structure, (structuregenerator1) -> {
+             return new LongOpenHashSet();
+         })).add(reference);
+         this.unsaved = true;
+@@ -280,13 +285,24 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+ 
+     @Override
+     public Map<StructureFeature<?>, LongSet> getAllReferences() {
+-        return Collections.unmodifiableMap(this.structuresRefences);
++        // JettPack start - lithium: chunk.structure_storage
++        Map<StructureFeature<?>, LongSet> structureReferences = this.structureReferences;
++        if (structureReferences.isEmpty()) {
++            return Collections.emptyMap();
++        }
++        return Collections.unmodifiableMap(structureReferences);
++        // JettPack end
+     }
+ 
+     @Override
+     public void setAllReferences(Map<StructureFeature<?>, LongSet> structureReferences) {
+-        this.structuresRefences.clear();
+-        this.structuresRefences.putAll(structureReferences);
++        // JettPack start - lithium: chunk.structure_storage
++        if (structureReferences instanceof HashMap) {
++            structureReferences.values().removeIf(longs -> longs == null || longs.isEmpty());
++        }
++        // JettPack end
++        this.structureReferences.clear();
++        this.structureReferences.putAll(structureReferences);
+         this.unsaved = true;
+     }
+ 
