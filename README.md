@@ -10,14 +10,15 @@
 
 ## Features
 
-- **Based on [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)**
+- **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)**
 - **Reduced bandwidth consumption** from avoiding sending useless packets in certain situations.
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
+- **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
 - **Login location** hiding feature, which adds another security layer in the logs.
 - **Removed metrics**, no one can collect data, not even us.
 - **Bugfixes** for several Minecraft issues.
-- **Safer methods** for Vanilla calls.
+- **Faster methods** for Vanilla calls.
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
