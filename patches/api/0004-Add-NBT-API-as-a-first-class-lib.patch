@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 19:07:59 +0100
+Date: Wed, 22 Dec 2021 17:10:44 +0100
 Subject: [PATCH] Add NBT API as a first-class lib
 
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 6e05b88a8ef08c2d267920888f20edffe120a7fa..1d5e05ab5c3c2ba206f52e8743163663490861ab 100644
+index 129c5b41b410b57952fedf90c1ea713ba1c36470..2c33800e7a49804a29f64fd5e6fde7d2c860ef4c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -1,6 +1,7 @@
@@ -19,7 +19,7 @@ index 6e05b88a8ef08c2d267920888f20edffe120a7fa..1d5e05ab5c3c2ba206f52e8743163663
  
  java {
 @@ -41,6 +42,7 @@ dependencies {
-     api("org.apache.logging.log4j:log4j-api:2.14.1")
+     api("org.apache.logging.log4j:log4j-api:2.17.0")
      api("org.slf4j:slf4j-api:1.8.0-beta4")
      api("io.sentry:sentry:5.4.0") // Pufferfish
 +    api("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT") // Yatopia
@@ -90,7 +90,7 @@ index 3b10fcc13893403b29f0260b8605144679e89b82..1e9a96d8b08cc396acf73dc420830093
 +    // Yatopia end
  }
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index bafad5764cc3933fcd9602d37bd2e68424cbd575..b1f93fe2d7e68327f98499ada6548d5d1ed22980 100644
+index 51ec2e4ec4239659272bba3d6ba2ad73926ebb88..6e7e2000c015484c4416c474fc1a4bd82da7f3e6 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -190,6 +190,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
