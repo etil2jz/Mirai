@@ -944,7 +944,7 @@ index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..d0a3699abf4f711e5bf996639977149f
          io.papermc.paper.world.ChunkEntitySlices slices = this.entitySliceManager.getChunk(chunkX, chunkZ);
          if (slices == null) {
 -            return new org.bukkit.entity.Entity[0];
-+            rreturn me.titaniumtown.Constants.EMPTY_bukkit_entity_arr; // JettPack
++            return me.titaniumtown.Constants.EMPTY_bukkit_entity_arr; // JettPack
          }
          return slices.getChunkEntities();
      }
