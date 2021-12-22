@@ -134,7 +134,7 @@ index 19f77e377342ee461f0da8bc5378f2002fb9e94a..e6799eb40ec5e8c9f58aaafb7841a906
  
      public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index ed2a684deccedf85ffbee01baeaa922c71bfb435..762927080ac2201fd74519d24989092902d4c78d 100644
+index 136ec7851f26c39b5b9a02ec791682fd5be2dbf1..ffcdd6c88aaae17075a491f35ebea3625e4914d2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -158,7 +158,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -273,7 +273,7 @@ index 6795132318a4e8b4c7a33b6f4b89a730ea66b97f..eebbf0b9d646ee5ae1bd48c821f122a7
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a7262d842ff1684346302e10b08b1e7bc98f47a5..21e478f81401649a170bfd20505f8094aa97b591 100644
+index b26b22e76cd5fc2683f2d876b7da4f8f726fa1fe..3b05364c1832a03feecdaaf391b1433f041f5789 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -124,13 +124,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -306,7 +306,7 @@ index f74c5bb8e1ba42c77c59d481b871fd992483b128..610e2ec624516684007fb53bf084b95b
      private NonNullList<ItemStack> items;
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
-index bc028de0ac71e69e8d714db5f65286f306544bf1..6e911b9a2fbdb4495605f68bc465b1f9e2d80ea1 100644
+index 6278115e3511fe2176b29122e2c733498f31bb5a..f25a0b94a001d13b698c9e9c1140e2dd290192a0 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 @@ -265,7 +265,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
@@ -460,10 +460,10 @@ index d33af84300db18ea2b71dba2c9ed43390a293500..14ef922c3f8d8f0867614fb0fd1faee7
  
                      MinecraftServer minecraftServer = this.level.getServer();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e8b256c947f7638496fdc8dd29b88298e3e003eb..5ac260b44c97e82f4cd0436750fb5ff19d32a128 100644
+index 6f885434f0576d2738b9c74fa9cc202e66ede262..0ab224b093e18f7e49c366c9e4862e0a97e7573c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1216,7 +1216,7 @@ public final class CraftServer implements Server {
+@@ -1237,7 +1237,7 @@ public final class CraftServer implements Server {
  
          if (worlddimension == null) {
              dimensionmanager = (DimensionType) console.registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION);
@@ -499,7 +499,7 @@ index be86114eac3975b82ca74d4d6ed3f0402a642e8a..e369d3a67c375e39c9ca58b44b71ab39
  
      public CraftFirework(CraftServer server, FireworkRocketEntity entity) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java b/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
-index 1209e99bf297ba15e2022635a538d441a2be3fe4..faa63c302d41dd4759c991995e0e75b86501181e 100644
+index dd453548e1a1ac26ce611f5a96bd3ea81b0971da..a2b03655e571d5c8e5a04566a300b1c2142cc097 100644
 --- a/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
 +++ b/src/main/java/org/bukkit/craftbukkit/generator/CustomChunkGenerator.java
 @@ -44,7 +44,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {

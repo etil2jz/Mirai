@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 9f16aad264975e626ab8ebca66c69990cc09b4ac..16bdc40da5c3a9a32663543ea42c8087e686cd5e 100644
+index c1579a1049f526b250266142396d5cacb6baec3e..cc07a18e45045b00924ff2b66b65059996d75ec0 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2729,7 +2729,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -19,7 +19,7 @@ index 9f16aad264975e626ab8ebca66c69990cc09b4ac..16bdc40da5c3a9a32663543ea42c8087
              if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
                  this.portalEntrancePos = pos.immutable();
                  portalPos = BlockPos.ZERO; // Purpur
-@@ -3383,7 +3383,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -3390,7 +3390,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
      }
  
      public boolean canChangeDimensions() {

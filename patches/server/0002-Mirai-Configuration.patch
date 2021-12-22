@@ -26,10 +26,10 @@ index aae2dadabedb075fd1bc712f0226882b85f4551d..0178460888a2273e4a7f75b1330ce853
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index cdb95e4070f7069e2f1eb0b115d6803db1ead22f..e8b256c947f7638496fdc8dd29b88298e3e003eb 100644
+index 88568bf2fe1572cce0fe7985bbcf4dceaae9155f..6f885434f0576d2738b9c74fa9cc202e66ede262 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -931,6 +931,7 @@ public final class CraftServer implements Server {
+@@ -952,6 +952,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper

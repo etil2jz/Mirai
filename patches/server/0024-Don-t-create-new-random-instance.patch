@@ -55,7 +55,7 @@ index b0cbe7d42eef1865e84211844b351027a26a5956..711d5dc2a8b3a5f2a2a35cab59b5ecfd
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 21e478f81401649a170bfd20505f8094aa97b591..30ed4649ba827b27784cdc6278e6760e2b5acef3 100644
+index 3b05364c1832a03feecdaaf391b1433f041f5789..5ae61bcb6799a32db746a7f00fc66f7a9ab77066 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -124,13 +124,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -97,10 +97,10 @@ index e3a2919e214c63aa8cc2334d30dade3daf39b92d..a580c191a0450c1088c32344b30a3f45
          if (!s1.isEmpty()) {
              try {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 5ac260b44c97e82f4cd0436750fb5ff19d32a128..0291d6fca982c967e2d3ff31ea042d22b7e234d1 100644
+index 0ab224b093e18f7e49c366c9e4862e0a97e7573c..e9545ca9c043a366ad60b14b4318504b6e71bb5e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1216,7 +1216,7 @@ public final class CraftServer implements Server {
+@@ -1237,7 +1237,7 @@ public final class CraftServer implements Server {
  
          if (worlddimension == null) {
              dimensionmanager = (DimensionType) console.registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getOrThrow(DimensionType.OVERWORLD_LOCATION);
