@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
-index 5aeaaae6f15050a2da271fe196d0a234ecafc8a1..c95aaea6cc984095654f7e44baa806342537061d 100644
+index ce5b42bcc68e0409c016ef2eae0daed95aa889c5..e78536dd57378e4248e9fb677dcb19bc988da8b7 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
 @@ -51,6 +51,8 @@ import net.minecraft.world.ticks.SerializableTickContainer;
@@ -86,7 +86,7 @@ index 5aeaaae6f15050a2da271fe196d0a234ecafc8a1..c95aaea6cc984095654f7e44baa80634
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
-index 300c95a3839954b9e631aa4d76c131a5c2d96394..ef443167e593d2eb515dc9ad6ae6d791ddd410b8 100644
+index 8246204ce5d8f825c7796f87006e658d7a019876..2fd92f77f3aac74709e351c26badafc400f8b74f 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
 @@ -64,6 +64,9 @@ import net.minecraft.world.ticks.LevelChunkTicks;
@@ -99,7 +99,7 @@ index 300c95a3839954b9e631aa4d76c131a5c2d96394..ef443167e593d2eb515dc9ad6ae6d791
  
  public class ChunkSerializer {
      // Paper start
-@@ -73,6 +76,48 @@ public class ChunkSerializer {
+@@ -79,6 +82,48 @@ public class ChunkSerializer {
      }
      // Paper end
  
@@ -148,7 +148,7 @@ index 300c95a3839954b9e631aa4d76c131a5c2d96394..ef443167e593d2eb515dc9ad6ae6d791
      public static final Codec<PalettedContainer<BlockState>> BLOCK_STATE_CODEC = PalettedContainer.codec(Block.BLOCK_STATE_REGISTRY, BlockState.CODEC, PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState(), null); // Paper - Anti-Xray - Add preset block states
      private static final Logger LOGGER = LogManager.getLogger();
      private static final String TAG_UPGRADE_DATA = "UpgradeData";
-@@ -676,7 +721,7 @@ public class ChunkSerializer {
+@@ -682,7 +727,7 @@ public class ChunkSerializer {
          }
  
          nbttagcompound.put("Heightmaps", nbttagcompound3);
