@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 22:46:37 +0100
+From: chickeneer <emcchickeneer@gmail.com>
+Date: Mon, 6 Sep 2021 02:05:16 -0500
 Subject: [PATCH] Mitigate ConcurrentModificationException by copying
  entitySection access
 

@@ -1,0 +1,65 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Fri, 24 May 2019 02:39:25 -0500
+Subject: [PATCH] Signs editable on right click
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/io/papermc/paper/adventure/PaperAdventure.java b/src/main/java/io/papermc/paper/adventure/PaperAdventure.java
+index 3661ac5e3bfdebb2911cb1b118942b9fc7884140..4622d42221f75206e1a7495c8d4896c3d6f35b34 100644
+--- a/src/main/java/io/papermc/paper/adventure/PaperAdventure.java
++++ b/src/main/java/io/papermc/paper/adventure/PaperAdventure.java
+@@ -92,6 +92,7 @@ public final class PaperAdventure {
+         })
+         .build();
+     public static final LegacyComponentSerializer LEGACY_SECTION_UXRC = LegacyComponentSerializer.builder().flattener(FLATTENER).hexColors().useUnusualXRepeatedCharacterHexFormat().build();
++    public static final LegacyComponentSerializer LEGACY_AMPERSAND = LegacyComponentSerializer.builder().character(LegacyComponentSerializer.AMPERSAND_CHAR).hexColors().build(); // Purpur
+     public static final PlainComponentSerializer PLAIN_COMPONENT = PlainComponentSerializer.builder().flattener(FLATTENER).build();
+     public static final PlainTextComponentSerializer PLAIN = PlainTextComponentSerializer.builder().flattener(FLATTENER).build();
+     public static final GsonComponentSerializer GSON = GsonComponentSerializer.builder()
+diff --git a/src/main/java/net/minecraft/world/level/block/SignBlock.java b/src/main/java/net/minecraft/world/level/block/SignBlock.java
+index ed3d78494735ceda14ad0ea23adeadc374f3b35e..88cc2da0e22c6449b260bc70b411926a63bbd49e 100644
+--- a/src/main/java/net/minecraft/world/level/block/SignBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/SignBlock.java
+@@ -14,6 +14,7 @@ import net.minecraft.world.item.DyeItem;
+ import net.minecraft.world.item.Item;
+ import net.minecraft.world.item.ItemStack;
+ import net.minecraft.world.item.Items;
++import net.minecraft.world.item.SignItem;
+ import net.minecraft.world.level.BlockGetter;
+ import net.minecraft.world.level.Level;
+ import net.minecraft.world.level.LevelAccessor;
+@@ -108,6 +109,17 @@ public abstract class SignBlock extends BaseEntityBlock implements SimpleWaterlo
+                         }
+                     }
+ 
++                    // Purpur start - right click to open sign editor
++                    if (wtf.etil.mirai.MiraiConfig.signRightClickEdit && itemStack.getItem() instanceof SignItem &&
++                        !player.isCrouching() && player.getAbilities().mayBuild &&
++                        player.getBukkitEntity().hasPermission("purpur.sign.edit")) {
++                        signBlockEntity.setEditable(true);
++                        signBlockEntity.setAllowedPlayerEditor(player.getUUID());
++                        player.openTextEdit(signBlockEntity);
++                        return InteractionResult.SUCCESS;
++                    }
++                    // Purpur end
++
+                     return signBlockEntity.executeClickCommands((ServerPlayer)player) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+                 } else {
+                     return InteractionResult.PASS;
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 5605a084ff5a9d3c68fd1ad67bd6a0d07d239851..c105a9c58eacf9baf74c67f76fce2b4ef5879e0f 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -235,4 +235,9 @@ public class MiraiConfig {
+         entitiesCanUsePortals = getBoolean("entities-can-use-portals", entitiesCanUsePortals);
+     }
+ 
++    public static boolean signRightClickEdit = false;
++    private static void signSettings() {
++        signRightClickEdit = getBoolean("sign.right-click-edit", signRightClickEdit);
++    }
++
+ }
+\ No newline at end of file

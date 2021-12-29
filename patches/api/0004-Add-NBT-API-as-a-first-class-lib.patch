@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Wed, 22 Dec 2021 17:10:44 +0100
+From: tr7zw <tr7zw@live.de>
+Date: Sat, 1 Aug 2020 15:55:15 -0500
 Subject: [PATCH] Add NBT API as a first-class lib
 
 Original code by YatopiaMC, licensed under MIT

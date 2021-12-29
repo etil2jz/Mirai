@@ -1,6 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 2 Dec 2021 16:28:51 +0100
+From: =?UTF-8?q?=E3=84=97=E3=84=A0=CB=8B=20=E3=84=91=E3=84=A7=CB=8A?=
+ <tsao-chi@the-lingo.org>
+Date: Fri, 10 Apr 2020 15:47:15 +0800
 Subject: [PATCH] Don't trigger Lootable Refresh for non player interaction
 
 Original code by Akarin-project, licensed under GNU General Public License v3.0

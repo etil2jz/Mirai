@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 14:08:05 +0100
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Wed, 20 Jan 2021 16:36:48 -0500
 Subject: [PATCH] Add config for logging login location
 
 Original code by YatopiaMC, licensed under MIT

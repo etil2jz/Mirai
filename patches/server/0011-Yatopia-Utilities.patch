@@ -1,17 +1,17 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 16 Dec 2021 23:43:24 +0100
+From: YatopiaMC <yatopiamc@gmail.com>
+Date: Fri, 23 Oct 2020 09:20:01 -0700
 Subject: [PATCH] Yatopia Utilities
 
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 73a74adf7fd14ff0b87f68930beb5c3ee465e0ec..e98d00a56bea534ccdd8a7b64b325c463bf4212f 100644
+index 6a8786790cfeb4373d23d7e743f06b19efa45c35..ea185d933980fa453e933e0e503d7eaa17f6f14f 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -40,6 +40,7 @@ dependencies {
-     implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.0") // Paper
+     implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.1") // Paper
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
 +    implementation("org.apache.commons:commons-rng-core:1.4") // Yatopia
@@ -20,7 +20,7 @@ index 73a74adf7fd14ff0b87f68930beb5c3ee465e0ec..e98d00a56bea534ccdd8a7b64b325c46
      runtimeOnly("com.lmax:disruptor:3.4.4") // Paper
 diff --git a/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..03e5260bd50c8af3db4ed71f6748fbb89267309e
+index 0000000000000000000000000000000000000000..13cf05fa0c34414a686856df8053a2af8346330e
 --- /dev/null
 +++ b/src/main/java/org/yatopiamc/yatopia/server/util/FastRandom.java
 @@ -0,0 +1,64 @@
@@ -71,7 +71,7 @@ index 0000000000000000000000000000000000000000..03e5260bd50c8af3db4ed71f6748fbb8
 +    public synchronized void setSeed(long seed) {
 +        SplittableRandom randomseed = new SplittableRandom(seed);
 +        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
-+        }
++    }
 +
 +    @Override
 +    public void nextBytes(byte[] bytes) {

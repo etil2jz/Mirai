@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 14:16:06 +0100
+From: tr7zw <tr7zw@live.de>
+Date: Wed, 5 Aug 2020 08:08:44 -0500
 Subject: [PATCH] Optimize TileEntity load unload
 
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..a7262d842ff1684346302e10b08b1e7bc98f47a5 100644
+index fc0afbf95d62aeddf8fb513b18c32ebe434d4b37..23ea2c68222e1c4094de193b3ab154b755e2823c 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -116,8 +116,10 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Thu, 2 Jan 2020 01:23:22 -0600
+Subject: [PATCH] MC-147659 - Fix non black cats spawning in swamp huts
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/npc/CatSpawner.java b/src/main/java/net/minecraft/world/entity/npc/CatSpawner.java
+index 436f9cb45ff5b83f55b12f291bed355fa12a0655..299d84ce7f16139b02b910a8ed18d8632cb1dcf7 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/CatSpawner.java
++++ b/src/main/java/net/minecraft/world/entity/npc/CatSpawner.java
+@@ -85,8 +85,9 @@ public class CatSpawner implements CustomSpawner {
+         if (cat == null) {
+             return 0;
+         } else {
++            cat.moveTo(pos, 0.0F, 0.0F); // Purpur
+             cat.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, (SpawnGroupData)null, (CompoundTag)null);
+-            cat.moveTo(pos, 0.0F, 0.0F);
++            //cat.moveTo(pos, 0.0F, 0.0F); // Purpur - move up - fixes non black cat types spawning inside swamp huts
+             world.addFreshEntityWithPassengers(cat);
+             return 1;
+         }

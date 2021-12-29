@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 17 Dec 2021 20:04:13 +0100
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 12:06:31 +0000
 Subject: [PATCH] Completely remove Metrics
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0
@@ -688,7 +688,7 @@ index 9045cb54813d26aba9f47dc999eb1d676cfb705b..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 9b12693b07b1fd3a634f865ac4ec612bb890f7ff..dc689c24fcd6ecdc9bc5f6f7f74964f4a311baa7 100644
+index 1e11147554dbd3dbc809440c8795ced668224c01..05b044b10bbcc7dc47d66698ccb403dad2d2fda1 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -51,7 +51,7 @@ public class PaperConfig {

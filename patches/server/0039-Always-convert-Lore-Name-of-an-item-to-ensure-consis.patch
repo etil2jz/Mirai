@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 12 Dec 2021 21:42:57 +0100
+From: Aikar <aikar@aikar.co>
+Date: Mon, 21 Dec 2020 17:24:43 -0500
 Subject: [PATCH] Always convert Lore/Name of an item to ensure consistency
 
 Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 66f808cabcf6a9a6584849b285f1c60133adc7b4..c38be29d0d9f42181e5c7bcbed68b2bdb8bc5a16 100644
+index 4d0f9131d1bad591b96b2156bd870447104b5a30..df73c89d23634ee81cc845a9e95b12cf2fdfd6b2 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -174,9 +174,9 @@ public final class ItemStack {

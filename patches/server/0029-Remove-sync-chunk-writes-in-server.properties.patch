@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:32:39 +0100
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Mon, 6 Dec 2021 10:27:12 -0500
 Subject: [PATCH] Remove 'sync-chunk-writes' in server.properties
 
 Original code by Titaniumtown, licensed under GNU General Public License v3.0

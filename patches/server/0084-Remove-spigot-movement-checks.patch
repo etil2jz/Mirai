@@ -1,0 +1,88 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Wed, 22 Dec 2021 01:07:24 -0500
+Subject: [PATCH] Remove spigot movement checks
+
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 4707ab9c34f814906a9d638d5c3b956f539c5479..3eeb350d64a0c0fa9b2c9b02eb04973c31e675db 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -591,12 +591,14 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                 }
+                 // Paper end
+ 
++                /* // JettPack start - remove spigot movement checks
+                 if (d10 - d9 > Math.max(100.0D, Math.pow((double) (org.spigotmc.SpigotConfig.movedTooQuicklyMultiplier * (float) i * speed), 2)) && !this.isSingleplayerOwner()) {
+                 // CraftBukkit end
+                     ServerGamePacketListenerImpl.LOGGER.warn("{} (vehicle of {}) moved too quickly! {},{},{}", entity.getName().getString(), this.player.getName().getString(), d6, d7, d8);
+                     this.connection.send(new ClientboundMoveVehiclePacket(entity));
+                     return;
+                 }
++                // JettPack end */
+ 
+                 AABB oldBox = entity.getBoundingBox(); // Paper - copy from player movement packet
+ 
+@@ -617,10 +619,12 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                 d10 = d6 * d6 + d7 * d7 + d8 * d8;
+                 boolean flag1 = false;
+ 
++                /* // JettPack start - remove spigot movement checks
+                 if (d10 > org.spigotmc.SpigotConfig.movedWronglyThreshold) { // Spigot
+                     flag1 = true; // Paper - diff on change, this should be moved wrongly
+                     ServerGamePacketListenerImpl.LOGGER.warn("{} (vehicle of {}) moved wrongly! {}", entity.getName().getString(), this.player.getName().getString(), Math.sqrt(d10));
+                 }
++                // JettPack end */
+                 Location curPos = this.getCraftPlayer().getLocation(); // Spigot
+ 
+                 entity.absMoveTo(d3, d4, d5, f, f1);
+@@ -1374,12 +1378,14 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                             if (!this.player.isChangingDimension() && (!this.player.getLevel().getGameRules().getBoolean(GameRules.RULE_DISABLE_ELYTRA_MOVEMENT_CHECK) || !this.player.isFallFlying())) {
+                                 float f2 = this.player.isFallFlying() ? 300.0F : 100.0F;
+ 
++                                /* // JettPack start - remove spigot movement checks
+                                 if (d11 - d10 > Math.max(f2, Math.pow((double) (org.spigotmc.SpigotConfig.movedTooQuicklyMultiplier * (float) i * speed), 2)) && !this.isSingleplayerOwner()) {
+                                 // CraftBukkit end
+                                     ServerGamePacketListenerImpl.LOGGER.warn("{} moved too quickly! {},{},{}", this.player.getName().getString(), d7, d8, d9);
+                                     this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
+                                     return;
+                                 }
++                                // JettPack end */
+                             }
+ 
+                             AABB axisalignedbb = this.player.getBoundingBox(); // Paper - diff on change, should be old AABB
+@@ -1440,10 +1446,12 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                             d11 = d7 * d7 + d8 * d8 + d9 * d9;
+                             boolean flag1 = false;
+ 
++                            /* // JettPack start - remove spigot movement checks
+                             if (!this.player.isChangingDimension() && d11 > org.spigotmc.SpigotConfig.movedWronglyThreshold && !this.player.isSleeping() && !this.player.gameMode.isCreative() && this.player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) { // Spigot
+                                 flag1 = true; // Paper - diff on change, this should be moved wrongly
+                                 ServerGamePacketListenerImpl.LOGGER.warn("{} moved wrongly!", this.player.getName().getString());
+                             }
++                            // JettPack end */
+ 
+                             this.player.absMoveTo(d0, d1, d2, f, f1);
+                             // Paper start - optimise out extra getCubes
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 238b056c154ba1c58b8d63a387d08910a31d0560..031bdb0763fa3c71108082a8b8fe65e85ed4baa7 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -338,6 +338,7 @@ public class SpigotConfig
+         SpigotConfig.saveUserCacheOnStopOnly = SpigotConfig.getBoolean( "settings.save-user-cache-on-stop-only", false );
+     }
+ 
++    /* // JettPack start - remove spigot movement checks
+     public static double movedWronglyThreshold;
+     private static void movedWronglyThreshold()
+     {
+@@ -349,6 +350,7 @@ public class SpigotConfig
+     {
+         SpigotConfig.movedTooQuicklyMultiplier = SpigotConfig.getDouble( "settings.moved-too-quickly-multiplier", 10.0D );
+     }
++    // JettPack end */
+ 
+     public static double maxHealth = 2048;
+     public static double movementSpeed = 2048;

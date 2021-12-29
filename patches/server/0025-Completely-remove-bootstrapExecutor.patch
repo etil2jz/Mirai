@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:10:22 +0100
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 12:26:15 +0000
 Subject: [PATCH] Completely remove bootstrapExecutor
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0

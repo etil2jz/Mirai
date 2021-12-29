@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 23:01:59 +0100
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 21 Mar 2020 18:33:05 -0500
 Subject: [PATCH] End gateway should check if entity can use portal
 
 Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
-index 6e911b9a2fbdb4495605f68bc465b1f9e2d80ea1..4b5e8f1d1973f50b45bab7908c416a3b7619fdb9 100644
+index f25a0b94a001d13b698c9e9c1140e2dd290192a0..49f1c94945175cdad621dd42b35965d4e6dd77fe 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 @@ -176,6 +176,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {

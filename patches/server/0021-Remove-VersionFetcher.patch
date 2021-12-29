@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 16:53:47 +0100
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 12:07:37 +0000
 Subject: [PATCH] Remove VersionFetcher
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0
@@ -162,10 +162,10 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 489932059dae0970e63d223a1c84b64688f09eee..ec38dcd9de5712cf0ef04eb30d471d5b57a3eb0c 100644
+index dd0250d461ea5f658b7c2934332864a6b7e1ef48..40991b5ad2d2e8ffca1698ce13d5619e1f56b24b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -392,10 +392,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -397,10 +397,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
          return com.destroystokyo.paper.PaperConfig.timingsServerName;
      }
  

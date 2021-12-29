@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index f690bf2cd3319e689c80d271ae354f93c70f6baa..2ac94979aac1e37ac8f6b6ead001f580d52dbce6 100644
+index 0f194168f5fca8eb768bca3ce953f28097fed578..6a8786790cfeb4373d23d7e743f06b19efa45c35 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -231,10 +231,10 @@ index 041ebfefca8f944f457a269f0e0b450b21949e73..88568bf2fe1572cce0fe7985bbcf4dce
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index cfa4b75b042e2a82e10e5dc95d4c71d39f5a8d60..54bac87a6bbf5a0a7ea65a4314e10e28a7e0be7a 100644
+index 7de9bf9790dce0e3866d71cc30e61e0323c037ca..dd0250d461ea5f658b7c2934332864a6b7e1ef48 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -399,7 +399,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

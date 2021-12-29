@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:38:52 +0100
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Mon, 6 Dec 2021 10:34:33 -0500
 Subject: [PATCH] Remove Spigot tick limiter
 
 Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 30ed4649ba827b27784cdc6278e6760e2b5acef3..426b006ba49bf244b048a3a0f3a3b5b577041cd3 100644
+index d30ace3b23e94d6ab7f0aba202fdf57ec6af9df3..66ed9d9b4843f6bdd206dd120525415fa09f6cb1 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -174,8 +174,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

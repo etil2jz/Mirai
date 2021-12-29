@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 18 Oct 2021 08:52:40 -0500
+Subject: [PATCH] World Instance Flag
+
+Original code by Cryptite, licensed under MIT
+You can find the original code on https://github.com/Cryptite/Slice
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index c7229e120d601619d2ea869d7aa506fb3b78cde4..6fd345bfb43818e23d63bfe14328f0a54d212c5c 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -211,6 +211,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     public final UUID uuid;
+     public boolean hasPhysicsEvent = true; // Paper
+     public boolean hasEntityMoveEvent = false; // Paper
++    public boolean instance; // Slice
+     public static Throwable getAddToWorldStackTrace(Entity entity) {
+         return new Throwable(entity + " Added to world at " + new java.util.Date());
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 5520b78f182e9e3281b12d6a2f93ce171e4b1151..b3347c4a80816b7c1910c50577d7a05bfd5835ea 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -1200,6 +1200,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+         world.noSave = !value;
+     }
+ 
++    // Slice start
++    @Override
++    public boolean isInstance() {
++        return world.instance;
++    }
++
++    @Override
++    public void setInstance(boolean value) {
++        world.instance = value;
++    }
++    // Slice end
++
+     @Override
+     public void setDifficulty(Difficulty difficulty) {
+         this.getHandle().serverLevelData.setDifficulty(net.minecraft.world.Difficulty.byId(difficulty.getValue()));

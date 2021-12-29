@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 16:40:59 +0100
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 11:59:11 +0000
 Subject: [PATCH] Remove TickTask
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0
@@ -57,7 +57,7 @@ index c691ee6208521b1570f0f25c8bbfd05146bd155c..1fe78da9a07bb2cadcd18ad4d30f9b10
      private void updateStatusIcon(ServerStatus metadata) {
          Optional<File> optional = Optional.of(this.getFile("server-icon.png")).filter(File::isFile);
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index ce807ea169d02a1035776a7453e560c510e6ab40..525692aa4cade4a5a2b6e71d293dfd8811abb92f 100644
+index 00869dd65c994a26ff3d2124c03dfb9f006b443c..23a537dcabe03dc1e2d471d6774bb820bdc0dc1e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -1274,10 +1274,12 @@ public class ServerChunkCache extends ChunkSource {

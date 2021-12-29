@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 22:07:06 +0100
+From: Aikar <aikar@aikar.co>
+Date: Thu, 14 Jan 2016 00:49:14 -0500
 Subject: [PATCH] Do not drop items from Give command
 
 Original code by Starlis, licensed under GNU General Public License v3.0

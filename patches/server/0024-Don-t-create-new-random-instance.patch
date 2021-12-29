@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:06:40 +0100
+From: foss-mc <69294560+foss-mc@users.noreply.github.com>
+Date: Thu, 1 Jul 2021 12:17:44 +0000
 Subject: [PATCH] Don't create new random instance
 
 Original code by PatinaMC, licensed under GNU General Public License v3.0
@@ -55,7 +55,7 @@ index b0cbe7d42eef1865e84211844b351027a26a5956..711d5dc2a8b3a5f2a2a35cab59b5ecfd
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 3b05364c1832a03feecdaaf391b1433f041f5789..5ae61bcb6799a32db746a7f00fc66f7a9ab77066 100644
+index 079f0cf57121c39773ef50b31ef7985b17feac0d..d30ace3b23e94d6ab7f0aba202fdf57ec6af9df3 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -124,13 +124,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

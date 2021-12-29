@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 22:29:10 +0100
+From: chickeneer <emcchickeneer@gmail.com>
+Date: Sat, 6 Jun 2020 21:07:15 -0500
 Subject: [PATCH] Bound villager trade maxUses by 16
 
 Original code by Starlis, licensed under GNU General Public License v3.0

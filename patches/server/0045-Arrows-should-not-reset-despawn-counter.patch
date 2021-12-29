@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Fri, 10 Dec 2021 23:04:17 +0100
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Wed, 4 Nov 2020 13:12:50 -0600
 Subject: [PATCH] Arrows should not reset despawn counter
 
 Original code by PurpurMC, licensed under MIT

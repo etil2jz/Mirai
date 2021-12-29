@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 19:53:49 +0100
+From: l_MrBoom_l <admin@epserv.ru>
+Date: Wed, 30 Sep 2020 18:20:12 +0300
 Subject: [PATCH] Configurable flight checks
 
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 0f7f811510188f2b37443c5d2378a138dbf43b32..c01dedbb818af63f61b1c5c7a112aefbc7f65c67 100644
+index 38bbc0d8cc844ab6b67a689fee95932537d42ebd..d61f58b210379bbac504a39977529bae887928d5 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -318,7 +318,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser

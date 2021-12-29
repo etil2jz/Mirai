@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 19:20:40 +0100
+From: Bjarne Koll <lynxplay101@gmail.com>
+Date: Thu, 9 Dec 2021 01:53:30 +0100
 Subject: [PATCH] Optimize Spigot event bus
 
 Original code by lynxplay, licensed under GNU General Public License v3.0

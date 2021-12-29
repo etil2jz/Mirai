@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:23:06 +0100
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Thu, 8 Jul 2021 17:00:21 -0400
 Subject: [PATCH] Better handling of async tasks
 
 Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index 74003e8887624736b154807e07835c315e836cf3..26dc229664be7437d4795f932757667260c901ce 100644
+index f99d189f461921d37581e2fc1382af60921b0660..c0f65d6c73773e4872b30126775e5b027738608e 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
 @@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,13 +21,13 @@ index 74003e8887624736b154807e07835c315e836cf3..26dc229664be7437d4795f9327576672
 +    public static final ConcurrentLinkedQueue smallAsyncTasks = new ConcurrentLinkedQueue(); // Jettpack
      public static final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
 -        0, 2, 60L, TimeUnit.SECONDS,
--        new LinkedBlockingQueue<Runnable>(),
+-        new LinkedBlockingQueue<>(),
 +        4, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, // Jettpack
 +        new SynchronousQueue<Runnable>(), // Jettpack
-         new ThreadFactoryBuilder().setNameFormat("Paper Async Task Handler Thread - %1$d").build()
-     );
-     public static final ThreadPoolExecutor cleanerExecutor = new ThreadPoolExecutor(
-@@ -68,6 +71,30 @@ public final class MCUtil {
+         new ThreadFactoryBuilder()
+             .setNameFormat("Paper Async Task Handler Thread - %1$d")
+             .setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(MinecraftServer.LOGGER))
+@@ -74,6 +77,29 @@ public final class MCUtil {
  
      public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
  
@@ -50,7 +50,6 @@ index 74003e8887624736b154807e07835c315e836cf3..26dc229664be7437d4795f9327576672
 +                while((runnable = (Runnable)smallAsyncTasks.poll()) != null) {
 +                    runnable.run();
 +                }
-+
 +            });
 +        }
 +    }
@@ -142,7 +141,7 @@ index f1c865c415243f50a9c82b96cca023274897193e..96161b7a260c90bae12f79a3b3a68ba5
                      new LoginHandler().fireEvents();
                  } catch (Exception ex) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
-index 3c1992e212a6d6f1db4d5b807b38d71913619fc0..5cce24b67d721d4dddc12596e1cece34949bed6b 100644
+index 9c1aff17aabd062640e3f451a2ef8c50a7c62f10..8edf46a096afab6a70517d2ec7c3253da7f34b0d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
 @@ -32,23 +32,30 @@ import java.util.Iterator;
@@ -161,10 +160,10 @@ index 3c1992e212a6d6f1db4d5b807b38d71913619fc0..5cce24b67d721d4dddc12596e1cece34
 +    /*
      private final ThreadPoolExecutor executor = new ThreadPoolExecutor(
              4, Integer.MAX_VALUE,30L, TimeUnit.SECONDS, new SynchronousQueue<>(),
-             new ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").build());
+             new ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
 +    */
      private final Executor management = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
-             .setNameFormat("Craft Async Scheduler Management Thread").build());
+             .setNameFormat("Craft Async Scheduler Management Thread").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
      private final List<CraftTask> temp = new ArrayList<>();
  
      CraftAsyncScheduler() {

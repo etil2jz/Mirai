@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 15:25:14 +0100
+From: Mykyta Komarnytskyy <nkomarn@hotmail.com>
+Date: Fri, 27 Nov 2020 10:33:59 -0600
 Subject: [PATCH] Use faster random implementation
 
 Original code by YatopiaMC, licensed under MIT
@@ -134,7 +134,7 @@ index 19f77e377342ee461f0da8bc5378f2002fb9e94a..e6799eb40ec5e8c9f58aaafb7841a906
  
      public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 136ec7851f26c39b5b9a02ec791682fd5be2dbf1..ffcdd6c88aaae17075a491f35ebea3625e4914d2 100644
+index 8beecd901213cf026d10db0fdb16155fcee7b8f6..64ffade8cb140010578a61cd3d66ac48fc77cd1b 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -158,7 +158,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -212,7 +212,7 @@ index 1037d0a0cdd4fd7aa99a958ee969759c5883fdc0..99ab7bf2829b1355de452a368ac9971d
          this.currentState = FishingHook.FishHookState.FLYING;
          this.noCulling = true;
 diff --git a/src/main/java/net/minecraft/world/entity/raid/Raid.java b/src/main/java/net/minecraft/world/entity/raid/Raid.java
-index 7131226de05bc57830f7a68ba545ebfd19d33a59..d41bdd71ae1f722b5f108bed9282bf5bde348e90 100644
+index 1090d706e9cc4e4655e68501452cfa05bd3d4f29..f2d0d1f6b1ebfe2f66c2e385281cc2e435b0808b 100644
 --- a/src/main/java/net/minecraft/world/entity/raid/Raid.java
 +++ b/src/main/java/net/minecraft/world/entity/raid/Raid.java
 @@ -110,7 +110,7 @@ public class Raid {
@@ -273,7 +273,7 @@ index 6795132318a4e8b4c7a33b6f4b89a730ea66b97f..eebbf0b9d646ee5ae1bd48c821f122a7
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index b26b22e76cd5fc2683f2d876b7da4f8f726fa1fe..3b05364c1832a03feecdaaf391b1433f041f5789 100644
+index 23ea2c68222e1c4094de193b3ab154b755e2823c..079f0cf57121c39773ef50b31ef7985b17feac0d 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -124,13 +124,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -328,7 +328,7 @@ index 6278115e3511fe2176b29122e2c733498f31bb5a..f25a0b94a001d13b698c9e9c1140e2dd
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index e4591c0b3c8547cc6f4e2a0891fc378ee4334d9e..f4f964a2ef28840944b11404cdc6e41684e46af3 100644
+index 10da0aa24b297ba24b29ba50086115440cfef515..416894241ccdbf0a41a194d1a477f7a3b72c9587 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -109,7 +109,7 @@ public abstract class ChunkGenerator implements BiomeManager.NoiseBiomeSource {
@@ -394,7 +394,7 @@ index 286c75989282c6d370ca64ac714ab15d784210ab..e3a2919e214c63aa8cc2334d30dade3d
          if (!s1.isEmpty()) {
              try {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
-index c03bf5bdb67b00c75f9fcfead882c4d944282244..300c994cd3cc0995eeb4914590afce8b6ad1d92b 100644
+index a928364c39703d6ac9ab4d9d3f06361132538dc0..b1caa6e5ebde9d3ee4f49e7ca265690829fe9b1f 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/feature/SpikeFeature.java
 @@ -36,7 +36,7 @@ public class SpikeFeature extends Feature<SpikeConfiguration> {

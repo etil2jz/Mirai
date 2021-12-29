@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Rafael S. M. Santos" <eu@rafaelsms.com>
+Date: Sun, 5 Dec 2021 19:03:53 -0300
+Subject: [PATCH] PaperPR Optimize despawn when no player is on range
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index 7e0d653eaf459430459a1c19dc86a787ef12bd63..66eea7efc285b127e9bf46cfeab83be8a869b71b 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -794,9 +794,6 @@ public abstract class Mob extends LivingEntity {
+         } else if (!this.isPersistenceRequired() && !this.requiresCustomPersistence()) {
+             // Paper start - optimise checkDespawn
+             Player entityhuman = this.level.findNearbyPlayer(this, level.paperConfig.hardDespawnDistances.getInt(this.getType().getCategory()) + 1, EntitySelector.affectsSpawning); // Paper
+-            if (entityhuman == null) {
+-                entityhuman = ((ServerLevel)this.level).playersAffectingSpawning.isEmpty() ? null : ((ServerLevel)this.level).playersAffectingSpawning.get(0);
+-            }
+             // Paper end - optimise checkDespawn
+ 
+             if (entityhuman != null) {
+@@ -816,6 +813,8 @@ public abstract class Mob extends LivingEntity {
+                 } else if (d0 < (double) l) {
+                     this.noActionTime = 0;
+                 }
++            } else {
++                this.discard(); // Paper - no entity found on hardDespawnDistance, we should discard it
+             }
+ 
+         } else {

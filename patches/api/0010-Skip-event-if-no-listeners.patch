@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Wed, 22 Dec 2021 18:12:39 +0100
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Mon, 13 Dec 2021 11:28:08 -0500
 Subject: [PATCH] Skip event if no listeners
 
 Original code by Titaniumtown, licensed under GNU General Public License v3.0

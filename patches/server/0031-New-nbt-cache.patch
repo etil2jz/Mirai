@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 9 Dec 2021 17:46:23 +0100
+From: Hugo Planque <hookwood01@gmail.com>
+Date: Thu, 21 Jan 2021 17:56:03 +0100
 Subject: [PATCH] New nbt cache
 
 Original code by YatopiaMC, licensed under MIT
@@ -21,7 +21,7 @@ index bde44438a2af1f7faaa655191c45ed2b4a6b8da0..aa1d8f84772aa3b5d329f899900ecd4a
          if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
              MinecraftServer.LOGGER.info("Saving usercache.json");
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 331ed6aa983714d6fc3596526fc7df0ab993062c..cc63322d73519840352ae1de8e20eda84b840f6b 100644
+index 061737d4cccc73471db063427ddc7545023c5fce..50128e541a12ed80c2df2c05bc929b4621345266 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -24,6 +24,10 @@ public class PlayerDataStorage {

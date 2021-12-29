@@ -1,6 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 2 Dec 2021 16:22:24 +0100
+From: =?UTF-8?q?=E3=84=97=E3=84=A0=CB=8B=20=E3=84=91=E3=84=A7=CB=8A?=
+ <tsao-chi@the-lingo.org>
+Date: Thu, 2 Apr 2020 11:29:08 +0800
 Subject: [PATCH] Avoid double I/O operation on load player file
 
 Original code by Akarin-project, licensed under GNU General Public License v3.0
