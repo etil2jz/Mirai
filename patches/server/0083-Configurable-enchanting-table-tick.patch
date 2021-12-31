@@ -1,11 +1,25 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Mykyta Komarnytskyy <nkomarn@hotmail.com>
-Date: Fri, 30 Oct 2020 20:13:08 -0700
+From: Ivan Pekov <ivan@mrivanplays.com>
+Date: Wed, 23 Dec 2020 08:42:18 +0200
 Subject: [PATCH] Configurable enchanting table tick
 
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+index 8eabe7113822d35ff53390e981ea69ad5f07d67d..abf277f292aff6e5d940de185c629811c083901a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+@@ -342,7 +342,8 @@ public class BeehiveBlockEntity extends BlockEntity {
+ 
+     }
+ 
+-    public static void serverTick(Level world, BlockPos pos, BlockState state, BeehiveBlockEntity blockEntity) {
++    public void serverTick(Level world, BlockPos pos, BlockState state, BeehiveBlockEntity blockEntity) {
++        if (this.stored.size() == 0) return; // Yatopia - TE optimizations
+         BeehiveBlockEntity.tickOccupants(world, pos, state, blockEntity.stored, blockEntity.savedFlowerPos);
+         if (!blockEntity.stored.isEmpty() && world.getRandom().nextDouble() < 0.005D) {
+             double d0 = (double) pos.getX() + 0.5D;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 index b03621ebd0a94ab2dceb9006aee43fd5320094e3..7afa4bd52d3816ffd5eba1afeec26abb0d298eaa 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
