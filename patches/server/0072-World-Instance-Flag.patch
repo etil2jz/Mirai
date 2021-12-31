@@ -7,7 +7,7 @@ Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index c7229e120d601619d2ea869d7aa506fb3b78cde4..6fd345bfb43818e23d63bfe14328f0a54d212c5c 100644
+index 2d2f1e3fe1c9314af18377458af74f8c6afa7603..4df7088e81ee6ccc7705d2c220ae80c373681c9e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -211,6 +211,7 @@ public class ServerLevel extends Level implements WorldGenLevel {

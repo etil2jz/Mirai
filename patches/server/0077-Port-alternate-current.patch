@@ -2042,7 +2042,7 @@ index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 6d0369bb8215eae6ea852c36597e88ebe880ff34..5717c9362bffdd5b6b3eb4ca2efd1e13ee0d1329 100644
+index 4df7088e81ee6ccc7705d2c220ae80c373681c9e..35c1604ff678a5344bc9de824eb2788561d2dcaf 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -161,8 +161,14 @@ import org.bukkit.event.weather.LightningStrikeEvent;

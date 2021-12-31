@@ -9,7 +9,7 @@ You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 Reverts Eigencraft redstone from Paper in order for it to be replaced with alternate-current's redstone implementation
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index d71cd626bcbefc576f9c05b8885acc9fb2a33cd5..dbc9a4f494434bc8e938d8d149d74ee977f78483 100644
+index 5a5db15493cd9b83815c36487c2f38cb8ac76f3a..9cf6a124800cfe9ed88158025b25fbfd46fd420d 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -77,16 +77,6 @@ public class PaperWorldConfig {

@@ -19,7 +19,7 @@ index 0011192cdba6dcb7ca125ae4a49ca89a93cc40f2..ade6a3d0e90e8c82e3e90bd2d12369cc
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 83268871928bfdb629290334475d7d9bf4f16c89..6dcbdcce41ec26c25047d47c7dbb683ea5cb5185 100644
+index 6c48c882e297f74b507ac363507da3586dad1d81..e05b0c80150d5db8696d5bb78ef3eb70363cd61c 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2724,12 +2724,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i

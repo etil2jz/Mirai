@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 5a7836a4d5d11b244f8ef7fe4b116a721f088e65..49a79df01682b90b80d203eafb1b07276032433b 100644
+index 7764b1f86aca33dc227bf4357c20839b8820eb67..9fc782fadc1daffb12ce02a6b1c3b4c4e60d8ae7 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -725,12 +725,12 @@ public class PaperCommand extends Command {
@@ -282,7 +282,7 @@ index d212774a4e7c578683394fb4a6c90ce5ce875711..d82fbd657a615d84afb0c6dfdc4b1a58
  
          i = Mth.clamp(i, (int) 0, (int) 15);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 416894241ccdbf0a41a194d1a477f7a3b72c9587..036718e2f6fe06cf97a8c8341d8a288c8defefb2 100644
+index f4f964a2ef28840944b11404cdc6e41684e46af3..21d47eba76598e9553b1996b5da4cd72a7d9617b 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -118,8 +118,8 @@ public abstract class ChunkGenerator implements BiomeManager.NoiseBiomeSource {

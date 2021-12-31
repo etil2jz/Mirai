@@ -7,7 +7,7 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index d61f58b210379bbac504a39977529bae887928d5..3d82574c0c2b9d5861a087f062e1dd61e238dbcf 100644
+index c01dedbb818af63f61b1c5c7a112aefbc7f65c67..6fc8c5fc8a14e1ea19da8bd01199f7f8be7ce33a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -2068,6 +2068,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser

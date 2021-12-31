@@ -6,7 +6,7 @@ Subject: [PATCH] Remove unnecessary getLogger()
 Based off of a Patina Patch: https://github.com/PatinaMC/Patina/blob/921d83ac9506b6364ebac2ec57332da4fd8e6ada/patches/server/0023-Remove-unnecessary-LogManager.getLogger.patch
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 64ffade8cb140010578a61cd3d66ac48fc77cd1b..52c73615e9253bb99cfde9b45c96b20b4b21320d 100644
+index ffcdd6c88aaae17075a491f35ebea3625e4914d2..9719bbee04c2035c6374a48f80bf4389b33f57cf 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -163,7 +163,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i

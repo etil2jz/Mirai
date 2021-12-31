@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 3d82574c0c2b9d5861a087f062e1dd61e238dbcf..2ee11525447c1f3a77d3c1b5c0e33aef778a64e0 100644
+index 6fc8c5fc8a14e1ea19da8bd01199f7f8be7ce33a..86c213ae5733d407c534e5b5e75e1330c61c8289 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -227,6 +227,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
