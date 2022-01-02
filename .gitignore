@@ -25,7 +25,6 @@ dependency-reduced-pom.xml
 
 # various other potential build files
 build/
-build-data/
 bin/
 dist/
 manifest.mf
