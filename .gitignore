@@ -25,6 +25,7 @@ dependency-reduced-pom.xml
 
 # various other potential build files
 build/
+build-data/
 bin/
 dist/
 manifest.mf
@@ -48,5 +49,6 @@ run/
 
 mirai-server
 mirai-api
+
 
 !gradle/wrapper/gradle-wrapper.jar
