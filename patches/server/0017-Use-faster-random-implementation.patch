@@ -273,10 +273,10 @@ index 6795132318a4e8b4c7a33b6f4b89a730ea66b97f..eebbf0b9d646ee5ae1bd48c821f122a7
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 9d7d5acd04c6f8ed77d86241c058ea9b09f7449b..6a061119f98837da20d40c82160ef60c2b0cfaef 100644
+index 96c6ef03a64e425472c64884c91ac4951950362b..2d3cdb47c80af4044bd42b0061d722da5596cd34 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -124,13 +124,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -123,13 +123,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Thread thread;
      private final boolean isDebug;
      private int skyDarken;

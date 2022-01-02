@@ -29,7 +29,7 @@ index 6d883db5c04cbcf454952c0f361029ecbfe4f037..8f0d53a1abe148382df6a8133ccbd5c0
  
      public static Direction getNearest(double x, double y, double z) {
 diff --git a/src/main/java/net/minecraft/world/phys/AABB.java b/src/main/java/net/minecraft/world/phys/AABB.java
-index 68cc6f2a78a06293a29317fda72ab3ee79b3533a..dfbc871cd3474346b8d83f0b55b4f5f9665e4386 100644
+index 68cc6f2a78a06293a29317fda72ab3ee79b3533a..706ac70115a28e8f97ac4c5a10f7339fe61c8de8 100644
 --- a/src/main/java/net/minecraft/world/phys/AABB.java
 +++ b/src/main/java/net/minecraft/world/phys/AABB.java
 @@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ index 68cc6f2a78a06293a29317fda72ab3ee79b3533a..dfbc871cd3474346b8d83f0b55b4f5f9
 +        assert Direction.Axis.X.ordinal() == 0;
 +        assert Direction.Axis.Y.ordinal() == 1;
 +        assert Direction.Axis.Z.ordinal() == 2;
-+        assert Direction.Axis.values().length == 3;
++        assert me.titaniumtown.Constants.ALL_AXIS_Direction.length == 3;
 +    }
 +    // JettPack end
 +

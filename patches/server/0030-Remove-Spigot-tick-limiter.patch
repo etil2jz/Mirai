@@ -7,10 +7,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 7a1dc47726e4b0033807eaebe28f15217564c022..3dd10305430306b8cee7ec071378dd4bfab9db1e 100644
+index 74d8edf5a558948233674c78c70135e8fdea469a..d1a4617d07b8719c2368745703903294aa61553a 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -174,8 +174,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -173,8 +173,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
  
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPos lastPhysicsProblem; // Spigot
@@ -21,7 +21,7 @@ index 7a1dc47726e4b0033807eaebe28f15217564c022..3dd10305430306b8cee7ec071378dd4b
      private int tileTickPosition;
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
-@@ -401,8 +401,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -400,8 +400,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          // CraftBukkit end
          timings = new co.aikar.timings.WorldTimingsHandler(this); // Paper - code below can generate new world and access timings
          this.keepSpawnInMemory = this.paperConfig.keepSpawnInMemory; // Paper

@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Simon Gardling <titaniumtown@gmail.com>
 Date: Tue, 9 Nov 2021 16:53:39 -0500
-Subject: [PATCH] Reduce allocs
+Subject: [PATCH] reduce allocs
 
 Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
@@ -20,7 +20,7 @@ index c0d123bff1825366c30aadd3ad8a7fde68ef74e4..7764b1f86aca33dc227bf4357c20839b
                  }
                  // else - fall through to default
 diff --git a/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java b/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
-index 0133ea6feb1ab88f021f66855669f58367e7420b..5f4ad69862b24b568b9e907563289624d196d6ea 100644
+index 0133ea6feb1ab88f021f66855669f58367e7420b..cd5499e750764eaa5e361e73eb581bfce7f9f7c1 100644
 --- a/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
 +++ b/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
 @@ -17,9 +17,9 @@ public final class EntityList implements Iterable<Entity> {
@@ -28,7 +28,7 @@ index 0133ea6feb1ab88f021f66855669f58367e7420b..5f4ad69862b24b568b9e907563289624
      }
  
 -    protected static final Entity[] EMPTY_LIST = new Entity[0];
-+    //protected static final Entity[] EMPTY_LIST = new Entity[0]; // JettPack
++    // protected static final Entity[] EMPTY_LIST = new Entity[0]; // JettPack
  
 -    protected Entity[] entities = EMPTY_LIST;
 +    protected Entity[] entities = me.titaniumtown.Constants.EMPTY_entity_arr; // JettPack
@@ -49,7 +49,7 @@ index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..27b6dc17a38f80abad2f959c90ffa5ef
      private long[] byIndex = EMPTY_LIST;
      private int size;
 diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
-index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..67fd71f018d80749648cb3b2c1cb7aeeab434867 100644
+index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..a919e8a2aa10ba01d7f389985591a0681c1b4426 100644
 --- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 +++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 @@ -63,7 +63,7 @@ public final class ChunkEntitySlices {
@@ -66,7 +66,7 @@ index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..67fd71f018d80749648cb3b2c1cb7aee
      protected static final class BasicEntityList<E extends Entity> {
  
 -        protected static final Entity[] EMPTY = new Entity[0];
-+        //protected static final Entity[] EMPTY = new Entity[0]; // JettPack
++        // protected static final Entity[] EMPTY = new Entity[0]; // JettPack
          protected static final int DEFAULT_CAPACITY = 4;
  
          protected E[] storage;
@@ -90,10 +90,10 @@ index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..67fd71f018d80749648cb3b2c1cb7aee
                  this.storage = Arrays.copyOf(this.storage, this.storage.length * 2);
 diff --git a/src/main/java/me/titaniumtown/Constants.java b/src/main/java/me/titaniumtown/Constants.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cefc897460c47edf07d7bcc3585cd123a3a77003
+index 0000000000000000000000000000000000000000..9ede2f067eacc1d418a8d6223f4052b81410d3b3
 --- /dev/null
 +++ b/src/main/java/me/titaniumtown/Constants.java
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,22 @@
 +package me.titaniumtown;
 +
 +import net.minecraft.core.Direction;
@@ -105,6 +105,7 @@ index 0000000000000000000000000000000000000000..cefc897460c47edf07d7bcc3585cd123
 +    public static final Direction[] ALL_Direction = Direction.values();
 +    public static final Direction[] VERTICAL_Direction = {Direction.DOWN, Direction.UP};
 +    public static final Direction[] HORIZONTAL_Direction = {Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH};
++    public static final Direction.Axis[] ALL_AXIS_Direction = Direction.Axis.values();
 +
 +    public static final EquipmentSlot[] ALL_EquipmentSlot = EquipmentSlot.values();
 +    public static final int[] EMPTY_int_arr = new int[0];
@@ -485,19 +486,18 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..aa565ab33700c92ca607463bdc0dcaef
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..0cff48d2d94bf50192e932c35afc421bdda032d0 100644
+index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..364ecdbe5bbe837b76451bb032fc52f41d8e0dca 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -111,7 +111,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -111,7 +111,6 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public static final int MAX_LEVEL_SIZE = 30000000;
      public static final int LONG_PARTICLE_CLIP_RANGE = 512;
      public static final int SHORT_PARTICLE_CLIP_RANGE = 32;
 -    private static final Direction[] DIRECTIONS = Direction.values();
-+    //private static final Direction[] DIRECTIONS = Direction.values(); // JettPack
      public static final int MAX_BRIGHTNESS = 15;
      public static final int TICKS_PER_DAY = 24000;
      public static final int MAX_ENTITY_SPAWN_Y = 20000000;
-@@ -209,7 +209,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -209,7 +208,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public org.bukkit.entity.Entity[] getChunkEntities(int chunkX, int chunkZ) {
          io.papermc.paper.world.ChunkEntitySlices slices = this.entitySliceManager.getChunk(chunkX, chunkZ);
          if (slices == null) {
@@ -506,7 +506,7 @@ index 90aa1d75b5c23e5ee27ceae9f6ef90de913a6601..0cff48d2d94bf50192e932c35afc421b
          }
          return slices.getChunkEntities();
      }
-@@ -1299,7 +1299,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1299,7 +1298,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
  
      public int getBestNeighborSignal(BlockPos pos) {
          int i = 0;
@@ -678,19 +678,18 @@ index 0ce900235fd083545a208132079510b5ca3c9cab..1afd59499a71d07222c08ccbc6248e30
  
          for (int k = 0; k < j; ++k) {
 diff --git a/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java b/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
-index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a344e71f16 100644
+index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..390e9b1f76a6fbbd34c638b4135c31d088901c13 100644
 --- a/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/MultifaceBlock.java
-@@ -52,7 +52,7 @@ public class MultifaceBlock extends Block {
+@@ -52,7 +52,6 @@ public class MultifaceBlock extends Block {
          enummap.put(Direction.UP, MultifaceBlock.UP_AABB);
          enummap.put(Direction.DOWN, MultifaceBlock.DOWN_AABB);
      });
 -    protected static final Direction[] DIRECTIONS = Direction.values();
-+    //protected static final Direction[] DIRECTIONS = Direction.values(); // JettPack
      private final ImmutableMap<BlockState, VoxelShape> shapesCache;
      private final boolean canRotate;
      private final boolean canMirrorX;
-@@ -73,7 +73,7 @@ public class MultifaceBlock extends Block {
+@@ -73,7 +72,7 @@ public class MultifaceBlock extends Block {
  
      @Override
      protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -699,7 +698,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
          int i = aenumdirection.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -99,7 +99,7 @@ public class MultifaceBlock extends Block {
+@@ -99,7 +98,7 @@ public class MultifaceBlock extends Block {
      @Override
      public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
          boolean flag = false;
@@ -708,7 +707,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
          int i = aenumdirection.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -185,7 +185,7 @@ public class MultifaceBlock extends Block {
+@@ -185,7 +184,7 @@ public class MultifaceBlock extends Block {
  
      private BlockState mapDirections(BlockState state, Function<Direction, Direction> mirror) {
          BlockState iblockdata1 = state;
@@ -717,7 +716,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
          int i = aenumdirection.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -200,7 +200,7 @@ public class MultifaceBlock extends Block {
+@@ -200,7 +199,7 @@ public class MultifaceBlock extends Block {
      }
  
      public boolean spreadFromRandomFaceTowardRandomDirection(BlockState state, ServerLevel world, BlockPos pos, Random random) {
@@ -726,7 +725,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
  
          Collections.shuffle(list);
          return list.stream().filter((enumdirection) -> {
-@@ -211,7 +211,7 @@ public class MultifaceBlock extends Block {
+@@ -211,7 +210,7 @@ public class MultifaceBlock extends Block {
      }
  
      public boolean spreadFromFaceTowardRandomDirection(BlockState state, LevelAccessor world, BlockPos pos, Direction from, Random random, boolean postProcess) {
@@ -735,7 +734,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
  
          Collections.shuffle(list, random);
          return list.stream().anyMatch((enumdirection1) -> {
-@@ -232,7 +232,7 @@ public class MultifaceBlock extends Block {
+@@ -232,7 +231,7 @@ public class MultifaceBlock extends Block {
      }
  
      protected boolean canSpread(BlockState state, BlockGetter world, BlockPos pos, Direction from) {
@@ -744,7 +743,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
              return this.getSpreadFromFaceTowardDirection(state, world, pos, from, enumdirection1).isPresent();
          });
      }
-@@ -330,7 +330,7 @@ public class MultifaceBlock extends Block {
+@@ -330,7 +329,7 @@ public class MultifaceBlock extends Block {
  
      private static VoxelShape calculateMultifaceShape(BlockState state) {
          VoxelShape voxelshape = Shapes.empty();
@@ -753,7 +752,7 @@ index babffeec9aa8a1526767f2d9fcedd146fc8a2e05..9b0811b9889f9210c6620427af42b4a3
          int i = aenumdirection.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -345,13 +345,13 @@ public class MultifaceBlock extends Block {
+@@ -345,13 +344,13 @@ public class MultifaceBlock extends Block {
      }
  
      protected static boolean hasAnyFace(BlockState state) {
@@ -884,7 +883,7 @@ index c9c18cf84e4ee5c253bbc64a4b41e91f9f4c4bc7..6ec908eda3855b926958cd546acd9055
              j = aenumdirection1.length;
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 05c46f3b3bce5225b819d86e6e06729a5093e092..a01d8bd11fe61979f3d38d461b177042a04752ac 100644
+index 05c46f3b3bce5225b819d86e6e06729a5093e092..d17fb373c43b9bc3c18e3b34fd5f70d95d4d3215 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 @@ -1080,7 +1080,7 @@ public abstract class BlockBehaviour {
@@ -896,6 +895,15 @@ index 05c46f3b3bce5225b819d86e6e06729a5093e092..a01d8bd11fe61979f3d38d461b177042
              private static final int SUPPORT_TYPE_COUNT = SupportType.values().length;
              protected final boolean solidRender;
              final boolean propagatesSkylightDown;
+@@ -1120,7 +1120,7 @@ public abstract class BlockBehaviour {
+                 if (!this.collisionShape.isEmpty() && block.getOffsetType() != BlockBehaviour.OffsetType.NONE) {
+                     throw new IllegalStateException(String.format("%s has a collision shape and an offset type, but is not marked as dynamicShape in its properties.", Registry.BLOCK.getKey(block)));
+                 } else {
+-                    this.largeCollisionShape = Arrays.stream(Direction.Axis.values()).anyMatch((enumdirection_enumaxis) -> {
++                    this.largeCollisionShape = Arrays.stream(me.titaniumtown.Constants.ALL_AXIS_Direction).anyMatch((enumdirection_enumaxis) -> {
+                         return this.collisionShape.min(enumdirection_enumaxis) < 0.0D || this.collisionShape.max(enumdirection_enumaxis) > 1.0D;
+                     });
+                     this.faceSturdy = new boolean[BlockBehaviour.BlockStateBase.Cache.DIRECTIONS.length * BlockBehaviour.BlockStateBase.Cache.SUPPORT_TYPE_COUNT];
 diff --git a/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java b/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java
 index 37d7165dfd17da03428f8dbbbf95aa8005be289c..3994fbc9c81ecec1864f16f1c28600381b3d3fb7 100644
 --- a/src/main/java/net/minecraft/world/level/lighting/BlockLightEngine.java
