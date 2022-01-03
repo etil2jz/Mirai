@@ -1,0 +1,140 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Wesley1808 <>
+Date: Fri, 3 Dec 2021 15:53:06 +0100
+Subject: [PATCH] servercore: Don't load chunks for block break packets
+
+Original code by Wesley1808, licensed under MIT
+You can find the original code on https://github.com/Wesley1808/ServerCore
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 15b6dd0c39a1de09dd7aad88ec6054bf83b2a943..97bcdc2af01f1b9d9f0a9e6045bab0ce56b95e60 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -445,7 +445,7 @@ public class ServerChunkCache extends ChunkSource {
+     }
+ 
+     @Nullable
+-    private ChunkHolder getVisibleChunkIfPresent(long pos) {
++    public ChunkHolder getVisibleChunkIfPresent(long pos) { // Mirai - private->public
+         return this.chunkMap.getVisibleChunkIfPresent(pos);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+index 534c7a702e96523bd2e3cf0bc20c7c63929b4f07..7f584576b390bef9ad4255c332884b2617f5302a 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+@@ -45,6 +45,11 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
+ import org.bukkit.event.player.PlayerInteractEvent;
+ // CraftBukkit end
+ 
++// Mirai start
++import net.minecraft.server.level.ServerLevel;
++import org.provim.servercore.utils.ChunkManager;
++// Mirai end
++
+ public class ServerPlayerGameMode {
+ 
+     private static final Logger LOGGER = LogManager.getLogger();
+@@ -616,4 +621,10 @@ public class ServerPlayerGameMode {
+     public void setLevel(ServerLevel world) {
+         this.level = world;
+     }
++
++    // Mirai start
++    private BlockState onlyProcessIfLoaded(ServerLevel level, BlockPos pos) {
++        return ChunkManager.getStateIfLoaded(level, pos);
++    }
++    // Mirai end
+ }
+diff --git a/src/main/java/org/provim/servercore/utils/ChunkManager.java b/src/main/java/org/provim/servercore/utils/ChunkManager.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd272da74610862e38b128dade0f3f2422649cf8
+--- /dev/null
++++ b/src/main/java/org/provim/servercore/utils/ChunkManager.java
+@@ -0,0 +1,85 @@
++package org.provim.servercore.utils;
++
++import net.minecraft.core.BlockPos;
++import net.minecraft.server.level.ChunkHolder;
++import net.minecraft.server.level.ServerChunkCache;
++import net.minecraft.util.Mth;
++import net.minecraft.world.level.ChunkPos;
++import net.minecraft.world.level.Level;
++import net.minecraft.world.level.block.Blocks;
++import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.chunk.LevelChunk;
++import net.minecraft.world.phys.AABB;
++import org.jetbrains.annotations.Nullable;
++
++public final class ChunkManager {
++
++    /**
++     * Returns the BlockState at {@param pos} in {@param level} if the position is loaded.
++     */
++
++    public static BlockState getStateIfLoaded(Level level, BlockPos pos) {
++        final LevelChunk chunk = getChunkIfLoaded(level, pos);
++        return chunk != null ? chunk.getBlockState(pos) : Blocks.VOID_AIR.defaultBlockState();
++    }
++
++    /**
++     * Returns the chunk at {@param pos} in {@param level} if the position is loaded.
++     */
++
++    @Nullable
++    public static LevelChunk getChunkIfLoaded(Level level, BlockPos pos) {
++        return getChunkIfLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
++    }
++
++    @Nullable
++    public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
++        if (!level.isClientSide) {
++            final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
++            return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
++        } else {
++            return level.getChunk(chunkX, chunkZ);
++        }
++    }
++
++    /**
++     * Returns a boolean that decides whether the chunk at {@param pos} in {@param level} is loaded.
++     */
++
++    public static boolean isChunkLoaded(Level level, BlockPos pos) {
++        return isChunkLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
++    }
++
++    public static boolean isChunkLoaded(Level level, int chunkX, int chunkZ) {
++        return level.isClientSide || isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
++    }
++
++    private static boolean isChunkLoaded(ChunkHolder holder) {
++        return holder != null && holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().isPresent();
++    }
++
++    public static boolean isTouchingUnloadedChunk(Level level, AABB box) {
++        final int minX = Mth.floor(box.minX) >> 4;
++        final int maxX = Mth.ceil(box.maxX) >> 4;
++        final int minZ = Mth.floor(box.minZ) >> 4;
++        final int maxZ = Mth.ceil(box.maxZ) >> 4;
++
++        for (int x = minX; x <= maxX; x++) {
++            for (int z = minZ; z <= maxZ; z++) {
++                if (!ChunkManager.isChunkLoaded(level, x, z)) {
++                    return true;
++                }
++            }
++        }
++        return false;
++    }
++
++    /**
++     * Returns the ChunkHolder at chunk coordinate X / Z in {@param level} if the location is loaded.
++     */
++
++    @Nullable
++    private static ChunkHolder getChunkHolder(Level level, int chunkX, int chunkZ) {
++        return level.getChunkSource() instanceof ServerChunkCache chunkCache ? chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ)) : null;
++    }
++}
+\ No newline at end of file
