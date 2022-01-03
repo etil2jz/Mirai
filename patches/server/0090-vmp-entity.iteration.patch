@@ -1,0 +1,113 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Mon, 3 Jan 2022 01:57:22 +0100
+Subject: [PATCH] vmp: entity.iteration
+
+Original code by RelativityMC, licensed under MIT
+You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
+
+diff --git a/src/main/java/com/ishland/vmp/common/general/collections/ITypeFilterableList.java b/src/main/java/com/ishland/vmp/common/general/collections/ITypeFilterableList.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e6fcae6500ef8e70a6043be71209546c710cd845
+--- /dev/null
++++ b/src/main/java/com/ishland/vmp/common/general/collections/ITypeFilterableList.java
+@@ -0,0 +1,8 @@
++package com.ishland.vmp.common.general.collections;
++
++public interface ITypeFilterableList {
++
++    Object[] getBackingArray();
++
++
++}
+diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySection.java b/src/main/java/net/minecraft/world/level/entity/EntitySection.java
+index 07691d38960add169d24bc830ac7b951bd5afaef..c9cb4fa8c96ca53a0692aee6ce0cf46a9466bec1 100644
+--- a/src/main/java/net/minecraft/world/level/entity/EntitySection.java
++++ b/src/main/java/net/minecraft/world/level/entity/EntitySection.java
+@@ -1,10 +1,14 @@
+ package net.minecraft.world.level.entity;
+ 
++import com.ishland.vmp.common.general.collections.ITypeFilterableList; // Mirai
++import it.unimi.dsi.fastutil.objects.ObjectArrayList; // Mirai
+ import java.util.Collection;
+ import java.util.function.Consumer;
+ import java.util.stream.Stream;
+ import net.minecraft.util.ClassInstanceMultiMap;
+ import net.minecraft.util.VisibleForDebug;
++import net.minecraft.world.level.entity.EntityAccess; // Mirai
++import net.minecraft.world.level.entity.EntityTypeTest; // Mirai
+ import net.minecraft.world.phys.AABB;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+@@ -45,27 +49,62 @@ public class EntitySection<T extends EntityAccess> {
+         return this.storage.remove(entity);
+     }
+ 
++    // Mirai start
++    /**
++     * @author ishland
++     * @reason use array for iteration & inline math
++     */
+     public void getEntities(AABB box, Consumer<T> action) {
+-        for(T entityAccess : this.storage) {
+-            if (entityAccess.getBoundingBox().intersects(box)) {
+-                action.accept(entityAccess);
++        if (this.storage instanceof ITypeFilterableList iTypeFilterableList) { // use array for iteration
++            for (Object _entityLike : iTypeFilterableList.getBackingArray()) {
++                if (_entityLike != null) {
++                    @SuppressWarnings("unchecked") T entityAccess = (T) _entityLike;
++                    AABB box1 = entityAccess.getBoundingBox();
++                    if (box1.minX < box.maxX && box1.maxX > box.minX && box1.minY < box.maxY && box1.maxY > box.minY && box1.minZ < box.maxZ && box1.maxZ > box.minZ) { // inline math
++                        action.accept(entityAccess);
++                    }
++                }
++            }
++        } else { // fallback
++            for (T entityAccess : this.storage) {
++                AABB box1 = entityAccess.getBoundingBox();
++                if (box1.minX < box.maxX && box1.maxX > box.minX && box1.minY < box.maxY && box1.maxY > box.minY && box1.minZ < box.maxZ && box1.maxZ > box.minZ) { // inline math
++                    action.accept(entityAccess);
++                }
+             }
+         }
+-
+     }
+ 
++    /**
++     * @author ishland
++     * @reason use array for iteration & inline math
++     */
+     public <U extends T> void getEntities(EntityTypeTest<T, U> type, AABB box, Consumer<? super U> action) {
+         Collection<? extends T> collection = this.storage.find(type.getBaseClass());
+         if (!collection.isEmpty()) {
+-            for(T entityAccess : collection) {
+-                U entityAccess2 = (U)((EntityAccess)type.tryCast(entityAccess));
+-                if (entityAccess2 != null && entityAccess.getBoundingBox().intersects(box)) {
+-                    action.accept(entityAccess2); // Paper - decompile fixes
++            if (collection instanceof ObjectArrayList objectArrayList) { // use array for iteration
++                for (Object _entityLike : objectArrayList.elements()) {
++                    if (_entityLike != null) {
++                        T entityAccess = (T) _entityLike;
++                        U entityAccess2 = type.tryCast(entityAccess);
++                        final AABB boundingBox = entityAccess.getBoundingBox();
++                        if (entityAccess2 != null && boundingBox.minX < box.maxX && boundingBox.maxX > box.minX && boundingBox.minY < box.maxY && boundingBox.maxY > box.minY && boundingBox.minZ < box.maxZ && boundingBox.maxZ > box.minZ) { // inline math
++                            action.accept(entityAccess2);
++                        }
++                    }
++                }
++            } else { // fallback
++                for(T entityAccess : collection) {
++                    U entityAccess2 = type.tryCast(entityAccess);
++                    AABB box1 = entityAccess.getBoundingBox();
++                    if (entityAccess2 != null && box1.minX < box.maxX && box1.maxX > box.minX && box1.minY < box.maxY && box1.maxY > box.minY && box1.minZ < box.maxZ && box1.maxZ > box.minZ) { // inline math
++                        action.accept(entityAccess2);
++                    }
+                 }
+             }
+-
+         }
+     }
++    // Mirai end
+ 
+     public boolean isEmpty() {
+         return this.storage.isEmpty();

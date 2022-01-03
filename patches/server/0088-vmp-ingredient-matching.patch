@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: ishland <ishlandmc@yeah.net>
 Date: Sun, 21 Nov 2021 03:01:00 +0100
-Subject: [PATCH] vmp: ingredient matching cache
+Subject: [PATCH] vmp: ingredient_matching
 
 Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
