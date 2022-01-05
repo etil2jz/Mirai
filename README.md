@@ -26,17 +26,18 @@ The latest JAR file can be downloaded here:
 [Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18/Mirai-1.18.1-R0.1-SNAPSHOT.jar)
 
 **Please note Java 17 is required.**
-
 You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
 ## Building
-
 In order to distribute and use this server software, you need a paperclip file:
 
 ```bash
 ./gradlew applyPatches && ./gradlew createReobfPaperclipJar
 ```
+
+## Contact
+Join us on [Discord](https://discord.gg/DdH6Yfu9gM)!
 
 ## License
 Patches are licensed under GPL-3.0.  
