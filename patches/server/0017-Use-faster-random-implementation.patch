@@ -204,7 +204,7 @@ index 1037d0a0cdd4fd7aa99a958ee969759c5883fdc0..99ab7bf2829b1355de452a368ac9971d
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 @@ -76,7 +76,7 @@ public class FishingHook extends Projectile {
  
-     private FishingHook(EntityType<? extends FishingHook> type, Level world, int lureLevel, int luckOfTheSeaLevel) {
+     private FishingHook(EntityType<? extends FishingHook> type, Level world, int luckOfTheSeaLevel, int lureLevel) {
          super(type, world);
 -        this.syncronizedRandom = new Random();
 +        this.syncronizedRandom = new org.yatopiamc.yatopia.server.util.FastRandom();
