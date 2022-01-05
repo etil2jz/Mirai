@@ -19,7 +19,7 @@ index 129c5b41b410b57952fedf90c1ea713ba1c36470..2c33800e7a49804a29f64fd5e6fde7d2
  
  java {
 @@ -41,6 +42,7 @@ dependencies {
-     api("org.apache.logging.log4j:log4j-api:2.17.0")
+     api("org.apache.logging.log4j:log4j-api:2.17.1")
      api("org.slf4j:slf4j-api:1.8.0-beta4")
      api("io.sentry:sentry:5.4.0") // Pufferfish
 +    api("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT") // Yatopia
