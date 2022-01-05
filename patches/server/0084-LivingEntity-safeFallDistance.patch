@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 638fb5ea3409d2531135567dc03f6319fa849db4..ccaf4c3090b33c9911bac76ae62c6b916349dc74 100644
+index b9cc4aa7cd5694976c43f834bbf60412992c269f..fcf6606d7fde0a9f93a2bd1a8e20f8f6ddb9374b 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -251,6 +251,7 @@ public abstract class LivingEntity extends Entity {
