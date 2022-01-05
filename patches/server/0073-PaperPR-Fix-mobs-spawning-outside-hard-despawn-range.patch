@@ -5,10 +5,10 @@ Subject: [PATCH] PaperPR Fix mobs spawning outside hard despawn range
 
 
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 387b8b158dfe7a3832dff84b0bde97fd4c3a863b..a4107dff1492c2234d0e3205714571f6b982b8e5 100644
+index 434bdc40ddd92700211076965d97a473706e7351..35c58ee4e780f57681674ee871cb009e085753af 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-@@ -403,7 +403,10 @@ public final class NaturalSpawner {
+@@ -410,7 +410,10 @@ public final class NaturalSpawner {
      }
  
      private static boolean isValidPositionForMob(ServerLevel world, Mob entity, double squaredDistance) {

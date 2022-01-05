@@ -65,7 +65,7 @@ index 40447d00aefb5ffedb8a2ee87155a04088f0649f..3a8c0aedb51c65c3b5cc6922068ece77
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5b17832ffcf0f21ce8dcfd943df2915079a4e907..e71e915c9c82cc5e3ec3e12404e7d91da3a18d46 100644
+index db5279dd944214802bafc75af7ec46c9eead605c..79a5bfab6c91900e40cb125ae2f77d405641bbf6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -393,7 +393,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -91,7 +91,7 @@ index 88f10d729aa1e0a01790521821d691a0ecd373a2..b990694dc5fc0568f346d3a4fa734f83
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3023ccfdb7fcf9b03ac0ca469a18ceed75511504..638fb5ea3409d2531135567dc03f6319fa849db4 100644
+index b9cc4aa7cd5694976c43f834bbf60412992c269f..fb62ae09dde3550fade48ae5a120ddb49b2d3dd1 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1472,7 +1472,7 @@ public abstract class LivingEntity extends Entity {
@@ -159,7 +159,7 @@ index 3023ccfdb7fcf9b03ac0ca469a18ceed75511504..638fb5ea3409d2531135567dc03f6319
                      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 6eff69877f2f6a20fece578e20a587743c7dd0bd..ef9c312fe804aba63951436f1a50800231a6c065 100644
+index b871d89d16e0bb08cc8ce87e74ced974734be418..981fa09173a2dc28579c985d011c71fb106f1fbf 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -1026,7 +1026,7 @@ public abstract class Player extends LivingEntity {
@@ -239,7 +239,7 @@ index 6eff69877f2f6a20fece578e20a587743c7dd0bd..ef9c312fe804aba63951436f1a508002
                  }
 @@ -1676,7 +1676,7 @@ public abstract class Player extends LivingEntity {
  
-     private void checkRidingStatistics(double dx, double dy, double dz) {
+     public void checkRidingStatistics(double dx, double dy, double dz) {
          if (this.isPassenger()) {
 -            int i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
 +            int i = wtf.etil.mirai.server.util.math.FastMath.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
@@ -282,7 +282,7 @@ index d212774a4e7c578683394fb4a6c90ce5ce875711..d82fbd657a615d84afb0c6dfdc4b1a58
  
          i = Mth.clamp(i, (int) 0, (int) 15);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index f4f964a2ef28840944b11404cdc6e41684e46af3..21d47eba76598e9553b1996b5da4cd72a7d9617b 100644
+index d8b790f0288cfffbc2720b31c6686a3524e76436..6620dc44f106285c193116e8fda3a556b4d7ab17 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -118,8 +118,8 @@ public abstract class ChunkGenerator implements BiomeManager.NoiseBiomeSource {

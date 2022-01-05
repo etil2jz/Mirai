@@ -210,7 +210,7 @@ index e2c8f716af55ebb7e4233c2a3d6515f8f4a239fa..2f5c021b6849acb81064d55418707921
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 406bfe20a7b8786bbc6bee46151be91dadec6180..d9c8e103546a9dee56e6e7a5db5a57d5158fc4ad 100644
+index f51fcaba69c9ddc27130ab615526e05b1b4f0e07..401326bfd610302a5b073cec646b435a861ad109 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -76,6 +76,8 @@ public class ServerChunkCache extends ChunkSource {
@@ -239,7 +239,7 @@ index 406bfe20a7b8786bbc6bee46151be91dadec6180..d9c8e103546a9dee56e6e7a5db5a57d5
      private void tickChunks() {
          long i = this.level.getGameTime();
          long j = i - this.lastInhabitedUpdate;
-@@ -1028,7 +1040,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -1024,7 +1036,7 @@ public class ServerChunkCache extends ChunkSource {
                  iterator1 = this.entityTickingChunks.iterator();
              } else {
                  iterator1 = this.entityTickingChunks.unsafeIterator();
@@ -332,7 +332,7 @@ index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c8
  
      public ZeroBitStorage(int size) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index af9c58944b38e8aeeca5dca75c9f97e49f2895f2..33670ff2369962836783feb37804532bed7b2857 100644
+index 2c988e05299d530d483e21ab452de0a03e5bdcbd..fcbbe52452f3e9ad4dcdbcc5d2dc20fa5d098746 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3022,7 +3022,7 @@ public abstract class LivingEntity extends Entity {
@@ -345,7 +345,7 @@ index af9c58944b38e8aeeca5dca75c9f97e49f2895f2..33670ff2369962836783feb37804532b
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 4e8b3f94dc990cd05d69e74db6c706e290dca702..7e0d653eaf459430459a1c19dc86a787ef12bd63 100644
+index 607e78c24edabb26fd7494855087f7f19cfdc576..dfe1758aeb113a18339f1dbc5e71a9d6ef5ff99b 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -1009,7 +1009,7 @@ public abstract class Mob extends LivingEntity {

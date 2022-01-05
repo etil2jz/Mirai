@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: jellysquid3 <jellysquid3@users.noreply.github.com>
+From: JellySquid <jellysquid+atwork@protonmail.com>
 Date: Wed, 23 Sep 2020 16:33:58 +0200
 Subject: [PATCH] lithium: tag
 
@@ -7,10 +7,10 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/tags/SetTag.java b/src/main/java/net/minecraft/tags/SetTag.java
-index d0c4a1dd2b11cfdbd3972dec5b5622e2f013ab48..91257c689e53f85ee518cd2196795a3282593210 100644
+index d0c4a1dd2b11cfdbd3972dec5b5622e2f013ab48..9444e3dcdf3fa307c93adb2f790876fcd9ad88e7 100644
 --- a/src/main/java/net/minecraft/tags/SetTag.java
 +++ b/src/main/java/net/minecraft/tags/SetTag.java
-@@ -3,12 +3,16 @@ package net.minecraft.tags;
+@@ -3,6 +3,8 @@ package net.minecraft.tags;
  import com.google.common.annotations.VisibleForTesting;
  import com.google.common.collect.ImmutableList;
  import com.google.common.collect.ImmutableSet;
@@ -18,38 +18,20 @@ index d0c4a1dd2b11cfdbd3972dec5b5622e2f013ab48..91257c689e53f85ee518cd2196795a32
 +import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet; // Mirai
  import java.util.List;
  import java.util.Set;
-+import net.minecraft.tags.Tag; // Mirai
  
- public class SetTag<T> implements Tag<T> {
-     private final ImmutableList<T> valuesList;
-     private final Set<T> values;
-+    private Set<T> valueSet; // Mirai
-     @VisibleForTesting
-     protected final Class<?> closestCommonSuperType;
+@@ -14,8 +16,14 @@ public class SetTag<T> implements Tag<T> {
  
-@@ -61,4 +65,25 @@ public class SetTag<T> implements Tag<T> {
- 
-         return first;
-     }
-+
-+    // Mirai start
-+    /**
-+     * If the number of elements in a tag is very small (<=3), it can be significantly faster to use simple linear scanning
-+     * across an array to check if an element is contained by the tag. We mix into the implementation type for Tag
-+     * and try replacing the type of set after the constructor has ran. If the set is too large, we still replace it
-+     * with a faster set type which has reference equality semantics.
-+     *
-+     * @reason Use specialized implementations
-+     * @author JellySquid
-+     */
-+    private void init(Set<T> values, Class<?> var2) {
-+        // Reference equality is safe for tag values
-+        // Use linear-scanning when the number of items in the tag is small
-+        if (this.valueSet.size() <= 3) {
-+            this.valueSet = new ReferenceArraySet<>(this.valueSet);
+     protected SetTag(Set<T> values, Class<?> type) {
+         this.closestCommonSuperType = type;
+-        this.values = values;
+         this.valuesList = ImmutableList.copyOf(values);
++        // Mirai start
++        if (values.size() <= 3) {
++            this.values = new ReferenceArraySet<>(values);
 +        } else {
-+            this.valueSet = new ReferenceOpenHashSet<>(this.valueSet);
++            this.values = new ReferenceOpenHashSet<>(values);
 +        }
-+    }
-+    // Mirai end
- }
++        // Mirai end
+     }
+ 
+     public static <T> SetTag<T> empty() {

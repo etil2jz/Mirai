@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 0f7f811510188f2b37443c5d2378a138dbf43b32..c01dedbb818af63f61b1c5c7a112aefbc7f65c67 100644
+index 889a4804eaa128e2f79a4ea48b8aa796336576d1..c0ab6ad0bd58b03cae2662d21c9c8449d0ab3225 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -318,7 +318,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -319,7 +319,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          ++this.tickCount;
          this.knownMovePacketCount = this.receivedMovePacketCount;
          if (this.clientIsFloating && !this.player.isSleeping()) {
@@ -19,7 +19,7 @@ index 0f7f811510188f2b37443c5d2378a138dbf43b32..c01dedbb818af63f61b1c5c7a112aefb
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
                  this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
                  return;
-@@ -337,7 +337,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -338,7 +338,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
              this.vehicleLastGoodY = this.lastVehicle.getY();
              this.vehicleLastGoodZ = this.lastVehicle.getZ();
              if (this.clientVehicleIsFloating && this.player.getRootVehicle().getControllingPassenger() == this.player) {

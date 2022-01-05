@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 6fc8c5fc8a14e1ea19da8bd01199f7f8be7ce33a..86c213ae5733d407c534e5b5e75e1330c61c8289 100644
+index feabd407ad8cf6da9b74a9ba755da0f0e6a0313b..5564118497f6c0c04e95602b7f56756272a62f76 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -227,6 +227,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -228,6 +228,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
      private long keepAliveTime = Util.getMillis();
      private boolean keepAlivePending;
      private long keepAliveChallenge;
@@ -18,7 +18,7 @@ index 6fc8c5fc8a14e1ea19da8bd01199f7f8be7ce33a..86c213ae5733d407c534e5b5e75e1330
      // CraftBukkit start - multithreaded fields
      private final AtomicInteger chatSpamTickCount = new AtomicInteger();
      private final java.util.concurrent.atomic.AtomicInteger tabSpamLimiter = new java.util.concurrent.atomic.AtomicInteger(); // Paper - configurable tab spam limits
-@@ -358,6 +359,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -359,6 +360,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          long currentTime = Util.getMillis();
          long elapsedTime = currentTime - this.keepAliveTime;
  
@@ -40,7 +40,7 @@ index 6fc8c5fc8a14e1ea19da8bd01199f7f8be7ce33a..86c213ae5733d407c534e5b5e75e1330
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
-@@ -3084,6 +3100,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3101,6 +3117,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
  
      @Override
      public void handleKeepAlive(ServerboundKeepAlivePacket packet) {
