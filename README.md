@@ -5,7 +5,8 @@
   <h4>Mirai is ❗under heavy development❗ and contributions are welcome!</h4>
   <h5><b>This project is experimental, its usage in production environment is discouraged if you are not ready to face possible bugs.</b></h5>
   
-  ![Build status](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build/ver/1.18?style=flat-square)
+  ![Build status](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build/ver/1.18?style=for-the-badge)
+  [![Discord](https://img.shields.io/discord/928402257605701683?color=5865F2&label=discord&style=for-the-badge)](https://discord.gg/DdH6Yfu9gM)
 </div>
 
 ## Features
@@ -35,9 +36,6 @@ In order to distribute and use this server software, you need a paperclip file:
 ```bash
 ./gradlew applyPatches && ./gradlew createReobfPaperclipJar
 ```
-
-## Contact
-Join us on [Discord](https://discord.gg/DdH6Yfu9gM)!
 
 ## License
 Patches are licensed under GPL-3.0.  
