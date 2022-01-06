@@ -1,0 +1,224 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 6 Jan 2022 18:36:03 +0100
+Subject: [PATCH] Set some strings to use `new String[0]`
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/profile/PaperGameProfileRepository.java b/src/main/java/com/destroystokyo/paper/profile/PaperGameProfileRepository.java
+index 08fdb681a68e8be6e4062af0630957ce3e524806..d53550918418a456d9112e0b04a7671161044862 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/PaperGameProfileRepository.java
++++ b/src/main/java/com/destroystokyo/paper/profile/PaperGameProfileRepository.java
+@@ -40,7 +40,7 @@ public class PaperGameProfileRepository extends YggdrasilGameProfileRepository {
+ 
+         // Some things were not found.... Proceed to look up.
+         if (!unfoundNames.isEmpty()) {
+-            String[] namesArr = unfoundNames.toArray(new String[unfoundNames.size()]);
++            String[] namesArr = unfoundNames.toArray(me.titaniumtown.Constants.EMPTY_string_arr);
+             super.findProfilesByNames(namesArr, agent, new PreProfileLookupCallback(callback));
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 4f8c0c69a7492ba183f436d4062df177d9c7a9ec..c4be1526230b4ea88d5fb4e9c0f1d0b79803254b 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1000,23 +1000,23 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     }
+ 
+     // CraftBukkit start
+-    private boolean hasStopped = false;
++    private final java.util.concurrent.atomic.AtomicBoolean hasStopped = new java.util.concurrent.atomic.AtomicBoolean(false); // Mirai - use AtomicBoolean
+     public volatile boolean hasFullyShutdown = false; // Paper
+     private boolean hasLoggedStop = false; // Paper
+-    private final Object stopLock = new Object();
++    //private final Object stopLock = new Object();
+     public final boolean hasStopped() {
+-        synchronized (this.stopLock) {
+-            return this.hasStopped;
+-        }
++        return hasStopped.get(); // Mirai
+     }
+     // CraftBukkit end
+ 
+     public void stopServer() {
+         // CraftBukkit start - prevent double stopping on multiple threads
+-        synchronized(this.stopLock) {
+-            if (this.hasStopped) return;
+-            this.hasStopped = true;
+-        }
++        // Mirai start
++        //synchronized(stopLock) {
++        if (hasStopped.get()) return;
++        hasStopped.set(true);
++        //}
++        // Mirai end
+         if (!hasLoggedStop && isDebugging()) io.papermc.paper.util.TraceUtil.dumpTraceForThread("Server stopped"); // Paper
+         // Paper start - kill main thread, and kill it hard
+         shutdownThread = Thread.currentThread();
+@@ -1382,7 +1382,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     @Override
+     public Runnable wrapRunnable(Runnable runnable) { // Patina
+         // Paper start - anything that does try to post to main during watchdog crash, run on watchdog
+-        if (this.hasStopped && Thread.currentThread().equals(shutdownThread)) {
++        if (this.hasStopped.get() && Thread.currentThread().equals(shutdownThread)) { // Mirai
+             runnable.run();
+             runnable = () -> {};
+         }
+diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
+index d2b103d94fd020295624da2eeb07653f585b586c..5d127532af7a318c3e17c407478f56247b842f23 100644
+--- a/src/main/java/net/minecraft/server/level/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
+@@ -907,7 +907,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+             MutableBoolean mutableboolean = new MutableBoolean();
+ 
+             do {
+-                boolean isShuttingDown = level.getServer().hasStopped(); // Paper
++                //boolean isShuttingDown = level.getServer().hasStopped(); // Paper // Mirai - unused local variable
+                 mutableboolean.setFalse();
+                 list.stream().map((playerchunk) -> {
+                     CompletableFuture completablefuture;
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 35c1604ff678a5344bc9de824eb2788561d2dcaf..f7e11cb3ef22d336cf14a6f0573e87426532cf94 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -1512,9 +1512,6 @@ public class ServerLevel extends Level implements WorldGenLevel, IServerWorld {
+             ServerPlayer entityplayer = (ServerPlayer) iterator.next();
+ 
+             if (entityplayer != null && entityplayer.level == this && entityplayer.getId() != entityId) {
+-                double d0 = (double) pos.getX() - entityplayer.getX();
+-                double d1 = (double) pos.getY() - entityplayer.getY();
+-                double d2 = (double) pos.getZ() - entityplayer.getZ();
+ 
+                 // CraftBukkit start
+                 if (entityhuman != null && !entityplayer.getBukkitEntity().canSee(entityhuman.getBukkitEntity())) {
+@@ -1522,6 +1519,11 @@ public class ServerLevel extends Level implements WorldGenLevel, IServerWorld {
+                 }
+                 // CraftBukkit end
+ 
++                // Mirai - moved from above
++                double d0 = (double) pos.getX() - entityplayer.getX();
++                double d1 = (double) pos.getY() - entityplayer.getY();
++                double d2 = (double) pos.getZ() - entityplayer.getZ();
++
+                 if (d0 * d0 + d1 * d1 + d2 * d2 < 1024.0D) {
+                     entityplayer.connection.send(new ClientboundBlockDestructionPacket(entityId, pos, progress));
+                 }
+diff --git a/src/main/java/net/minecraft/server/players/OldUsersConverter.java b/src/main/java/net/minecraft/server/players/OldUsersConverter.java
+index 5445cb5910ec63408dc4379eec5e12d305182527..eefcf3f2073ba39ba8bba71850a48ae584224a57 100644
+--- a/src/main/java/net/minecraft/server/players/OldUsersConverter.java
++++ b/src/main/java/net/minecraft/server/players/OldUsersConverter.java
+@@ -330,7 +330,7 @@ public class OldUsersConverter {
+             }
+ 
+             try {
+-                final String[] astring = (String[]) list.toArray(new String[list.size()]);
++                final String[] astring = (String[]) list.toArray(me.titaniumtown.Constants.EMPTY_string_arr);
+                 ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback() {
+                     public void onProfileLookupSucceeded(GameProfile gameprofile) {
+                         minecraftServer.getProfileCache().add(gameprofile);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 9d9d76c4f44a8c2421d560de9e3eac9ae26290cf..04efe836d6bfb874d4fb4eb53121d3a6fc8ec18a 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1574,7 +1574,7 @@ public final class CraftServer implements Server {
+                     commands = ImmutableList.of(section.getString(key));
+                 }
+ 
+-                result.put(key, commands.toArray(new String[commands.size()]));
++                result.put(key, commands.toArray(me.titaniumtown.Constants.EMPTY_string_arr));
+             }
+         }
+ 
+@@ -2027,7 +2027,7 @@ public final class CraftServer implements Server {
+ 
+         players.addAll(this.getOnlinePlayers());
+ 
+-        return players.toArray(new OfflinePlayer[players.size()]);
++        return players.toArray(new OfflinePlayer[0]); // Mirai - use non-pre-sized array
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 6a72d883029f4b69395afffcb3e2ac36fe41942a..96f443bb00ccc26e5d0652187dcd0448ea1e298c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -1809,7 +1809,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+ 
+     @Override
+     public String[] getGameRules() {
+-        return CraftWorld.getGameRulesNMS().keySet().toArray(new String[CraftWorld.getGameRulesNMS().size()]);
++        return CraftWorld.getGameRulesNMS().keySet().toArray(me.titaniumtown.Constants.EMPTY_string_arr);
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+index b39117c4505926da0be9c8248964a233393e8e2d..c3bd2f966c5fc3ab51d36649f8f0b02ae9f1e18e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Collection;
++import java.util.Collections; // Mirai
+ import java.util.Optional;
+ import java.util.Set;
+ import net.minecraft.core.BlockPos;
+@@ -622,7 +623,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+ 
+     @Override
+     public boolean discoverRecipe(NamespacedKey recipe) {
+-        return this.discoverRecipes(Arrays.asList(recipe)) != 0;
++        return this.discoverRecipes(Collections.singletonList(recipe)) != 0; // Mirai - use singletonList
+     }
+ 
+     @Override
+@@ -632,7 +633,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+ 
+     @Override
+     public boolean undiscoverRecipe(NamespacedKey recipe) {
+-        return this.undiscoverRecipes(Arrays.asList(recipe)) != 0;
++        return this.undiscoverRecipes(Collections.singletonList(recipe)) != 0; // Mirai - use singleton list
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/help/MultipleCommandAliasHelpTopic.java b/src/main/java/org/bukkit/craftbukkit/help/MultipleCommandAliasHelpTopic.java
+index 3233ffe920c961f04045713232d90249b950db67..10566f504bebbcdf861b4bc9abf4edc6e4c20545 100644
+--- a/src/main/java/org/bukkit/craftbukkit/help/MultipleCommandAliasHelpTopic.java
++++ b/src/main/java/org/bukkit/craftbukkit/help/MultipleCommandAliasHelpTopic.java
+@@ -23,7 +23,7 @@ public class MultipleCommandAliasHelpTopic extends HelpTopic {
+         StringBuilder sb = new StringBuilder();
+         for (int i = 0; i < alias.getCommands().length; i++) {
+             if (i != 0) {
+-                sb.append(ChatColor.GOLD + " > " + ChatColor.WHITE);
++                sb.append(ChatColor.GOLD).append(" > ").append(ChatColor.WHITE); // Mirai - chain .append call instead of using +
+             }
+             sb.append("/");
+             sb.append(alias.getCommands()[i].getLabel());
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
+index 6e8edc80dd7dfa867901769fda82706746f1bcc5..2e346c516b1fabc23077250305218c48f9f2e0c2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
+@@ -169,7 +169,7 @@ public final class CraftChatMessage {
+                 this.appendNewComponent(message.length());
+             }
+ 
+-            this.output = this.list.toArray(new Component[this.list.size()]);
++            this.output = this.list.toArray(new Component[0]); // Mirai - use non-pre-sized array
+         }
+ 
+         private void appendNewComponent(int index) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/WeakCollection.java b/src/main/java/org/bukkit/craftbukkit/util/WeakCollection.java
+index 049d750d3af991dd14ac8cf644330404e74b2151..eaad5c3a4a7f2303bc7b1964eedfeeb3db6d70f0 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/WeakCollection.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/WeakCollection.java
+@@ -175,10 +175,6 @@ public final class WeakCollection<T> implements Collection<T> {
+     }
+ 
+     private Collection<T> toCollection() {
+-        ArrayList<T> collection = new ArrayList<T>();
+-        for (T value : this) {
+-            collection.add(value);
+-        }
+-        return collection;
++        return new ArrayList<>(this); // Mirai - just clone
+     }
+ }
