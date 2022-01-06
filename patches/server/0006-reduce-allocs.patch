@@ -345,10 +345,10 @@ index 2c988e05299d530d483e21ab452de0a03e5bdcbd..fcbbe52452f3e9ad4dcdbcc5d2dc20fa
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 607e78c24edabb26fd7494855087f7f19cfdc576..dfe1758aeb113a18339f1dbc5e71a9d6ef5ff99b 100644
+index 35ff7abd8251b0af6c23fbb63804db632ec5b85d..def1aadb3002441b34bebb24cf727b1b91a688ba 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -1009,7 +1009,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1011,7 +1011,7 @@ public abstract class Mob extends LivingEntity {
      @Override
      protected void dropCustomDeathLoot(DamageSource source, int lootingMultiplier, boolean allowDrops) {
          super.dropCustomDeathLoot(source, lootingMultiplier, allowDrops);
@@ -357,7 +357,7 @@ index 607e78c24edabb26fd7494855087f7f19cfdc576..dfe1758aeb113a18339f1dbc5e71a9d6
          int j = aenumitemslot.length;
  
          for (int k = 0; k < j; ++k) {
-@@ -1067,7 +1067,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1069,7 +1069,7 @@ public abstract class Mob extends LivingEntity {
              }
  
              boolean flag = true;
@@ -366,7 +366,7 @@ index 607e78c24edabb26fd7494855087f7f19cfdc576..dfe1758aeb113a18339f1dbc5e71a9d6
              int j = aenumitemslot.length;
  
              for (int k = 0; k < j; ++k) {
-@@ -1154,7 +1154,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1156,7 +1156,7 @@ public abstract class Mob extends LivingEntity {
          float f = difficulty.getSpecialMultiplier();
  
          this.enchantSpawnedWeapon(f);
@@ -375,7 +375,7 @@ index 607e78c24edabb26fd7494855087f7f19cfdc576..dfe1758aeb113a18339f1dbc5e71a9d6
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -1365,7 +1365,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1367,7 +1367,7 @@ public abstract class Mob extends LivingEntity {
              t0.setInvulnerable(this.isInvulnerable());
              if (flag) {
                  t0.setCanPickUpLoot(this.canPickUpLoot());

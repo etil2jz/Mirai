@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 042be2cf60a9d01698808d84f2e537a5eb952079..456bfb666238c9384b1fd70f85c4467449fc214a 100644
+index f55f8c0b2c748a5442199c0a7f772b02ed533753..c23408e641f7af74d126632813b4ba537898f62b 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -483,7 +483,13 @@ public abstract class PlayerList {
@@ -26,19 +26,20 @@ index 042be2cf60a9d01698808d84f2e537a5eb952079..456bfb666238c9384b1fd70f85c44674
  
      public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 8f07fceba57bf49d8a2e0d9c1dedf91d23bb3932..9f775115d5120d3fc514d9c0cea98272feecbb49 100644
+index 5b30b329959811f99f13f32166574f90e765bcb1..63d750d5858d20304b9608697ae618eb97cb6eb6 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -189,6 +189,11 @@ public class MiraiConfig {
-         fixProtocolLib = getBoolean("fix-protocollib", fixProtocolLib);
-     }
+@@ -184,6 +184,11 @@ public class MiraiConfig {
  
+     // Mirai - settings below
+ 
+-    
 +    public static boolean logPlayerLoginLoc = true;
 +    private static void logPlayerLoc() {
 +        logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
 +    }
 +
- 
++
  
  }
 \ No newline at end of file
