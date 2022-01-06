@@ -58,7 +58,7 @@ index f99d189f461921d37581e2fc1382af60921b0660..c0f65d6c73773e4872b30126775e5b02
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 41557a97b1bc1d4986efa9d4a5d7691ec250882f..1866d0a01cf921d306d4a3e251076f20b60463a1 100644
+index ff048b48ab243513967572872220176d826659fe..8ff419c0054fcb65257eb76b53323b318e303bc1 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -372,6 +372,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -77,7 +77,7 @@ index 41557a97b1bc1d4986efa9d4a5d7691ec250882f..1866d0a01cf921d306d4a3e251076f20
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1522,6 +1524,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1521,6 +1523,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
@@ -86,7 +86,7 @@ index 41557a97b1bc1d4986efa9d4a5d7691ec250882f..1866d0a01cf921d306d4a3e251076f20
          }
          // Paper end
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 9dcae48cd94c411176368312adf9f44b11af5760..2128063800421e0710db8f73ae9b460796bc649f 100644
+index 1be5ae3162f2e2b5a48310c162edf8bdc8a08c2b..475f080d91c7f7cbb012ed5a28dabc0ccab5a22c 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -46,6 +46,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;

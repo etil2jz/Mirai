@@ -19,7 +19,7 @@ index 0011192cdba6dcb7ca125ae4a49ca89a93cc40f2..ade6a3d0e90e8c82e3e90bd2d12369cc
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6c48c882e297f74b507ac363507da3586dad1d81..e05b0c80150d5db8696d5bb78ef3eb70363cd61c 100644
+index b4b8d2abe29239968cc623f6438c0156659f14e9..18e024c625e39f1f9e2815a777b6c1d155274806 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2724,12 +2724,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -39,10 +39,10 @@ index 6c48c882e297f74b507ac363507da3586dad1d81..e05b0c80150d5db8696d5bb78ef3eb70
  
              this.isInsidePortal = true;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index d2a5547b58c09245214d9722a07e0164ba921ddc..0275dac37ec5864e7b1e0b5c9a3dd9d7aa10a97f 100644
+index ede41bc4ab49065cc06e66189610791cab01b39d..f05dac79dc5a2bfacbe209bb36e13c4f55cac311 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -225,6 +225,11 @@ public class MiraiConfig {
+@@ -220,6 +220,11 @@ public class MiraiConfig {
          loggerSuppressUnrecognizedRecipeErrors = getBoolean("logger.suppress-unrecognized-recipe-errors", loggerSuppressUnrecognizedRecipeErrors);
      }
  

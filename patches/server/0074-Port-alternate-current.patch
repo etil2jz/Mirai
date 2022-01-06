@@ -2603,7 +2603,7 @@ index 184c70cd2954f4904518c3fee2a377d9c4e81cc3..cdc1ea044d5fa13af48f9b87e5e8a100
          super(settings, () -> {
              return BlockEntityType.TRAPPED_CHEST;
 diff --git a/src/main/java/net/minecraft/world/level/block/TripWireHookBlock.java b/src/main/java/net/minecraft/world/level/block/TripWireHookBlock.java
-index 02a3e1ced592784b9c66927c76376c7ab413367d..7070dabb09347b98570b7460da712a3b7e621bf7 100644
+index a4344bf2267112e3c1e31c07c9f6b8eae9666947..09159965c77dea23aa11bf5524ac7bffcebd7cc6 100644
 --- a/src/main/java/net/minecraft/world/level/block/TripWireHookBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/TripWireHookBlock.java
 @@ -26,8 +26,22 @@ import net.minecraft.world.level.gameevent.GameEvent;
@@ -2631,10 +2631,10 @@ index 02a3e1ced592784b9c66927c76376c7ab413367d..7070dabb09347b98570b7460da712a3b
      public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
      public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 58fedd73583f5c8d1c3d3971d994156f67ae082c..b5e0254f043e2d25bcbb98885558c117e2c72c44 100644
+index 726c0fdb46619e0e0c57b7b5a65be4270acdd0eb..4a6ece60ec3084409577e50486dda9707c23e935 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -242,4 +242,9 @@ public class MiraiConfig {
+@@ -237,4 +237,9 @@ public class MiraiConfig {
          signAllowColors = getBoolean("sign.allow-colors", signAllowColors);
      }
  

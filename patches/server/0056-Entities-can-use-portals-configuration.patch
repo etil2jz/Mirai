@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e05b0c80150d5db8696d5bb78ef3eb70363cd61c..7ad3ac00dd1107cca3be8ed02bddc2b55be6dcca 100644
+index 18e024c625e39f1f9e2815a777b6c1d155274806..9da77bc090385becb60d72842f9d2f05f5608546 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2729,7 +2729,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -29,10 +29,10 @@ index e05b0c80150d5db8696d5bb78ef3eb70363cd61c..7ad3ac00dd1107cca3be8ed02bddc2b5
  
      public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 0275dac37ec5864e7b1e0b5c9a3dd9d7aa10a97f..5605a084ff5a9d3c68fd1ad67bd6a0d07d239851 100644
+index f05dac79dc5a2bfacbe209bb36e13c4f55cac311..0e80ceca8f8188b8d0eb80e130699f6f6302a8fd 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -230,6 +230,9 @@ public class MiraiConfig {
+@@ -225,6 +225,9 @@ public class MiraiConfig {
          playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", playerFixStuckPortal);
      }
  

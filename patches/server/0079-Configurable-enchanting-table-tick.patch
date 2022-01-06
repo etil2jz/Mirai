@@ -19,10 +19,10 @@ index b03621ebd0a94ab2dceb9006aee43fd5320094e3..7afa4bd52d3816ffd5eba1afeec26abb
          blockEntity.oRot = blockEntity.rot;
          Player player = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 3.0D, false);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index b5e0254f043e2d25bcbb98885558c117e2c72c44..55a16321d86d7b0c149f799d8f16404455bb30d5 100644
+index 4a6ece60ec3084409577e50486dda9707c23e935..c13fc3c014c6f558c0582aedb221c9236ad0031d 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -247,4 +247,9 @@ public class MiraiConfig {
+@@ -242,4 +242,9 @@ public class MiraiConfig {
          alternateCurrent = getBoolean("enable-alternate-current", alternateCurrent);
      }
  

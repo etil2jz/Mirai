@@ -29,10 +29,10 @@ index 889a4804eaa128e2f79a4ea48b8aa796336576d1..c0ab6ad0bd58b03cae2662d21c9c8449
                      this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                      return;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 458d7aedfd8279f0e581415f350e867672718027..d6bc7e52e01bc6877fc96f0948dcbc192e64e2b0 100644
+index 667eaabe95e9b44cad64dd5aba5ac693f4d726ed..a24a35f3ef2812d2951fb13439f856ee9495226b 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -199,4 +199,13 @@ public class MiraiConfig {
+@@ -194,4 +194,13 @@ public class MiraiConfig {
          maxBees = getInt("max-bees-in-hive", maxBees);
      }
  

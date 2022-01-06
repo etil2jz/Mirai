@@ -43,10 +43,10 @@ index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..d243af83f3159d8a4d56d08dab022b31
          if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
              new Exception().printStackTrace();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 6b229fef229e136fff7598b9efab974997d48116..d2a5547b58c09245214d9722a07e0164ba921ddc 100644
+index ee0b35e703b1930b32a01b5fa532fdbaf60127c4..ede41bc4ab49065cc06e66189610791cab01b39d 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -216,6 +216,15 @@ public class MiraiConfig {
+@@ -211,6 +211,15 @@ public class MiraiConfig {
          useAlternateKeepAlive = getBoolean("use-alternate-keepalive", useAlternateKeepAlive);
      }
  

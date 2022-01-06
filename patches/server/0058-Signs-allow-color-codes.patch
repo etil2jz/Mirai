@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index f5087576843b23f2b1537f2062db74a10778d4a4..04ea3dfacf2f6a133bd635326a7b818f8038fccb 100644
+index ade6a3d0e90e8c82e3e90bd2d12369ccd0760eca..c93c3c3f83a60aa1769607a26148f2eb754cbda6 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1460,6 +1460,7 @@ public class ServerPlayer extends Player {
@@ -72,10 +72,10 @@ index 6371176fba41218a209ea59b4cafe5b2d4a685fd..7666bca74f4f68bb4e902ec2eb7c4895
      public CompoundTag getUpdateTag() {
          return this.saveWithoutMetadata();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index c105a9c58eacf9baf74c67f76fce2b4ef5879e0f..58fedd73583f5c8d1c3d3971d994156f67ae082c 100644
+index 1f6c73f15b9a289754d6f8dacad9eda5ff3fd752..726c0fdb46619e0e0c57b7b5a65be4270acdd0eb 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -236,8 +236,10 @@ public class MiraiConfig {
+@@ -231,8 +231,10 @@ public class MiraiConfig {
      }
  
      public static boolean signRightClickEdit = false;

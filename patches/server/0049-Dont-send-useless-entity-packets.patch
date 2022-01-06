@@ -42,10 +42,10 @@ index 4fa44b576404438d08085e1d8c82fa96206eae50..042985988d11ca9f1bf6a62ec0622392
          this.entity.stopSeenByPlayer(player);
          player.connection.send(new ClientboundRemoveEntitiesPacket(new int[]{this.entity.getId()}));
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index d6bc7e52e01bc6877fc96f0948dcbc192e64e2b0..01511376b5548468d63893bf8d69bae7f8f5f521 100644
+index a24a35f3ef2812d2951fb13439f856ee9495226b..8be485f3f68f42e09058fc543485137e03056266 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -206,6 +206,11 @@ public class MiraiConfig {
+@@ -201,6 +201,11 @@ public class MiraiConfig {
  		checkVehicleFlying = getBoolean("checks.vehicle-flight", checkVehicleFlying);
  	}
  

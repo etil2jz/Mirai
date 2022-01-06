@@ -58,10 +58,10 @@ index feabd407ad8cf6da9b74a9ba755da0f0e6a0313b..5564118497f6c0c04e95602b7f567562
          if (this.keepAlivePending && packet.getId() == this.keepAliveChallenge) {
              int i = (int) (Util.getMillis() - this.keepAliveTime);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 01511376b5548468d63893bf8d69bae7f8f5f521..6b229fef229e136fff7598b9efab974997d48116 100644
+index 8be485f3f68f42e09058fc543485137e03056266..ee0b35e703b1930b32a01b5fa532fdbaf60127c4 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -211,6 +211,11 @@ public class MiraiConfig {
+@@ -206,6 +206,11 @@ public class MiraiConfig {
          dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", dontSendUselessEntityPackets);
      }
  

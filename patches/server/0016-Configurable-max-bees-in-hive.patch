@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable max bees in hive
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 5c784e1155c16dbbe1b75bb5bcb3d73793d146a3..8eabe7113822d35ff53390e981ea69ad5f07d67d 100644
+index b05ac56823feaf062b1418c9e6dbe4268225f00f..2d981971497c3f06a3bae7a15679af462f489b6f 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
@@ -18,10 +18,10 @@ index 5c784e1155c16dbbe1b75bb5bcb3d73793d146a3..8eabe7113822d35ff53390e981ea69ad
      public BeehiveBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.BEEHIVE, pos, state);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 9f775115d5120d3fc514d9c0cea98272feecbb49..458d7aedfd8279f0e581415f350e867672718027 100644
+index 63d750d5858d20304b9608697ae618eb97cb6eb6..667eaabe95e9b44cad64dd5aba5ac693f4d726ed 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -194,6 +194,9 @@ public class MiraiConfig {
+@@ -189,6 +189,9 @@ public class MiraiConfig {
          logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
      }
  

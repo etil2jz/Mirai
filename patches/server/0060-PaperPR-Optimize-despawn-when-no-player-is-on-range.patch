@@ -5,10 +5,10 @@ Subject: [PATCH] PaperPR Optimize despawn when no player is on range
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 7e0d653eaf459430459a1c19dc86a787ef12bd63..66eea7efc285b127e9bf46cfeab83be8a869b71b 100644
+index def1aadb3002441b34bebb24cf727b1b91a688ba..d696bbb44994994af87ee0df5317ca94d20cb74c 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -794,9 +794,6 @@ public abstract class Mob extends LivingEntity {
+@@ -796,9 +796,6 @@ public abstract class Mob extends LivingEntity {
          } else if (!this.isPersistenceRequired() && !this.requiresCustomPersistence()) {
              // Paper start - optimise checkDespawn
              Player entityhuman = this.level.findNearbyPlayer(this, level.paperConfig.hardDespawnDistances.getInt(this.getType().getCategory()) + 1, EntitySelector.affectsSpawning); // Paper
@@ -18,7 +18,7 @@ index 7e0d653eaf459430459a1c19dc86a787ef12bd63..66eea7efc285b127e9bf46cfeab83be8
              // Paper end - optimise checkDespawn
  
              if (entityhuman != null) {
-@@ -816,6 +813,8 @@ public abstract class Mob extends LivingEntity {
+@@ -818,6 +815,8 @@ public abstract class Mob extends LivingEntity {
                  } else if (d0 < (double) l) {
                      this.noActionTime = 0;
                  }

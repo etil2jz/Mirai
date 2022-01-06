@@ -49,10 +49,10 @@ index ed3d78494735ceda14ad0ea23adeadc374f3b35e..88cc2da0e22c6449b260bc70b411926a
                  } else {
                      return InteractionResult.PASS;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 5605a084ff5a9d3c68fd1ad67bd6a0d07d239851..c105a9c58eacf9baf74c67f76fce2b4ef5879e0f 100644
+index 0e80ceca8f8188b8d0eb80e130699f6f6302a8fd..1f6c73f15b9a289754d6f8dacad9eda5ff3fd752 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -235,4 +235,9 @@ public class MiraiConfig {
+@@ -230,4 +230,9 @@ public class MiraiConfig {
          entitiesCanUsePortals = getBoolean("entities-can-use-portals", entitiesCanUsePortals);
      }
  
