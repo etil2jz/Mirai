@@ -14,7 +14,7 @@ index b470da69f271d1a5ebb9727c0c34944e85ce3a51..5e80825c0e98c0eb5c4309a9234e7b03
      private static final Logger LOGGER = LogManager.getLogger();
      private final File playerDir;
      protected final DataFixer fixerUpper;
-+    private final wtf.etil.mirai.server.cache.NBTCache dataCache = new wtf.etil.mirai.server.NBTCache(); // Mirai - NBT Cache system
++    private final wtf.etil.mirai.server.cache.NBTCache dataCache = new wtf.etil.mirai.server.cache.NBTCache(); // Mirai - NBT Cache system
  
      public PlayerDataStorage(LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer) {
          this.fixerUpper = dataFixer;
