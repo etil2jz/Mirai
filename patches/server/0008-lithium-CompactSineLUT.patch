@@ -49,14 +49,14 @@ index 0000000000000000000000000000000000000000..6af5d13b5dfb620306d8d7028aeb393f
 +        final float[] SINE_TABLE = Mth.getSinTable();
 +        // Copy the sine table, covering to raw int bits
 +        for (int i = 0; i < SINE_TABLE_INT.length; i++) {
-+            SINE_TABLE_INT[i] = Float.floatToRawIntBits(Mth.SIN[i]);
++            SINE_TABLE_INT[i] = Float.floatToRawIntBits(SINE_TABLE[i]);
 +        }
 +
-+        SINE_TABLE_MIDPOINT = Mth.SIN[Mth.SIN.length / 2];
++        SINE_TABLE_MIDPOINT = SINE_TABLE[SINE_TABLE.length / 2];
 +
 +        // Test that the lookup table is correct during runtime
-+        for (int i = 0; i < Mth.SIN.length; i++) {
-+            float expected = Mth.SIN[i];
++        for (int i = 0; i < SINE_TABLE.length; i++) {
++            float expected = SINE_TABLE[i];
 +            float value = lookup(i);
 +
 +            if (expected != value) {
