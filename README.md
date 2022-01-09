@@ -11,15 +11,16 @@
 
 ## Features
 
-- **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)**
-- **Reduced bandwidth consumption** from avoiding sending useless packets in certain situations.
+- **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)** for the best performance.
+- **Contains a few [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
+- **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
+- **Reduced bandwidth consumption and CPU usage** from avoiding sending useless packets in certain situations.
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
-- **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
-- **Login location** hiding feature, which adds another security layer in the logs.
-- **Removed metrics**, no one can collect data, not even us.
+- **Login location** hiding feature, which adds another security layer in the logs for admins.
+- **Toggleable metrics**, no one can collect data, not even us.
 - **Bugfixes** for several Minecraft issues.
-- **Faster methods** for Vanilla calls.
+- **Faster process** for Vanilla methods.
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
@@ -27,6 +28,7 @@ The latest JAR file can be downloaded here:
 [Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18/Mirai-1.18.1-R0.1-SNAPSHOT.jar)
 
 **Please note Java 17 is required.**
+
 You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
