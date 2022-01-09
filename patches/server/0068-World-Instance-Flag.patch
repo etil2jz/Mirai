@@ -19,10 +19,10 @@ index 2d2f1e3fe1c9314af18377458af74f8c6afa7603..4df7088e81ee6ccc7705d2c220ae80c3
          return new Throwable(entity + " Added to world at " + new java.util.Date());
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 010c4761ba43c9c856e2daf33615967b4687fb82..6a72d883029f4b69395afffcb3e2ac36fe41942a 100644
+index 7ca746e36a98e0b7d7e47c68962975242c4dd070..f404b38242485d081ecaad34a43eadcd9950cad2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1200,6 +1200,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1225,6 +1225,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          world.noSave = !value;
      }
  
