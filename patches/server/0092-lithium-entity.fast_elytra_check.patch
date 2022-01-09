@@ -14,7 +14,7 @@ index 9373e4ce1061d5cb3a2d22272671c668614dd4a8..a9cf45362ca7dfe9261098085993a133
      }
  
      private void updateFallFlying() {
-+        if (!this.getSharedFlag(7)) return; // Mirai
++        if (!this.isFallFlying()) return; // Mirai
 +
          boolean flag = this.getSharedFlag(7);
  
