@@ -1,0 +1,211 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Mon, 10 Jan 2022 18:07:44 -0500
+Subject: [PATCH] lithium: collections.brain and ai.task.memory_change_counting
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/Brain.java b/src/main/java/net/minecraft/world/entity/ai/Brain.java
+index d1d576a616797d7658c117582435434743aeef58..81c325573a392ddb7aad01e5d2fd075817c16f8d 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/Brain.java
++++ b/src/main/java/net/minecraft/world/entity/ai/Brain.java
+@@ -40,13 +40,21 @@ import net.minecraft.world.entity.schedule.Schedule;
+ import org.apache.commons.lang3.mutable.MutableObject;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++// JettPack start
++import it.unimi.dsi.fastutil.objects.Reference2ReferenceLinkedOpenHashMap;
++import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
++import java.util.ArrayList;
++// JettPack end
+ 
+ public class Brain<E extends LivingEntity> {
+     static final Logger LOGGER = LogManager.getLogger();
+     private final Supplier<Codec<Brain<E>>> codec;
+     private static final int SCHEDULE_UPDATE_DELAY = 20;
+-    private final Map<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> memories = Maps.newHashMap();
+-    private final Map<SensorType<? extends Sensor<? super E>>, Sensor<? super E>> sensors = Maps.newLinkedHashMap();
++    // JettPack start - lithium: collections.brain
++    private final Map<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> memories = new Reference2ReferenceOpenHashMap<>();
++    private final Map<SensorType<? extends Sensor<? super E>>, Sensor<? super E>> sensors = new Reference2ReferenceLinkedOpenHashMap<>();
++    private ArrayList<Map<Activity, Set<Behavior<? super E>>>> tasksSorted = new ArrayList<>();
++    // JettPack end
+     private final Map<Integer, Map<Activity, Set<Behavior<? super E>>>> availableBehaviorsByPriority = Maps.newTreeMap();
+     private Schedule schedule = Schedule.EMPTY;
+     private final Map<Activity, Set<Pair<MemoryModuleType<?>, MemoryStatus>>> activityRequirements = Maps.newHashMap();
+@@ -59,6 +67,12 @@ public class Brain<E extends LivingEntity> {
+     public static <E extends LivingEntity> Brain.Provider<E> provider(Collection<? extends MemoryModuleType<?>> memoryModules, Collection<? extends SensorType<? extends Sensor<? super E>>> sensors) {
+         return new Brain.Provider<>(memoryModules, sensors);
+     }
++    // JettPack start - ai.task.memory_change_counting
++    private long memoryModCount = 1;
++    public long getModCount() {
++        return memoryModCount;
++    }
++    // JettPack end
+ 
+     public static <E extends LivingEntity> Codec<Brain<E>> codec(Collection<? extends MemoryModuleType<?>> memoryModules, Collection<? extends SensorType<? extends Sensor<? super E>>> sensors) {
+         final MutableObject<Codec<Brain<E>>> mutableObject = new MutableObject<>();
+@@ -83,7 +97,7 @@ public class Brain<E extends LivingEntity> {
+                     mutableObject.setValue(mutableObject.getValue().apply2(Builder::add, dataResult2));
+                 });
+                 ImmutableList<Brain.MemoryValue<?>> immutableList = mutableObject.getValue().resultOrPartial(Brain.LOGGER::error).map(Builder::build).orElseGet(ImmutableList::of);
+-                return DataResult.success(new Brain<>(memoryModules, sensors, immutableList, mutableObject::getValue));
++                return DataResult.success(new Brain(memoryModules, sensors, immutableList, mutableObject::getValue)); // JettPack - decomp fix
+             }
+ 
+             private <T, U> DataResult<Brain.MemoryValue<U>> captureRead(MemoryModuleType<U> memoryModuleType, DynamicOps<T> dynamicOps, T object) {
+@@ -134,9 +148,7 @@ public class Brain<E extends LivingEntity> {
+     }
+ 
+     Stream<Brain.MemoryValue<?>> memories() {
+-        return this.memories.entrySet().stream().map((entry) -> {
+-            return Brain.MemoryValue.createUnchecked(entry.getKey(), entry.getValue());
+-        });
++        return this.memories.entrySet().stream().map(entry -> Brain.MemoryValue.createUnchecked((MemoryModuleType)entry.getKey(), (Optional)entry.getValue())); // JettPack - decomp fix
+     }
+ 
+     public boolean hasMemoryValue(MemoryModuleType<?> type) {
+@@ -164,14 +176,19 @@ public class Brain<E extends LivingEntity> {
+             if (memory.isPresent() && this.isEmptyCollection(memory.get().getValue())) {
+                 this.eraseMemory(type);
+             } else {
+-                this.memories.put(type, memory);
++                // JettPack start - lithium: ai.task.memory_change_counting
++                Object oldValue = this.memories.put(type, memory);
++                if (oldValue == null || ((Optional<?>) oldValue).isPresent() != ((Optional<?>) memory).isPresent()) {
++                    this.memoryModCount++;
++                }
++                // JettPack end
+             }
+         }
+ 
+     }
+ 
+     public <U> Optional<U> getMemory(MemoryModuleType<U> type) {
+-        return this.memories.get(type).map(ExpirableValue::getValue);
++        return ((Optional)this.memories.get(type)).map(object -> ((ExpirableValue)object).getValue()); // JettPack - decomp fix
+     }
+ 
+     public <U> long getTimeUntilExpiry(MemoryModuleType<U> type) {
+@@ -312,6 +329,7 @@ public class Brain<E extends LivingEntity> {
+ 
+     public void addActivity(Activity activity, int begin, ImmutableList<? extends Behavior<? super E>> list) {
+         this.addActivity(activity, this.createPriorityPairs(begin, list));
++        this.tasksSorted = new ArrayList<>(this.availableBehaviorsByPriority.values()); // JettPack - lithium: collections.brain
+     }
+ 
+     public void addActivityAndRemoveMemoryWhenStopped(Activity activity, int begin, ImmutableList<? extends Behavior<? super E>> tasks, MemoryModuleType<?> memoryType) {
+@@ -347,6 +365,7 @@ public class Brain<E extends LivingEntity> {
+     @VisibleForTesting
+     public void removeAllBehaviors() {
+         this.availableBehaviorsByPriority.clear();
++        this.tasksSorted = new ArrayList<>(this.availableBehaviorsByPriority.values()); // JettPack - lithium: collections.brain
+     }
+ 
+     public boolean isActive(Activity activity) {
+@@ -354,7 +373,7 @@ public class Brain<E extends LivingEntity> {
+     }
+ 
+     public Brain<E> copyWithoutBehaviors() {
+-        Brain<E> brain = new Brain<>(this.memories.keySet(), this.sensors.keySet(), ImmutableList.of(), this.codec);
++        Brain<E> brain = new Brain<E>(this.memories.keySet(), this.sensors. keySet(), ImmutableList.of(), this.codec); // JettPack - decomp fix
+ 
+         for(Entry<MemoryModuleType<?>, Optional<? extends ExpirableValue<?>>> entry : this.memories.entrySet()) {
+             MemoryModuleType<?> memoryModuleType = entry.getKey();
+@@ -405,7 +424,7 @@ public class Brain<E extends LivingEntity> {
+     private void startEachNonRunningBehavior(ServerLevel world, E entity) {
+         long l = world.getGameTime();
+ 
+-        for(Map<Activity, Set<Behavior<? super E>>> map : this.availableBehaviorsByPriority.values()) {
++        for(Map<Activity, Set<Behavior<? super E>>> map : this.tasksSorted) { // JettPack - lithium: collections.brain
+             for(Entry<Activity, Set<Behavior<? super E>>> entry : map.entrySet()) {
+                 Activity activity = entry.getKey();
+                 if (this.activeActivities.contains(activity)) {
+@@ -464,8 +483,8 @@ public class Brain<E extends LivingEntity> {
+         private final MemoryModuleType<U> type;
+         private final Optional<? extends ExpirableValue<U>> value;
+ 
+-        static <U> Brain.MemoryValue<U> createUnchecked(MemoryModuleType<U> type, Optional<? extends ExpirableValue<?>> data) {
+-            return new Brain.MemoryValue<>(type, data);
++        static <U> Brain.MemoryValue<U> createUnchecked(MemoryModuleType<U> type, Optional<? extends ExpirableValue<U>> data) { // JettPack - decomp fix
++            return new Brain.MemoryValue<U>(type, data); // JettPack - decomp fix
+         }
+ 
+         MemoryValue(MemoryModuleType<U> type, Optional<? extends ExpirableValue<U>> data) {
+@@ -499,7 +518,7 @@ public class Brain<E extends LivingEntity> {
+ 
+         public Brain<E> makeBrain(Dynamic<?> data) {
+             return this.codec.parse(data).resultOrPartial(Brain.LOGGER::error).orElseGet(() -> {
+-                return new Brain<>(this.memoryTypes, this.sensorTypes, ImmutableList.of(), () -> {
++                return new Brain(this.memoryTypes, this.sensorTypes, ImmutableList.of(), () -> { // JettPack - decomp fix
+                     return this.codec;
+                 });
+             });
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+index c24ff2ef1054523e58892c2b35080cffb6ab744a..2238e662f0c418548e51c3ec122106b7966921f1 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+@@ -6,6 +6,13 @@ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.world.entity.LivingEntity;
+ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+ import net.minecraft.world.entity.ai.memory.MemoryStatus;
++// JettPack start
++import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
++import it.unimi.dsi.fastutil.objects.ObjectIterator;
++import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
++import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
++import net.minecraft.world.entity.ai.Brain;
++// JettPack end
+ 
+ public abstract class Behavior<E extends LivingEntity> {
+     private static final int DEFAULT_DURATION = 60;
+@@ -27,10 +34,15 @@ public abstract class Behavior<E extends LivingEntity> {
+         this(requiredMemoryState, runTime, runTime);
+     }
+ 
++    // JettPack start - lithium: ai.task.memory_change_counting
++    private long cachedMemoryModCount;
++    private boolean cachedHasRequiredMemoryState;
++    // JettPack end
++
+     public Behavior(Map<MemoryModuleType<?>, MemoryStatus> requiredMemoryState, int minRunTime, int maxRunTime) {
+         this.minDuration = minRunTime;
+         this.maxDuration = maxRunTime;
+-        this.entryCondition = requiredMemoryState;
++        this.entryCondition = new Reference2ObjectOpenHashMap<>(requiredMemoryState); // JettPack - lithium: ai.task.memory_change_counting
+         // Paper start - configurable behavior tick rate and timings
+         String key = io.papermc.paper.util.ObfHelper.INSTANCE.deobfClassName(this.getClass().getName());
+         int lastSeparator = key.lastIndexOf('.');
+@@ -109,15 +121,24 @@ public abstract class Behavior<E extends LivingEntity> {
+     }
+ 
+     private boolean hasRequiredMemories(E entity) {
+-        for(Entry<MemoryModuleType<?>, MemoryStatus> entry : this.entryCondition.entrySet()) {
+-            MemoryModuleType<?> memoryModuleType = entry.getKey();
+-            MemoryStatus memoryStatus = entry.getValue();
+-            if (!entity.getBrain().checkMemory(memoryModuleType, memoryStatus)) {
+-                return false;
++        // JettPack start - lithium: ai.task.memory_change_counting
++        Brain<?> brain = entity.getBrain();
++        long modCount = brain.getModCount();
++        if (this.cachedMemoryModCount == modCount) {
++            return this.cachedHasRequiredMemoryState;
++        }
++        this.cachedMemoryModCount = modCount;
++
++        ObjectIterator<Reference2ObjectMap.Entry<MemoryModuleType<?>, MemoryStatus>> fastIterator = ((Reference2ObjectOpenHashMap<MemoryModuleType<?>, MemoryStatus>) this.entryCondition).reference2ObjectEntrySet().fastIterator();
++        while (fastIterator.hasNext()) {
++            Reference2ObjectMap.Entry<MemoryModuleType<?>, MemoryStatus> entry = fastIterator.next();
++            if (!brain.checkMemory(entry.getKey(), entry.getValue())) {
++                return this.cachedHasRequiredMemoryState = false;
+             }
+         }
+ 
+-        return true;
++        return this.cachedHasRequiredMemoryState = true;
++        // JettPack end
+     }
+ 
+     public static enum Status {
