@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Mon, 10 Jan 2022 22:28:46 -0500
+Subject: [PATCH] lithium: world.inline_height
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+index 2b697f0d0b59b5af5aa59850d5e501cde9acf577..868e05f910349826db4116f26499d8805bfa26b0 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
++++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+@@ -76,6 +76,54 @@ public class LevelChunk extends ChunkAccess {
+             return "<null>";
+         }
+     };
++
++    // JettPack start - lithium: world.inline_height
++    @Override
++    public int getMaxBuildHeight() {
++        return this.level.getMaxBuildHeight();
++    }
++
++    @Override
++    public int getSectionsCount() {
++        return this.level.getSectionsCount();
++    }
++
++    @Override
++    public int getMinSection() {
++        return this.level.getMinSection();
++    }
++
++    @Override
++    public int getMaxSection() {
++        return this.level.getMaxSection();
++    }
++
++    @Override
++    public boolean isOutsideBuildHeight(BlockPos pos) {
++        return this.level.isOutsideBuildHeight(pos);
++    }
++
++    @Override
++    public boolean isOutsideBuildHeight(int y) {
++        return this.level.isOutsideBuildHeight(y);
++    }
++
++    @Override
++    public int getSectionIndex(int y) {
++        return this.level.getSectionIndex(y);
++    }
++
++    @Override
++    public int getSectionIndexFromSectionY(int coord) {
++        return this.level.getSectionIndexFromSectionY(coord);
++    }
++
++    @Override
++    public int getSectionYFromSectionIndex(int index) {
++        return this.level.getSectionYFromSectionIndex(index);
++    }
++    // JettPack end
++
+     private final Map<BlockPos, LevelChunk.RebindableTickingBlockEntityWrapper> tickersInLevel;
+     public boolean loaded;
+     private boolean clientLightReady;
