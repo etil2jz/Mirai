@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index b9cc4aa7cd5694976c43f834bbf60412992c269f..fcf6606d7fde0a9f93a2bd1a8e20f8f6ddb9374b 100644
+index 7f8c9538c231a7aca163ecdb3966cd2dc23e2cad..1f41e0a3d2b4b5bd5f2db217ef24a5711ac8513d 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -251,6 +251,7 @@ public abstract class LivingEntity extends Entity {
@@ -29,7 +29,7 @@ index b9cc4aa7cd5694976c43f834bbf60412992c269f..fcf6606d7fde0a9f93a2bd1a8e20f8f6
  
              if (!landedState.isAir()) {
                  double d1 = Math.min((double) (0.2F + f / 15.0F), 2.5D);
-@@ -1922,7 +1923,7 @@ public abstract class LivingEntity extends Entity {
+@@ -1921,7 +1922,7 @@ public abstract class LivingEntity extends Entity {
          MobEffectInstance mobeffect = this.getEffect(MobEffects.JUMP);
          float f2 = mobeffect == null ? 0.0F : (float) (mobeffect.getAmplifier() + 1);
  

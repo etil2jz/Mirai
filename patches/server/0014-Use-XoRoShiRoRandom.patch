@@ -194,10 +194,10 @@ index 03726227fdd60e9cf77213d50184abff438e01ef..8220cb49c2d4d46120615b298ce36d10
  
      public BaseSpawner() {}
 diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
-index 6795132318a4e8b4c7a33b6f4b89a730ea66b97f..b8d83a0d56ce2285ee17c0b0226bd08d4cc304c0 100644
+index 97f99a06b8954b08af9f4156abe8abdad359349a..e0e27004d67fd759903645cff8a491e5516aeea8 100644
 --- a/src/main/java/net/minecraft/world/level/Explosion.java
 +++ b/src/main/java/net/minecraft/world/level/Explosion.java
-@@ -88,7 +88,7 @@ public class Explosion {
+@@ -89,7 +89,7 @@ public class Explosion {
      }
  
      public Explosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType) {

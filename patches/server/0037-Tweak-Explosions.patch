@@ -7,10 +7,10 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
-index b8d83a0d56ce2285ee17c0b0226bd08d4cc304c0..804e335effeb42c6cc39ffbbefe386266c1b3d57 100644
+index e0e27004d67fd759903645cff8a491e5516aeea8..354d6aa1fdead781ff7ff4c5e7fa261181ce754d 100644
 --- a/src/main/java/net/minecraft/world/level/Explosion.java
 +++ b/src/main/java/net/minecraft/world/level/Explosion.java
-@@ -155,6 +155,7 @@ public class Explosion {
+@@ -156,6 +156,7 @@ public class Explosion {
          int i;
          int j;
  
@@ -18,7 +18,7 @@ index b8d83a0d56ce2285ee17c0b0226bd08d4cc304c0..804e335effeb42c6cc39ffbbefe38626
          for (int k = 0; k < 16; ++k) {
              for (i = 0; i < 16; ++i) {
                  for (j = 0; j < 16; ++j) {
-@@ -209,6 +210,7 @@ public class Explosion {
+@@ -210,6 +211,7 @@ public class Explosion {
                  }
              }
          }
@@ -26,7 +26,7 @@ index b8d83a0d56ce2285ee17c0b0226bd08d4cc304c0..804e335effeb42c6cc39ffbbefe38626
  
          this.toBlow.addAll(set);
          float f2 = this.radius * 2.0F;
-@@ -219,7 +221,7 @@ public class Explosion {
+@@ -220,7 +222,7 @@ public class Explosion {
          int i1 = Mth.floor(this.y + (double) f2 + 1.0D);
          int j1 = Mth.floor(this.z - (double) f2 - 1.0D);
          int k1 = Mth.floor(this.z + (double) f2 + 1.0D);
@@ -35,7 +35,7 @@ index b8d83a0d56ce2285ee17c0b0226bd08d4cc304c0..804e335effeb42c6cc39ffbbefe38626
          Vec3 vec3d = new Vec3(this.x, this.y, this.z);
  
          for (int l1 = 0; l1 < list.size(); ++l1) {
-@@ -279,7 +281,7 @@ public class Explosion {
+@@ -300,7 +302,7 @@ public class Explosion {
          boolean flag1 = this.blockInteraction != Explosion.BlockInteraction.NONE;
  
          if (particles) {

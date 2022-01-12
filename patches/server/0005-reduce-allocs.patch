@@ -262,7 +262,7 @@ index e80176708db486190dd527e3ade5fc690ceb39f7..4fa44b576404438d08085e1d8c82fa96
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index c7229e120d601619d2ea869d7aa506fb3b78cde4..2d2f1e3fe1c9314af18377458af74f8c6afa7603 100644
+index 27791d82b3343f14ff99efd4aed2193ea276b852..484cdad55acbaaecd223186750e36b60fe8c4bfb 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -846,7 +846,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -332,10 +332,10 @@ index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c8
  
      public ZeroBitStorage(int size) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 2c988e05299d530d483e21ab452de0a03e5bdcbd..fcbbe52452f3e9ad4dcdbcc5d2dc20fa5d098746 100644
+index d4da096f22bd3c118304fb00c7b9763562b9c889..7d7a85508adbbe905a7b95c6b625bfed24ba330d 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3022,7 +3022,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3021,7 +3021,7 @@ public abstract class LivingEntity extends Entity {
      @Nullable
      private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
          Map<EquipmentSlot, ItemStack> map = null;
