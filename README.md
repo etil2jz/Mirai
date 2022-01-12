@@ -13,6 +13,7 @@
 
 - **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)** for the best performance.
 - **Contains a few [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
+- **Integrates [Hydrogen](https://github.com/CaffeineMC/hydrogen-fabric)** which reduces memory consumption.
 - **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
 - **Reduced bandwidth consumption and CPU usage** from avoiding sending useless packets in certain situations.
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
