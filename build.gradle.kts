@@ -60,7 +60,7 @@ subprojects {
 paperweight {
     serverProject.set(project(":mirai-server"))
 
-    remapRepo.set("https://maven.quiltmc.org/")
+    remapRepo.set("https://maven.quiltmc.org/repository/release/")
     decompileRepo.set("https://maven.quiltmc.org/")
 
     useStandardUpstream("pufferfish") {
