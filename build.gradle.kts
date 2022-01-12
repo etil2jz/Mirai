@@ -15,9 +15,9 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc.tiny-remapper:0.7.1:fat")
-    decompiler("org.quiltmc.quiltflower:1.7.0")
-    paperclip("io.papermc.paperclip:3.0.2")
+    remapper("org.quiltmc:tiny-remapper:0.7.1:fat")
+    decompiler("org.quiltmc:quiltflower:1.7.0")
+    paperclip("io.papermc:paperclip:3.0.2")
 }
 
 subprojects {
