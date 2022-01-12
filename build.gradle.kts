@@ -15,9 +15,9 @@ repositories {
 }
 
 dependencies {
-    remapper("net.fabricmc:tiny-remapper:0.7.0:fat")
+    remapper("org.quiltmc.tiny-remapper:0.7.1:fat")
     decompiler("org.quiltmc.quiltflower:1.7.0")
-    paperclip("io.papermc:paperclip:3.0.2")
+    paperclip("io.papermc.paperclip:3.0.2")
 }
 
 subprojects {
@@ -60,7 +60,7 @@ subprojects {
 paperweight {
     serverProject.set(project(":mirai-server"))
 
-    remapRepo.set("https://maven.fabricmc.net/")
+    remapRepo.set("https://maven.quiltmc.org/")
     decompileRepo.set("https://maven.quiltmc.org/")
 
     useStandardUpstream("pufferfish") {
