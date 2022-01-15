@@ -1,0 +1,230 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Tue, 11 Jan 2022 15:28:32 -0500
+Subject: [PATCH] lithium: ai.brain
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/MaskedList.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/MaskedList.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..06399c159c8b779bb65149704490671e0c04d4c2
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/MaskedList.java
+@@ -0,0 +1,87 @@
++package me.jellysquid.mods.lithium.common.util.collections;
++
++import it.unimi.dsi.fastutil.objects.ObjectArrayList;
++
++import java.util.*;
++import java.util.function.Consumer;
++
++public class MaskedList<E> extends AbstractList<E> {
++    private final ObjectArrayList<E> allElements;
++    private final BitSet visibleMask;
++
++    public MaskedList(ObjectArrayList<E> allElements) {
++        this.allElements = allElements;
++        this.visibleMask = new BitSet();
++    }
++
++    public void setVisible(E element, final boolean visible) {
++        int i = -1;
++        if (visible) {
++            do {
++                i = this.visibleMask.nextClearBit(i + 1);
++            } while (element != this.allElements.get(i));
++            this.visibleMask.set(i);
++        } else {
++            do {
++                i = this.visibleMask.nextSetBit(i + 1);
++            } while (element != this.allElements.get(i));
++            this.visibleMask.clear(i);
++        }
++    }
++
++    @Override
++    public Iterator<E> iterator() {
++        return new Iterator<E>() {
++            int nextIndex = 0;
++
++            @Override
++            public boolean hasNext() {
++                return MaskedList.this.visibleMask.nextSetBit(this.nextIndex) != -1;
++            }
++
++            @Override
++            public E next() {
++                int index = MaskedList.this.visibleMask.nextSetBit(this.nextIndex);
++                this.nextIndex = index + 1;
++                return MaskedList.this.allElements.get(index);
++            }
++        };
++    }
++
++    @Override
++    public Spliterator<E> spliterator() {
++        return new Spliterators.AbstractSpliterator<E>(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.NONNULL) {
++            int nextIndex = 0;
++
++            @Override
++            public boolean tryAdvance(Consumer<? super E> action) {
++                int index = MaskedList.this.visibleMask.nextSetBit(this.nextIndex);
++                if (index == -1) {
++                    return false;
++                }
++                this.nextIndex = index + 1;
++                action.accept(MaskedList.this.allElements.get(index));
++                return true;
++            }
++        };
++    }
++
++    @Override
++    public E get(int index) {
++        if (index < 0 || index >= this.size()) {
++            throw new IndexOutOfBoundsException(index);
++        }
++
++        int i = 0;
++        while (index >= 0) {
++            index--;
++            i = this.visibleMask.nextSetBit(i + 1);
++        }
++        return this.allElements.get(i);
++    }
++
++    @Override
++    public int size() {
++        return this.visibleMask.cardinality();
++    }
++}
+diff --git a/src/main/java/net/minecraft/world/entity/ai/Brain.java b/src/main/java/net/minecraft/world/entity/ai/Brain.java
+index 8179f5bc2bcd5ddb46e790b6e906ea9a517ed5b0..500a0e8505c181fa61d1b0c173bac03cd38d9616 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/Brain.java
++++ b/src/main/java/net/minecraft/world/entity/ai/Brain.java
+@@ -44,6 +44,7 @@ import org.apache.logging.log4j.Logger;
+ import it.unimi.dsi.fastutil.objects.Reference2ReferenceLinkedOpenHashMap;
+ import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+ import java.util.ArrayList;
++import me.jellysquid.mods.lithium.common.util.collections.MaskedList;
+ // JettPack end
+ 
+ public class Brain<E extends LivingEntity> {
+@@ -55,6 +56,7 @@ public class Brain<E extends LivingEntity> {
+     private final Map<SensorType<? extends Sensor<? super E>>, Sensor<? super E>> sensors = new Reference2ReferenceLinkedOpenHashMap<>();
+     private ArrayList<Map<Activity, Set<Behavior<? super E>>>> tasksSorted = new ArrayList<>();
+     // JettPack end
++    private MaskedList<Behavior<? super E>> flatTasks; // JettPack - lithium: ai.brain
+     private final Map<Integer, Map<Activity, Set<Behavior<? super E>>>> availableBehaviorsByPriority = Maps.newTreeMap();
+     private Schedule schedule = Schedule.EMPTY;
+     private final Map<Activity, Set<Pair<MemoryModuleType<?>, MemoryStatus>>> activityRequirements = Maps.newHashMap();
+@@ -74,6 +76,22 @@ public class Brain<E extends LivingEntity> {
+     }
+     // JettPack end
+ 
++    // JettPack start - ai.brain
++    private void initTaskList() {
++        ObjectArrayList<Behavior<? super E>> list = new ObjectArrayList<>();
++
++        for (Map<Activity, Set<Behavior<? super E>>> map : this.availableBehaviorsByPriority.values()) {
++            for (Set<Behavior<? super E>> set : map.values()) {
++                for (Behavior<? super E> task : set) {
++                    //noinspection UseBulkOperation
++                    list.add(task);
++                }
++            }
++        }
++        this.flatTasks = new MaskedList<>(list);
++    }
++    // JettPack end
++
+     public static <E extends LivingEntity> Codec<Brain<E>> codec(Collection<? extends MemoryModuleType<?>> memoryModules, Collection<? extends SensorType<? extends Sensor<? super E>>> sensors) {
+         final MutableObject<Codec<Brain<E>>> mutableObject = new MutableObject<>();
+         mutableObject.setValue((new MapCodec<Brain<E>>() {
+@@ -141,7 +159,7 @@ public class Brain<E extends LivingEntity> {
+             memoryValue.setMemoryInternal(this);
+         }
+         this.tasksSorted = new ArrayList<>(this.availableBehaviorsByPriority.values()); // JettPack - lithium: collections.brain
+-
++        this.flatTasks = null; // JettPack - lithium: ai.brain
+     }
+ 
+     public <T> DataResult<T> serializeStart(DynamicOps<T> ops) {
+@@ -244,19 +262,12 @@ public class Brain<E extends LivingEntity> {
+     @Deprecated
+     @VisibleForDebug
+     public List<Behavior<? super E>> getRunningBehaviors() {
+-        List<Behavior<? super E>> list = new ObjectArrayList<>();
+-
+-        for(Map<Activity, Set<Behavior<? super E>>> map : this.availableBehaviorsByPriority.values()) {
+-            for(Set<Behavior<? super E>> set : map.values()) {
+-                for(Behavior<? super E> behavior : set) {
+-                    if (behavior.getStatus() == Behavior.Status.RUNNING) {
+-                        list.add(behavior);
+-                    }
+-                }
+-            }
++        // JettPack start - lithium: ai.brain
++        if (this.flatTasks == null) {
++            this.initTaskList();
+         }
+-
+-        return list;
++        return this.flatTasks;
++        // JettPack end
+     }
+ 
+     public void useDefaultActivity() {
+@@ -369,6 +380,7 @@ public class Brain<E extends LivingEntity> {
+     public void removeAllBehaviors() {
+         this.availableBehaviorsByPriority.clear();
+         this.tasksSorted = new ArrayList<>(this.availableBehaviorsByPriority.values()); // JettPack - lithium: collections.brain
++        this.flatTasks = null; // JettPack - lithium: ai.brain
+     }
+ 
+     public boolean isActive(Activity activity) {
+@@ -419,7 +431,13 @@ public class Brain<E extends LivingEntity> {
+         long l = entity.level.getGameTime();
+ 
+         for(Behavior<? super E> behavior : this.getRunningBehaviors()) {
++            // JettPack start - lithium: ai.brain
+             behavior.doStop(world, entity, l);
++            if (this.flatTasks == null) {
++                this.initTaskList();
++            }
++            this.flatTasks.setVisible(behavior, false);
++            // JettPack end
+         }
+ 
+     }
+@@ -434,6 +452,14 @@ public class Brain<E extends LivingEntity> {
+                     for(Behavior<? super E> behavior : entry.getValue()) {
+                         if (behavior.getStatus() == Behavior.Status.STOPPED) {
+                             behavior.tryStart(world, entity, l);
++                            // JettPack start - lithium: ai.brain
++                            if (behavior.getStatus() == Behavior.Status.RUNNING) {
++                                if (this.flatTasks == null) {
++                                    this.initTaskList();
++                                }
++                                this.flatTasks.setVisible(behavior, true);
++                            }
++                            // JettPack end
+                         }
+                     }
+                 }
+@@ -447,6 +473,14 @@ public class Brain<E extends LivingEntity> {
+ 
+         for(Behavior<? super E> behavior : this.getRunningBehaviors()) {
+             behavior.tickOrStop(world, entity, l);
++            // JettPack start - lithium: ai.brain
++            if (behavior.getStatus() != Behavior.Status.RUNNING) {
++                if (this.flatTasks == null) {
++                    this.initTaskList();
++                }
++                this.flatTasks.setVisible(behavior, false);
++            }
++            // JettPack end
+         }
+ 
+     }
