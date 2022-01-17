@@ -145,105 +145,24 @@ index 0000000000000000000000000000000000000000..44085c98292654ebb1f6d522b908bd72
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
-index cbb044019629796c5b4f0ff708a5a4084932c5f9..53620a833ce92e97866d17f9b7273421d98e2cfd 100644
+index 22e94c9c01b845c363ede1ec6e86c5d115c56c7d..c0bd6e5c4424748a758c763028d87a161df3d9d3 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 @@ -1,5 +1,6 @@
  package net.minecraft.world.level.levelgen.synth;
  
-+import com.ishland.c2me.libs.vectorized_algorithms.VectorizedAlgorithms; // Mirai
++import com.ishland.c2me.libs.vectorized_algorithms.VectorizedAlgorithms; // Mirai - c2me: vectorizations.vectorize_noise
  import com.google.common.annotations.VisibleForTesting;
  import net.minecraft.util.Mth;
  import net.minecraft.world.level.levelgen.RandomSource;
-@@ -115,45 +116,49 @@ public final class ImprovedNoise {
-      * @reason inline math & small optimization: remove frequent type conversions and redundant ops
+@@ -115,6 +116,7 @@ public final class ImprovedNoise {
+      * @reason inline Mth & small optimization: remove frequent type conversions and redundant ops
       */
      private double sampleAndLerp(int sectionX, int sectionY, int sectionZ, double localX, double localY, double localZ, double fadeLocalX) {
--        int i = this.p[sectionX & 0xFF];
--        int j = this.p[sectionX + 1 & 0xFF];
--        int k = this.p[i + sectionY & 0xFF];
--        int l = this.p[i + sectionY + 1 & 0xFF];
--        int m = this.p[j + sectionY & 0xFF];
--        int n = this.p[j + sectionY + 1 & 0xFF];
--
--        double d = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][0] * localX)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][1] * localY)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][2] * localZ);
--        double e = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][1] * localY)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][2] * localZ);
--        double f = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][0] * localX)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][2] * localZ);
--        double g = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][2] * localZ);
--        double h = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][0] * localX)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][1] * localY)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
--        double o = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][1] * localY)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
--        double p = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][0] * localX)
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
--        double q = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
--                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
--
--        double r = localX * localX * localX * (localX * (localX * 6.0 - 15.0) + 10.0);
--        double s = fadeLocalX * fadeLocalX * fadeLocalX * (fadeLocalX * (fadeLocalX * 6.0 - 15.0) + 10.0);
--        double t = localZ * localZ * localZ * (localZ * (localZ * 6.0 - 15.0) + 10.0);
--
--        double v0 = d + r * (e - d) + s * (f + r * (g - f) - (d + r * (e - d)));
--        double v1 = h + r * (o - h) + s * (p + r * (q - p) - (h + r * (o - h)));
--        return v0 + (t * (v1 - v0));
-+        if (wtf.etil.mirai.MiraiConfig.vectorizedPerlinNoise) {
-+            return VectorizedAlgorithms.perlinNoiseVectorized(p, sectionX, sectionY, sectionZ, localX, localY, localZ, fadeLocalX);
-+        } else {
-+            int i = this.p[sectionX & 0xFF];
-+            int j = this.p[sectionX + 1 & 0xFF];
-+            int k = this.p[i + sectionY & 0xFF];
-+            int l = this.p[i + sectionY + 1 & 0xFF];
-+            int m = this.p[j + sectionY & 0xFF];
-+            int n = this.p[j + sectionY + 1 & 0xFF];
-+
-+            double d = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][0] * localX)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][1] * localY)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][2] * localZ);
-+            double e = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][1] * localY)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][2] * localZ);
-+            double f = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][0] * localX)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][2] * localZ);
-+            double g = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][2] * localZ);
-+            double h = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][0] * localX)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][1] * localY)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+            double o = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][1] * localY)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+            double p = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][0] * localX)
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+            double q = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
-+                    + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+
-+            double r = localX * localX * localX * (localX * (localX * 6.0 - 15.0) + 10.0);
-+            double s = fadeLocalX * fadeLocalX * fadeLocalX * (fadeLocalX * (fadeLocalX * 6.0 - 15.0) + 10.0);
-+            double t = localZ * localZ * localZ * (localZ * (localZ * 6.0 - 15.0) + 10.0);
-+
-+            double v0 = d + r * (e - d) + s * (f + r * (g - f) - (d + r * (e - d)));
-+            double v1 = h + r * (o - h) + s * (p + r * (q - p) - (h + r * (o - h)));
-+            return v0 + (t * (v1 - v0));
-+        }
-     }
-     // Mirai end
- 
++        if (wtf.etil.mirai.MiraiConfig.vectorizedPerlinNoise) { return VectorizedAlgorithms.perlinNoiseVectorized(p, sectionX, sectionY, sectionZ, localX, localY, localZ, fadeLocalX); } // Mirai - c2me: vectorizations.vectorize_noise
+         // TODO [VanillaCopy] but inlined
+         int i = this.p[sectionX & 0xFF];
+         int j = this.p[sectionX + 1 & 0xFF];
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 1ba057cbd0ec23cd7ef3d3d1c7685f44cfe34eec..90cf922c8df669ac80451d64b376918dece09dc9 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java

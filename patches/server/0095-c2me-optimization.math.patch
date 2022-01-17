@@ -7,14 +7,14 @@ Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/C2ME-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
-index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a4084932c5f9 100644
+index 765b56776e457109ddea9f7dbfd0b17beefee51e..22e94c9c01b845c363ede1ec6e86c5d115c56c7d 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 @@ -11,6 +11,27 @@ public final class ImprovedNoise {
      public final double yo;
      public final double zo;
  
-+    // Mirai start
++    // Mirai start - c2me: optimization.math
 +    private static final double[][] SIMPLEX_NOISE_GRADIENTS = new double[][]{
 +            {1, 1, 0},
 +            {-1, 1, 0},
@@ -42,7 +42,7 @@ index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a408
          return this.noise(x, y, z, 0.0D, 0.0D);
      }
  
-+    // Mirai start
++    // Mirai start - c2me: optimization.math
 +    /**
 +     * @author ishland
 +     * @reason optimize: remove frequent type conversions
@@ -90,14 +90,14 @@ index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a408
  
      public double noiseWithDerivative(double x, double y, double z, double[] ds) {
          double d = x + this.xo;
-@@ -84,26 +109,53 @@ public final class ImprovedNoise {
+@@ -84,26 +109,46 @@ public final class ImprovedNoise {
          return this.p[hash & 255] & 255;
      }
  
-+    // Mirai start
++    // Mirai start - c2me: optimization.math
 +    /**
 +     * @author ishland
-+     * @reason inline math & small optimization: remove frequent type conversions and redundant ops
++     * @reason inline Mth & small optimization: remove frequent type conversions and redundant ops
 +     */
      private double sampleAndLerp(int sectionX, int sectionY, int sectionZ, double localX, double localY, double localZ, double fadeLocalX) {
 -        int i = this.p(sectionX);
@@ -118,6 +118,7 @@ index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a408
 -        double s = Mth.smoothstep(fadeLocalX);
 -        double t = Mth.smoothstep(localZ);
 -        return Mth.lerp3(r, s, t, d, e, f, g, h, o, p, q);
++        // TODO [VanillaCopy] but inlined
 +        int i = this.p[sectionX & 0xFF];
 +        int j = this.p[sectionX + 1 & 0xFF];
 +        int k = this.p[i + sectionY & 0xFF];
@@ -125,30 +126,22 @@ index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a408
 +        int m = this.p[j + sectionY & 0xFF];
 +        int n = this.p[j + sectionY + 1 & 0xFF];
 +
-+        double d = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][0] * localX)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][1] * localY)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15][2] * localZ);
-+        double e = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][1] * localY)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15][2] * localZ);
-+        double f = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][0] * localX)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15][2] * localZ);
-+        double g = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][0] * (localX - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][1] * (localY - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15][2] * localZ);
-+        double h = (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][0] * localX)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][1] * localY)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+        double o = (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][1] * localY)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+        double p = (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][0] * localX)
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
-+        double q = (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][0] * (localX - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][1] * (localY - 1.0))
-+                + (SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15][2] * (localZ - 1.0));
++        final double[] grad0 = SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ & 0xFF] & 15];
++        final double[] grad1 = SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ & 0xFF] & 15];
++        final double[] grad2 = SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ & 0xFF] & 15];
++        final double[] grad3 = SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ & 0xFF] & 15];
++        final double[] grad4 = SIMPLEX_NOISE_GRADIENTS[this.p[k + sectionZ + 1 & 0xFF] & 15];
++        final double[] grad5 = SIMPLEX_NOISE_GRADIENTS[this.p[m + sectionZ + 1 & 0xFF] & 15];
++        final double[] grad6 = SIMPLEX_NOISE_GRADIENTS[this.p[l + sectionZ + 1 & 0xFF] & 15];
++        final double[] grad7 = SIMPLEX_NOISE_GRADIENTS[this.p[n + sectionZ + 1 & 0xFF] & 15];
++        double d = (grad0[0] * localX) + (grad0[1] * localY) + (grad0[2] * localZ);
++        double e = (grad1[0] * (localX - 1.0)) + (grad1[1] * localY) + (grad1[2] * localZ);
++        double f = (grad2[0] * localX) + (grad2[1] * (localY - 1.0)) + (grad2[2] * localZ);
++        double g = (grad3[0] * (localX - 1.0)) + (grad3[1] * (localY - 1.0)) + (grad3[2] * localZ);
++        double h = (grad4[0] * localX) + (grad4[1] * localY) + (grad4[2] * (localZ - 1.0));
++        double o = (grad5[0] * (localX - 1.0)) + (grad5[1] * localY) + (grad5[2] * (localZ - 1.0));
++        double p = (grad6[0] * localX) + (grad6[1] * (localY - 1.0)) + (grad6[2] * (localZ - 1.0));
++        double q = (grad7[0] * (localX - 1.0)) + (grad7[1] * (localY - 1.0)) + (grad7[2] * (localZ - 1.0));
 +
 +        double r = localX * localX * localX * (localX * (localX * 6.0 - 15.0) + 10.0);
 +        double s = fadeLocalX * fadeLocalX * fadeLocalX * (fadeLocalX * (fadeLocalX * 6.0 - 15.0) + 10.0);
@@ -163,14 +156,14 @@ index 765b56776e457109ddea9f7dbfd0b17beefee51e..cbb044019629796c5b4f0ff708a5a408
      private double sampleWithDerivative(int sectionX, int sectionY, int sectionZ, double localX, double localY, double localZ, double[] ds) {
          int i = this.p(sectionX);
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
-index b6b56a3db74e07ca015deb7a8ebddc97f6228025..7b52299339efc075d370f9d1750cc57a8cf717e2 100644
+index b6b56a3db74e07ca015deb7a8ebddc97f6228025..510e83b92028a6d338407c7b428be3daa2355932 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
 @@ -164,9 +164,15 @@ public class PerlinNoise {
          return this.noiseLevels[this.noiseLevels.length - 1 - octave];
      }
  
-+    // Mirai start
++    // Mirai start - c2me: optimization.math
 +    /**
 +     * @author ishland
 +     * @reason remove frequent type conversion

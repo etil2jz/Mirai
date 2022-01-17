@@ -7,10 +7,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d8baa239c8cec5a67e30e4756ef37d47f4e6e367..5927315477992dd32b6cdc283d0e84dc500ebf37 100644
+index 3009b111a25e901504e8845465574451196fc217..2809bc3e3772ca0d75adb964679889f259795e70 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1773,10 +1773,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1777,10 +1777,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
          }
      }
  
@@ -28,7 +28,7 @@ index d8baa239c8cec5a67e30e4756ef37d47f4e6e367..5927315477992dd32b6cdc283d0e84dc
      public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
          this.absMoveTo(x, y, z);
          this.setYRot(yaw % 360.0F);
-@@ -4142,6 +4148,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -4150,6 +4156,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
          return this.getZ((2.0D * this.random.nextDouble() - 1.0D) * widthScale);
      }
  
@@ -42,7 +42,7 @@ index d8baa239c8cec5a67e30e4756ef37d47f4e6e367..5927315477992dd32b6cdc283d0e84dc
          // Paper start
          this.setPosRaw(x, y, z, false);
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 0e2b3d889953fcc2ff012d923d12cd9afc109776..759bef4e466eeea020c09f653ad971b3c9640e7b 100644
+index d696bbb44994994af87ee0df5317ca94d20cb74c..ba5b19b8ffede5d0abc98d71a6c36537ce74f1df 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -1617,15 +1617,31 @@ public abstract class Mob extends LivingEntity {
