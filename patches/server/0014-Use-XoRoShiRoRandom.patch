@@ -68,7 +68,7 @@ index 7b23535a680d2a8534dcb8dd87770f66fb982c13..5e9c7f428e4a0d920569c2a02e999da9
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 462d8c36166c63a4dc8fa74ac7f82859e6f4b83a..1be5ae3162f2e2b5a48310c162edf8bdc8a08c2b 100644
+index 60ba196e17df34c3ae2a9883e5d28830a2243517..f5f06eb1d4de5fdde57fd1ecac80244f7a617a9f 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -52,7 +52,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
@@ -253,10 +253,10 @@ index d33af84300db18ea2b71dba2c9ed43390a293500..e60d244c44396ec09ecff889d8b9543b
  
                      MinecraftServer minecraftServer = this.level.getServer();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index c28f7074a07051ea9aee5dc67dfef9193426a42d..7ca746e36a98e0b7d7e47c68962975242c4dd070 100644
+index 5fb475b3ccaa98861e2c817b37cd1740e5bfed8d..e8c5c0c6e05194707db35246444e4a44878a227b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -229,7 +229,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -231,7 +231,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
      }
      // Paper end
  

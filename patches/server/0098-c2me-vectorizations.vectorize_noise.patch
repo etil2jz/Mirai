@@ -3,12 +3,14 @@ From: ishland <ishlandmc@yeah.net>
 Date: Tue, 21 Sep 2021 10:37:45 +0200
 Subject: [PATCH] c2me: vectorizations.vectorize_noise
 
+Copyright (c) 2021-2022 ishland
+
 Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/C2ME-fabric (Yarn mappings)
 
 diff --git a/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedAlgorithms.java b/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedAlgorithms.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..43d1959002295b5f6431e024813b49e30ee7099f
+index 0000000000000000000000000000000000000000..77aed653efa723b17e1943e40202954d730f4b47
 --- /dev/null
 +++ b/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedAlgorithms.java
 @@ -0,0 +1,9 @@
@@ -21,10 +23,9 @@ index 0000000000000000000000000000000000000000..43d1959002295b5f6431e024813b49e3
 +    }
 +
 +}
-\ No newline at end of file
 diff --git a/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedPerlinNoise.java b/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedPerlinNoise.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..44085c98292654ebb1f6d522b908bd727c761ede
+index 0000000000000000000000000000000000000000..6679e557f4a3c7dbe88c77c605c97ff673425d7e
 --- /dev/null
 +++ b/src/main/java/com/ishland/c2me/libs/vectorized_algorithms/VectorizedPerlinNoise.java
 @@ -0,0 +1,115 @@
@@ -143,9 +144,8 @@ index 0000000000000000000000000000000000000000..44085c98292654ebb1f6d522b908bd72
 +    }
 +
 +}
-\ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
-index 22e94c9c01b845c363ede1ec6e86c5d115c56c7d..c0bd6e5c4424748a758c763028d87a161df3d9d3 100644
+index 883a8dcf94b619cd5ffbcfc6f28809c2c6a71f55..873614980ec45bcd64ef05fd938bd99b85b9e51e 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 @@ -1,5 +1,6 @@
@@ -161,8 +161,8 @@ index 22e94c9c01b845c363ede1ec6e86c5d115c56c7d..c0bd6e5c4424748a758c763028d87a16
      private double sampleAndLerp(int sectionX, int sectionY, int sectionZ, double localX, double localY, double localZ, double fadeLocalX) {
 +        if (wtf.etil.mirai.MiraiConfig.vectorizedPerlinNoise) { return VectorizedAlgorithms.perlinNoiseVectorized(p, sectionX, sectionY, sectionZ, localX, localY, localZ, fadeLocalX); } // Mirai - c2me: vectorizations.vectorize_noise
          // TODO [VanillaCopy] but inlined
-         int i = this.p[sectionX & 0xFF];
-         int j = this.p[sectionX + 1 & 0xFF];
+         final int var0 = sectionX & 0xFF;
+         final int var1 = (sectionX + 1) & 0xFF;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 1ba057cbd0ec23cd7ef3d3d1c7685f44cfe34eec..90cf922c8df669ac80451d64b376918dece09dc9 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java

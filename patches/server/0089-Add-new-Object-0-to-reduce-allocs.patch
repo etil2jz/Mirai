@@ -29,7 +29,7 @@ index 81dde0efc1a06420c0791520b9e40b24dd1f0318..371dd89f91f5b53e7d31155e22a4f29b
      }
      // Paper start
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c62dece6ea8869ce32ec04acc269f98d572d9034..5add4522234776ac7cc377441f71bed60f890e4d 100644
+index 944b4b288fd3f3d3160eeb73ae9060ef9d224b7a..efb3020e81a02d79ad07ceccd8d28ff94d883ad4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1441,8 +1441,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -82,7 +82,7 @@ index 9570706dcb5218f03766c0dd9ecd371992ad29ce..378d03f53f7de378bb7fc70c5accdbde
              }
          }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 34fc7ddd11f5a600fa252c63a1ed7015adc90d15..a69a101f054e575b170c00b10ad009a692a65340 100644
+index d008dea9328b58f5a8e7a3c047985f5c232acae5..5e9025bc84dd5c42ae1f82399cf6da3fc9243908 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -254,7 +254,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
@@ -104,10 +104,10 @@ index 34fc7ddd11f5a600fa252c63a1ed7015adc90d15..a69a101f054e575b170c00b10ad009a6
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index da84ae21026acd54478ff23673a817361ad01afd..7f39d1b1c9cb6e3d83aaa61e3f5292e60bc98f5e 100644
+index 4b7f804b6dfe96c49444c0afcebfcc857440c7e6..20f48a3d3a5d454aa6109557c031043210404726 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -312,7 +312,7 @@ public abstract class PlayerList {
+@@ -316,7 +316,7 @@ public abstract class PlayerList {
      }
  
      void disconnectPendingPlayer(ServerPlayer entityplayer) {
@@ -116,7 +116,7 @@ index da84ae21026acd54478ff23673a817361ad01afd..7f39d1b1c9cb6e3d83aaa61e3f5292e6
          entityplayer.networkManager.send(new ClientboundDisconnectPacket(msg), (future) -> {
              entityplayer.networkManager.disconnect(msg);
              entityplayer.networkManager = null;
-@@ -726,7 +726,7 @@ public abstract class PlayerList {
+@@ -730,7 +730,7 @@ public abstract class PlayerList {
          while (iterator.hasNext()) {
              entityplayer = (ServerPlayer) iterator.next();
              this.save(entityplayer); // CraftBukkit - Force the player's inventory to be saved

@@ -7,7 +7,7 @@ Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 2d2f1e3fe1c9314af18377458af74f8c6afa7603..4df7088e81ee6ccc7705d2c220ae80c373681c9e 100644
+index 75b885da98b308ed8894fc95e604076d8593461e..751faa74604edd15a1f8223043d9fe188f7375a8 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -211,6 +211,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -19,10 +19,10 @@ index 2d2f1e3fe1c9314af18377458af74f8c6afa7603..4df7088e81ee6ccc7705d2c220ae80c3
          return new Throwable(entity + " Added to world at " + new java.util.Date());
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 7ca746e36a98e0b7d7e47c68962975242c4dd070..f404b38242485d081ecaad34a43eadcd9950cad2 100644
+index e8c5c0c6e05194707db35246444e4a44878a227b..27e817f805faf0bc882f75649dd4efeaf4067a2d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1225,6 +1225,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1227,6 +1227,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          world.noSave = !value;
      }
  
