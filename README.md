@@ -12,9 +12,10 @@
 ## Features
 
 - **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)** for the best performance.
-- **Contains a few [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
+- **Contains [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
 - **Integrates [Hydrogen](https://github.com/CaffeineMC/hydrogen-fabric)** which reduces memory consumption.
 - **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
+- **(WIP) Implements [C2ME](https://github.com/RelativityMC/C2ME-fabric)** to improve chunk generation speed, I/O and loading.
 - **Reduced bandwidth consumption and CPU usage** from avoiding sending useless packets in certain situations.
 - **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
@@ -26,7 +27,7 @@
 
 ## Downloads
 The latest JAR file can be downloaded here:
-[Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18/Mirai-1.18.1-R0.1-SNAPSHOT.jar)
+[Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18.1/Mirai-1.18.1-R0.1-SNAPSHOT.jar)
 
 **Please note Java 17 is required.**
 

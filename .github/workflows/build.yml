@@ -54,4 +54,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          publish_branch: build/1.18
+          publish_branch: build/1.18.1
