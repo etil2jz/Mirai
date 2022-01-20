@@ -3,8 +3,8 @@ From: 2No2Name <2No2Name@web.de>
 Date: Thu, 13 Jan 2022 15:38:29 -0500
 Subject: [PATCH] lithium: cache iterate outwards
 
-Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
-You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+Original code by the PR below, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric/pull/123 (Yarn mappings)
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java b/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java
 new file mode 100644
