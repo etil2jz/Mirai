@@ -44,7 +44,7 @@ index 944b4b288fd3f3d3160eeb73ae9060ef9d224b7a..efb3020e81a02d79ad07ceccd8d28ff9
  
                  ImageIO.write(bufferedimage, "PNG", bytearrayoutputstream);
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 9570706dcb5218f03766c0dd9ecd371992ad29ce..378d03f53f7de378bb7fc70c5accdbde402b9e73 100644
+index 8baa1ee0073b21954dd40109155d10ea9f373017..85b2a93d5c7835174dd234b9d45c4693959c0bb1 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -378,7 +378,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -72,7 +72,7 @@ index 9570706dcb5218f03766c0dd9ecd371992ad29ce..378d03f53f7de378bb7fc70c5accdbde
              return;
          }
          // Paper end
-@@ -2941,7 +2941,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2943,7 +2943,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
@@ -82,10 +82,10 @@ index 9570706dcb5218f03766c0dd9ecd371992ad29ce..378d03f53f7de378bb7fc70c5accdbde
              }
          }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index d008dea9328b58f5a8e7a3c047985f5c232acae5..5e9025bc84dd5c42ae1f82399cf6da3fc9243908 100644
+index 6006b9b824eee427712c5eafc67788982fc64936..a53f2210409410ba2b0edbd479ed8ab21fc8e5a9 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -254,7 +254,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -255,7 +255,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
  
      @Override
      public void handleHello(ServerboundHelloPacket packet) {
@@ -94,7 +94,7 @@ index d008dea9328b58f5a8e7a3c047985f5c232acae5..5e9025bc84dd5c42ae1f82399cf6da3f
          this.gameProfile = packet.getGameProfile();
          // Paper start - validate usernames
          if (com.destroystokyo.paper.PaperConfig.isProxyOnlineMode() && com.destroystokyo.paper.PaperConfig.performUsernameValidation) {
-@@ -298,7 +298,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -299,7 +299,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
  
      @Override
      public void handleKey(ServerboundKeyPacket packet) {
