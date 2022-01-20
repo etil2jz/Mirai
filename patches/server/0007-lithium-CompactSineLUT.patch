@@ -8,7 +8,7 @@ You can find the original code on https://github.com/CaffeineMC/lithium-fabric (
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6af5d13b5dfb620306d8d7028aeb393fa8a55583
+index 0000000000000000000000000000000000000000..d2b00d9a91b60716d5f458048df3d944060eb749
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
 @@ -0,0 +1,90 @@

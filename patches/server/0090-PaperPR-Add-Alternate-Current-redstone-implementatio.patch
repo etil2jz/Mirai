@@ -2003,7 +2003,7 @@ index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 0297e176e2e4b29b4aeeaee30d43653bfbc228bf..e6bc4afd582d495961f7f215407efcea4d169ba7 100644
+index 96e2ae4443fc07fd678d6f7bca900b28960d430b..9d7215f87f6f77def478dc223d94993c9103e1a1 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -71,8 +71,8 @@ public class PaperConfig {
@@ -2018,7 +2018,7 @@ index 0297e176e2e4b29b4aeeaee30d43653bfbc228bf..e6bc4afd582d495961f7f215407efcea
      }
  
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 5a5db15493cd9b83815c36487c2f38cb8ac76f3a..853c79fff2a930885e78be1e3d48bb66db0e5a97 100644
+index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..d7913e8ce46b38d9e2e345c33ecf63f6799a476f 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -77,13 +77,37 @@ public class PaperWorldConfig {
@@ -2067,7 +2067,7 @@ index 5a5db15493cd9b83815c36487c2f38cb8ac76f3a..853c79fff2a930885e78be1e3d48bb66
      }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index eca710db195a5eda4f4c515e116e26e99b2b4677..f6135a2a5eef0e223ec43b73384897f2aa1d54e4 100644
+index 434dacbabdf0f6bec9fa84d2f57d605b50e6d812..5acd60a388dca9438d215182cba53ed17ee4a488 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -161,9 +161,14 @@ import org.bukkit.event.weather.LightningStrikeEvent;

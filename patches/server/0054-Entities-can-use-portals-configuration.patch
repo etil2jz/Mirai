@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 18e024c625e39f1f9e2815a777b6c1d155274806..9da77bc090385becb60d72842f9d2f05f5608546 100644
+index 4377e6fe490f79ab530184d8feec31ab91b42369..04efe4d98b24ed7261e0ebb9711f3a0f4591affd 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2729,7 +2729,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i

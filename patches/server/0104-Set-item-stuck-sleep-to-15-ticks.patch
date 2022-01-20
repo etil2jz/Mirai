@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-index 3ad87457cc1279540b5b633216aa0161e6e9b1b2..b82df3b410c592652ae6b2482379487ad30cebe4 100644
+index 7889c9832c6a1ac2afebe4e1030495b3ea52fc2b..76ae2763e0dac4531262a85a4782966f4ba97597 100644
 --- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 @@ -127,7 +127,7 @@ public class ItemEntity extends Entity {

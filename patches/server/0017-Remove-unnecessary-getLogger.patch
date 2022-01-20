@@ -6,7 +6,7 @@ Subject: [PATCH] Remove unnecessary getLogger()
 Based off of a Patina Patch: https://github.com/PatinaMC/Patina/blob/921d83ac9506b6364ebac2ec57332da4fd8e6ada/patches/server/0023-Remove-unnecessary-LogManager.getLogger.patch
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 136ec7851f26c39b5b9a02ec791682fd5be2dbf1..d522ba0cbfad653970f238af5011c1acc25f6d07 100644
+index 0b8ee9ba1424f0c92ff90b239cf81f8f41cdb894..fbe89224be8cc627b081c1accbbe314a640bd632 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -163,7 +163,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -41,7 +41,7 @@ index 5aeaaae6f15050a2da271fe196d0a234ecafc8a1..ce5b42bcc68e0409c016ef2eae0daed9
  
      public ShortList[] getPostProcessing() {
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-index c7216cf3317cbd49b032c44feb370c50928dd21e..c6ab0baa5575095216e696d5604d321cae0b0f25 100644
+index bffb2915d84be3a1b642788e21c803b54b2db6ea..536ed91c6c5368314dd3efb86b1341113eb1316d 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 @@ -113,7 +113,7 @@ public class RegionFileStorage implements AutoCloseable {

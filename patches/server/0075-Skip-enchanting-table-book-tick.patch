@@ -5,7 +5,7 @@ Subject: [PATCH] Skip enchanting table book tick
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
-index b03621ebd0a94ab2dceb9006aee43fd5320094e3..697de9c85c056fc2676a92e492bd1cecf80a4204 100644
+index 424ad38b5522d9b76aa1bf726a9fe2c1e934598d..604f5a72b24644e2f3ebbc8a1bc5c256e79e4685 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 @@ -49,6 +49,9 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable

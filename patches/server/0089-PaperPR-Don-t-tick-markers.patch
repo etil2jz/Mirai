@@ -22,7 +22,7 @@ index 2e141e7b85ef54a084698b5a920b85212271fce8..6b843f9fba6c26b1581be114d6f255a6
                      }
                  });
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f5539056a3066071c11d0144c2a867d874dc2331..7a9637c2f69d86eb7762b1e6d6ffa4e570d34b46 100644
+index 751faa74604edd15a1f8223043d9fe188f7375a8..434dacbabdf0f6bec9fa84d2f57d605b50e6d812 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -2406,6 +2406,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -34,7 +34,7 @@ index f5539056a3066071c11d0144c2a867d874dc2331..7a9637c2f69d86eb7762b1e6d6ffa4e5
              ServerLevel.this.entityManager.addNavigatorsIfPathingToRegion(entity); // Paper - optimise notify
          }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 8d3147b48eff5418f452eb1449639316399942ee..671de58cfbce73238a55abd880d005f673097e08 100644
+index 59a6cb575e40465275184cb816c862c79995c729..91a1d359d32fa2d6044b0bd92ee7e0ae074b4a2a 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -215,7 +215,7 @@ public class ActivationRange

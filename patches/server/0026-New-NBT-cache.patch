@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index b470da69f271d1a5ebb9727c0c34944e85ce3a51..5e80825c0e98c0eb5c4309a9234e7b03d2d383db 100644
+index b470da69f271d1a5ebb9727c0c34944e85ce3a51..633a27ec48a7bb208a7a1629d2b6079a7da27518 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -24,6 +24,7 @@ public class PlayerDataStorage {

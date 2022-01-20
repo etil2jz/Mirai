@@ -68,7 +68,7 @@ index 7b23535a680d2a8534dcb8dd87770f66fb982c13..5e9c7f428e4a0d920569c2a02e999da9
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 60ba196e17df34c3ae2a9883e5d28830a2243517..f5f06eb1d4de5fdde57fd1ecac80244f7a617a9f 100644
+index 368e32bc12a1a09bf7309f299a1a72554947f43b..678981ded0acd4d5756af9f8f72ccce112ef98ba 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -52,7 +52,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
@@ -133,7 +133,7 @@ index 323eea2bccacfcc85849b5d82c2b30d991e0c0d8..20668da3594346511b065146a2b7478c
      private int tickDelay;
      private int spawnDelay;
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
-index 2015223c1703935faef52a8b88263ab3f1fbe92a..e34b4036a8a2efadd18f62c5037b75f6b59c53e0 100644
+index f958ce70efb64d4077fae60a790a0df6786ad0ea..e582990660e99c0a330c55fb7029a044078baa9e 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 @@ -76,7 +76,7 @@ public class FishingHook extends Projectile {

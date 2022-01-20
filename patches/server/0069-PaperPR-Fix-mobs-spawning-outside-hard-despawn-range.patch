@@ -5,7 +5,7 @@ Subject: [PATCH] PaperPR Fix mobs spawning outside hard despawn range
 
 
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 58bdbd1ad4e87d5e16d23ae437bd231394da7dfc..5afae997e70467ef45fb46601b43fa2ea810904b 100644
+index 4ae9717b9ee77b3c28282e6560fc42081b6188ae..13c63fc42c14ff6004815774c851788fde5e6cdf 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -410,7 +410,10 @@ public final class NaturalSpawner {
