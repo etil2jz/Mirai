@@ -900,7 +900,7 @@ index c9cb4fa8c96ca53a0692aee6ce0cf46a9466bec1..cd5576f1c39da04642211f265623e38a
          this.chunkStatus = status;
          return visibility;
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-index aae1f6d5d0e47363042657d755f6bfeea2420347..2ed8ab49b4a37876416aa974bd49915b9f0e3fa0 100644
+index c3826f82bdf72a03b1f8ce61d0f75e4f733feced..504be6004b3c1b23e6253c50ad046a2a0e0e7996 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 @@ -20,6 +20,10 @@ import net.minecraft.core.SectionPos;
@@ -914,7 +914,7 @@ index aae1f6d5d0e47363042657d755f6bfeea2420347..2ed8ab49b4a37876416aa974bd49915b
  
  public class EntitySectionStorage<T extends EntityAccess> {
      private final Class<T> entityClass;
-@@ -71,6 +75,20 @@ public class EntitySectionStorage<T extends EntityAccess> {
+@@ -72,6 +76,20 @@ public class EntitySectionStorage<T extends EntityAccess> {
      }
      // JettPack end
  
@@ -935,7 +935,7 @@ index aae1f6d5d0e47363042657d755f6bfeea2420347..2ed8ab49b4a37876416aa974bd49915b
      public LongStream getExistingSectionPositionsInChunk(long chunkPos) {
          int i = ChunkPos.getX(chunkPos);
          int j = ChunkPos.getZ(chunkPos);
-@@ -98,7 +116,11 @@ public class EntitySectionStorage<T extends EntityAccess> {
+@@ -99,7 +117,11 @@ public class EntitySectionStorage<T extends EntityAccess> {
      }
  
      public EntitySection<T> getOrCreateSection(long sectionPos) {

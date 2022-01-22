@@ -1,0 +1,112 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Gegy <gegy1000@gmail.com>
+Date: Fri, 21 Jan 2022 10:19:06 -0500
+Subject: [PATCH] lithium: shapes.blockstate_cache
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/Object2BooleanCacheTable.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/Object2BooleanCacheTable.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5dc1b2da7adaf97cfd913b016cb5344f97723655
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/Object2BooleanCacheTable.java
+@@ -0,0 +1,59 @@
++package me.jellysquid.mods.lithium.common.util.collections;
++
++import it.unimi.dsi.fastutil.HashCommon;
++import java.util.function.Predicate;
++import net.minecraft.util.Mth;
++
++/**
++ * A lossy hashtable implementation that stores a mapping between an object and a boolean.
++ * <p>
++ * Any hash collisions will result in an overwrite: this is safe because the correct value can always be recomputed,
++ * given that the given operator is deterministic.
++ * <p>
++ * This implementation is safe to use from multiple threads
++ */
++public final class Object2BooleanCacheTable<T> {
++    private final int mask;
++
++    private final Node<T>[] nodes;
++
++    private final Predicate<T> operator;
++
++    @SuppressWarnings("unchecked")
++    public Object2BooleanCacheTable(int capacity, Predicate<T> operator) {
++        int capacity1 = Mth.smallestEncompassingPowerOfTwo(capacity);
++        this.mask = capacity1 - 1;
++
++        this.nodes = (Node<T>[]) new Node[capacity1];
++
++        this.operator = operator;
++    }
++
++    private static <T> int hash(T key) {
++        return HashCommon.mix(key.hashCode());
++    }
++
++    public boolean get(T key) {
++        int idx = hash(key) & this.mask;
++
++        Node<T> node = this.nodes[idx];
++        if (node != null && key.equals(node.key)) {
++            return node.value;
++        }
++
++        boolean test = this.operator.test(key);
++        this.nodes[idx] = new Node<>(key, test);
++
++        return test;
++    }
++
++    static class Node<T> {
++        final T key;
++        final boolean value;
++
++        Node(T key, boolean value) {
++            this.key = key;
++            this.value = value;
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/world/level/block/Block.java b/src/main/java/net/minecraft/world/level/block/Block.java
+index fd99f10ec86769236a29c9228cb2519f80d1a477..b7f447bfd1146c781bd86f6e8af41e014ab5086b 100644
+--- a/src/main/java/net/minecraft/world/level/block/Block.java
++++ b/src/main/java/net/minecraft/world/level/block/Block.java
+@@ -62,6 +62,7 @@ import net.minecraft.world.phys.shapes.Shapes;
+ import net.minecraft.world.phys.shapes.VoxelShape;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import me.jellysquid.mods.lithium.common.util.collections.Object2BooleanCacheTable; // JettPack
+ 
+ public class Block extends BlockBehaviour implements ItemLike {
+ 
+@@ -77,11 +78,12 @@ public class Block extends BlockBehaviour implements ItemLike {
+ 
+     protected static final Logger LOGGER = LogManager.getLogger();
+     public static final IdMapper<BlockState> BLOCK_STATE_REGISTRY = new IdMapper<>();
+-    private static final LoadingCache<VoxelShape, Boolean> SHAPE_FULL_BLOCK_CACHE = CacheBuilder.newBuilder().maximumSize(512L).weakKeys().build(new CacheLoader<VoxelShape, Boolean>() {
+-        public Boolean load(VoxelShape voxelshape) {
+-            return !Shapes.joinIsNotEmpty(Shapes.block(), voxelshape, BooleanOp.NOT_SAME);
+-        }
+-    });
++    // JettPack start - lithium: shapes.blockstate_cache
++    private static final Object2BooleanCacheTable<VoxelShape> FULL_CUBE_CACHE = new Object2BooleanCacheTable<>(
++            512,
++            shape -> !Shapes.joinIsNotEmpty(Shapes.block(), shape, BooleanOp.NOT_SAME)
++    );
++    // JettPack end
+     public static final int UPDATE_NEIGHBORS = 1;
+     public static final int UPDATE_CLIENTS = 2;
+     public static final int UPDATE_INVISIBLE = 4;
+@@ -287,7 +289,7 @@ public class Block extends BlockBehaviour implements ItemLike {
+     }
+ 
+     public static boolean isShapeFullBlock(VoxelShape shape) {
+-        return (Boolean) Block.SHAPE_FULL_BLOCK_CACHE.getUnchecked(shape);
++        return FULL_CUBE_CACHE.get(shape); // JettPack - lithium: shapes.blockstate_cache
+     }
+ 
+     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
