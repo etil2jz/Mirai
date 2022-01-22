@@ -1,0 +1,243 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SuperCoder7979 <25208576+SuperCoder7979@users.noreply.github.com>
+Date: Fri, 22 Jan 2021 16:38:19 -0500
+Subject: [PATCH] lithium: gen
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/Pos.java b/src/main/java/me/jellysquid/mods/lithium/common/util/Pos.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..6035196d81c9fce80f7db8d1e45d58b9adb3d543
+--- /dev/null
++++ b/src/main/java/me/jellysquid/mods/lithium/common/util/Pos.java
+@@ -0,0 +1,93 @@
++package me.jellysquid.mods.lithium.common.util;
++
++import net.minecraft.core.SectionPos;
++import net.minecraft.world.level.LevelHeightAccessor;
++
++public class Pos {
++
++    public static class BlockCoord {
++        public static int getYSize(LevelHeightAccessor view) {
++            return view.getHeight();
++        }
++        public static int getMinY(LevelHeightAccessor view) {
++            return view.getMinBuildHeight();
++        }
++        public static int getMaxYInclusive(LevelHeightAccessor view) {
++            return view.getMaxBuildHeight() - 1;
++        }
++        public static int getMaxYExclusive(LevelHeightAccessor view) {
++            return view.getMaxBuildHeight();
++        }
++
++        public static int getMaxInSectionCoord(int sectionCoord) {
++            return 15 + getMinInSectionCoord(sectionCoord);
++        }
++
++        public static int getMaxYInSectionIndex(LevelHeightAccessor view, int sectionIndex){
++            return getMaxInSectionCoord(SectionYCoord.fromSectionIndex(view, sectionIndex));
++        }
++
++        public static int getMinInSectionCoord(int sectionCoord) {
++            return SectionPos.sectionToBlockCoord(sectionCoord);
++        }
++
++        public static int getMinYInSectionIndex(LevelHeightAccessor view, int sectionIndex) {
++            return getMinInSectionCoord(SectionYCoord.fromSectionIndex(view, sectionIndex));
++        }
++    }
++
++    public static class ChunkCoord {
++        public static int fromBlockCoord(int blockCoord) {
++            return SectionPos.blockToSectionCoord(blockCoord);
++        }
++
++        public static int fromBlockSize(int i) {
++            return i >> 4; //same method as fromBlockCoord, just be clear about coord/size semantic difference
++        }
++    }
++
++    public static class SectionYCoord {
++        public static int getNumYSections(LevelHeightAccessor view) {
++            return view.getSectionsCount();
++        }
++        public static int getMinYSection(LevelHeightAccessor view) {
++            return view.getMinSection();
++        }
++        public static int getMaxYSectionInclusive(LevelHeightAccessor view) {
++            return view.getMaxSection() - 1;
++        }
++        public static int getMaxYSectionExclusive(LevelHeightAccessor view) {
++            return view.getMaxSection();
++        }
++
++        public static int fromSectionIndex(LevelHeightAccessor view, int sectionCoord) {
++            return sectionCoord + SectionYCoord.getMinYSection(view);
++        }
++        public static int fromBlockCoord(int blockCoord) {
++            return SectionPos.blockToSectionCoord(blockCoord);
++        }
++    }
++
++    public static class SectionYIndex {
++        public static int getNumYSections(LevelHeightAccessor view) {
++            return view.getSectionsCount();
++        }
++        public static int getMinYSectionIndex(LevelHeightAccessor view) {
++            return 0;
++        }
++        public static int getMaxYSectionIndexInclusive(LevelHeightAccessor view) {
++            return view.getSectionsCount() - 1;
++        }
++        public static int getMaxYSectionIndexExclusive(LevelHeightAccessor view) {
++            return view.getSectionsCount();
++        }
++
++
++        public static int fromSectionCoord(LevelHeightAccessor view, int sectionCoord) {
++            return sectionCoord - SectionYCoord.getMinYSection(view);
++        }
++        public static int fromBlockCoord(LevelHeightAccessor view, int blockCoord) {
++            return fromSectionCoord(view, SectionPos.blockToSectionCoord(blockCoord));
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
+index 9b25d36fe5230e287d81b99be31b9eddd8e76002..2082de19365dafe350ca5f9102f10a02be0fbaab 100644
+--- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
++++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
+@@ -52,6 +52,7 @@ import net.minecraft.world.ticks.LevelTickAccess;
+ import net.minecraft.world.ticks.WorldGenTickAccess;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import me.jellysquid.mods.lithium.common.util.Pos; // Mirai - lithium: gen
+ 
+ public class WorldGenRegion implements WorldGenLevel {
+ 
+@@ -79,6 +80,8 @@ public class WorldGenRegion implements WorldGenLevel {
+     @Nullable
+     private Supplier<String> currentlyGenerating;
+     private final AtomicLong subTickCount = new AtomicLong();
++    private ChunkAccess[] chunksArr; // Mirai - lithium: gen
++    private int minChunkX, minChunkZ; // Mirai - lithium: gen
+ 
+     public WorldGenRegion(ServerLevel world, List<ChunkAccess> chunks, ChunkStatus status, int placementRadius) {
+         this.generatingStatus = status;
+@@ -101,6 +104,12 @@ public class WorldGenRegion implements WorldGenLevel {
+             this.lastPos = ((ChunkAccess) chunks.get(chunks.size() - 1)).getPos();
+             this.structureFeatureManager = world.structureFeatureManager().forWorldGenRegion(this);
+         }
++        // Mirai start - lithium: gen
++        this.minChunkX = this.firstPos.x;
++        this.minChunkZ = this.firstPos.z;
++
++        this.chunksArr = chunks.toArray(new ChunkAccess[0]);
++        // Mirai end
+     }
+ 
+     public ChunkPos getCenter() {
+@@ -112,11 +121,33 @@ public class WorldGenRegion implements WorldGenLevel {
+         this.currentlyGenerating = structureName;
+     }
+ 
++    // Mirai start - lithium: gen
++    /**
++     * @reason Use the chunk array for faster access
++     * @author SuperCoder7979, 2No2Name
++     */
+     @Override
+     public ChunkAccess getChunk(int chunkX, int chunkZ) {
+-        return this.getChunk(chunkX, chunkZ, ChunkStatus.EMPTY);
++        int x = chunkX - this.minChunkX;
++        int z = chunkZ - this.minChunkZ;
++        int w = this.size;
++
++        if (x >= 0 && z >= 0 && x < w && z < w) {
++            return this.chunksArr[x + z * w];
++        } else {
++            throw new NullPointerException("No chunk exists at " + new ChunkPos(chunkX, chunkZ));
++        }
+     }
+ 
++    /**
++     * Use our chunk fetch function
++     */
++    public ChunkAccess getChunk(BlockPos pos) {
++        // Skip checking chunk.getStatus().isAtLeast(ChunkStatus.EMPTY) here, because it is always true
++        return this.getChunk(Pos.ChunkCoord.fromBlockCoord(pos.getX()), Pos.ChunkCoord.fromBlockCoord(pos.getZ()));
++    }
++    // Mirai end
++
+     @Nullable
+     @Override
+     public ChunkAccess getChunk(int chunkX, int chunkZ, ChunkStatus leastStatus, boolean create) {
+@@ -172,10 +203,24 @@ public class WorldGenRegion implements WorldGenLevel {
+     }
+     // Paper end
+ 
++    // Mirai start - lithium: gen
++    /**
++     * @reason Avoid pointer de-referencing, make method easier to inline
++     * @author JellySquid
++     */
+     @Override
+     public BlockState getBlockState(BlockPos pos) {
+-        return this.getChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())).getBlockState(pos);
++        int x = (Pos.ChunkCoord.fromBlockCoord(pos.getX())) - this.minChunkX;
++        int z = (Pos.ChunkCoord.fromBlockCoord(pos.getZ())) - this.minChunkZ;
++        int w = this.size;
++
++        if (x >= 0 && z >= 0 && x < w && z < w) {
++            return this.chunksArr[x + z * w].getBlockState(pos);
++        } else {
++            throw new NullPointerException("No chunk exists at " + new ChunkPos(pos));
++        }
+     }
++    // Mirai end
+ 
+     @Override
+     public FluidState getFluidState(BlockPos pos) {
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
+index 09d814317443a86210245ab3a7902f2078f08131..b82febb544627379f862258ac467687bebff3fa1 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
+@@ -80,6 +80,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
+     public final Registry<NormalNoise.NoiseParameters> noises;
+     private final long seed;
+     public final Supplier<NoiseGeneratorSettings> settings;
++    private int cachedSeaLevel; // Mirai - lithium: gen
+     private final NoiseSampler sampler;
+     private final SurfaceSystem surfaceSystem;
+     private final WorldGenMaterialRule materialRule;
+@@ -114,6 +115,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
+             return l < Math.min(-54, j) ? aquifer_b : aquifer_b1;
+         };
+         this.surfaceSystem = new SurfaceSystem(noiseRegistry, this.defaultBlock, j, seed, generatorsettingbase.getRandomSource());
++        this.cachedSeaLevel = this.settings.get().seaLevel(); // Mirai - lithium: gen
+     }
+ 
+     @Override
+@@ -416,10 +418,18 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
+         return ((NoiseGeneratorSettings) this.settings.get()).noiseSettings().height();
+     }
+ 
+-    @Override
++    // Mirai start - lithium: gen
++    /**
++     * Use cached sea level instead of retrieving from the registry every time.
++     * This method is called for every block in the chunk so this will save a lot of registry lookups.
++     *
++     * @author SuperCoder79
++     * @reason avoid registry lookup
++     */
+     public int getSeaLevel() {
+-        return ((NoiseGeneratorSettings) this.settings.get()).seaLevel();
++        return this.cachedSeaLevel;
+     }
++    // Mirai end
+ 
+     @Override
+     public int getMinY() {
