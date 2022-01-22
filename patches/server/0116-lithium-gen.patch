@@ -201,17 +201,17 @@ index 9b25d36fe5230e287d81b99be31b9eddd8e76002..2082de19365dafe350ca5f9102f10a02
      @Override
      public FluidState getFluidState(BlockPos pos) {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
-index 09d814317443a86210245ab3a7902f2078f08131..b82febb544627379f862258ac467687bebff3fa1 100644
+index 09d814317443a86210245ab3a7902f2078f08131..0a67bd979002d78aa369b770aba5c1d7e05c2ebc 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
-@@ -80,6 +80,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
-     public final Registry<NormalNoise.NoiseParameters> noises;
-     private final long seed;
-     public final Supplier<NoiseGeneratorSettings> settings;
-+    private int cachedSeaLevel; // Mirai - lithium: gen
-     private final NoiseSampler sampler;
+@@ -84,6 +84,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
      private final SurfaceSystem surfaceSystem;
      private final WorldGenMaterialRule materialRule;
+     private final Aquifer.FluidPicker globalFluidPicker;
++    private int cachedSeaLevel; // Mirai - lithium: gen
+ 
+     public NoiseBasedChunkGenerator(Registry<NormalNoise.NoiseParameters> noiseRegistry, BiomeSource biomeSource, long seed, Supplier<NoiseGeneratorSettings> settings) {
+         this(noiseRegistry, biomeSource, biomeSource, seed, settings);
 @@ -114,6 +115,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
              return l < Math.min(-54, j) ? aquifer_b : aquifer_b1;
          };
@@ -220,11 +220,10 @@ index 09d814317443a86210245ab3a7902f2078f08131..b82febb544627379f862258ac467687b
      }
  
      @Override
-@@ -416,10 +418,18 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
+@@ -416,10 +418,19 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
          return ((NoiseGeneratorSettings) this.settings.get()).noiseSettings().height();
      }
  
--    @Override
 +    // Mirai start - lithium: gen
 +    /**
 +     * Use cached sea level instead of retrieving from the registry every time.
@@ -233,6 +232,7 @@ index 09d814317443a86210245ab3a7902f2078f08131..b82febb544627379f862258ac467687b
 +     * @author SuperCoder79
 +     * @reason avoid registry lookup
 +     */
+     @Override
      public int getSeaLevel() {
 -        return ((NoiseGeneratorSettings) this.settings.get()).seaLevel();
 +        return this.cachedSeaLevel;
