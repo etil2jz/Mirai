@@ -11,7 +11,7 @@
 
 ## Features
 
-- **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)** for the best performance.
+- **Fork of [Purpur](https://github.com/PurpurMC/Purpur)** with [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) patches for the best performance.
 - **Contains [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
 - **Integrates [Hydrogen](https://github.com/CaffeineMC/hydrogen-fabric)** which reduces memory consumption.
 - **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
