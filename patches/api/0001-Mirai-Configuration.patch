@@ -1,16 +1,16 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Thu, 2 Dec 2021 16:06:46 +0100
+Date: Sun, 23 Jan 2022 12:43:29 +0100
 Subject: [PATCH] Mirai Configuration
 
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index e48af3822e9f118399c3a1c9358c56efae12e0da..b65f95c1027ef7dbd37d2c622fedafd54de21c77 100644
+index 2c4dfcf909c0214d25232a14635b96f92d4d974a..26379a174dcf8f2014e258cf4c2ab793ac44a7b0 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1778,6 +1778,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1793,6 +1793,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
          }
-         // Paper end
+         // Purpur end
  
 +        // Mirai start
 +        @NotNull

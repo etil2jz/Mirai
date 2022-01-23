@@ -7,12 +7,12 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index cd08f9b16c065be8f0eacaeba51d3e72d332daf9..c1156377bb9314241772ba5e4f458915bba84d47 100644
+index d23d178ff161b8f3d645b7776295bdb0808d12a5..c153f0b3c7f0446e870b616aaf27ef1dcec9b37d 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -487,7 +487,13 @@ public abstract class PlayerList {
-         }
+@@ -488,7 +488,13 @@ public abstract class PlayerList {
          // Paper end
+         org.purpurmc.purpur.task.BossBarTask.addToAll(player); // Purpur
          // CraftBukkit - Moved from above, added world
 -        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
 +        // Yatopia start - configurable logging of player login location

@@ -20,10 +20,10 @@ index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..34665a768285fd99e49d57d3879deb1f
      private long lastFill = -1;
      private long nextRefill = -1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 663ab7f3c2e7514c211f01114aa8869f24615da0..5830bda766ea88bb45096d900afe76600ce2f9e0 100644
+index 40fd4ab3e2a599df0a073005596bb79cedcc5518..a7bf94b3faa53fb252d152e6912f9a122d7b9af2 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -415,7 +415,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -418,7 +418,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          this.onMetricsRecordingFinished = (path) -> {
          };
          this.status = new ServerStatus();
@@ -46,10 +46,10 @@ index 62f26f5d3ef5546f26424185e378fea64c08ce2f..54559b015813ca1c5dae9cb229a4a63f
          double d1 = (double) (center.y - maxRange);
          double d2 = (double) (center.x + maxRange);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 7b23535a680d2a8534dcb8dd87770f66fb982c13..5e9c7f428e4a0d920569c2a02e999da910fc9397 100644
+index a9885f92e0a3494b27376a7a01edbd0e22a31708..978db44242f78d1f9f36722bae7d358417cace36 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -368,7 +368,7 @@ public class ServerPlayer extends Player {
+@@ -373,7 +373,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);
@@ -58,7 +58,7 @@ index 7b23535a680d2a8534dcb8dd87770f66fb982c13..5e9c7f428e4a0d920569c2a02e999da9
  
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
-@@ -405,7 +405,7 @@ public class ServerPlayer extends Player {
+@@ -410,7 +410,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);
@@ -68,7 +68,7 @@ index 7b23535a680d2a8534dcb8dd87770f66fb982c13..5e9c7f428e4a0d920569c2a02e999da9
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 368e32bc12a1a09bf7309f299a1a72554947f43b..678981ded0acd4d5756af9f8f72ccce112ef98ba 100644
+index 547158e80c501aec66f4ffc96c0a496a346e0dd3..60eb77a3fa4f7c314e1c7b907221d8b21647d3c8 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -52,7 +52,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
@@ -120,10 +120,10 @@ index f3b8e253a5bfc3f68121dbe656ae7e2ac0f0eb1c..4b7dd3f2157d0f78bc35ec865555682d
      protected static final int TARGETING_RANGE = 16;
      private static final TargetingConditions TARGET_CONDITIONS = TargetingConditions.forNonCombat().range(16.0D);
 diff --git a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
-index 323eea2bccacfcc85849b5d82c2b30d991e0c0d8..20668da3594346511b065146a2b7478c98283b9b 100644
+index bb5918ff947eb4cc4d0c964b2a8a9166c5745987..9775f5f476e23e9b0c7ba4ac7a8eeb5b6a1d6d4c 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
-@@ -35,7 +35,7 @@ public class WanderingTraderSpawner implements CustomSpawner {
+@@ -36,7 +36,7 @@ public class WanderingTraderSpawner implements CustomSpawner {
      private static final int SPAWN_CHANCE_INCREASE = 25;
      private static final int SPAWN_ONE_IN_X_CHANCE = 10;
      private static final int NUMBER_OF_SPAWN_ATTEMPTS = 10;
@@ -133,7 +133,7 @@ index 323eea2bccacfcc85849b5d82c2b30d991e0c0d8..20668da3594346511b065146a2b7478c
      private int tickDelay;
      private int spawnDelay;
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
-index f958ce70efb64d4077fae60a790a0df6786ad0ea..e582990660e99c0a330c55fb7029a044078baa9e 100644
+index 4430c4bfc29fa5d03bd2c0c45087789c18ea17dd..a16f9ae39f0203b8ffbb80129079526a23a79bb4 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 @@ -76,7 +76,7 @@ public class FishingHook extends Projectile {
@@ -181,7 +181,7 @@ index d75f14e23d94deee2b6af20c8af3bcd42c1fbbc3..7c21d59bb9052d2e2c690f31a2427706
          this.costs = new int[3];
          this.enchantClue = new int[]{-1, -1, -1};
 diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
-index 03726227fdd60e9cf77213d50184abff438e01ef..8220cb49c2d4d46120615b298ce36d10b29dba6d 100644
+index 76979991d2ded84161e8a0fc72cbb2d2c3c6c55e..82731dbc70b0333229be8900d1f526816c67012a 100644
 --- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
 @@ -41,7 +41,7 @@ public abstract class BaseSpawner {
@@ -207,7 +207,7 @@ index 97f99a06b8954b08af9f4156abe8abdad359349a..e0e27004d67fd759903645cff8a491e5
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 96c6ef03a64e425472c64884c91ac4951950362b..1b6fc6511c32e6509f773d5259e7a07c3b8e79bf 100644
+index d8be78f0cb2989e549322066405fd7b10ab76fe8..c4cd90ba6253770a1dd7301797cbaaba3ecb4518 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -123,13 +123,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Mon, 3 Jan 2022 16:03:27 +0100
+Subject: [PATCH] Configurable server metrics
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+index 1b0335ff450cd37f0746f3f7bdedf420a8d887cc..8e55d57f0da0208fa12be4ca82ff30f70240f217 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+@@ -123,7 +123,7 @@ public class PaperConfig {
+             MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
+         }
+ 
+-        if (!metricsStarted) {
++        if (!metricsStarted && wtf.etil.mirai.MiraiConfig.serverMetrics) { // Mirai - configurable server metrics
+             Metrics.PaperMetrics.startMetrics();
+             metricsStarted = true;
+         }
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 551cf30c52bb55e7c36cc27f3700c5cd27809c35..1cf3fe75ddc6fee55425ce5b242c370d6b2367d2 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -196,6 +196,9 @@ public class MiraiConfig {
+ 		checkVehicleFlying = getBoolean("checks.vehicle-flight", checkVehicleFlying);
+ 	}
+ 
+-
++    public static boolean serverMetrics = false;
++    private static void allowServerMetrics() {
++        serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
++    }
+ 
+ }
+\ No newline at end of file
