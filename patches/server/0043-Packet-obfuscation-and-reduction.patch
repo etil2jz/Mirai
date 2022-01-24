@@ -158,10 +158,10 @@ index 0b2730e3af0989d567a178393bc11fa3bf3ae115..4f332b1c332e7b7ac4ed566d07f36e32
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 8c9e4d70fa08cfc2f5f60d65804615d62731cad9..810f5a40ef5a3c6bab1a2627d0460bfcaad61006 100644
+index 58afc2ffc45367f1163b9c0e87f69c8edbc38f8d..4206b0f526469fd52e38c1d66fb0219004ef7a29 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3009,7 +3009,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -3016,7 +3016,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
          if (event.isCancelled()) {
              return;
          }
