@@ -210,7 +210,7 @@ index e2c8f716af55ebb7e4233c2a3d6515f8f4a239fa..2f5c021b6849acb81064d55418707921
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index f51fcaba69c9ddc27130ab615526e05b1b4f0e07..401326bfd610302a5b073cec646b435a861ad109 100644
+index 91e5784cf6552fc9cfab371756751ea73e206ec1..4fbb9110ce27df22df141fb2c123abf172e51bac 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -76,6 +76,8 @@ public class ServerChunkCache extends ChunkSource {
@@ -332,10 +332,10 @@ index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c8
  
      public ZeroBitStorage(int size) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index d4da096f22bd3c118304fb00c7b9763562b9c889..7d7a85508adbbe905a7b95c6b625bfed24ba330d 100644
+index a6681690e1e556440320c492bf2a8e617008baa1..5b0a904673db2eb98296807730ce9454b8740aa9 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3021,7 +3021,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3020,7 +3020,7 @@ public abstract class LivingEntity extends Entity {
      @Nullable
      private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
          Map<EquipmentSlot, ItemStack> map = null;
@@ -398,7 +398,7 @@ index a9dfe190f46230077e2e1bf9aacbf5375651f216..431a07a8aa3c5c94eda582c37ef6afc5
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-index 415c8a8142867974dfc4722bac933257a28efc1b..2926b6aa84ff5444e35c0def81f3853d1c7757ee 100644
+index 5c6b2bc734c4f49395856975ff77bfbae2b0e85a..dc5c38973cffc3c13ce8f5a83cf9a3d88cecd96a 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 @@ -226,7 +226,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {

@@ -3,6 +3,8 @@ From: ishland <ishlandmc@yeah.net>
 Date: Sat, 4 Dec 2021 12:09:59 +0100
 Subject: [PATCH] vmp: spawn_density_cap
 
+Copyright (c) 2021-2022 ishland
+
 Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
 

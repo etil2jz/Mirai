@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 4377e6fe490f79ab530184d8feec31ab91b42369..04efe4d98b24ed7261e0ebb9711f3a0f4591affd 100644
+index 62e757fe84abf647c92005c16f24c94786a2229b..87c8c3aca37570b93cd8c10ef4ed7ed5cd54ccb8 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2729,7 +2729,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -2750,7 +2750,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
          if (this.isOnPortalCooldown()) {
              if (!(wtf.etil.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
              this.setPortalCooldown();
@@ -19,7 +19,7 @@ index 4377e6fe490f79ab530184d8feec31ab91b42369..04efe4d98b24ed7261e0ebb9711f3a0f
              if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
                  this.portalEntrancePos = pos.immutable();
                  portalPos = BlockPos.ZERO; // Purpur
-@@ -3390,7 +3390,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -3412,7 +3412,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
      }
  
      public boolean canChangeDimensions() {

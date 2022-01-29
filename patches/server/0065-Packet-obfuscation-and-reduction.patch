@@ -158,10 +158,10 @@ index 042985988d11ca9f1bf6a62ec0622392c6e9b99f..756d4a9f7e2be49076af43212a7c1126
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f02c5a487ae3c1362b8e72f9188b0fe98265d82a..72790d1288ff471b2270ec96a207dd65d81e514d 100644
+index f008fb003e9a18d6ed0dd08cc6c99b14e8363bb8..97ff4c0b6b1a12c6de82bc8d707337792d1c99b2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2980,7 +2980,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -3001,7 +3001,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
          if (event.isCancelled()) {
              return;
          }
@@ -184,10 +184,10 @@ index d85da02be7f1d494af8f2cc840c49073774f5f9c..aaf3a82c57b92b53d6bd737a4e20c91b
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 55dd48144ec7cb54b279de2857f706858ba74772..602c86594336bd5ad43d22582fdbd4c39186369e 100644
+index 53620ae30370482ffa698bf8c0f662141dcede84..3a57ba15d14071ca38536b602fa2547bce7a0795 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2028,7 +2028,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2066,7 +2066,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

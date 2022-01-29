@@ -12,10 +12,10 @@ doing questionable/buggy ones, and claiming breathtaking performance improvement
 any of those Spigot forks!
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 2809bc3e3772ca0d75adb964679889f259795e70..76acbf2c76b91982355f04c2ca275390db169e4b 100644
+index 72e39b9c7344e89bb9919b882002b4ebbd2d464d..7947271bbdc58011088e626cd1b3f9625d9bcd62 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1125,7 +1125,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1132,7 +1132,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
                  }
  
                  this.tryCheckInsideBlocks();

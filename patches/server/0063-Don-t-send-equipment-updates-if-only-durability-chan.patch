@@ -7,10 +7,10 @@ Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 2da12e588e67c8591028561ccd3e94887fb104eb..7f8c9538c231a7aca163ecdb3966cd2dc23e2cad 100644
+index 8987bd73727c7e4195a209bd3344474719bd6ca8..d0fb41d5c1b7a4cc0d5f554ec20dfc5ecb3a0058 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3041,7 +3041,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3040,7 +3040,7 @@ public abstract class LivingEntity extends Entity {
  
              ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
  

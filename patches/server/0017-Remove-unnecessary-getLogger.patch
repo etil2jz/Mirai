@@ -6,7 +6,7 @@ Subject: [PATCH] Remove unnecessary getLogger()
 Based off of a Patina Patch: https://github.com/PatinaMC/Patina/blob/921d83ac9506b6364ebac2ec57332da4fd8e6ada/patches/server/0023-Remove-unnecessary-LogManager.getLogger.patch
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0b8ee9ba1424f0c92ff90b239cf81f8f41cdb894..fbe89224be8cc627b081c1accbbe314a640bd632 100644
+index 05e521c01a62e800f177cb586609d7a3a51dacc6..5209e0d076099516525f578ddbfe14064e67f235 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -163,7 +163,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -18,7 +18,7 @@ index 0b8ee9ba1424f0c92ff90b239cf81f8f41cdb894..fbe89224be8cc627b081c1accbbe314a
              } else {
                  super.setSeed(seed);
                  locked = true;
-@@ -2322,7 +2322,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -2340,7 +2340,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
                  try {
                      spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.valueOf(spawnReasonName);
                  } catch (Exception ignored) {
