@@ -16,10 +16,10 @@ index 9ede2f067eacc1d418a8d6223f4052b81410d3b3..13a710a6d517a229b8c5679f40cffa39
  }
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/network/Connection.java b/src/main/java/net/minecraft/network/Connection.java
-index 81dde0efc1a06420c0791520b9e40b24dd1f0318..371dd89f91f5b53e7d31155e22a4f29be37f9f5f 100644
+index 7b8f9cf06833860d0fc02399822e6aea214883ed..1caa987e2f03203379fb2f798d38d2240665fa00 100644
 --- a/src/main/java/net/minecraft/network/Connection.java
 +++ b/src/main/java/net/minecraft/network/Connection.java
-@@ -282,7 +282,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
+@@ -304,7 +304,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
      }
  
      public void setListener(PacketListener listener) {
@@ -29,10 +29,10 @@ index 81dde0efc1a06420c0791520b9e40b24dd1f0318..371dd89f91f5b53e7d31155e22a4f29b
      }
      // Paper start
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 944b4b288fd3f3d3160eeb73ae9060ef9d224b7a..efb3020e81a02d79ad07ceccd8d28ff94d883ad4 100644
+index 79936ad8196846e187f8153c15cd8a3e21380876..cb074736f3d547fa188c65da0db7a344ec5f7fa9 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1441,8 +1441,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1442,8 +1442,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -44,7 +44,7 @@ index 944b4b288fd3f3d3160eeb73ae9060ef9d224b7a..efb3020e81a02d79ad07ceccd8d28ff9
  
                  ImageIO.write(bufferedimage, "PNG", bytearrayoutputstream);
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 8baa1ee0073b21954dd40109155d10ea9f373017..85b2a93d5c7835174dd234b9d45c4693959c0bb1 100644
+index 8d50853d35f2d880bf8eb17ea0780dc2c9b1a367..9e352acd099d61d4e523ee895f658f50dada3e6f 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -378,7 +378,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -72,7 +72,7 @@ index 8baa1ee0073b21954dd40109155d10ea9f373017..85b2a93d5c7835174dd234b9d45c4693
              return;
          }
          // Paper end
-@@ -2943,7 +2943,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2949,7 +2949,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
@@ -104,7 +104,7 @@ index 6006b9b824eee427712c5eafc67788982fc64936..a53f2210409410ba2b0edbd479ed8ab2
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 4b7f804b6dfe96c49444c0afcebfcc857440c7e6..20f48a3d3a5d454aa6109557c031043210404726 100644
+index 4feddab26597b67edc4f79e10d41a88d96f16b37..ddd687336a727b164b5f4c566e02b3ad50b26dad 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {

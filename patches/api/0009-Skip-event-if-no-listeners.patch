@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 2c33800e7a49804a29f64fd5e6fde7d2c860ef4c..03bad379b8d8c15567a1fdae06b8da6ba567d189 100644
+index 62e071edc3128b128c5ff631606eb1466ae34ef2..31346c12d1c72cdec89dffbe07106e37c47fbb4c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -26,7 +26,7 @@ dependencies {

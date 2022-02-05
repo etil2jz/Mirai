@@ -184,10 +184,10 @@ index d85da02be7f1d494af8f2cc840c49073774f5f9c..aaf3a82c57b92b53d6bd737a4e20c91b
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 53620ae30370482ffa698bf8c0f662141dcede84..3a57ba15d14071ca38536b602fa2547bce7a0795 100644
+index 60dbed75f29777f8ffcd1349549be75729d48be1..3820a4c379a2c006d0cb179c931fc4da12b2adda 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2066,7 +2066,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2096,7 +2096,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

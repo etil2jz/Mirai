@@ -100,7 +100,7 @@ index 40447d00aefb5ffedb8a2ee87155a04088f0649f..31cc0a29e89e79f616b3ee329a552896
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 8595b31137db798b6ae8969970e607459593d39d..944b4b288fd3f3d3160eeb73ae9060ef9d224b7a 100644
+index eaf775072e4782db6f05d12b7c8e4184d13c661e..79936ad8196846e187f8153c15cd8a3e21380876 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -393,7 +393,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -126,7 +126,7 @@ index 88f10d729aa1e0a01790521821d691a0ecd373a2..df2c8dffd626eab0e03b1b62940a52fa
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index d0fb41d5c1b7a4cc0d5f554ec20dfc5ecb3a0058..1350e1cd84312b93da26f6bc49fd9bad6b0dd606 100644
+index e9777c0d9c0de9378951fb08155409a3dfcc9958..d0a3dac7920d309eefdb72e888817f282662bf0a 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1470,7 +1470,7 @@ public abstract class LivingEntity extends Entity {

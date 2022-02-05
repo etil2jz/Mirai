@@ -2003,7 +2003,7 @@ index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 96e2ae4443fc07fd678d6f7bca900b28960d430b..9d7215f87f6f77def478dc223d94993c9103e1a1 100644
+index b1589f65b6a4464c2c5dc450693505673fc89077..354e764de71b95a6287f5d50c9d2a2b21dd548ac 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -71,8 +71,8 @@ public class PaperConfig {
@@ -2067,7 +2067,7 @@ index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..d7913e8ce46b38d9e2e345c33ecf63f6
      }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 434dacbabdf0f6bec9fa84d2f57d605b50e6d812..5acd60a388dca9438d215182cba53ed17ee4a488 100644
+index b836f61a7b5490dea6a531a7e7342ff986194485..fd50a81c6cce512e5c7fa47f5e6ab7ab131c575c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -161,9 +161,14 @@ import org.bukkit.event.weather.LightningStrikeEvent;
@@ -2085,7 +2085,7 @@ index 434dacbabdf0f6bec9fa84d2f57d605b50e6d812..5acd60a388dca9438d215182cba53ed1
      public static final BlockPos END_SPAWN_POINT = new BlockPos(100, 50, 0);
      private static final int MIN_RAIN_DELAY_TIME = 12000;
      private static final int MAX_RAIN_DELAY_TIME = 180000;
-@@ -225,6 +230,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -224,6 +229,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return convertable.dimensionType;
      }
  

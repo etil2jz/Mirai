@@ -600,7 +600,7 @@ index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 72790d1288ff471b2270ec96a207dd65d81e514d..3009b111a25e901504e8845465574451196fc217 100644
+index 97ff4c0b6b1a12c6de82bc8d707337792d1c99b2..e43127f6325e4de9971b01fbeda03dcbc578a2f0 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -147,9 +147,29 @@ import org.bukkit.event.entity.EntityPoseChangeEvent;

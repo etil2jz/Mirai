@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index ade6a3d0e90e8c82e3e90bd2d12369ccd0760eca..c93c3c3f83a60aa1769607a26148f2eb754cbda6 100644
+index 8eabffbfa852773c28702c2c2dd3b124b24e8ae2..0eddb9829788ab7c9bf72805bc46a24152c4a7a1 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1460,6 +1460,7 @@ public class ServerPlayer extends Player {
@@ -19,10 +19,10 @@ index ade6a3d0e90e8c82e3e90bd2d12369ccd0760eca..c93c3c3f83a60aa1769607a26148f2eb
          this.connection.send(new ClientboundBlockUpdatePacket(this.level, sign.getBlockPos()));
          this.connection.send(new ClientboundOpenSignEditorPacket(sign.getBlockPos()));
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 4e0ea5943952ec32ad88c935d7b0259e2eb096e6..8baa1ee0073b21954dd40109155d10ea9f373017 100644
+index 022b2bb3f13b45618889e7b09e4499ee79331118..8d50853d35f2d880bf8eb17ea0780dc2c9b1a367 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -3093,11 +3093,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3099,11 +3099,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
                  }
                  // Paper end
  
