@@ -106,7 +106,7 @@ index 0000000000000000000000000000000000000000..6035196d81c9fce80f7db8d1e45d58b9
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index 9b25d36fe5230e287d81b99be31b9eddd8e76002..2082de19365dafe350ca5f9102f10a02be0fbaab 100644
+index 2eecd5021d40ec3a9ebf56ce2c7abb976c93de12..626f6ca0aed2e3055f679e2f4168a77559dc72a2 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 @@ -52,6 +52,7 @@ import net.minecraft.world.ticks.LevelTickAccess;

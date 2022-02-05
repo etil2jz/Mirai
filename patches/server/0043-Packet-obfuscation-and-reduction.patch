@@ -171,10 +171,10 @@ index 58afc2ffc45367f1163b9c0e87f69c8edbc38f8d..4206b0f526469fd52e38c1d66fb02190
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index e014859b52f31f29923dc4cf7cc0bf4a37b12fa3..a6038630686a9e971ec33caa981711aa7661ef06 100644
+index 9fef9468d010a8e152c6936b3efbe74f501b02ba..16c059d89f366984198c0fc1efb54fedee7c263d 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -671,7 +671,7 @@ public abstract class Player extends LivingEntity {
+@@ -672,7 +672,7 @@ public abstract class Player extends LivingEntity {
      public void increaseScore(int score) {
          int j = this.getScore();
  
@@ -184,10 +184,10 @@ index e014859b52f31f29923dc4cf7cc0bf4a37b12fa3..a6038630686a9e971ec33caa981711aa
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 5abecfec78f2249555b327db214384d3400275b5..49f13fb906829913770ba48aec8d0c6d1db18e96 100644
+index 1bfc4c8156ebcab30a7009f5daaf5ebcd59aed45..f32aaefdeead2dc4f53321201a0103b62a2ec2bc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2097,7 +2097,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2127,7 +2127,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 9e9cdabefce3767a2e482f7cc5eb69c635ea17a7..f601a8a9c826c42c43c0b8bd65c2bf3d10bc5001 100644
+index 087be9acfa77d3fd0216e5983aa62149e668cfc7..9e0b041dc917b01847e16d56984b913e0dff3e49 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -76,6 +76,54 @@ public class LevelChunk extends ChunkAccess {

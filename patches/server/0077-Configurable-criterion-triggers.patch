@@ -9,10 +9,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 040e7a459949b2003fff25e3c605790cd1d3968a..d21fdd0a3e2612439bb7aea2d9b0b2ac2dfe91fe 100644
+index 2c04d9e293ed2369e27e8821bcc41d8a4046ae35..7bbe213486c8a83cd773edd9ff134653719246c7 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -617,6 +617,7 @@ public class ServerPlayer extends Player {
+@@ -616,6 +616,7 @@ public class ServerPlayer extends Player {
  
      @Override
      protected void onInsideBlock(BlockState state) {
@@ -20,7 +20,7 @@ index 040e7a459949b2003fff25e3c605790cd1d3968a..d21fdd0a3e2612439bb7aea2d9b0b2ac
          CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
      }
  
-@@ -662,8 +663,7 @@ public class ServerPlayer extends Player {
+@@ -661,8 +662,7 @@ public class ServerPlayer extends Player {
                  this.setCamera(this);
              }
          }
@@ -30,7 +30,7 @@ index 040e7a459949b2003fff25e3c605790cd1d3968a..d21fdd0a3e2612439bb7aea2d9b0b2ac
          if (this.levitationStartPos != null) {
              CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
          }
-@@ -748,7 +748,7 @@ public class ServerPlayer extends Player {
+@@ -747,7 +747,7 @@ public class ServerPlayer extends Player {
                  this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
              }
  

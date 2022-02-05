@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index f99d189f461921d37581e2fc1382af60921b0660..cd9d39b0ab5aad07ac87df0bdd665be45db2b519 100644
+index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633f2c39b14 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
 @@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,7 +59,7 @@ index f99d189f461921d37581e2fc1382af60921b0660..cd9d39b0ab5aad07ac87df0bdd665be4
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2ccc308546ee96e0a6a4dca013397f561e3a8164..709cd98a82429d6b0a72b6d2ca5e145ecb680bc0 100644
+index 22487ed11962ec8d8ee55ef1651fc7bf0ca1a67e..b020c98411a015c8f2ec4c3356fed600b5bb0b79 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -375,6 +375,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -78,7 +78,7 @@ index 2ccc308546ee96e0a6a4dca013397f561e3a8164..709cd98a82429d6b0a72b6d2ca5e145e
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1546,6 +1548,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1550,6 +1552,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {

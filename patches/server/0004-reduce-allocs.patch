@@ -210,10 +210,10 @@ index e2c8f716af55ebb7e4233c2a3d6515f8f4a239fa..2f5c021b6849acb81064d55418707921
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index f51fcaba69c9ddc27130ab615526e05b1b4f0e07..401326bfd610302a5b073cec646b435a861ad109 100644
+index addf249717b5271b664f4a9d28dd6cc177db5688..99a86acedeed4aede7e7afc7e9ee122b78201c7e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -76,6 +76,8 @@ public class ServerChunkCache extends ChunkSource {
+@@ -77,6 +77,8 @@ public class ServerChunkCache extends ChunkSource {
      final com.destroystokyo.paper.util.concurrent.WeakSeqLock loadedChunkMapSeqLock = new com.destroystokyo.paper.util.concurrent.WeakSeqLock();
      final Long2ObjectOpenHashMap<LevelChunk> loadedChunkMap = new Long2ObjectOpenHashMap<>(8192, 0.5f);
  
@@ -222,7 +222,7 @@ index f51fcaba69c9ddc27130ab615526e05b1b4f0e07..401326bfd610302a5b073cec646b435a
      private final LevelChunk[] lastLoadedChunks = new LevelChunk[4 * 4];
      
      public boolean firstRunSpawnCounts = true; // Pufferfish
-@@ -933,6 +935,16 @@ public class ServerChunkCache extends ChunkSource {
+@@ -928,6 +930,16 @@ public class ServerChunkCache extends ChunkSource {
          this.clearCache();
      }
  
@@ -239,7 +239,7 @@ index f51fcaba69c9ddc27130ab615526e05b1b4f0e07..401326bfd610302a5b073cec646b435a
      private void tickChunks() {
          long i = this.level.getGameTime();
          long j = i - this.lastInhabitedUpdate;
-@@ -1024,7 +1036,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -1019,7 +1031,7 @@ public class ServerChunkCache extends ChunkSource {
                  iterator1 = this.entityTickingChunks.iterator();
              } else {
                  iterator1 = this.entityTickingChunks.unsafeIterator();
@@ -262,10 +262,10 @@ index e3d7a80f8c4b68933875ef90006b79776b4ab000..0b2730e3af0989d567a178393bc11fa3
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 70bbd689e60901b76e9c1d2aab470e09beaf389b..14b183a01dcfebed01edfbee8afebd5c4bc3ebfa 100644
+index 72909d206e6535a0f7f896bdf28b78266bb46878..f8e2cecea6b6f2b2c81d2bbd93008d246d654505 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -899,7 +899,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -902,7 +902,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -274,7 +274,7 @@ index 70bbd689e60901b76e9c1d2aab470e09beaf389b..14b183a01dcfebed01edfbee8afebd5c
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1172,7 +1172,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1175,7 +1175,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -332,7 +332,7 @@ index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c8
  
      public ZeroBitStorage(int size) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 6e3cd8c1e0aa87de00824bfc5a06a6bf9cbc907c..33b682dbf98cf9b8f7d924a7d3b280b069b5f196 100644
+index 260b5a61890ceac0e36aa08b70f0a0fa430cabb0..522466ac49a299b70bbc798c60522b454e432ad8 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3086,7 +3086,7 @@ public abstract class LivingEntity extends Entity {
@@ -398,7 +398,7 @@ index f4cbe31de73fbc3828e0b57cefd969e200d600cb..9f1c8b8a7e562b0de8b8ac377e5a4779
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-index d656fc034212822df8cec3645b02dcfe0f7b9325..820804fa5126f63a50146e71af1cb67a2bc1b734 100644
+index 8d4dbabdd02acdde3e525594b2afe4345f23ce04..bb199bef1d82417605c9002a8861c669ef2f78c6 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 @@ -278,7 +278,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
@@ -486,7 +486,7 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..aa565ab33700c92ca607463bdc0dcaef
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index dfcb5d9fe165852bffe2a676f134ba060ea1aa71..451aa123c4da157c187f858a929b120b85170cce 100644
+index 4451967905f4e564cd354226c79bf6df4364833a..35f469ead580db9ac2c40206baecd5759c359981 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -111,7 +111,6 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -506,7 +506,7 @@ index dfcb5d9fe165852bffe2a676f134ba060ea1aa71..451aa123c4da157c187f858a929b120b
          }
          return slices.getChunkEntities();
      }
-@@ -1346,7 +1345,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1351,7 +1350,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
  
      public int getBestNeighborSignal(BlockPos pos) {
          int i = 0;
@@ -883,10 +883,10 @@ index c9c18cf84e4ee5c253bbc64a4b41e91f9f4c4bc7..6ec908eda3855b926958cd546acd9055
              j = aenumdirection1.length;
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index b2dd2a211bdd1441eae67dd6bd93691964e07620..c63a94ded1c817e968bebe6dc492e2c1f347d47e 100644
+index e82776b32b5fed044134ff19504cfa814067150d..59d30495ff1fa3e9901d905c5b655040b589c762 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -1080,7 +1080,7 @@ public abstract class BlockBehaviour {
+@@ -1115,7 +1115,7 @@ public abstract class BlockBehaviour {
  
          private static final class Cache {
  
@@ -895,7 +895,7 @@ index b2dd2a211bdd1441eae67dd6bd93691964e07620..c63a94ded1c817e968bebe6dc492e2c1
              private static final int SUPPORT_TYPE_COUNT = SupportType.values().length;
              protected final boolean solidRender;
              final boolean propagatesSkylightDown;
-@@ -1120,7 +1120,7 @@ public abstract class BlockBehaviour {
+@@ -1155,7 +1155,7 @@ public abstract class BlockBehaviour {
                  if (!this.collisionShape.isEmpty() && block.getOffsetType() != BlockBehaviour.OffsetType.NONE) {
                      throw new IllegalStateException(String.format("%s has a collision shape and an offset type, but is not marked as dynamicShape in its properties.", Registry.BLOCK.getKey(block)));
                  } else {
