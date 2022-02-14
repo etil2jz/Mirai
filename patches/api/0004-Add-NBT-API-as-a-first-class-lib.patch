@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 46348c1673366ab096051020817bf35adcf79320..78904d037f3a871ead92e4b478471bd20bb48334 100644
+index 46348c1673366ab096051020817bf35adcf79320..8cb674bc4219e7c212a0a342a949062a45632602 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -1,6 +1,7 @@
@@ -22,7 +22,7 @@ index 46348c1673366ab096051020817bf35adcf79320..78904d037f3a871ead92e4b478471bd2
      api("org.apache.logging.log4j:log4j-api:2.17.1")
      api("org.slf4j:slf4j-api:1.8.0-beta4")
      api("io.sentry:sentry:5.4.0") // Pufferfish
-+    api("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT") // Yatopia
++    api("de.tr7zw:item-nbt-api:2.9.2-SNAPSHOT") // Yatopia
  
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2")
