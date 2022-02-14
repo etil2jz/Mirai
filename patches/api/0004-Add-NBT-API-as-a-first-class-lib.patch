@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 129c5b41b410b57952fedf90c1ea713ba1c36470..2c33800e7a49804a29f64fd5e6fde7d2c860ef4c 100644
+index 46348c1673366ab096051020817bf35adcf79320..78904d037f3a871ead92e4b478471bd20bb48334 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -1,6 +1,7 @@
@@ -26,7 +26,7 @@ index 129c5b41b410b57952fedf90c1ea713ba1c36470..2c33800e7a49804a29f64fd5e6fde7d2
  
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2")
-@@ -94,6 +96,10 @@ tasks.jar {
+@@ -101,6 +103,10 @@ tasks.jar {
      }
  }
  
@@ -38,7 +38,7 @@ index 129c5b41b410b57952fedf90c1ea713ba1c36470..2c33800e7a49804a29f64fd5e6fde7d2
      inputs.files(apiAndDocs)
          .ignoreEmptyDirectories()
 diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
-index 5a4884db36d448c885e49c965ae329a0638dd628..ce86d0d58182466dc1b2dbf1851e5bff42f7013f 100644
+index 049c36807d2a970842442c1b7517c06f3f150041..8bc45dcb8b739045cf4d867f2ea34488a4f59281 100644
 --- a/src/main/java/org/bukkit/Chunk.java
 +++ b/src/main/java/org/bukkit/Chunk.java
 @@ -283,4 +283,16 @@ public interface Chunk extends PersistentDataHolder {
@@ -90,7 +90,7 @@ index 3b10fcc13893403b29f0260b8605144679e89b82..1e9a96d8b08cc396acf73dc420830093
 +    // Yatopia end
  }
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index 51ec2e4ec4239659272bba3d6ba2ad73926ebb88..6e7e2000c015484c4416c474fc1a4bd82da7f3e6 100644
+index c2c45a93887f99466a8ac4275355ac75c7f901c4..520865c7ea629848fda50f7589d56018d7b1acd1 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -190,6 +190,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
@@ -123,7 +123,7 @@ index 51ec2e4ec4239659272bba3d6ba2ad73926ebb88..6e7e2000c015484c4416c474fc1a4bd8
       * Returns a list of entities within a bounding box centered around this
       * entity
 diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/org/bukkit/inventory/ItemStack.java
-index 56072cb4d32ca8a09023be08a5a832c2c108379a..aebcc6d749e135445b7e779fc2f6412db91e591a 100644
+index 7dfc84c77d8e185bb0513d9f9c603ce1b501a5e0..eeab6b554b40e8c84e496ba62163f56d6696d705 100644
 --- a/src/main/java/org/bukkit/inventory/ItemStack.java
 +++ b/src/main/java/org/bukkit/inventory/ItemStack.java
 @@ -587,6 +587,44 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor

@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 0f194168f5fca8eb768bca3ce953f28097fed578..6a8786790cfeb4373d23d7e743f06b19efa45c35 100644
+index 86548210e50879504f646ef3aa46927998f2d775..e7f677cb5abb24c52b10087837f44c865140635c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -17,7 +17,7 @@ index 0f194168f5fca8eb768bca3ce953f28097fed578..6a8786790cfeb4373d23d7e743f06b19
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -80,7 +80,7 @@ tasks.jar {
+@@ -87,7 +87,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",

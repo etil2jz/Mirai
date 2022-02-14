@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 21 Mar 2020 18:33:05 -0500
+Subject: [PATCH] End gateway should check if entity can use portal
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+index bc028de0ac71e69e8d714db5f65286f306544bf1..500a4013ce525c0474fe3991457d4c2a50ceb7ed 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+@@ -176,6 +176,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
+ 
+     public static void teleportEntity(Level world, BlockPos pos, BlockState state, Entity entity, TheEndGatewayBlockEntity blockEntity) {
+         if (world instanceof ServerLevel && !blockEntity.isCoolingDown()) {
++            if (!entity.canChangeDimensions()) return; // Purpur
+             ServerLevel worldserver = (ServerLevel) world;
+ 
+             blockEntity.teleportCooldown = 100;
