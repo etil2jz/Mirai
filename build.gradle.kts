@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    remapper("net.fabricmc:tiny-remapper:0.7.0:fat")
+    remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
     decompiler("org.quiltmc.quiltflower:1.7.0")
     paperclip("io.papermc:paperclip:3.0.2")
 }
@@ -33,9 +33,6 @@ subprojects {
     tasks.withType<JavaCompile> {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
-        options.compilerArgs = listOf(
-                "--add-modules", "jdk.incubator.vector" 
-        )
     }
     tasks.withType<Javadoc> {
         options.encoding = Charsets.UTF_8.name()

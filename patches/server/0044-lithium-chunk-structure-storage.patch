@@ -1,0 +1,159 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Sat, 18 Dec 2021 23:57:33 -0500
+Subject: [PATCH] lithium: chunk structure storage
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+index 5aeaaae6f15050a2da271fe196d0a234ecafc8a1..c95aaea6cc984095654f7e44baa806342537061d 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+@@ -51,6 +51,8 @@ import net.minecraft.world.ticks.SerializableTickContainer;
+ import net.minecraft.world.ticks.TickContainerAccess;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import java.util.HashMap; // JettPack
++import it.unimi.dsi.fastutil.longs.LongSets; // JettPack
+ 
+ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiomeSource, FeatureAccess {
+ 
+@@ -71,7 +73,7 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+     protected BlendingData blendingData;
+     public final Map<Heightmap.Types, Heightmap> heightmaps = Maps.newEnumMap(Heightmap.Types.class);
+     private final Map<StructureFeature<?>, StructureStart<?>> structureStarts = Maps.newHashMap();
+-    private final Map<StructureFeature<?>, LongSet> structuresRefences = Maps.newHashMap();
++    private final Map<StructureFeature<?>, LongSet> structureReferences = Maps.newHashMap(); // JettPack - fix typo in mojmap
+     protected final Map<BlockPos, CompoundTag> pendingBlockEntities = Maps.newHashMap();
+     public final Map<BlockPos, BlockEntity> blockEntities = Maps.newHashMap();
+     protected final LevelHeightAccessor levelHeightAccessor;
+@@ -258,6 +260,11 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+     }
+ 
+     public void setAllStarts(Map<StructureFeature<?>, StructureStart<?>> structureStarts) {
++        // JettPack start - lithium: chunk.structure_storage
++        if (structureStarts instanceof HashMap && !structureStarts.isEmpty()) {
++            structureStarts.values().removeIf(structureStart -> structureStart == null || structureStart == StructureStart.INVALID_START);
++        }
++        // JettPack end
+         this.structureStarts.clear();
+         this.structureStarts.putAll(structureStarts);
+         this.unsaved = true;
+@@ -265,14 +272,12 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+ 
+     @Override
+     public LongSet getReferencesForFeature(StructureFeature<?> structure) {
+-        return (LongSet) this.structuresRefences.computeIfAbsent(structure, (structuregenerator1) -> {
+-            return new LongOpenHashSet();
+-        });
++        return this.structureReferences.getOrDefault(structure, LongSets.EMPTY_SET); // JettPack - lithium: chunk.structure_storage
+     }
+ 
+     @Override
+     public void addReferenceForFeature(StructureFeature<?> structure, long reference) {
+-        ((LongSet) this.structuresRefences.computeIfAbsent(structure, (structuregenerator1) -> {
++        ((LongSet) this.structureReferences.computeIfAbsent(structure, (structuregenerator1) -> {
+             return new LongOpenHashSet();
+         })).add(reference);
+         this.unsaved = true;
+@@ -280,13 +285,24 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+ 
+     @Override
+     public Map<StructureFeature<?>, LongSet> getAllReferences() {
+-        return Collections.unmodifiableMap(this.structuresRefences);
++        // JettPack start - lithium: chunk.structure_storage
++        Map<StructureFeature<?>, LongSet> structureReferences = this.structureReferences;
++        if (structureReferences.isEmpty()) {
++            return Collections.emptyMap();
++        }
++        return Collections.unmodifiableMap(structureReferences);
++        // JettPack end
+     }
+ 
+     @Override
+     public void setAllReferences(Map<StructureFeature<?>, LongSet> structureReferences) {
+-        this.structuresRefences.clear();
+-        this.structuresRefences.putAll(structureReferences);
++        // JettPack start - lithium: chunk.structure_storage
++        if (structureReferences instanceof HashMap && !structureReferences.isEmpty()) {
++            structureReferences.values().removeIf(longs -> longs == null || longs.isEmpty());
++        }
++        // JettPack end
++        this.structureReferences.clear();
++        this.structureReferences.putAll(structureReferences);
+         this.unsaved = true;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
+index 8246204ce5d8f825c7796f87006e658d7a019876..2fd92f77f3aac74709e351c26badafc400f8b74f 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
++++ b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
+@@ -64,6 +64,9 @@ import net.minecraft.world.ticks.LevelChunkTicks;
+ import net.minecraft.world.ticks.ProtoChunkTicks;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap; // JettPack
++import it.unimi.dsi.fastutil.objects.Object2ObjectMaps; // JettPack
++import it.unimi.dsi.fastutil.longs.LongSets; // JettPack
+ 
+ public class ChunkSerializer {
+     // Paper start
+@@ -79,6 +82,48 @@ public class ChunkSerializer {
+     }
+     // Paper end
+ 
++    // JettPack start - lithium: chunk.structure_storage
++    private static final Object2ObjectOpenHashMap<StructureFeature<?>, StructureStart<?>> DEFAULT_STRUCTURE_STARTS;
++    private static final Map<StructureFeature<?>, StructureStart<?>> DEFAULT_STRUCTURE_STARTS_READONLY;
++    private static final Object2ObjectOpenHashMap<StructureFeature<?>, LongSet> DEFAULT_STRUCTURE_REFERENCES;
++    private static final Map<StructureFeature<?>, LongSet> DEFAULT_STRUCTURE_REFERENCES_READONLY;
++
++    static {
++        Object2ObjectOpenHashMap<StructureFeature<?>, StructureStart<?>> structureStarts = new Object2ObjectOpenHashMap<>();
++        Object2ObjectOpenHashMap<StructureFeature<?>, LongSet> structureReferences = new Object2ObjectOpenHashMap<>();
++        for (StructureFeature<?> structureFeature : Registry.STRUCTURE_FEATURE) {
++            structureStarts.put(structureFeature, StructureStart.INVALID_START);
++            structureReferences.put(structureFeature, LongSets.emptySet());
++        }
++        structureStarts.trim();
++        structureReferences.trim();
++        DEFAULT_STRUCTURE_STARTS = structureStarts;
++        DEFAULT_STRUCTURE_REFERENCES = structureReferences;
++        DEFAULT_STRUCTURE_STARTS_READONLY = Object2ObjectMaps.unmodifiable(structureStarts);
++        DEFAULT_STRUCTURE_REFERENCES_READONLY = Object2ObjectMaps.unmodifiable(structureReferences);
++    }
++
++    private static Map<StructureFeature<?>, StructureStart<?>> getCompleteStructureStarts(ChunkAccess chunk) {
++        Map<StructureFeature<?>, StructureStart<?>> structureStarts = chunk.getAllStarts();
++        if (structureStarts.isEmpty()) {
++            return DEFAULT_STRUCTURE_STARTS_READONLY;
++        }
++        Object2ObjectOpenHashMap<StructureFeature<?>, StructureStart<?>> completeStructureStarts = DEFAULT_STRUCTURE_STARTS.clone();
++        completeStructureStarts.putAll(structureStarts);
++        return completeStructureStarts;
++    }
++
++    private static Map<StructureFeature<?>, LongSet> getCompleteStructureReferences(ChunkAccess chunk) {
++        Map<StructureFeature<?>, LongSet> structureReferences = chunk.getAllReferences();
++        if (structureReferences.isEmpty()) {
++            return DEFAULT_STRUCTURE_REFERENCES_READONLY;
++        }
++        Object2ObjectOpenHashMap<StructureFeature<?>, LongSet> completeStructureReferences = DEFAULT_STRUCTURE_REFERENCES.clone();
++        completeStructureReferences.putAll(structureReferences);
++        return completeStructureReferences;
++    }
++    // JettPack end
++
+     public static final Codec<PalettedContainer<BlockState>> BLOCK_STATE_CODEC = PalettedContainer.codec(Block.BLOCK_STATE_REGISTRY, BlockState.CODEC, PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState(), null); // Paper - Anti-Xray - Add preset block states
+     private static final Logger LOGGER = LogManager.getLogger();
+     private static final String TAG_UPGRADE_DATA = "UpgradeData";
+@@ -682,7 +727,7 @@ public class ChunkSerializer {
+         }
+ 
+         nbttagcompound.put("Heightmaps", nbttagcompound3);
+-        nbttagcompound.put("structures", ChunkSerializer.packStructureData(StructurePieceSerializationContext.fromLevel(world), chunkcoordintpair, chunk.getAllStarts(), chunk.getAllReferences()));
++        nbttagcompound.put("structures", ChunkSerializer.packStructureData(StructurePieceSerializationContext.fromLevel(world), chunkcoordintpair, getCompleteStructureStarts(chunk), getCompleteStructureReferences(chunk))); // JettPack - lithium: chunk.structure_storage
+         // CraftBukkit start - store chunk persistent data in nbt
+         if (!chunk.persistentDataContainer.isEmpty()) { // SPIGOT-6814: Always save PDC to account for 1.17 to 1.18 chunk upgrading.
+             nbttagcompound.put("ChunkBukkitValues", chunk.persistentDataContainer.toTagCompound());

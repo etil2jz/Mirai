@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: tr7zw <tr7zw@live.de>
+Date: Thu, 2 Apr 2020 18:49:38 +0200
+Subject: [PATCH] Add NBT API as a first-class lib
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 730ba5c921e9556d6b1dca77a146f856225e8ab5..fbfda8c02fb5175c853130997789e619d142147a 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -115,6 +115,7 @@ relocation {
+     relocate("org.bukkit.craftbukkit" to "org.bukkit.craftbukkit.v$packageVersion") {
+         exclude("org.bukkit.craftbukkit.Main*")
+     }
++    relocate("de.tr7zw.changeme.nbtapi" to "de.tr7zw.nbtapi") // Yatopia - Add NBT API as a first-class lib
+ }
+ 
+ tasks.shadowJar {

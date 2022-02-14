@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 42fe0d4ecaae77edb37aa6cca8722bb4af8f8fca..38f671e44441c7a21be3430a0a7dc61e7099708d 100644
+index 4dfe75727f69b48907c7edf7a46e580cbd7b1648..b4af95b2317d02672a606f72a34094f569747560 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -1,6 +1,7 @@
@@ -22,11 +22,11 @@ index 42fe0d4ecaae77edb37aa6cca8722bb4af8f8fca..38f671e44441c7a21be3430a0a7dc61e
      api("org.slf4j:slf4j-api:1.8.0-beta4")
      api("io.sentry:sentry:5.4.0") // Pufferfish
      api("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT") // Purpur
-+    api("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT") // Yatopia
++    api("de.tr7zw:item-nbt-api:2.9.2-SNAPSHOT") // Yatopia
  
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2")
-@@ -95,6 +97,10 @@ tasks.jar {
+@@ -102,6 +104,10 @@ tasks.jar {
      }
  }
  
@@ -35,8 +35,8 @@ index 42fe0d4ecaae77edb37aa6cca8722bb4af8f8fca..38f671e44441c7a21be3430a0a7dc61e
 +}
 +
  tasks.withType<Javadoc> {
+     (options as StandardJavadocDocletOptions).addStringOption("-add-modules", "jdk.incubator.vector") // Purpur - our javadocs need this for pufferfish's SIMD patch
      inputs.files(apiAndDocs)
-         .ignoreEmptyDirectories()
 diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
 index 049c36807d2a970842442c1b7517c06f3f150041..8bc45dcb8b739045cf4d867f2ea34488a4f59281 100644
 --- a/src/main/java/org/bukkit/Chunk.java
@@ -90,7 +90,7 @@ index 3b10fcc13893403b29f0260b8605144679e89b82..1e9a96d8b08cc396acf73dc420830093
 +    // Yatopia end
  }
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index b2504a24ee2cc142f7b07fa5a908c0c693f18b8b..ca8caaa0b8dd85cb3c428afaced456363264d38d 100644
+index 26847ed7bae8ae4e0a21106a0ff09a50af6ce689..74b4f7e5c93314227962a31e94104a58514385af 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -190,6 +190,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent

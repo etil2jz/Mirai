@@ -1,0 +1,198 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 6 Oct 2021 11:03:01 -0500
+Subject: [PATCH] Packet obfuscation and reduction
+
+Original code by Cryptite, licensed under MIT
+You can find the original code on https://github.com/Cryptite/Slice
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725fcb902848 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
+@@ -22,6 +22,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
+ 
+     }
+ 
++    // Slice start
++    public ClientboundSetEntityDataPacket(int id, List<SynchedEntityData.DataItem<?>> packedItems) {
++        this.id = id;
++        this.packedItems = packedItems;
++    }
++    // Slice end
++
+     public ClientboundSetEntityDataPacket(FriendlyByteBuf buf) {
+         this.id = buf.readVarInt();
+         this.packedItems = SynchedEntityData.unpack(buf);
+diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..e97d4081e37b82019dbc90ae6c53b8688a865c8a 100644
+--- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
++++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
+@@ -136,6 +136,11 @@ public class SynchedEntityData {
+     }
+ 
+     public <T> void set(EntityDataAccessor<T> key, T value) {
++        //Slice start
++        set(key, value, null);
++    }
++
++    public <T> void set(EntityDataAccessor<T> key, T value, @Nullable T foreignValue) { // Slice end
+         SynchedEntityData.DataItem<T> datawatcher_item = this.getItem(key);
+ 
+         if (ObjectUtils.notEqual(value, datawatcher_item.getValue())) {
+@@ -145,6 +150,12 @@ public class SynchedEntityData {
+             this.isDirty = true;
+         }
+ 
++        // Slice start
++        if (foreignValue != null && ObjectUtils.notEqual(foreignValue, datawatcher_item.getForeignValue())) {
++            datawatcher_item.setForeignValue(foreignValue);
++        }
++        // Slice end
++
+     }
+ 
+     // CraftBukkit start - add method from above
+@@ -200,6 +211,28 @@ public class SynchedEntityData {
+         return list;
+     }
+ 
++    // Slice start
++    @Nullable
++    public List<SynchedEntityData.DataItem<?>> packForeignDirty(List<DataItem<?>> unpackedData) {
++        List<SynchedEntityData.DataItem<?>> list = null;
++
++        for (DataItem<?> dataItem : unpackedData) {
++            DataItem<?> item = itemsById.get(dataItem.accessor.getId());
++            if (item.isDirty(true)) {
++                item.setForeignDirty(false);
++
++                if (list == null) {
++                    list = Lists.newArrayList();
++                }
++
++                list.add(item.copy(true));
++            }
++        }
++
++        return list;
++    }
++    // Slice end
++
+     @Nullable
+     public List<SynchedEntityData.DataItem<?>> getAll() {
+         List<SynchedEntityData.DataItem<?>> list = null;
+@@ -313,11 +346,14 @@ public class SynchedEntityData {
+         final EntityDataAccessor<T> accessor;
+         T value;
+         private boolean dirty;
++        @Nullable T foreignValue = null; // Slice
++        private boolean foreignDirty; // Slice
+ 
+         public DataItem(EntityDataAccessor<T> data, T value) {
+             this.accessor = data;
+             this.value = value;
+             this.dirty = true;
++            this.foreignDirty = true; // Slice
+         }
+ 
+         public EntityDataAccessor<T> getAccessor() {
+@@ -343,5 +379,34 @@ public class SynchedEntityData {
+         public SynchedEntityData.DataItem<T> copy() {
+             return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy(this.value));
+         }
++
++        // Slice start
++        public void setForeignValue(T foreignValue) {
++            this.foreignValue = foreignValue;
++            this.foreignDirty = true;
++        }
++
++        public @Nullable T getForeignValue() {
++            return foreignValue;
++        }
++
++        public boolean isDirty(boolean foreign) {
++            if (foreign) {
++                //There must be a foreign value in order for this to be dirty, otherwise we consider this a normal
++                //value and check the normal dirty flag.
++                return foreignValue == null || this.foreignDirty;
++            }
++
++            return this.dirty;
++        }
++
++        public void setForeignDirty(boolean dirty) {
++            this.foreignDirty = dirty;
++        }
++
++        public SynchedEntityData.DataItem<T> copy(boolean foreign) {
++            return new SynchedEntityData.DataItem<>(this.accessor, this.accessor.getSerializer().copy((foreign && this.foreignValue != null ? this.foreignValue : this.value)));
++        }
++        // Slice end
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index e3d7a80f8c4b68933875ef90006b79776b4ab000..3c8b1589754202f82e32066a0799d7983c2ee91f 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -372,7 +372,19 @@ public class ServerEntity {
+         SynchedEntityData datawatcher = this.entity.getEntityData();
+ 
+         if (datawatcher.isDirty()) {
+-            this.broadcastAndSend(new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false));
++            // Slice start
++            ClientboundSetEntityDataPacket dataPacket = new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false);
++            if (this.entity instanceof ServerPlayer serverPlayer) {
++                serverPlayer.connection.send(dataPacket);
++            }
++
++            //Get the packedData that the original packet has, and then determine if any of those are changed in
++            //the foreign version. If null, nothing to notify foreign trackers about.
++            List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
++            if (dirtyItems != null) {
++                this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
++            }
++            // Slice end
+         }
+ 
+         if (this.entity instanceof LivingEntity) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 864cafd56f49fb01802ebe31299c9bfabc4740f6..bef22771b34857c41b9008a41ef710acf78c4058 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -3016,7 +3016,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+         if (event.isCancelled()) {
+             return;
+         }
+-        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount());
++        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount(), getMaxAirSupply()); // Slice
+         // CraftBukkit end
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 9fef9468d010a8e152c6936b3efbe74f501b02ba..16c059d89f366984198c0fc1efb54fedee7c263d 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -672,7 +672,7 @@ public abstract class Player extends LivingEntity {
+     public void increaseScore(int score) {
+         int j = this.getScore();
+ 
+-        this.entityData.set(Player.DATA_SCORE_ID, j + score);
++        this.entityData.set(Player.DATA_SCORE_ID, j + score, 0); // Slice
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index d7008f2a1f647ae042eb7e25068b942e39e4b728..1f094494dcb9745213d10d5717d65a26840a607f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -2129,7 +2129,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+                 this.sendHealthUpdate();
+             }
+         }
+-        this.getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth());
++        this.getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth(), isDead() ? 0f : 20f); // Slice
+ 
+         this.getHandle().maxHealthCache = getMaxHealth();
+     }

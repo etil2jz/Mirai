@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: l_MrBoom_l <admin@epserv.ru>
+Date: Wed, 30 Sep 2020 18:20:12 +0300
+Subject: [PATCH] Configurable flight checks
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 058c45ee30e687165d837980f7aed229475a4ea3..8c20f062e65b72e6e8c0ce88371f1097b5468bd1 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -331,7 +331,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         ++this.tickCount;
+         this.knownMovePacketCount = this.receivedMovePacketCount;
+         if (this.clientIsFloating && !this.player.isSleeping()) {
+-            if (++this.aboveGroundTickCount > 80) {
++            if (wtf.etil.mirai.MiraiConfig.checkFlying && ++this.aboveGroundTickCount > 80) { // Yatopia - Configurable flight checks
+                 ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
+                 this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
+                 return;
+@@ -350,7 +350,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+             this.vehicleLastGoodY = this.lastVehicle.getY();
+             this.vehicleLastGoodZ = this.lastVehicle.getZ();
+             if (this.clientVehicleIsFloating && this.player.getRootVehicle().getControllingPassenger() == this.player) {
+-                if (++this.aboveGroundVehicleTickCount > 80) {
++                if (wtf.etil.mirai.MiraiConfig.checkVehicleFlying && ++this.aboveGroundVehicleTickCount > 80) { // Yatopia - Configurable flight checks
+                     ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating a vehicle too long!", this.player.getName().getString());
+                     this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
+                     return;
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 63d750d5858d20304b9608697ae618eb97cb6eb6..551cf30c52bb55e7c36cc27f3700c5cd27809c35 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -189,6 +189,13 @@ public class MiraiConfig {
+         logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
+     }
+ 
++    public static boolean checkFlying = true;
++    public static boolean checkVehicleFlying = true;
++    private static void flightChecks() {
++		checkFlying = getBoolean("checks.flight", checkFlying);
++		checkVehicleFlying = getBoolean("checks.vehicle-flight", checkVehicleFlying);
++	}
++
+ 
+ 
+ }
+\ No newline at end of file
