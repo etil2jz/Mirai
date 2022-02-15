@@ -20,7 +20,7 @@ index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..34665a768285fd99e49d57d3879deb1f
      private long lastFill = -1;
      private long nextRefill = -1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 623bacaabff76caab4b4d45a75b04b636b34d455..ad8b87febb60fc4a5be4493195f0c97d0a104e62 100644
+index 8bb399a76fb10e7c04e20672b0072ca2c2850642..555f41f510cd49d89e6641fab5e0be79a258f6ff 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -418,7 +418,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -68,7 +68,7 @@ index 61b0b0a847042557d7b9cd20f0ad51f0ff1751b8..8af3fe639efeb0e02ca92a796bf4a29e
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 547158e80c501aec66f4ffc96c0a496a346e0dd3..60eb77a3fa4f7c314e1c7b907221d8b21647d3c8 100644
+index 70114b482b485c01dddca3451ce06585681acedc..3111f7aa58bdcbdad23a02e9d87ccb41c6b55758 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -52,7 +52,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
@@ -207,10 +207,10 @@ index 97f99a06b8954b08af9f4156abe8abdad359349a..e0e27004d67fd759903645cff8a491e5
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 8d5b3bd0d4e7af63b9a13dfe9b1dbc1b71ad7eca..3401a9fdc943f97623eedd839dfe90927d6bf891 100644
+index 84c428065fd7e5ef3a4a9cf35c62818e54cc70eb..30cfb84a76d90ee9d7437c7aec3badac047ea06b 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -126,13 +126,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -124,13 +124,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Thread thread;
      private final boolean isDebug;
      private int skyDarken;
@@ -253,10 +253,10 @@ index d33af84300db18ea2b71dba2c9ed43390a293500..e60d244c44396ec09ecff889d8b9543b
  
                      MinecraftServer minecraftServer = this.level.getServer();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 121b6bf4099a4ea6a71664fd152a865056825f59..a8bc0da6c9142e122aa39630c42533df232def3f 100644
+index dfd32e1213056ed1061f647c95fd71bfbab41294..7e1cb1d1a1d664080796348916e0bdfa842f05f7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -229,7 +229,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -236,7 +236,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
      }
      // Paper end
  

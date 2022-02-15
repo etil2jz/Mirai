@@ -6,6 +6,19 @@ Subject: [PATCH] lithium: precompute shape arrays
 Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
+diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
+index efda08e9b776cda42911446a1d4e4fb49be1ca76..be94fd06fb7257289ea95e8b97af954d380f551a 100644
+--- a/src/main/java/net/minecraft/core/Direction.java
++++ b/src/main/java/net/minecraft/core/Direction.java
+@@ -41,7 +41,7 @@ public enum Direction implements StringRepresentable {
+     private final Direction.Axis axis;
+     private final Direction.AxisDirection axisDirection;
+     private final Vec3i normal;
+-    private static final Direction[] VALUES = values();
++    public static final Direction[] VALUES = values(); // JettPack
+     private static final Map<String, Direction> BY_NAME = Arrays.stream(VALUES).collect(Collectors.toMap(Direction::getName, (direction) -> {
+         return direction;
+     }));
 diff --git a/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java b/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java
 index a544db042c8d2ecec8d323770552c4f10ca758a6..c04da8da5b40430b61972bce32cec4e8c0370bac 100644
 --- a/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java
@@ -32,7 +45,7 @@ index a544db042c8d2ecec8d323770552c4f10ca758a6..c04da8da5b40430b61972bce32cec4e8
  
      public int size() {
 diff --git a/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java b/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
-index 68e89dbd79171627046e89699057964e44c40e7d..eeb4d25f2e6cf62dee4f81d6852dcf09aeefd3ff 100644
+index 68e89dbd79171627046e89699057964e44c40e7d..959588962acb0196ec9f1cc2502e62117f6ccdc4 100644
 --- a/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
 +++ b/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
 @@ -3,15 +3,25 @@ package net.minecraft.world.phys.shapes;
@@ -47,9 +60,9 @@ index 68e89dbd79171627046e89699057964e44c40e7d..eeb4d25f2e6cf62dee4f81d6852dcf09
      protected CubeVoxelShape(DiscreteVoxelShape voxels) {
          super(voxels);
 +        // JettPack start - lithium: shapes.precompute_shape_arrays
-+        this.list = new DoubleList[Direction.Axis.values().length];
++        this.list = new DoubleList[Direction.VALUES.length];
 +
-+        for (Direction.Axis axis : Direction.Axis.values()) {
++        for (Direction.Axis axis : Direction.Axis.VALUES) {
 +            this.list[axis.ordinal()] = new CubePointRange(voxels.getSize(axis));
 +        }
 +        // JettPack end

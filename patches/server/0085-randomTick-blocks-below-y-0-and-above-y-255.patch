@@ -9,10 +9,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
-index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..b1d7a34b6e05fcf1c681ebb160f69e447fe98621 100644
+index afd194c5e63f4f8e2220c5b382138e96ecb14c1b..7472b9f4e0bd855f169680db8c90f738e7a2ffd2 100644
 --- a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
 +++ b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
-@@ -26,7 +26,7 @@ public final class IBlockDataList {
+@@ -24,7 +24,7 @@ public final class IBlockDataList {
      private int size;
  
      public static int getLocationKey(final int x, final int y, final int z) {
@@ -22,7 +22,7 @@ index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..b1d7a34b6e05fcf1c681ebb160f69e44
  
      public static BlockState getBlockDataFromRaw(final long raw) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index e45e292c0efb0f95e9435a27357bfaa4fe23bf8e..cdf53ac784383f75b8bda881110632adb895a576 100644
+index 1fc09f4ac14e0351ee0b77515348dee2c4d80c64..3f5345bad48f35f29a6111302f0eb7d4d95e6b6c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -903,7 +903,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
