@@ -8,7 +8,7 @@ You can find the original code on https://github.com/CaffeineMC/lithium-fabric (
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c3f55b58607d5060bc8513e359c5f00bfb8bf428
+index 0000000000000000000000000000000000000000..2d79932dbd1fc386a94b8d6ea3526934c54c2aad
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/lithium/common/util/collections/HashedList.java
 @@ -0,0 +1,280 @@
@@ -22,10 +22,10 @@ index 0000000000000000000000000000000000000000..c3f55b58607d5060bc8513e359c5f00b
 +import java.util.ListIterator;
 +import java.util.NoSuchElementException;
 +
-+/*
-+Wraps a {@link List} with a hash table which provides O(1) lookups for {@link Collection#contains(Object)}. The type
-+contained by this list must use reference-equality semantics.
-+*/
++/**
++ * Wraps a {@link List} with a hash table which provides O(1) lookups for {@link Collection#contains(Object)}. The type
++ * contained by this list must use reference-equality semantics.
++ */
 +@SuppressWarnings("SuspiciousMethodCalls")
 +public class HashedList<T> implements List<T> {
 +    private final ReferenceArrayList<T> list;
@@ -292,4 +292,18 @@ index 0000000000000000000000000000000000000000..c3f55b58607d5060bc8513e359c5f00b
 +        return new HashedList<>(list);
 +    }
 +}
-\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index 154c8cf5a74278f349ec4c969254b62b3c48106b..c055903ada18a95b6cd1d37c546a0157744d3b8c 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -116,8 +116,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public static final int TICKS_PER_DAY = 24000;
+     public static final int MAX_ENTITY_SPAWN_Y = 20000000;
+     public static final int MIN_ENTITY_SPAWN_Y = -20000000;
+-    protected final List<TickingBlockEntity> blockEntityTickers = Lists.newArrayList(); public final int getTotalTileEntityTickers() { return this.blockEntityTickers.size(); } // Paper
+-    private final List<TickingBlockEntity> pendingBlockEntityTickers = Lists.newArrayList();
++    protected final List<TickingBlockEntity> blockEntityTickers = me.jellysquid.mods.lithium.common.util.collections.HashedList.wrapper(Lists.newArrayList()); public final int getTotalTileEntityTickers() { return this.blockEntityTickers.size(); } // Paper // Jettpack - lithium: hashed_list
++    private final List<TickingBlockEntity> pendingBlockEntityTickers = me.jellysquid.mods.lithium.common.util.collections.HashedList.wrapper(Lists.newArrayList()); // Jettpack - lithium: hashed_list
+     private boolean tickingBlockEntities;
+     public final Thread thread;
+     private final boolean isDebug;
