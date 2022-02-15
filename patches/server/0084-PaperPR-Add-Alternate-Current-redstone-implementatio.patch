@@ -11,7 +11,7 @@ This patch implements SpaceWalkerRS's optimized redstone algorithm as an alterna
 
 diff --git a/src/main/java/alternate/current/redstone/Node.java b/src/main/java/alternate/current/redstone/Node.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3c139f67beaac9402a6add5b19613c4d40863f54
+index 0000000000000000000000000000000000000000..28af1c501da4c7fbfa943a008b5450d16b757423
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/Node.java
 @@ -0,0 +1,98 @@
@@ -113,10 +113,9 @@ index 0000000000000000000000000000000000000000..3c139f67beaac9402a6add5b19613c4d
 +		throw new UnsupportedOperationException("Not a WireNode!");
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/PowerQueue.java b/src/main/java/alternate/current/redstone/PowerQueue.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c519125dc8e5f30cef7f88dc26980e8586980c5a
+index 0000000000000000000000000000000000000000..070973f35bbb07b974f638754547b821143b4c6b
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/PowerQueue.java
 @@ -0,0 +1,91 @@
@@ -211,10 +210,9 @@ index 0000000000000000000000000000000000000000..c519125dc8e5f30cef7f88dc26980e85
 +		return size;
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WireBlock.java b/src/main/java/alternate/current/redstone/WireBlock.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..768408de7c9aff7c1842e15855dcf2209d405550
+index 0000000000000000000000000000000000000000..3b3ba9325717a4bd9399537fd15746ae2fc731b2
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WireBlock.java
 @@ -0,0 +1,64 @@
@@ -282,10 +280,9 @@ index 0000000000000000000000000000000000000000..768408de7c9aff7c1842e15855dcf220
 +	public void findWireConnections(WireNode wire, WireHandler.NodeProvider nodeProvider);
 +	
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WireConnection.java b/src/main/java/alternate/current/redstone/WireConnection.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..03944c984072338093c46ea77abae1971414bf7c
+index 0000000000000000000000000000000000000000..fccf3d6b86fd4948c2f7dd7ef30a5f8d407f7444
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WireConnection.java
 @@ -0,0 +1,28 @@
@@ -317,10 +314,9 @@ index 0000000000000000000000000000000000000000..03944c984072338093c46ea77abae197
 +		this.out = out;
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WireConnectionManager.java b/src/main/java/alternate/current/redstone/WireConnectionManager.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..621cf923eb14cca047ae9219a7946e9b66f9641f
+index 0000000000000000000000000000000000000000..4db24a54d1e5c577755a966e88651014192fb454
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WireConnectionManager.java
 @@ -0,0 +1,123 @@
@@ -447,10 +443,9 @@ index 0000000000000000000000000000000000000000..621cf923eb14cca047ae9219a7946e9b
 +		
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WireHandler.java b/src/main/java/alternate/current/redstone/WireHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..05753e9eae53da9eb78964142b923d29b589bca5
+index 0000000000000000000000000000000000000000..1f71f1d511d8078d8efce9732e48154f99c8ff2e
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WireHandler.java
 @@ -0,0 +1,1158 @@
@@ -1132,9 +1127,9 @@ index 0000000000000000000000000000000000000000..05753e9eae53da9eb78964142b923d29
 +			if (neighbor.isRedstoneComponent()) {
 +				power = Math.max(power, world.getWeakPowerFrom(neighbor.pos, neighbor.state, Directions.ALL[iDir]));
 +			}
-+		
++			
 +			if (power >= maxPower) {
-+			return maxPower;
++				return maxPower;
 +			}
 +		}
 +		
@@ -1615,7 +1610,7 @@ index 0000000000000000000000000000000000000000..05753e9eae53da9eb78964142b923d29
 \ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WireNode.java b/src/main/java/alternate/current/redstone/WireNode.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..15db3329181a2677478e1841a7746be058e67285
+index 0000000000000000000000000000000000000000..ed4f071245ae94d4ced5476ef88def48e9768ca7
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WireNode.java
 @@ -0,0 +1,103 @@
@@ -1722,10 +1717,9 @@ index 0000000000000000000000000000000000000000..15db3329181a2677478e1841a7746be0
 +		return world.setWireState(pos, state);
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/redstone/WorldAccess.java b/src/main/java/alternate/current/redstone/WorldAccess.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9bfccaeb0991800e12f1a21cb8126dfda71b1175
+index 0000000000000000000000000000000000000000..4f1ac60f3070412f9c9286624f76ad39154e28ec
 --- /dev/null
 +++ b/src/main/java/alternate/current/redstone/WorldAccess.java
 @@ -0,0 +1,139 @@
@@ -1868,10 +1862,9 @@ index 0000000000000000000000000000000000000000..9bfccaeb0991800e12f1a21cb8126dfd
 +		return !state.canSurvive(world, pos);
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/util/BlockUtil.java b/src/main/java/alternate/current/util/BlockUtil.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1fa03724ac39cb131a2261e97c98a5961d8cf7c0
+index 0000000000000000000000000000000000000000..b605c78c20912794a23cc7dbf07bdff12116b666
 --- /dev/null
 +++ b/src/main/java/alternate/current/util/BlockUtil.java
 @@ -0,0 +1,14 @@
@@ -1889,10 +1882,9 @@ index 0000000000000000000000000000000000000000..1fa03724ac39cb131a2261e97c98a596
 +		super(settings);
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/alternate/current/util/collection/SimpleQueue.java b/src/main/java/alternate/current/util/collection/SimpleQueue.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702cdf0db8fe
+index 0000000000000000000000000000000000000000..6d6c1b81b696187add53e744aaffa54df7193864
 --- /dev/null
 +++ b/src/main/java/alternate/current/util/collection/SimpleQueue.java
 @@ -0,0 +1,105 @@
@@ -2001,7 +1993,6 @@ index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702c
 +		return ++i < queue.length ? i : 0;
 +	}
 +}
-\ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 index b1589f65b6a4464c2c5dc450693505673fc89077..354e764de71b95a6287f5d50c9d2a2b21dd548ac 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
@@ -2018,7 +2009,7 @@ index b1589f65b6a4464c2c5dc450693505673fc89077..354e764de71b95a6287f5d50c9d2a2b2
      }
  
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..d7913e8ce46b38d9e2e345c33ecf63f6799a476f 100644
+index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..e1ce4e48ecb8e200c5236bfd34423bac4bd005d3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -77,13 +77,37 @@ public class PaperWorldConfig {
@@ -2043,7 +2034,7 @@ index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..d7913e8ce46b38d9e2e345c33ecf63f6
 +            boolean oldUseEigenCraft = getBoolean("use-faster-eigencraft-redstone", false);
 +            if (!oldUseEigenCraft) {
 +                redstoneAlgoString = "vanilla";
-+                set("redstone.algo", "vanilla");
++                set("redstone-algo", "vanilla");
 +            }
 +        }
 +        switch (redstoneAlgoString) {
@@ -2067,7 +2058,7 @@ index d7dcf36c8c972e30320c56e447822cf26f6d5fb3..d7913e8ce46b38d9e2e345c33ecf63f6
      }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index a7ac129b754f8aa2c96606c88685caf3a32dc8a2..fc1e584ade36bf2c21c34f6a41b5a6ae8eb5d350 100644
+index b836f61a7b5490dea6a531a7e7342ff986194485..fd50a81c6cce512e5c7fa47f5e6ab7ab131c575c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -161,9 +161,14 @@ import org.bukkit.event.weather.LightningStrikeEvent;
@@ -2317,15 +2308,13 @@ index 0afffc33f3be221a28c62115f493808aeffb1bd8..eb792a5d16826bbed2c9b4d306b9eed0
      public boolean isSignalSource(BlockState state) {
          return true;
 diff --git a/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java b/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
-index 037330bcb10039c013b2ed5fd68dee16ede20fbe..9f150a0075544f2e777f0efd5dbb82746b0fa3d0 100644
+index 037330bcb10039c013b2ed5fd68dee16ede20fbe..9e3e65ac4e21a44d4cf563e11453b38f8b68c93d 100644
 --- a/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/RedStoneWireBlock.java
 @@ -39,8 +39,82 @@ import net.minecraft.world.phys.shapes.CollisionContext;
  import net.minecraft.world.phys.shapes.Shapes;
  import net.minecraft.world.phys.shapes.VoxelShape;
  import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
--
--public class RedStoneWireBlock extends Block {
 +import com.destroystokyo.paper.PaperWorldConfig; // Paper
 +// Paper start
 +import alternate.current.redstone.Node;
@@ -2364,7 +2353,8 @@ index 037330bcb10039c013b2ed5fd68dee16ede20fbe..9f150a0075544f2e777f0efd5dbb8274
 +	public BlockState updatePowerState(WorldAccess world, BlockPos pos, BlockState state, int power) {
 +		return state.setValue(BlockStateProperties.POWER, power);
 +	}
-+    
+ 
+-public class RedStoneWireBlock extends Block {
 +    @Override
 +    public Block asBlock() {
 +		return (Block)this;
@@ -2485,7 +2475,7 @@ index 037330bcb10039c013b2ed5fd68dee16ede20fbe..9f150a0075544f2e777f0efd5dbb8274
                  this.updateNeighborsOfNeighboringWires(world, pos);
              }
          }
-@@ -524,7 +617,10 @@ public class RedStoneWireBlock extends Block {
+@@ -524,15 +617,18 @@ public class RedStoneWireBlock extends Block {
  
      @Override
      public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
@@ -2497,9 +2487,10 @@ index 037330bcb10039c013b2ed5fd68dee16ede20fbe..9f150a0075544f2e777f0efd5dbb8274
              if (state.canSurvive(world, pos)) {
                  this.updateSurroundingRedstone(world, pos, state, fromPos); // Paper - Optimize redstone
              } else {
-@@ -533,6 +629,7 @@ public class RedStoneWireBlock extends Block {
+                 dropResources(state, world, pos);
+                 world.removeBlock(pos, false);
              }
- 
+-
          }
 +        // Paper end
      }
