@@ -218,7 +218,7 @@ index e2c8f716af55ebb7e4233c2a3d6515f8f4a239fa..2f5c021b6849acb81064d55418707921
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 623bacaabff76caab4b4d45a75b04b636b34d455..8bb399a76fb10e7c04e20672b0072ca2c2850642 100644
+index 5012ecd3dada8f5aebb46b65df726f20e0ea4b6c..ddbf9658515870b5fabb87e043b93ada8b6b8053 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1452,8 +1452,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -389,10 +389,10 @@ index c82bb38b5b1c9204daef21455723d21509ad1c44..47425ce7091ed8afaa2573901225c92d
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 624fa29aeb3e4ec0998756d3ebd31ec7125950b1..5387bb2eeaecb85a2b64c6f26b4a8c8e3097c5d8 100644
+index 2ff8237f85afeaca852326367a3810e75c35812d..889d8ec50e8ed3bef019ed033481dcbbed0ca387 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3086,7 +3086,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3095,7 +3095,7 @@ public abstract class LivingEntity extends Entity {
      @Nullable
      private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
          Map<EquipmentSlot, ItemStack> map = null;
@@ -402,7 +402,7 @@ index 624fa29aeb3e4ec0998756d3ebd31ec7125950b1..5387bb2eeaecb85a2b64c6f26b4a8c8e
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index f760e6f20e65154417e694e94018a3f6760d6ed6..f9ccbe468a6b4c60ef8b0d52755de5cf7590affb 100644
+index 1441619edfe075c176ef8e2606eb6f5251558e6c..aa00845ced67294081e4ab7e534047dca98048ff 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -1040,7 +1040,7 @@ public abstract class Mob extends LivingEntity {
@@ -414,7 +414,7 @@ index f760e6f20e65154417e694e94018a3f6760d6ed6..f9ccbe468a6b4c60ef8b0d52755de5cf
          int j = aenumitemslot.length;
  
          for (int k = 0; k < j; ++k) {
-@@ -1098,7 +1098,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1102,7 +1102,7 @@ public abstract class Mob extends LivingEntity {
              }
  
              boolean flag = true;
@@ -423,7 +423,7 @@ index f760e6f20e65154417e694e94018a3f6760d6ed6..f9ccbe468a6b4c60ef8b0d52755de5cf
              int j = aenumitemslot.length;
  
              for (int k = 0; k < j; ++k) {
-@@ -1191,7 +1191,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1195,7 +1195,7 @@ public abstract class Mob extends LivingEntity {
          float f = difficulty.getSpecialMultiplier();
  
          this.enchantSpawnedWeapon(f);
@@ -432,7 +432,7 @@ index f760e6f20e65154417e694e94018a3f6760d6ed6..f9ccbe468a6b4c60ef8b0d52755de5cf
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -1403,7 +1403,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1407,7 +1407,7 @@ public abstract class Mob extends LivingEntity {
              t0.setInvulnerable(this.isInvulnerable());
              if (flag) {
                  t0.setCanPickUpLoot(this.canPickUpLoot());

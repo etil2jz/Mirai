@@ -7,10 +7,10 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 90ce82cb46b0f49857c3b1078447f7f511b84c7a..ea833a02078c61df0a6c743c10d3a405e9a3b763 100644
+index 04393fba3c170e7ed6bc6ce598d6df9b91830878..4aadf55a622c212187fe95a6af10775e6ace1ed3 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2481,6 +2481,8 @@ public abstract class LivingEntity extends Entity {
+@@ -2490,6 +2490,8 @@ public abstract class LivingEntity extends Entity {
      }
  
      protected void updateSwingTime() {

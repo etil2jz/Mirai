@@ -44,7 +44,7 @@ index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e29
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 76d27205b2bd08ba2b3530b46f0d9b4e2315d82e..ad08b91f50cc3744bfd0700ca6209076a64bb254 100644
+index d0b6b17b8edf80b1c0ca60b8f9eb4f9fb18ca159..c8474d7a7a75f18a78f3b3a63dd980d10da09660 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -725,12 +725,12 @@ public class PaperCommand extends Command {
@@ -102,7 +102,7 @@ index 40447d00aefb5ffedb8a2ee87155a04088f0649f..31cc0a29e89e79f616b3ee329a552896
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index bebe4fde1de2049c184d7fd01c336c9cb674d989..5a309e3e5c92366bba25add93e3286e0e7108f59 100644
+index 779cbb80b4dce264a23921a441b7f17a019dfc4b..6fb7b210a87e3feb5922842abab618deca9211a9 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -396,7 +396,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -128,7 +128,7 @@ index 88f10d729aa1e0a01790521821d691a0ecd373a2..df2c8dffd626eab0e03b1b62940a52fa
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6341d218a 100644
+index 6b4e1d23a81cb80f5fb72727e775b0b0887f98a2..f48a251dfce41306b70d5f944db3c5f21cb07481 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1503,7 +1503,7 @@ public abstract class LivingEntity extends Entity {
@@ -140,7 +140,7 @@ index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6
                  }
              }
  
-@@ -2031,9 +2031,9 @@ public abstract class LivingEntity extends Entity {
+@@ -2040,9 +2040,9 @@ public abstract class LivingEntity extends Entity {
  
                  if (f3 > 0.0F && f3 < 3.4028235E37F) {
                      if (this instanceof ServerPlayer) {
@@ -152,7 +152,7 @@ index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6
                      }
                  }
              }
-@@ -2143,9 +2143,9 @@ public abstract class LivingEntity extends Entity {
+@@ -2152,9 +2152,9 @@ public abstract class LivingEntity extends Entity {
                  float f3 = (float) -event.getDamage(DamageModifier.RESISTANCE);
                  if (f3 > 0.0F && f3 < 3.4028235E37F) {
                      if (this instanceof ServerPlayer) {
@@ -164,7 +164,7 @@ index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6
                      }
                  }
              }
-@@ -2177,10 +2177,10 @@ public abstract class LivingEntity extends Entity {
+@@ -2186,10 +2186,10 @@ public abstract class LivingEntity extends Entity {
              float f2 = absorptionModifier;
  
              if (f2 > 0.0F && f2 < 3.4028235E37F && this instanceof net.minecraft.world.entity.player.Player) {
@@ -177,7 +177,7 @@ index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6
              }
  
             // Purpur start
-@@ -2202,7 +2202,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2211,7 +2211,7 @@ public abstract class LivingEntity extends Entity {
                      // PAIL: Be sure to drag all this code from the EntityHuman subclass each update.
                      ((net.minecraft.world.entity.player.Player) this).causeFoodExhaustion(damagesource.getFoodExhaustion(), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.DAMAGED); // CraftBukkit - EntityExhaustionEvent
                      if (f < 3.4028235E37F) {
@@ -186,7 +186,7 @@ index e5ab936dbfa7dabdef2d5410574ae1e51fb06fdc..5435bf016ac7e681ee422bf9d84180c6
                      }
                  }
                  // CraftBukkit end
-@@ -2224,7 +2224,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2233,7 +2233,7 @@ public abstract class LivingEntity extends Entity {
                          CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayer) this, damagesource, f, originalDamage, true);
                          f2 = (float) -event.getDamage(DamageModifier.BLOCKING);
                          if (f2 > 0.0F && f2 < 3.4028235E37F) {
