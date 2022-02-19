@@ -20,7 +20,7 @@ index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..34665a768285fd99e49d57d3879deb1f
      private long lastFill = -1;
      private long nextRefill = -1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 69fc41704e503f1a96ddbc64df13c350417f89a6..072c1f7e3cbcf77e40c843e6c40df0b5d782e99f 100644
+index f499eb2d3d3982dbcb9ff54896f91e2b556f087a..607b8c18c90f4b7c61981638cd5d897488c4f520 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -415,7 +415,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -207,10 +207,10 @@ index 97f99a06b8954b08af9f4156abe8abdad359349a..e0e27004d67fd759903645cff8a491e5
          this.hitPlayers = Maps.newHashMap();
          this.level = world;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index c055903ada18a95b6cd1d37c546a0157744d3b8c..49089ddc7bb6c97edd88cd7c827d2a4f96758fd2 100644
+index 5ff2865317ab85071fa66d5af56364e70a1b25b0..d6c51836536f8db8f9259ede6ab2cf610ed4edcc 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -122,13 +122,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -124,13 +124,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Thread thread;
      private final boolean isDebug;
      private int skyDarken;
@@ -253,10 +253,10 @@ index d33af84300db18ea2b71dba2c9ed43390a293500..e60d244c44396ec09ecff889d8b9543b
  
                      MinecraftServer minecraftServer = this.level.getServer();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index c0e1d53f41bf8ed0de8cca901ea75483bbada3bc..49a994091ee574aa6f7927f1a519a24fdd2c3ec7 100644
+index 2c3ce2065812de227c34506edddb439da9a07ba1..746b3fcafc14d9f9b049c4d31c9b9181a2ea9e96 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -231,7 +231,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -236,7 +236,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
      }
      // Paper end
  

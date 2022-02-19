@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 5209e0d076099516525f578ddbfe14064e67f235..789652eb317f6359358b3e8c9a6818e416ed20c2 100644
+index 4f796acbd9d24f7559b0fa9246e34cea8bdbcf09..9d86abdcaad113af61282e49066b82cea38e4cc2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1770,6 +1770,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
@@ -19,10 +19,10 @@ index 5209e0d076099516525f578ddbfe14064e67f235..789652eb317f6359358b3e8c9a6818e4
  
      public void absMoveTo(double x, double y, double z) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3236a1dc51c394b784d3f42b78e76bf7c2f69c37..5e0dec96d04c925108210a470a2c2671470de897 100644
+index 157b3c1f034166833c1c0393cdcdf2a89432ecd1..190b582a7e92bec6f676ec967df5f6530141efde 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2923,7 +2923,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2932,7 +2932,7 @@ public abstract class LivingEntity extends Entity {
              }
          }
  

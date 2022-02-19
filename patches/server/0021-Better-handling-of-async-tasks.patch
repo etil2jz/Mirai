@@ -59,7 +59,7 @@ index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 8d511ce78d6a7d305cb158482ebe3946e7e210fa..19fb9fe02ef029aecec00dc02f72a2b4a2cda48b 100644
+index dfb20123def4e0e3b13d3ae976a0259d1e17bd01..5a9554596a4ec3e1d8435692e9dd25d6bc4fba5e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -372,6 +372,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -78,7 +78,7 @@ index 8d511ce78d6a7d305cb158482ebe3946e7e210fa..19fb9fe02ef029aecec00dc02f72a2b4
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1525,6 +1527,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1522,6 +1524,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
@@ -87,7 +87,7 @@ index 8d511ce78d6a7d305cb158482ebe3946e7e210fa..19fb9fe02ef029aecec00dc02f72a2b4
          }
          // Paper end
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 678981ded0acd4d5756af9f8f72ccce112ef98ba..6006b9b824eee427712c5eafc67788982fc64936 100644
+index f58956e9d8f169adab5ecfc71f9e5f9b181e60ba..a53f2210409410ba2b0edbd479ed8ab21fc8e5a9 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -127,6 +127,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener

@@ -19,10 +19,10 @@ index 8eabffbfa852773c28702c2c2dd3b124b24e8ae2..0eddb9829788ab7c9bf72805bc46a241
          this.connection.send(new ClientboundBlockUpdatePacket(this.level, sign.getBlockPos()));
          this.connection.send(new ClientboundOpenSignEditorPacket(sign.getBlockPos()));
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 022b2bb3f13b45618889e7b09e4499ee79331118..8d50853d35f2d880bf8eb17ea0780dc2c9b1a367 100644
+index efc56b8871b657fb57672bd77f17fa7e27fab0f0..14f30e39359a9d919c37fd1b6bc253235052248d 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -3099,11 +3099,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3095,11 +3095,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
                  }
                  // Paper end
  

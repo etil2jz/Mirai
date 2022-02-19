@@ -9,7 +9,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index c0d123bff1825366c30aadd3ad8a7fde68ef74e4..7764b1f86aca33dc227bf4357c20839b8820eb67 100644
+index 76d27205b2bd08ba2b3530b46f0d9b4e2315d82e..d0b6b17b8edf80b1c0ca60b8f9eb4f9fb18ca159 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -214,7 +214,7 @@ public class PaperCommand extends Command {
@@ -218,7 +218,7 @@ index e2c8f716af55ebb7e4233c2a3d6515f8f4a239fa..2f5c021b6849acb81064d55418707921
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 1d5cee5cae732fbe9181cb3cecc68ec980257248..69fc41704e503f1a96ddbc64df13c350417f89a6 100644
+index 4c5ee8ab215e8fedf65d2e28ac8dd5621a860385..f499eb2d3d3982dbcb9ff54896f91e2b556f087a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1427,8 +1427,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -246,7 +246,7 @@ index e80176708db486190dd527e3ade5fc690ceb39f7..eeb8bf5c04661ed7232aa0ba3eb7be4d
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 59d57108f38f38e03cd8b69a53c3e9d40179599a..a0857991d64d89874fea552a5459a45f14529034 100644
+index 740e1d7b299e78668bff5b176bbe54f478c73fd3..11d4a0ae6ee18c64bcb406093505f6e7f66dd334 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -849,7 +849,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -268,10 +268,10 @@ index 59d57108f38f38e03cd8b69a53c3e9d40179599a..a0857991d64d89874fea552a5459a45f
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index cb35f2f1f2f4d568bc59ce5c08ab3b908533264c..0948716d05b4ab4fdbd58c3083ec88b76db77bb3 100644
+index b9f2f6713bd9e3431ddbf2a41f16cbda5739ef57..eda3cdaaa707c180c96553a0139ebed8103d0e03 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -362,7 +362,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
@@ -280,7 +280,7 @@ index cb35f2f1f2f4d568bc59ce5c08ab3b908533264c..0948716d05b4ab4fdbd58c3083ec88b7
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -799,13 +799,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -796,13 +796,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.getWorldServer()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(com.destroystokyo.paper.PaperConfig.tabSpamIncrement) > com.destroystokyo.paper.PaperConfig.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -296,7 +296,7 @@ index cb35f2f1f2f4d568bc59ce5c08ab3b908533264c..0948716d05b4ab4fdbd58c3083ec88b7
              return;
          }
          // Paper end
-@@ -2932,7 +2932,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2928,7 +2928,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
@@ -389,10 +389,10 @@ index c82bb38b5b1c9204daef21455723d21509ad1c44..47425ce7091ed8afaa2573901225c92d
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3236a1dc51c394b784d3f42b78e76bf7c2f69c37..60d103b7430d52cefed700690107a1f7ae83b1c3 100644
+index 6f98681ac54f575be047867a8c0b58e1dbd2a37d..157b3c1f034166833c1c0393cdcdf2a89432ecd1 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3020,7 +3020,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3029,7 +3029,7 @@ public abstract class LivingEntity extends Entity {
      @Nullable
      private Map<EquipmentSlot, ItemStack> collectEquipmentChanges() {
          Map<EquipmentSlot, ItemStack> map = null;
@@ -402,7 +402,7 @@ index 3236a1dc51c394b784d3f42b78e76bf7c2f69c37..60d103b7430d52cefed700690107a1f7
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 35ff7abd8251b0af6c23fbb63804db632ec5b85d..68af6ab855ffbab888333c9c0224dafdc7e304d7 100644
+index 73af374f4aa9e3e8f188434c21a5f1433cffc637..7ee01ebedfb20354359d23168d7a69f4ad7f83c0 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -1011,7 +1011,7 @@ public abstract class Mob extends LivingEntity {
@@ -414,7 +414,7 @@ index 35ff7abd8251b0af6c23fbb63804db632ec5b85d..68af6ab855ffbab888333c9c0224dafd
          int j = aenumitemslot.length;
  
          for (int k = 0; k < j; ++k) {
-@@ -1069,7 +1069,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1073,7 +1073,7 @@ public abstract class Mob extends LivingEntity {
              }
  
              boolean flag = true;
@@ -423,7 +423,7 @@ index 35ff7abd8251b0af6c23fbb63804db632ec5b85d..68af6ab855ffbab888333c9c0224dafd
              int j = aenumitemslot.length;
  
              for (int k = 0; k < j; ++k) {
-@@ -1156,7 +1156,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1160,7 +1160,7 @@ public abstract class Mob extends LivingEntity {
          float f = difficulty.getSpecialMultiplier();
  
          this.enchantSpawnedWeapon(f);
@@ -432,7 +432,7 @@ index 35ff7abd8251b0af6c23fbb63804db632ec5b85d..68af6ab855ffbab888333c9c0224dafd
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -1367,7 +1367,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1371,7 +1371,7 @@ public abstract class Mob extends LivingEntity {
              t0.setInvulnerable(this.isInvulnerable());
              if (flag) {
                  t0.setCanPickUpLoot(this.canPickUpLoot());
@@ -508,10 +508,10 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..aa565ab33700c92ca607463bdc0dcaef
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a98d115b7dccd836fa2c0f50333730db6f388aff..154c8cf5a74278f349ec4c969254b62b3c48106b 100644
+index 4f8b2617adc0013035cc0ca72bf1b83eb5c18c6c..38511f90af47885aac6b29130d8ce5846accbf61 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -209,7 +209,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -206,7 +206,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public org.bukkit.entity.Entity[] getChunkEntities(int chunkX, int chunkZ) {
          io.papermc.paper.world.ChunkEntitySlices slices = this.entitySliceManager.getChunk(chunkX, chunkZ);
          if (slices == null) {

@@ -293,10 +293,10 @@ index 0000000000000000000000000000000000000000..2d79932dbd1fc386a94b8d6ea3526934
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 154c8cf5a74278f349ec4c969254b62b3c48106b..c055903ada18a95b6cd1d37c546a0157744d3b8c 100644
+index 38511f90af47885aac6b29130d8ce5846accbf61..5ff2865317ab85071fa66d5af56364e70a1b25b0 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -116,8 +116,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -118,8 +118,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public static final int TICKS_PER_DAY = 24000;
      public static final int MAX_ENTITY_SPAWN_Y = 20000000;
      public static final int MIN_ENTITY_SPAWN_Y = -20000000;

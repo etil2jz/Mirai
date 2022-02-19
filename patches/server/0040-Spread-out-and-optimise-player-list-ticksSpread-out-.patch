@@ -8,7 +8,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index e4c5521ecc421bbf7150d08c5961d484cb02bd0f..4feddab26597b67edc4f79e10d41a88d96f16b37 100644
+index 8166477d2781e64ef4a376ba968298a21ca5892e..ddd687336a727b164b5f4c566e02b3ad50b26dad 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1021,22 +1021,21 @@ public abstract class PlayerList {
@@ -47,10 +47,10 @@ index e4c5521ecc421bbf7150d08c5961d484cb02bd0f..4feddab26597b67edc4f79e10d41a88d
  
      public void broadcastAll(Packet<?> packet) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index a5ccc1b3c7cef43527556c33d846cc9904e3ab8b..60dbed75f29777f8ffcd1349549be75729d48be1 100644
+index ef841a5ea1f634e87e5437faf83dc00efd590106..f6893b0ef990d76fed9e634a2c946e1b4281d482 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1626,7 +1626,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1649,7 +1649,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public boolean canSee(org.bukkit.entity.Entity entity) {

@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 62e071edc3128b128c5ff631606eb1466ae34ef2..31346c12d1c72cdec89dffbe07106e37c47fbb4c 100644
+index 8cb674bc4219e7c212a0a342a949062a45632602..fc44980b81187ada230512822641904f689f9102 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -26,7 +26,7 @@ dependencies {
@@ -20,10 +20,10 @@ index 62e071edc3128b128c5ff631606eb1466ae34ef2..31346c12d1c72cdec89dffbe07106e37
      api("org.yaml:snakeyaml:1.30")
      // Paper start
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index bb60356395ef81bd3bbc51ea1e4ca2faaca2bd1b..9813932164ecadbb5889d5d26bdd3a9947436f48 100644
+index 9bb5be67a850bb7ff9de798dc7450f0bfdea4c01..f10274303d62979cf4c79a112046b223426d09e5 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -611,6 +611,13 @@ public final class SimplePluginManager implements PluginManager {
+@@ -612,6 +612,13 @@ public final class SimplePluginManager implements PluginManager {
       */
      @Override
      public void callEvent(@NotNull Event event) {
@@ -37,7 +37,7 @@ index bb60356395ef81bd3bbc51ea1e4ca2faaca2bd1b..9813932164ecadbb5889d5d26bdd3a99
          // Paper - replace callEvent by merging to below method
          // KTP start - optimize spigot event bus
          final boolean isAsync = event.isAsynchronous();
-@@ -622,8 +629,8 @@ public final class SimplePluginManager implements PluginManager {
+@@ -623,8 +630,8 @@ public final class SimplePluginManager implements PluginManager {
          }
          // KTP end - optimize spigot event bus
  
