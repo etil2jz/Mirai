@@ -7,7 +7,7 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 90018506da9e900d448a1fc43b3213ac513686e6..bd50d7f001aac517dcb9004241896ef20a589cd1 100644
+index 34e571b702684673b89103176838dc246ff9b24d..71f8b0f34e45ad85d6d371955f07bae239f3ae9f 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
 @@ -73,7 +73,7 @@ public class Util {
@@ -19,18 +19,15 @@ index 90018506da9e900d448a1fc43b3213ac513686e6..bd50d7f001aac517dcb9004241896ef2
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
      // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
-@@ -192,9 +192,11 @@ public class Util {
-         return 255;
+@@ -193,7 +193,7 @@ public class Util {
      }
  
-+    /* // Patina
      public static ExecutorService bootstrapExecutor() {
-         return BOOTSTRAP_EXECUTOR;
+-        return BOOTSTRAP_EXECUTOR;
++        return BACKGROUND_EXECUTOR; // Patina
      }
-+    */
  
      public static ExecutorService backgroundExecutor() {
-         return BACKGROUND_EXECUTOR;
 diff --git a/src/main/java/net/minecraft/util/datafix/DataFixers.java b/src/main/java/net/minecraft/util/datafix/DataFixers.java
 index b08d32bc80b4a65ebb980366a3e717c3b0e1bdab..a4ff80ec773e3a33238d444966054bd9a48a60d8 100644
 --- a/src/main/java/net/minecraft/util/datafix/DataFixers.java
