@@ -27,7 +27,7 @@
 
 ## Downloads
 The latest JAR file can be downloaded here:
-[Mirai-1.18.1-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18.2/Mirai-1.18.2-R0.1-SNAPSHOT.jar)
+[Mirai-1.18.2-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/build/1.18.2/Mirai-1.18.2-R0.1-SNAPSHOT.jar)
 
 **Please note Java 17 is required.**
 
