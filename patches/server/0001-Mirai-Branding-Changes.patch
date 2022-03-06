@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 86548210e50879504f646ef3aa46927998f2d775..e7f677cb5abb24c52b10087837f44c865140635c 100644
+index ecb65e75d19d2f7b72410c89251e56566b7b6dc0..f86e58bd58d6e1e05962e85fc3aa9ae4f7a178f8 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -15,19 +15,19 @@ index 86548210e50879504f646ef3aa46927998f2d775..e7f677cb5abb24c52b10087837f44c86
 -    implementation(project(":pufferfish-api")) // Pufferfish // Paper
 +    implementation(project(":mirai-api")) // Mirai // Pufferfish // Paper
      // Pufferfish start
-     implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") {
+     implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
 @@ -87,7 +87,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Pufferfish-$implementationVersion", // Pufferfish
-+            "Implementation-Version" to "git-Mirai-$implementationVersion", // Pufferfish
++            "Implementation-Version" to "git-Mirai-$implementationVersion", // Mirai // Pufferfish
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..9045cb54813d26aba9f47dc999eb1d676cfb705b 100644
+index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..d5b52bbde079da71ae58c9400d13f209e0fb27b1 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
@@ -35,7 +35,7 @@ index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..9045cb54813d26aba9f47dc999eb1d67
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Pufferfish", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
-+                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
++                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish // Mirai
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
@@ -44,7 +44,7 @@ index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..9045cb54813d26aba9f47dc999eb1d67
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
                  metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
 -                metrics.addCustomChart(new Metrics.SimplePie("pufferfish_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
-+                metrics.addCustomChart(new Metrics.SimplePie("mirai_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
++                metrics.addCustomChart(new Metrics.SimplePie("mirai_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Pufferfish // Mirai
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -205,10 +205,10 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a31f8bf3f4183a7a02f58f2321dbeaf427017b1c..4c5ee8ab215e8fedf65d2e28ac8dd5621a860385 100644
+index 56f437b0e1ad5b167cdcbaaaf83b49d27e37b904..0c33cd1c57ff4b6106deee1b194c63cb7d3a3860 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1712,7 +1712,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1699,7 +1699,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -218,10 +218,10 @@ index a31f8bf3f4183a7a02f58f2321dbeaf427017b1c..4c5ee8ab215e8fedf65d2e28ac8dd562
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e62a643990929dccf1c022a3c9eca12d08d5ca7d..3191585bb7b3b9f0309f67c98b3668d01d25b4b7 100644
+index cc88eb1247bafb65999e1ca5624c87b038b27866..89443256aca6c801e6cd50db163381de5f19d008 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
+@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -231,20 +231,20 @@ index e62a643990929dccf1c022a3c9eca12d08d5ca7d..3191585bb7b3b9f0309f67c98b3668d0
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 98d396658bd7547e6b6f850529cab216e83c6c62..0c13463b8b28b099be323969a9535359f41f5541 100644
+index 7e06f263cf618b82f77101ef86d819d5dc37a24e..41e7ca100073052b99c82fa6a82f8168e0135499 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -421,7 +421,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
 -        return new gg.pufferfish.pufferfish.PufferfishVersionFetcher(); // Pufferfish
-+        return new com.destroystokyo.paper.PaperVersionFetcher(); // Mirai
++        return new com.destroystokyo.paper.PaperVersionFetcher();
      }
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 80553face9c70c2a3d897681e7761df85b22d464..ce2d17a9756f0375a96bbf7c56c3032c73d503f3 100644
+index 80553face9c70c2a3d897681e7761df85b22d464..e35c6c83d22ce166c59c0e1312da3a59285e1c2f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -1,29 +1,9 @@
@@ -275,6 +275,6 @@ index 80553face9c70c2a3d897681e7761df85b22d464..ce2d17a9756f0375a96bbf7c56c3032c
 -        }
 -
 -        return result;
-+        return "1.18.1-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.1
++        return "1.18.2-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.2
      }
  }

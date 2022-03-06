@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 133286cae44d984c5cd91302b94b9bfa9a32401d..e4c5521ecc421bbf7150d08c5961d484cb02bd0f 100644
+index 28917ee393e91327f6a3cb9e3f22b45fd14d94c0..225042ac16e9d30ab6641c92d10b2390a3642bd4 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -747,13 +747,19 @@ public abstract class PlayerList {
+@@ -754,13 +754,19 @@ public abstract class PlayerList {
          if (getBans().isBanned(gameprofile) && (gameprofilebanentry = getBans().get(gameprofile)) != null) {
              // Paper end
  
@@ -31,7 +31,7 @@ index 133286cae44d984c5cd91302b94b9bfa9a32401d..e4c5521ecc421bbf7150d08c5961d484
              //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
              //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
 diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
-index 8982562721c3a5a5a3305e90bd8b5bc21585a425..db22fc485e6091bd81c0c369f302c6ffb4157448 100644
+index 63c0fe30ff035b6b5c1b4b35d3ad6c649d94e421..f01621bf34da2ea877e010834511c119664a03b7 100644
 --- a/src/main/java/net/minecraft/server/players/StoredUserList.java
 +++ b/src/main/java/net/minecraft/server/players/StoredUserList.java
 @@ -73,9 +73,14 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {

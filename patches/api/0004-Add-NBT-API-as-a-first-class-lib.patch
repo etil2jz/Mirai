@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 46348c1673366ab096051020817bf35adcf79320..8cb674bc4219e7c212a0a342a949062a45632602 100644
+index 78cc14e2717178a66d9be30182b20859e38c2f93..141d3b2e58ed769e99e8cf5fb63a593d70696506 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -1,6 +1,7 @@
@@ -18,7 +18,7 @@ index 46348c1673366ab096051020817bf35adcf79320..8cb674bc4219e7c212a0a342a949062a
  }
  
  java {
-@@ -41,6 +42,7 @@ dependencies {
+@@ -42,6 +43,7 @@ dependencies {
      api("org.apache.logging.log4j:log4j-api:2.17.1")
      api("org.slf4j:slf4j-api:1.8.0-beta4")
      api("io.sentry:sentry:5.4.0") // Pufferfish
@@ -26,7 +26,7 @@ index 46348c1673366ab096051020817bf35adcf79320..8cb674bc4219e7c212a0a342a949062a
  
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2")
-@@ -101,6 +103,10 @@ tasks.jar {
+@@ -102,6 +104,10 @@ tasks.jar {
      }
  }
  
@@ -35,8 +35,8 @@ index 46348c1673366ab096051020817bf35adcf79320..8cb674bc4219e7c212a0a342a949062a
 +}
 +
  tasks.withType<Javadoc> {
-     inputs.files(apiAndDocs)
-         .ignoreEmptyDirectories()
+     val options = options as StandardJavadocDocletOptions
+     options.overview = "src/main/javadoc/overview.html"
 diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
 index 049c36807d2a970842442c1b7517c06f3f150041..8bc45dcb8b739045cf4d867f2ea34488a4f59281 100644
 --- a/src/main/java/org/bukkit/Chunk.java
@@ -90,7 +90,7 @@ index 3b10fcc13893403b29f0260b8605144679e89b82..1e9a96d8b08cc396acf73dc420830093
 +    // Yatopia end
  }
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index c2c45a93887f99466a8ac4275355ac75c7f901c4..520865c7ea629848fda50f7589d56018d7b1acd1 100644
+index 8bc6876c82935988436597161fa0ec94c032174b..853fe4a484478f4c86a64159f61a6dd9b5a61163 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -190,6 +190,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent

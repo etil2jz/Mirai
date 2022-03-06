@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index f00d21bdb0fced241dbbd37784c05f1c3a4598e4..129c5b41b410b57952fedf90c1ea713ba1c36470 100644
+index 0007c6b1d81373cb6592c8b9e02f464405050f68..78cc14e2717178a66d9be30182b20859e38c2f93 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -50,6 +50,7 @@ dependencies {
+@@ -51,6 +51,7 @@ dependencies {
      compileOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.2")
      compileOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.2")
      compileOnly("com.google.code.findbugs:jsr305:1.3.9") // Paper

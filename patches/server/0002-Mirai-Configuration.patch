@@ -5,10 +5,10 @@ Subject: [PATCH] Mirai Configuration
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index aae2dadabedb075fd1bc712f0226882b85f4551d..0178460888a2273e4a7f75b1330ce853dafbcce0 100644
+index 27e90ca03275a42271bbe97ee1a63a355b098ede..201319ddb8a0f1817ec5328aa5757212ea6a4b49 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -234,6 +234,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -237,6 +237,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          // Paper end
          gg.pufferfish.pufferfish.PufferfishConfig.load(); // Pufferfish
          gg.pufferfish.pufferfish.PufferfishCommand.init(); // Pufferfish
@@ -26,10 +26,10 @@ index aae2dadabedb075fd1bc712f0226882b85f4551d..0178460888a2273e4a7f75b1330ce853
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3191585bb7b3b9f0309f67c98b3668d01d25b4b7..de5df1f57d8becd1bddbe590667a566ce8ff1a6b 100644
+index 89443256aca6c801e6cd50db163381de5f19d008..83839f6e84956777f5ab917c1f025fabcdd73103 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -957,6 +957,7 @@ public final class CraftServer implements Server {
+@@ -955,6 +955,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
@@ -38,7 +38,7 @@ index 3191585bb7b3b9f0309f67c98b3668d01d25b4b7..de5df1f57d8becd1bddbe590667a566c
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index f810bebfca3932c80e20646eb0680f7718506707..a23cc1b72b475f5dc006a49732fb3d305fdf418b 100644
+index afcc80d1f79d1743b0940c69858eacec88fec889..51ae78a404b35d043b526ce439b4b634b70a7cba 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -153,6 +153,14 @@ public class Main {

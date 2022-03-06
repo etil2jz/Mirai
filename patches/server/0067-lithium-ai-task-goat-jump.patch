@@ -1,0 +1,147 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Fri, 10 Sep 2021 16:35:53 -0400
+Subject: [PATCH] lithium: ai task goat jump
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
+index b25d245d0ad892e99663c3d741b2350fb1531d0e..3aafff1b77f137da897bc412edd7d0d57faa1458 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/LongJumpToRandomPos.java
+@@ -25,6 +25,8 @@ import net.minecraft.world.level.pathfinder.Path;
+ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+ import net.minecraft.world.phys.AABB;
+ import net.minecraft.world.phys.Vec3;
++import it.unimi.dsi.fastutil.longs.LongArrayList; // JettPack
++import it.unimi.dsi.fastutil.shorts.ShortArrayList; // JettPack
+ 
+ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+     private static final int FIND_JUMP_TRIES = 20;
+@@ -41,12 +43,26 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+     private int findJumpTries;
+     private long prepareJumpStart;
+     private Function<E, SoundEvent> getJumpSound;
++    private final LongArrayList potentialTargets = new LongArrayList(); // JettPack
++    private final ShortArrayList potentialWeights = new ShortArrayList(); // JettPack
+ 
+-    public LongJumpToRandomPos(UniformInt cooldownRange, int verticalRange, int horizontalRange, float maxRange, Function<E, SoundEvent> entityToSound) {
++    // JettPack start
++    private static int findIndex(ShortArrayList weights, int weightedIndex) {
++        for (int i = 0; i < weights.size(); i++) {
++            weightedIndex -= weights.getShort(i);
++            if (weightedIndex < 0) {
++                return i;
++            }
++        }
++        return -1;
++    }
++    // JettPack end
++
++    public LongJumpToRandomPos(UniformInt cooldownRange, int maxLongJumpHeight, int maxLongJumpWidth, float maxRange, Function<E, SoundEvent> entityToSound) {
+         super(ImmutableMap.of(MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED, MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS, MemoryStatus.VALUE_ABSENT, MemoryModuleType.LONG_JUMP_MID_JUMP, MemoryStatus.VALUE_ABSENT), 200);
+         this.timeBetweenLongJumps = cooldownRange;
+-        this.maxLongJumpHeight = verticalRange;
+-        this.maxLongJumpWidth = horizontalRange;
++        this.maxLongJumpHeight = maxLongJumpHeight;
++        this.maxLongJumpWidth = maxLongJumpWidth;
+         this.maxJumpVelocity = maxRange;
+         this.getJumpSound = entityToSound;
+     }
+@@ -66,30 +82,63 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+         return bl;
+     }
+ 
++    // JettPack start
++    /**
++     * @author 2No2Name
++     * @reason only evaluate 20+ instead of ~100 possible jumps without affecting behavior
++     * [VanillaCopy] the whole method, commented changes
++     */
+     @Override
+     protected void start(ServerLevel serverLevel, Mob mob, long l) {
++        this.potentialTargets.clear();
++        this.potentialWeights.clear();
++        int potentialTotalWeight = 0;
+         this.chosenJump = Optional.empty();
+-        this.findJumpTries = 20;
++        this.findJumpTries = FIND_JUMP_TRIES;
+         this.jumpCandidates.clear();
+         this.initialPosition = Optional.of(mob.position());
+-        BlockPos blockPos = mob.blockPosition();
+-        int i = blockPos.getX();
+-        int j = blockPos.getY();
+-        int k = blockPos.getZ();
+-        Iterable<BlockPos> iterable = BlockPos.betweenClosed(i - this.maxLongJumpWidth, j - this.maxLongJumpHeight, k - this.maxLongJumpWidth, i + this.maxLongJumpWidth, j + this.maxLongJumpHeight, k + this.maxLongJumpWidth);
+-        PathNavigation pathNavigation = mob.getNavigation();
+-
+-        for(BlockPos blockPos2 : iterable) {
+-            double d = blockPos2.distSqr(blockPos);
+-            if ((i != blockPos2.getX() || k != blockPos2.getZ()) && pathNavigation.isStableDestination(blockPos2) && mob.getPathfindingMalus(WalkNodeEvaluator.getBlockPathTypeStatic(mob.level, blockPos2.mutable())) == 0.0F) {
+-                Optional<Vec3> optional = this.calculateOptimalJumpVector(mob, Vec3.atCenterOf(blockPos2));
+-                optional.ifPresent((vel) -> {
+-                    this.jumpCandidates.add(new LongJumpToRandomPos.PossibleJump(new BlockPos(blockPos2), vel, Mth.ceil(d)));
+-                });
++        BlockPos goatPos = mob.blockPosition();
++        int goatX = goatPos.getX();
++        int goatY = goatPos.getY();
++        int goatZ = goatPos.getZ();
++        Iterable<BlockPos> iterable = BlockPos.betweenClosed(goatX - this.maxLongJumpWidth, goatY - this.maxLongJumpHeight, goatZ - this.maxLongJumpWidth, goatX + this.maxLongJumpWidth, goatY + this.maxLongJumpHeight, goatZ + this.maxLongJumpWidth);
++        PathNavigation entityNavigation = mob.getNavigation();
++
++        BlockPos.MutableBlockPos targetPosCopy = new BlockPos.MutableBlockPos();
++        for (BlockPos targetPos : iterable) {
++            if (goatX == targetPos.getX() && goatZ == targetPos.getZ()) {
++                continue;
+             }
+-        }
++            double squaredDistance = targetPos.distSqr(goatPos);
+ 
++            //Optimization: Evaluate the flight path check later (after random selection, but before world can be modified)
++            if (entityNavigation.isStableDestination(targetPos) && mob.getPathfindingMalus(WalkNodeEvaluator.getBlockPathTypeStatic(mob.level, targetPosCopy.set(targetPos))) == 0.0F) {
++                this.potentialTargets.add(targetPos.asLong());
++                int weight = Mth.ceil(squaredDistance);
++                this.potentialWeights.add((short) weight);
++                potentialTotalWeight += weight;
++            }
++        }
++        // Optimization: Do the random picking of positions before doing the expensive the jump flight path validity check.
++        // up to FIND_JUMP_TRIES random jumpCandidates can be selected in keepRunning, so only this number of jumpCandidates needs to be generated
++        while (this.jumpCandidates.size() < FIND_JUMP_TRIES) {
++            // the number of random calls will be different from vanilla, but this is not reasonably detectable (not affecting world generation)
++            if (potentialTotalWeight == 0) {
++                return; // collection is empty/fully consumed, no more possible jumpCandidates available
++            }
++            int chosenIndex = findIndex(this.potentialWeights, serverLevel.random.nextInt(potentialTotalWeight));
++            long chosenPos = this.potentialTargets.getLong(chosenIndex);
++            short chosenWeight = this.potentialWeights.set(chosenIndex, (short) 0);
++            potentialTotalWeight -= chosenWeight;
++            // Very expensive method call, it shifts bounding boxes around and checks for collisions with them
++            Optional<Vec3> optional = this.calculateOptimalJumpVector(mob, Vec3.atCenterOf(targetPosCopy.set(chosenPos)));
++            if (optional.isPresent()) {
++                //the weight in Target should be unused, as the random selection already took place
++                this.jumpCandidates.add(new LongJumpToRandomPos.PossibleJump(new BlockPos(targetPosCopy), optional.get(), chosenWeight));
++            }
++        }
+     }
++    // JettPack end
+ 
+     @Override
+     protected void tick(ServerLevel serverLevel, E mob, long l) {
+@@ -106,7 +155,14 @@ public class LongJumpToRandomPos<E extends Mob> extends Behavior<E> {
+             }
+         } else {
+             --this.findJumpTries;
+-            Optional<LongJumpToRandomPos.PossibleJump> optional = WeightedRandom.getRandomItem(serverLevel.random, this.jumpCandidates);
++            // JettPack start
++            Optional<LongJumpToRandomPos.PossibleJump> optional;
++            if (this.jumpCandidates.isEmpty()) {
++                optional = Optional.empty();
++            } else {
++                optional = Optional.of(this.jumpCandidates.get(0));
++            }
++            // JettPack end
+             if (optional.isPresent()) {
+                 this.jumpCandidates.remove(optional.get());
+                 mob.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(optional.get().getJumpTarget()));

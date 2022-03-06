@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable max bees in hive
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index b05ac56823feaf062b1418c9e6dbe4268225f00f..2d981971497c3f06a3bae7a15679af462f489b6f 100644
+index 483dc52c793d9f90a35b1d091dd8ce71115e4640..0282c11936f817dd86861960cf58b8466e8d27f6 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-@@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+@@ -42,7 +42,7 @@ public class BeehiveBlockEntity extends BlockEntity {
      private final List<BeehiveBlockEntity.BeeData> stored = Lists.newArrayList();
      @Nullable
      public BlockPos savedFlowerPos;

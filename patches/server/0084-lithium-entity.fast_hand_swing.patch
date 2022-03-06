@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Sun, 9 Jan 2022 06:03:28 +0100
+Subject: [PATCH] lithium: entity.fast_hand_swing
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 03b5d86a5c5576e7a9cf838e0e58fe48eca5f959..029188eae19875d80fd597dc775ceb560ef335c2 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -2431,6 +2431,8 @@ public abstract class LivingEntity extends Entity {
+     }
+ 
+     protected void updateSwingTime() {
++        if (!this.swinging && this.swingTime == 0) return; // Mirai
++
+         int i = this.getCurrentSwingDuration();
+ 
+         if (this.swinging) {

@@ -8,10 +8,10 @@ Original code by Akarin-project, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/Akarin-project/Akarin
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e0c91bc518168441fffa32f4c611a74800a8d2e2..05e521c01a62e800f177cb586609d7a3a51dacc6 100644
+index 59ec3d56e88cf6cee218422481457b944ff25998..44c857b026d5944b3c97c46c58b46d96cc28c732 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1857,37 +1857,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1862,37 +1862,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
      public void playerTouch(Player player) {}
  
      public void push(Entity entity) {

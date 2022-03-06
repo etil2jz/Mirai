@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ishland <ishlandmc@yeah.net>
+Date: Sun, 21 Nov 2021 03:01:00 +0100
+Subject: [PATCH] vmp: ingredient_matching
+
+Copyright (c) 2021-2022 ishland
+
+Original code by RelativityMC, licensed under MIT
+You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/item/crafting/Ingredient.java b/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
+index 895c0f1600139e340aa22a7c398978add56fa706..bbf7d112b8020567f2c1d02ce0b2c1a22b2279d1 100644
+--- a/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
++++ b/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
+@@ -12,9 +12,12 @@ import it.unimi.dsi.fastutil.ints.IntList;
+ import java.util.Arrays;
+ import java.util.Collection;
+ import java.util.Collections;
++import java.util.HashSet; // Mirai
+ import java.util.Iterator;
+ import java.util.List;
++import java.util.Set; // Mirai
+ import java.util.function.Predicate;
++import java.util.stream.Collectors; // Mirai
+ import java.util.stream.Stream;
+ import java.util.stream.StreamSupport;
+ import javax.annotation.Nullable;
+@@ -38,6 +41,8 @@ public final class Ingredient implements Predicate<ItemStack> {
+     @Nullable
+     private IntList stackingIds;
+     public boolean exact; // CraftBukkit
++    private Set<Item> matchingItems = null; // Mirai
++    private boolean isEmptyMatch = false; // Mirai
+ 
+     public Ingredient(Stream<? extends Ingredient.Value> entries) {
+         this.values = (Ingredient.Value[]) entries.toArray((i) -> {
+@@ -65,32 +70,25 @@ public final class Ingredient implements Predicate<ItemStack> {
+         if (itemstack == null) {
+             return false;
+         } else {
+-            this.dissolve();
+-            if (this.itemStacks.length == 0) {
+-                return itemstack.isEmpty();
+-            } else {
+-                ItemStack[] aitemstack = this.itemStacks;
+-                int i = aitemstack.length;
+-
+-                for (int j = 0; j < i; ++j) {
+-                    ItemStack itemstack1 = aitemstack[j];
+-
+-                    // CraftBukkit start
+-                    if (this.exact) {
+-                        if (itemstack1.getItem() == itemstack.getItem() && ItemStack.tagMatches(itemstack, itemstack1)) {
+-                            return true;
+-                        }
+-
+-                        continue;
+-                    }
+-                    // CraftBukkit end
+-                    if (itemstack1.is(itemstack.getItem())) {
+-                        return true;
+-                    }
+-                }
+-
+-                return false;
++            // Mirai start
++            /**
++             * @author ishland
++             * @reason optimize test()
++             */
++            Set<Item> matchingItems = this.matchingItems;
++            boolean isEmptyMatch = this.isEmptyMatch;
++            if (matchingItems == null) {
++                matchingItems = this.matchingItems = Arrays.stream(this.values)
++                        .flatMap(entry -> entry.getItems().stream())
++                        .filter(itemstack1 -> !itemstack1.isEmpty())
++                        .map(ItemStack::getItem)
++                        .collect(Collectors.toCollection(HashSet::new));
++                isEmptyMatch = this.isEmptyMatch = this.matchingItems.isEmpty();
++            }
++            if (itemstack.isEmpty()) {
++                return isEmptyMatch;
+             }
++            return matchingItems.contains(itemstack.getItem());
+         }
+     }
+ 

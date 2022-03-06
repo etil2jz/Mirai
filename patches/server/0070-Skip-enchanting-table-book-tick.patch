@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 8 Jan 2022 22:00:46 +0100
+Subject: [PATCH] Skip enchanting table book tick
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+index 31c1122d0d2675bc2f5533abdc2e75fa182393b4..62447e07b80fc4d2691905511eb22270aaa2ffeb 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+@@ -49,6 +49,9 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
+     }
+ 
+     public static void bookAnimationTick(Level world, BlockPos pos, BlockState state, EnchantmentTableBlockEntity blockEntity) {
++        // Mirai start
++        return;
++        /*
+         blockEntity.oOpen = blockEntity.open;
+         blockEntity.oRot = blockEntity.rot;
+         Player player = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 3.0D, false);
+@@ -102,6 +105,8 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
+         h = Mth.clamp(h, -0.2F, 0.2F);
+         blockEntity.flipA += (h - blockEntity.flipA) * 0.9F;
+         blockEntity.flip += blockEntity.flipA;
++        */
++        // Mirai end
+     }
+ 
+     @Override

@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: jellysquid3 <jellysquid3@users.noreply.github.com>
+Date: Sat, 1 Jan 2022 03:59:58 -0500
+Subject: [PATCH] lithium: precompute shape arrays
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
+index b84bc629eb994fbba6a9825014be260c4339b8c8..ba09161ff75dba9433da8ad2da81f92fe06d0670 100644
+--- a/src/main/java/net/minecraft/core/Direction.java
++++ b/src/main/java/net/minecraft/core/Direction.java
+@@ -41,7 +41,7 @@ public enum Direction implements StringRepresentable {
+     private final Direction.Axis axis;
+     private final Direction.AxisDirection axisDirection;
+     private final Vec3i normal;
+-    private static final Direction[] VALUES = values();
++    public static final Direction[] VALUES = values(); // JettPack
+     private static final Map<String, Direction> BY_NAME = Arrays.stream(VALUES).collect(Collectors.toMap(Direction::getName, (direction) -> {
+         return direction;
+     }));
+diff --git a/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java b/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java
+index def6c6a91aa229c83adb89a3fd0eb8bfb80e8182..dc700c70b0f8a3f42716060fbb81b3c75e3647ee 100644
+--- a/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java
++++ b/src/main/java/net/minecraft/world/phys/shapes/CubePointRange.java
+@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.doubles.AbstractDoubleList;
+ 
+ public class CubePointRange extends AbstractDoubleList {
+     private final int parts;
++    private double scale; // JettPack - lithium: shapes.precompute_shape_arrays
+ 
+     CubePointRange(int sectionCount) {
+         if (sectionCount <= 0) {
+@@ -11,10 +12,11 @@ public class CubePointRange extends AbstractDoubleList {
+         } else {
+             this.parts = sectionCount;
+         }
++        this.scale = 1.0D / sectionCount; // JettPack - lithium: shapes.precompute_shape_arrays
+     }
+ 
+     public double getDouble(int i) {
+-        return (double)i / (double)this.parts;
++        return i * this.scale; // JettPack - lithium: shapes.precompute_shape_arrays
+     }
+ 
+     public int size() {
+diff --git a/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java b/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
+index 374da999d4fb544a5571ca888dd4cc60680d0ee0..ba4355ed2b5380ceab95d19908ec6b8fe7d2f12a 100644
+--- a/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
++++ b/src/main/java/net/minecraft/world/phys/shapes/CubeVoxelShape.java
+@@ -3,15 +3,25 @@ package net.minecraft.world.phys.shapes;
+ import it.unimi.dsi.fastutil.doubles.DoubleList;
+ import net.minecraft.core.Direction;
+ import net.minecraft.util.Mth;
++import net.minecraft.world.phys.shapes.CubePointRange; // JettPack
+ 
+ public final class CubeVoxelShape extends VoxelShape {
++    private DoubleList[] list; // JettPack - lithium: shapes.precompute_shape_arrays
++
+     protected CubeVoxelShape(DiscreteVoxelShape voxels) {
+         super(voxels);
++        // JettPack start - lithium: shapes.precompute_shape_arrays
++        this.list = new DoubleList[Direction.VALUES.length];
++
++        for (Direction.Axis axis : Direction.Axis.VALUES) {
++            this.list[axis.ordinal()] = new CubePointRange(voxels.getSize(axis));
++        }
++        // JettPack end
+     }
+ 
+     @Override
+     protected DoubleList getCoords(Direction.Axis axis) {
+-        return new CubePointRange(this.shape.getSize(axis));
++        return this.list[axis.ordinal()]; // JettPack - lithium: shapes.precompute_shape_arrays
+     }
+ 
+     @Override
