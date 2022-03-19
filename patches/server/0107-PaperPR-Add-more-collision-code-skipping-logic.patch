@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Sat, 19 Mar 2022 16:27:30 +0100
+Subject: [PATCH] PaperPR Add more collision code skipping logic
+
+Taken from https://github.com/PaperMC/Paper/pull/7581
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 3c59b3bf5c41a26fcad9429475404b6cdb362413..4eb6c9b20aade6aec2e6c5eb7aaed36c9a178f05 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3399,6 +3399,10 @@ public abstract class LivingEntity extends Entity {
+ 
+     protected void pushEntities() {
+         // Paper start - don't run getEntities if we're not going to use its result
++        if (!isCollidable(level.paperConfig.fixClimbingBypassingCrammingRule)) return;
++        net.minecraft.world.scores.Team team = getTeam();
++        if (team != null && team.getCollisionRule() == net.minecraft.world.scores.Team.CollisionRule.NEVER) return;
++
+         int i = this.level.getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
+         if (i <= 0 && level.paperConfig.maxCollisionsPerEntity <= 0) {
+             return;

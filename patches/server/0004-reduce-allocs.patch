@@ -219,10 +219,10 @@ index 1e0d261439255091a6f61485c0747231fbd5b1db..490f5d86df7fff6537c7080361a7df80
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0c33cd1c57ff4b6106deee1b194c63cb7d3a3860..461303a7752a6206513b410620142b3b3344a604 100644
+index 7ba86703433322e2b166cc263cedd6e7310d36a4..26841729126b022f75e55e584fe850771dedd4cd 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1414,8 +1414,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1412,8 +1412,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -247,7 +247,7 @@ index 937a93d134dc986fe23e5676d58f7619524b9bf3..5c457f0e3906685dc7e386b2a94a6a27
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 48e428ce0590c530522de56c9f9c8cf1631c6e01..0047c226840d678dbf7df2549a1af670cf18f115 100644
+index 1b6d32d8720f66908b9f1b872115fcff081f5378..4f48322fd81093d09d1b3e143475e16ec000f55d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -850,7 +850,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -269,7 +269,7 @@ index 48e428ce0590c530522de56c9f9c8cf1631c6e01..0047c226840d678dbf7df2549a1af670
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index bc67e1a997d59408b00c333184d9f8dcc6cb262a..ad35454e47c362f00da05738d2654f018e74fc0b 100644
+index 5bc9c51cdfd1f9d1f15d0717575899e2f038c95c..737f92266206dc0163488fa76be340ed8cf3947f 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -281,7 +281,7 @@ index bc67e1a997d59408b00c333184d9f8dcc6cb262a..ad35454e47c362f00da05738d2654f01
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -790,13 +790,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -799,13 +799,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.getWorldServer()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(com.destroystokyo.paper.PaperConfig.tabSpamIncrement) > com.destroystokyo.paper.PaperConfig.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -297,7 +297,7 @@ index bc67e1a997d59408b00c333184d9f8dcc6cb262a..ad35454e47c362f00da05738d2654f01
              return;
          }
          // Paper end
-@@ -2942,7 +2942,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2951,7 +2951,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
