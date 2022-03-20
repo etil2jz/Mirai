@@ -59,18 +59,10 @@ index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 739431b258bb088e51d4759ead27d38a3de901bc..11d20e1123128e06eba6ee705f112f4926a4a159 100644
+index 71cb6cde91820825d726d3821d7840f10d1958d8..fa9d73b9863e7d29523065d01cd75e93f5dfdf13 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -375,6 +375,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
-             return;
-         }
- 
-+        MCUtil.flushAsyncTasksMidTick();
-         co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
-         try {
-             for (;;) {
-@@ -1109,6 +1110,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1070,6 +1070,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          LOGGER.info("Flushing Chunk IO");
          com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.close(true, true); // Paper
          LOGGER.info("Closing Thread Pool");
@@ -78,7 +70,7 @@ index 739431b258bb088e51d4759ead27d38a3de901bc..11d20e1123128e06eba6ee705f112f49
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1547,6 +1549,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1531,6 +1532,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
@@ -86,11 +78,19 @@ index 739431b258bb088e51d4759ead27d38a3de901bc..11d20e1123128e06eba6ee705f112f49
              this.runAllTasks();
          }
          // Paper end
+@@ -2775,6 +2777,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             return;
+         }
+ 
++        MCUtil.flushAsyncTasksMidTick();
+         co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
+         try {
+             for (;;) {
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 3111f7aa58bdcbdad23a02e9d87ccb41c6b55758..ed3e7ac5db615c901d18648a655fb0280d2f60c1 100644
+index 11df88a1fd017a2919a304e242839bc84062dfa7..6bc6ea20304caca2360189335223b7f4bd042dae 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -127,6 +127,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -123,6 +123,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
  
      }
  
@@ -98,7 +98,7 @@ index 3111f7aa58bdcbdad23a02e9d87ccb41c6b55758..ed3e7ac5db615c901d18648a655fb028
      // Paper start - Cache authenticator threads
      private static final AtomicInteger threadId = new AtomicInteger(0);
      private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
-@@ -139,6 +140,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -135,6 +136,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              }
      );
      // Paper end
@@ -106,7 +106,7 @@ index 3111f7aa58bdcbdad23a02e9d87ccb41c6b55758..ed3e7ac5db615c901d18648a655fb028
      // Spigot start
      public void initUUID()
      {
-@@ -279,7 +281,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -276,7 +278,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              // Paper end
              // Spigot start
              // Paper start - Cache authenticator threads
@@ -115,7 +115,7 @@ index 3111f7aa58bdcbdad23a02e9d87ccb41c6b55758..ed3e7ac5db615c901d18648a655fb028
                  @Override
                  public void run() {
                      try {
-@@ -323,7 +325,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -326,7 +328,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
          }
  
          // Paper start - Cache authenticator threads
@@ -124,7 +124,7 @@ index 3111f7aa58bdcbdad23a02e9d87ccb41c6b55758..ed3e7ac5db615c901d18648a655fb028
              public void run() {
                  GameProfile gameprofile = ServerLoginPacketListenerImpl.this.gameProfile;
  
-@@ -457,7 +459,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+@@ -460,7 +462,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
              this.gameProfile = com.destroystokyo.paper.proxy.VelocityProxy.createProfile(buf);
  
              // Proceed with login

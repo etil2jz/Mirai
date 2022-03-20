@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Tue, 25 Jan 2022 11:21:34 -0500
+Subject: [PATCH] randomTick blocks below y=0 and above y=255
+
+Fixes an issue with Paper's "Optimise random block ticking" patch where the handling of world height in respect for IBlockDataList and picking a Y position wasn't updated to match 1.18. Resulting in only blocks between y levels 0-255 being randomTicked.
+
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
+index 52ec153be9d7177102dd137dfc356e29173f62bd..a941e22417da81ac5ca75e4d315197f3c9e50172 100644
+--- a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
++++ b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
+@@ -24,7 +24,7 @@ public final class IBlockDataList {
+     private int size;
+ 
+     public static int getLocationKey(final int x, final int y, final int z) {
+-        return (x & 15) | (((z & 15) << 4)) | ((y & 255) << (4 + 4));
++        return (x & 15) | ((z & 15) << 4) | ((y & 4095) << 8); // JettPack
+     }
+ 
+     public static BlockState getBlockDataFromRaw(final long raw) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index eaff8fbe409a88725c799fc63e709ce065ecc555..1336c3c6faebcd87711b09949f9dee82a580fad9 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -899,7 +899,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                     continue;
+                 }
+ 
+-                int yPos = (sectionIndex + minSection) << 4;
++                int yPos = ((sectionIndex + minSection) << 4) + 4096;
+                 for (int a = 0; a < randomTickSpeed; ++a) {
+                     int tickingBlocks = section.tickingList.size();
+                     int index = this.randomTickRandom.nextInt(16 * 16 * 16);
+@@ -910,7 +910,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                     long raw = section.tickingList.getRaw(index);
+                     int location = com.destroystokyo.paper.util.maplist.IBlockDataList.getLocationFromRaw(raw);
+                     int randomX = location & 15;
+-                    int randomY = ((location >>> (4 + 4)) & 255) | yPos;
++                    int randomY = (((location >>> 8) & 4095) | yPos)-4096; // JettPack
+                     int randomZ = (location >>> 4) & 15;
+ 
+                     BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
+diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
+index d69fe40d3af983144999963ec25b32500237e515..7b57e332c0f37de879827d7cc85317d7cec84e8d 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
++++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
+@@ -190,7 +190,7 @@ public class LevelChunkSection {
+             if (iblockdata1.isRandomlyTicking()) {
+                 --this.tickingBlockCount;
+                 // Paper start
+-                this.tickingList.remove(x, y, z);
++                this.tickingList.remove(x, y+4096, z);
+                 // Paper end
+             }
+         }
+@@ -205,7 +205,7 @@ public class LevelChunkSection {
+             if (state.isRandomlyTicking()) {
+                 ++this.tickingBlockCount;
+                 // Paper start
+-                this.tickingList.add(x, y, z, state);
++                this.tickingList.add(x, y+4096, z, state);
+                 // Paper end
+             }
+         }

@@ -5,57 +5,57 @@ Subject: [PATCH] Don't create new random instance
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 8af3fe639efeb0e02ca92a796bf4a29ecfeb0718..2c04d9e293ed2369e27e8821bcc41d8a4046ae35 100644
+index e217120cdfb35a631b488b784caeba14afd411c4..24e2a9b4308ada12ca4977864f6ec91eaa58e288 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -373,7 +373,7 @@ public class ServerPlayer extends Player {
+@@ -371,7 +371,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);
--            int k1 = (wtf.etil.mirai.server.util.XoRoShiRoRandom()).nextInt(i1); // JettPack
+-            int k1 = (new Random()).nextInt(i1);
 +            int k1 = worldserver.random.nextInt(i1); // Patina - don't create new random instance
  
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
-@@ -410,7 +410,7 @@ public class ServerPlayer extends Player {
+@@ -408,7 +408,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);
--            int k1 = (wtf.etil.mirai.server.util.XoRoShiRoRandom()).nextInt(i1); // JettPack
+-            int k1 = (new Random()).nextInt(i1);
 +            int k1 = world.random.nextInt(i1); // Patina - don't create new random instance
  
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
-index f42bce03c21309efbb208be21263b6c09927ed6c..711d5dc2a8b3a5f2a2a35cab59b5ecfdeb152141 100644
+index a17d40d20d86453cd4ff416cc748f703982891d9..979e509310cc1a34fcbef3d6bfa05518929209bf 100644
 --- a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
 +++ b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
 @@ -348,7 +348,7 @@ public class QueryThreadGs4 extends GenericThread {
              this.identBytes[2] = bs[5];
              this.identBytes[3] = bs[6];
              this.ident = new String(this.identBytes, StandardCharsets.UTF_8);
--            this.challenge = (wtf.etil.mirai.server.util.XoRoShiRoRandom()).nextInt(16777216); // JettPack
+-            this.challenge = (new Random()).nextInt(16777216);
 +            this.challenge = java.util.concurrent.ThreadLocalRandom.current().nextInt(16777216); // Patina - don't create new random instance
              this.challengeBytes = String.format("\t%s%d\u0000", this.ident, this.challenge).getBytes(StandardCharsets.UTF_8);
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 30cfb84a76d90ee9d7437c7aec3badac047ea06b..28033eb45af46f5957d2f96ccc7d0c3f36c96dbe 100644
+index 8720bc9e7e364a8c8ad9779a1377b6985a22e67f..022591686dff1b49041e227d0207f2618446da4d 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -124,13 +124,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -121,13 +121,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Thread thread;
      private final boolean isDebug;
      private int skyDarken;
--    protected int randValue = (new wtf.etil.mirai.server.util.XoRoShiRoRandom()).nextInt(); // JettPack
-+    //protected int randValue = (wtf.etil.mirai.server.util.XoRoShiRoRandom()).nextInt(); // JettPack // Patina - moved down
+-    protected int randValue = (new Random()).nextInt();
++    //protected int randValue = (new Random()).nextInt(); // Patina - moved down
      protected final int addend = 1013904223;
      protected float oRainLevel;
      public float rainLevel;
      protected float oThunderLevel;
      public float thunderLevel;
-     public final Random random = new wtf.etil.mirai.server.util.XoRoShiRoRandom(); // JettPack
+     public final Random random = new Random();
 +    protected int randValue = random.nextInt(); // Patina - don't create new random instance
-     private final DimensionType dimensionType;
+     final DimensionType dimensionType;
+     private final Holder<DimensionType> dimensionTypeRegistration;
      public final WritableLevelData levelData;
-     private final Supplier<ProfilerFiller> profiler;

@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index ed64dcb2e7809d317739666d55ee0d86a85f66ff..becea0582c504c0bdfb02c327613a54c0d2582fa 100644
+index 9803e39475573efcfc5cf2c2346428dfa949699a..e418581089012731dcf0b6f168ddda9042797cb5 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -488,7 +488,13 @@ public abstract class PlayerList {
+@@ -495,7 +495,13 @@ public abstract class PlayerList {
          // Paper end
          org.purpurmc.purpur.task.BossBarTask.addToAll(player); // Purpur
          // CraftBukkit - Moved from above, added world

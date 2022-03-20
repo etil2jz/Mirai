@@ -7,10 +7,10 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index d985932adec493163ac41f7f35d0b530c1e1f7db..839785ae1a3ea750a0d268d1ae99fcca4ea455b9 100644
+index 51c4d3876dc53d88cbbb3529e9064628bee013b6..1cce6555a2ea46236f75c7e98a989c03f41e40e2 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -73,7 +73,7 @@ public class Util {
+@@ -68,7 +68,7 @@ public class Util {
      private static final int DEFAULT_MAX_THREADS = 255;
      private static final String MAX_THREADS_SYSTEM_PROPERTY = "max.bg.threads";
      private static final AtomicInteger WORKER_COUNT = new AtomicInteger(1);
@@ -19,20 +19,17 @@ index d985932adec493163ac41f7f35d0b530c1e1f7db..839785ae1a3ea750a0d268d1ae99fcca
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
      // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
-@@ -192,9 +192,11 @@ public class Util {
-         return 255;
+@@ -191,7 +191,7 @@ public class Util {
      }
  
-+    /* // Patina
      public static ExecutorService bootstrapExecutor() {
-         return BOOTSTRAP_EXECUTOR;
+-        return BOOTSTRAP_EXECUTOR;
++        return BACKGROUND_EXECUTOR; // Patina
      }
-+    */
  
      public static ExecutorService backgroundExecutor() {
-         return BACKGROUND_EXECUTOR;
 diff --git a/src/main/java/net/minecraft/util/datafix/DataFixers.java b/src/main/java/net/minecraft/util/datafix/DataFixers.java
-index b08d32bc80b4a65ebb980366a3e717c3b0e1bdab..a4ff80ec773e3a33238d444966054bd9a48a60d8 100644
+index e4090fa0f01078277d70b1a88e870a56f6b1cb0f..0c5abb040d156c8a855c3c40718411f2c7e8e43d 100644
 --- a/src/main/java/net/minecraft/util/datafix/DataFixers.java
 +++ b/src/main/java/net/minecraft/util/datafix/DataFixers.java
 @@ -78,15 +78,15 @@ public class DataFixers {

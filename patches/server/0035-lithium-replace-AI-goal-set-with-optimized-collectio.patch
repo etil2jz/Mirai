@@ -7,17 +7,17 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
-index 02f44b5682b99417f3cd6d6b25dc46cdc2a09093..564ea7120f8820bf98b8b5d23562908b9c43b525 100644
+index b9dacaccbe17e9ad91dfe7a937a74295b142ae1e..a59e9ba77c1a2175033b989cf0e38c71da5665db 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
-@@ -13,6 +13,7 @@ import java.util.stream.Stream;
+@@ -13,6 +13,7 @@ import java.util.function.Supplier;
+ import java.util.stream.Stream;
  import net.minecraft.util.profiling.ProfilerFiller;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
+ import org.slf4j.Logger;
 +import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet; // Lithium
  
  public class GoalSelector {
-     private static final Logger LOGGER = LogManager.getLogger();
+     private static final Logger LOGGER = LogUtils.getLogger();
 @@ -28,7 +29,7 @@ public class GoalSelector {
          }
      };

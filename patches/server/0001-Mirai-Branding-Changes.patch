@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Etil <81570777+etil2jz@users.noreply.github.com>
-Date: Sun, 23 Jan 2022 12:37:04 +0100
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Sat, 19 Mar 2022 18:08:39 +0100
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 81f0c8be31a6e58915b5300fd11917ab69785855..730ba5c921e9556d6b1dca77a146f856225e8ab5 100644
+index e8bbf2519a75a94002b20c31a709a41eec4716aa..87021d2763b0afee57558697941ca9c1b266ac20 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -15,7 +15,7 @@ index 81f0c8be31a6e58915b5300fd11917ab69785855..730ba5c921e9556d6b1dca77a146f856
 -    implementation(project(":purpur-api")) // Pufferfish // Paper // Purpur
 +    implementation(project(":mirai-api")) // Pufferfish // Paper // Purpur // Mirai
      // Pufferfish start
-     implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") {
+     implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
 @@ -89,7 +89,7 @@ tasks.jar {
          attributes(
@@ -205,10 +205,10 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 719595aefbd11d4ca9f13c3088f3fc7ccb8d7912..5012ecd3dada8f5aebb46b65df726f20e0ea4b6c 100644
+index 69917030089f29ca0b26e13b8182c966103e6cd6..b0f93cb36f876be78ebd2f13a2c509162e7896a0 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1738,7 +1738,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -218,10 +218,10 @@ index 719595aefbd11d4ca9f13c3088f3fc7ccb8d7912..5012ecd3dada8f5aebb46b65df726f20
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 79d1e922db61d6bb2c42a6f5aad9291dd55f44d3..5e2bab00161c8c18454bce3f4d19af472d17ec4b 100644
+index 74630b99102bbb082ce48b8e76be29fc944cf9d8..66c9eafb91a95c5987b206a70824a3ff4d0a1ed3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
+@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -230,21 +230,8 @@ index 79d1e922db61d6bb2c42a6f5aad9291dd55f44d3..5e2bab00161c8c18454bce3f4d19af47
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
-diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 5687dbbb3f1df46a453841c24a343773c801bf73..0c13463b8b28b099be323969a9535359f41f5541 100644
---- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-+++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -421,7 +421,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
- 
-     @Override
-     public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
--        return new com.destroystokyo.paper.PaperVersionFetcher(); // Pufferfish // Purpur
-+        return new com.destroystokyo.paper.PaperVersionFetcher(); // Mirai
-     }
- 
-     @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..ce2d17a9756f0375a96bbf7c56c3032c73d503f3 100644
+index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..dde8458ce2d8cc9aceaa4c62acdaf2ff0c0d610a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -1,29 +1,9 @@
@@ -275,6 +262,6 @@ index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..ce2d17a9756f0375a96bbf7c56c3032c
 -        }
 -
 -        return result;
-+        return "1.18.1-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.1
++        return "1.18.2-R0.1-SNAPSHOT (Purpur build)"; // Mirai - hardcode version, it's obviously 1.18.2
      }
  }

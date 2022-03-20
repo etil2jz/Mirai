@@ -2,8 +2,9 @@ import io.papermc.paperweight.util.constants.*
 
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.patcher") version "1.3.3"
+    `maven-publish`
+    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("io.papermc.paperweight.patcher") version "1.3.5"
 }
 
 repositories {
@@ -15,16 +16,15 @@ repositories {
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
-    decompiler("org.quiltmc.quiltflower:1.7.0")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.29")
     paperclip("io.papermc:paperclip:3.0.2")
 }
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
@@ -59,7 +59,7 @@ paperweight {
     serverProject.set(project(":mirai-server"))
 
     remapRepo.set("https://maven.fabricmc.net/")
-    decompileRepo.set("https://maven.quiltmc.org/")
+    decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     useStandardUpstream("purpur") {
         url.set(github("PurpurMC", "Purpur"))

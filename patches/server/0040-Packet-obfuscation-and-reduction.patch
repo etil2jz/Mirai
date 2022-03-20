@@ -7,7 +7,7 @@ Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725fcb902848 100644
+index 019ccd50ac87557bd971c0fde3113cc0e2e301ff..bb116272d84908649ef0f80618a66094422ecfca 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 @@ -22,6 +22,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
@@ -25,22 +25,23 @@ index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725f
          this.id = buf.readVarInt();
          this.packedItems = SynchedEntityData.unpack(buf);
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..e97d4081e37b82019dbc90ae6c53b8688a865c8a 100644
+index 1d88edfd09a909044f6e3175af652914b4d06311..9031fb0e8c589b759549f4197772b6c9929736a0 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-@@ -136,6 +136,11 @@ public class SynchedEntityData {
+@@ -136,6 +136,12 @@ public class SynchedEntityData {
      }
  
      public <T> void set(EntityDataAccessor<T> key, T value) {
-+        //Slice start
++        // Slice start
 +        set(key, value, null);
 +    }
 +
-+    public <T> void set(EntityDataAccessor<T> key, T value, @Nullable T foreignValue) { // Slice end
++    public <T> void set(EntityDataAccessor<T> key, T value, @Nullable T foreignValue) {
++        // Slice end
          SynchedEntityData.DataItem<T> datawatcher_item = this.getItem(key);
  
          if (ObjectUtils.notEqual(value, datawatcher_item.getValue())) {
-@@ -145,6 +150,12 @@ public class SynchedEntityData {
+@@ -145,6 +151,11 @@ public class SynchedEntityData {
              this.isDirty = true;
          }
  
@@ -49,7 +50,6 @@ index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..e97d4081e37b82019dbc90ae6c53b868
 +            datawatcher_item.setForeignValue(foreignValue);
 +        }
 +        // Slice end
-+
      }
  
      // CraftBukkit start - add method from above
@@ -133,10 +133,10 @@ index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..e97d4081e37b82019dbc90ae6c53b868
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 1073a06ce5796a9beec7d3553b291d98c4d2620a..57e23c0788d7a50f1e724f9f3605e9ddada228f5 100644
+index c35ad916e1af768347bce23f0b0ea6dfc58fb1e4..9f93d3d4e9eea7c563c794ce7f989e9eb11343f0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -372,7 +372,19 @@ public class ServerEntity {
+@@ -373,7 +373,19 @@ public class ServerEntity {
          SynchedEntityData datawatcher = this.entity.getEntityData();
  
          if (datawatcher.isDirty()) {
@@ -158,11 +158,11 @@ index 1073a06ce5796a9beec7d3553b291d98c4d2620a..57e23c0788d7a50f1e724f9f3605e9dd
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 864cafd56f49fb01802ebe31299c9bfabc4740f6..bef22771b34857c41b9008a41ef710acf78c4058 100644
+index 26db7dc46b8dbe4afce71c8286a65d5749e12a8f..dfcfa6493558f1e196584d6650dba39226ff91bf 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3016,7 +3016,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
-         if (event.isCancelled()) {
+@@ -3057,7 +3057,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+             this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
 -        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount());
@@ -171,10 +171,10 @@ index 864cafd56f49fb01802ebe31299c9bfabc4740f6..bef22771b34857c41b9008a41ef710ac
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 9fef9468d010a8e152c6936b3efbe74f501b02ba..16c059d89f366984198c0fc1efb54fedee7c263d 100644
+index 5b221b9026ed0a357669a0422bdff2524b5e372a..22eb757844a3704b00fa6ed5e6e1c7941c2cf652 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -672,7 +672,7 @@ public abstract class Player extends LivingEntity {
+@@ -673,7 +673,7 @@ public abstract class Player extends LivingEntity {
      public void increaseScore(int score) {
          int j = this.getScore();
  
@@ -182,12 +182,12 @@ index 9fef9468d010a8e152c6936b3efbe74f501b02ba..16c059d89f366984198c0fc1efb54fed
 +        this.entityData.set(Player.DATA_SCORE_ID, j + score, 0); // Slice
      }
  
-     @Override
+     public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 85daead2568eb2bc09843f7841652b7ea8dc161d..66085dd5e78a20ff097cf63804d6d615e3fd1233 100644
+index e8be878dd0893300b6834531e418705f2268c01d..e9bd790069dce0441efe8dc5682ea4a2daac55d6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2150,7 +2150,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2139,7 +2139,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

@@ -104,7 +104,7 @@ index 0000000000000000000000000000000000000000..d2b00d9a91b60716d5f458048df3d944
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index 87f6559990fde02318bfe2fc7e0a40b39b116888..5e789ce4d13212b83cceeead0a24613a2d247f32 100644
+index 10a126d11d84287d82abd22f084490cf2683372e..4ba1913dcaa27dfb12257d530f874e79ca4b4b5e 100644
 --- a/src/main/java/net/minecraft/util/Mth.java
 +++ b/src/main/java/net/minecraft/util/Mth.java
 @@ -8,6 +8,7 @@ import net.minecraft.core.Vec3i;
@@ -120,7 +120,7 @@ index 87f6559990fde02318bfe2fc7e0a40b39b116888..5e789ce4d13212b83cceeead0a24613a
  
      });
 -    private static final Random RANDOM = new Random();
-+    private static final Random RANDOM = new wtf.etil.mirai.server.util.XoRoShiRoRandom(); // Mirai
++    private static final Random RANDOM = new Random(); // Mirai - too lazy to edit correctly this line
 +    public static float[] getSinTable() { return SIN; } // Mirai
      private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
      private static final double ONE_SIXTH = 0.16666666666666666D;

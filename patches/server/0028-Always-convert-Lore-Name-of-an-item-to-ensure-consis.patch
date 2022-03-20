@@ -7,10 +7,10 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index e2206b2b7e9af5a62816e128cbf285157efa7013..73c55f766c63da21bbfe41058c4a14454524c9e9 100644
+index dedb34547b903d666a95c159d4076dc8e2b853e2..b167a85a9eeee154b84dbfa3d2158b81ba299ad3 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -174,9 +174,9 @@ public final class ItemStack {
+@@ -176,9 +176,9 @@ public final class ItemStack {
          if (display != null) {
              if (display.contains("Name", 8)) {
                  String json = display.getString("Name");
@@ -22,7 +22,7 @@ index e2206b2b7e9af5a62816e128cbf285157efa7013..73c55f766c63da21bbfe41058c4a1445
                      } catch (com.google.gson.JsonParseException jsonparseexception) {
                          display.remove("Name");
                      }
-@@ -186,7 +186,7 @@ public final class ItemStack {
+@@ -188,7 +188,7 @@ public final class ItemStack {
                  ListTag list = display.getList("Lore", 8);
                  for (int index = 0; index < list.size(); index++) {
                      String json = list.getString(index);
@@ -31,7 +31,7 @@ index e2206b2b7e9af5a62816e128cbf285157efa7013..73c55f766c63da21bbfe41058c4a1445
                          try {
                              list.set(index, convert(json));
                          } catch (com.google.gson.JsonParseException e) {
-@@ -203,6 +203,9 @@ public final class ItemStack {
+@@ -205,6 +205,9 @@ public final class ItemStack {
          if (component instanceof TextComponent && component.getContents().contains("\u00A7") && component.getSiblings().isEmpty()) {
              // Only convert if the root component is a single comp with legacy in it, don't convert already normal components
              component = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(component.getContents())[0];
@@ -42,7 +42,7 @@ index e2206b2b7e9af5a62816e128cbf285157efa7013..73c55f766c63da21bbfe41058c4a1445
          return net.minecraft.nbt.StringTag.valueOf(org.bukkit.craftbukkit.util.CraftChatMessage.toJSON(component));
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 784548cc1a34d94c4529f9de369a062680bd02b1..4b99dfce1b5948ad756032414ea34300007a500f 100644
+index 3b0341fecee0d122d2ddf358bc615daae1c58f8b..36df6872314774ed78f7d3a0a17d1f68dffa7db0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -687,7 +687,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {

@@ -7,52 +7,51 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 35c39aed9583275ef25d32c783715798b52bdb63..6bff63c5897ffd24eeb0dba8a8bfabc38e6b21ee 100644
+index f816fae46568b83ef4441bd3bb06f2081308921e..e9cd9b65838ab53368b8686f701707045ac8ebc0 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -24,6 +24,7 @@ public class PlayerDataStorage {
-     private static final Logger LOGGER = LogManager.getLogger();
+     private static final Logger LOGGER = LogUtils.getLogger();
      private final File playerDir;
      protected final DataFixer fixerUpper;
-+    private final wtf.etil.mirai.server.cache.NBTCache dataCache = new wtf.etil.mirai.server.cache.NBTCache(); // Mirai - NBT Cache system
++    private final wtf.etil.mirai.server.cache.NBTCache dataCache = new wtf.etil.mirai.server.cache.NBTCache(); // Yatopia - NBT Cache system
  
      public PlayerDataStorage(LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer) {
          this.fixerUpper = dataFixer;
-@@ -37,11 +38,24 @@ public class PlayerDataStorage {
+@@ -37,11 +38,23 @@ public class PlayerDataStorage {
              CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
              File file = File.createTempFile(player.getStringUUID() + "-", ".dat", this.playerDir);
  
 -            NbtIo.writeCompressed(nbttagcompound, file);
 -            File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
 -            File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
-+            // Mirai start - NBT Cache system
++            // Yatopia start - NBT Cache system
 +            Runnable task = () -> {
 +                try {
 +                    NbtIo.writeCompressed(nbttagcompound, file);
 +                    File file1 = new File(this.playerDir, player.getStringUUID() + ".dat");
 +                    File file2 = new File(this.playerDir, player.getStringUUID() + ".dat_old");
-+
+ 
+-            Util.safeReplaceFile(file1, file, file2);
 +                    Util.safeReplaceFile(file1, file, file2);
 +                } catch (Exception exception) {
 +                    PlayerDataStorage.LOGGER.error("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
 +                }
-+            };
-+            synchronized (this.dataCache){
++                };
++            synchronized (this.dataCache) {
 +                this.dataCache.put(file, nbttagcompound);
 +            }
 +            net.minecraft.server.MCUtil.asyncExecutor.execute(task);
-+            // Mirai end
- 
--            Util.safeReplaceFile(file1, file, file2);
++            // Yatopia end
          } catch (Exception exception) {
              PlayerDataStorage.LOGGER.warn("Failed to save player data for {}", player.getScoreboardName(), exception); // Paper
          }
-@@ -56,9 +70,18 @@ public class PlayerDataStorage {
+@@ -56,9 +69,18 @@ public class PlayerDataStorage {
              File file = new File(this.playerDir, player.getStringUUID() + ".dat");
              // Spigot Start
              boolean usingWrongFile = false;
 -            if ( org.bukkit.Bukkit.getOnlineMode() && !file.exists() ) // Paper - Check online mode first
-+            // Mirai start - NBT Cache system
++            // Yatopia start - NBT Cache system
 +            boolean normalFile = file.exists() && file.isFile();
 +            CompoundTag playerData;
 +            synchronized (this.dataCache){
@@ -61,13 +60,13 @@ index 35c39aed9583275ef25d32c783715798b52bdb63..6bff63c5897ffd24eeb0dba8a8bfabc3
 +            if (playerData == null && org.bukkit.Bukkit.getOnlineMode() && !normalFile ) // Paper - Check online mode first
              {
                  file = new File( this.playerDir, java.util.UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + player.getScoreboardName() ).getBytes( "UTF-8" ) ).toString() + ".dat");
-+                synchronized (this.dataCache){
++                synchronized (this.dataCache) {
 +                    playerData = this.dataCache.get(file);
 +                }
                  if ( file.exists() )
                  {
                      usingWrongFile = true;
-@@ -67,9 +90,12 @@ public class PlayerDataStorage {
+@@ -67,9 +89,12 @@ public class PlayerDataStorage {
              }
              // Spigot End
  
@@ -77,7 +76,7 @@ index 35c39aed9583275ef25d32c783715798b52bdb63..6bff63c5897ffd24eeb0dba8a8bfabc3
 +            } else if (normalFile) {
                  nbttagcompound = NbtIo.readCompressed(file);
              }
-+            // Mirai end
++            // Yatopia end
              // Spigot Start
              if ( usingWrongFile )
              {

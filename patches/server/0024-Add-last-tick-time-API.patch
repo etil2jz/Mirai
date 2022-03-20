@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 11d20e1123128e06eba6ee705f112f4926a4a159..779cbb80b4dce264a23921a441b7f17a019dfc4b 100644
+index fa9d73b9863e7d29523065d01cd75e93f5dfdf13..11e2c7660818a661d506e9f143726289d99b8415 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1214,6 +1214,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1174,6 +1174,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
      // Paper End
      // Spigot End
  
@@ -19,7 +19,7 @@ index 11d20e1123128e06eba6ee705f112f4926a4a159..779cbb80b4dce264a23921a441b7f17a
      protected void runServer() {
          try {
              long serverStartTime = Util.getNanos(); // Paper
-@@ -1284,7 +1286,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1244,7 +1246,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      this.nextTickTime += 50L;
                      this.startMetricsRecordingTick();
                      this.profiler.push("tick");
@@ -30,15 +30,20 @@ index 11d20e1123128e06eba6ee705f112f4926a4a159..779cbb80b4dce264a23921a441b7f17a
                      this.mayHaveDelayedTasks = true;
                      // Purpur start - tps catchup
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9fc80751e6c206f8416dbd7fc9ec4d2bd76536d2..1a6963b354da2f4ede3ab7ad04807834c3387765 100644
+index 94c60dd6754176900ae88296e24a55881dc718fe..859f1980507f6abfac7e5d86943b0b761be3be37 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2897,4 +2897,6 @@ public final class CraftServer implements Server {
+@@ -2900,4 +2900,11 @@ public final class CraftServer implements Server {
          return getServer().lagging;
      }
      // Purpur end
 +
-+    @Override public java.time.Duration getLastTickTime() { return net.minecraft.server.MinecraftServer.lastTickTime; } // Yatopia
++    // Yatopia start
++    @Override
++    public java.time.Duration getLastTickTime() {
++        return net.minecraft.server.MinecraftServer.lastTickTime;
++    }
++    // Yatopia end
  }
 diff --git a/src/main/java/org/spigotmc/TicksPerSecondCommand.java b/src/main/java/org/spigotmc/TicksPerSecondCommand.java
 index 088239d17aa8178cf8af09ec23cfd4deaaf2bbb6..0ecac76577eb440a0c3104ef4603acec826c474d 100644

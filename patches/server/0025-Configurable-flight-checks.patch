@@ -7,13 +7,13 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 058c45ee30e687165d837980f7aed229475a4ea3..8c20f062e65b72e6e8c0ce88371f1097b5468bd1 100644
+index 31bbefe0083037b74eabf1f2da1d76c9e3f1267b..422e33a7ae46a1c57c128d5e4a49bcd422d4df85 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -331,7 +331,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          ++this.tickCount;
          this.knownMovePacketCount = this.receivedMovePacketCount;
-         if (this.clientIsFloating && !this.player.isSleeping()) {
+         if (this.clientIsFloating && !this.player.isSleeping() && !this.player.isPassenger()) {
 -            if (++this.aboveGroundTickCount > 80) {
 +            if (wtf.etil.mirai.MiraiConfig.checkFlying && ++this.aboveGroundTickCount > 80) { // Yatopia - Configurable flight checks
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
