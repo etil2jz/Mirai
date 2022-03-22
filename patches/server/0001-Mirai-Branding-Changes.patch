@@ -231,7 +231,7 @@ index 74630b99102bbb082ce48b8e76be29fc944cf9d8..66c9eafb91a95c5987b206a70824a3ff
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..dde8458ce2d8cc9aceaa4c62acdaf2ff0c0d610a 100644
+index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..e35c6c83d22ce166c59c0e1312da3a59285e1c2f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -1,29 +1,9 @@
@@ -262,6 +262,6 @@ index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..dde8458ce2d8cc9aceaa4c62acdaf2ff
 -        }
 -
 -        return result;
-+        return "1.18.2-R0.1-SNAPSHOT (Purpur build)"; // Mirai - hardcode version, it's obviously 1.18.2
++        return "1.18.2-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.2
      }
  }
