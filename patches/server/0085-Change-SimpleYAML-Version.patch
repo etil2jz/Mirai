@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pascalpex <pascalpex@gmail.com>
+Date: Tue, 22 Mar 2022 12:02:53 +0100
+Subject: [PATCH] Change SimpleYAML Version
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 613e83a445d645229f3c8401aad7fc7ff781f50f..0aab98fb1ad05b1800f2facf904e2288da5c4501 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -59,7 +59,7 @@ dependencies {
+ 
+     // Pufferfish start
+     implementation("org.yaml:snakeyaml:1.28")
+-    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:ed30ff3e6b") {
++    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:1.8") {
+         exclude(group="org.yaml", module="snakeyaml")
+     }
+     // Pufferfish end
