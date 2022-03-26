@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fa9d73b9863e7d29523065d01cd75e93f5dfdf13..11e2c7660818a661d506e9f143726289d99b8415 100644
+index 9570fbe033db384282d26e020b9a4d1abbd59bb3..b2f105c639c17e1b1685b6aee964b6a34f165ee4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1174,6 +1174,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -30,10 +30,10 @@ index fa9d73b9863e7d29523065d01cd75e93f5dfdf13..11e2c7660818a661d506e9f143726289
                      this.mayHaveDelayedTasks = true;
                      // Purpur start - tps catchup
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 94c60dd6754176900ae88296e24a55881dc718fe..859f1980507f6abfac7e5d86943b0b761be3be37 100644
+index fdecf280866c5b148cfd8fbf82487ddb284a8195..5ec8c37b96af64d4aab9f94d8fa5e10a3255edfc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2900,4 +2900,11 @@ public final class CraftServer implements Server {
+@@ -2905,4 +2905,11 @@ public final class CraftServer implements Server {
          return getServer().lagging;
      }
      // Purpur end

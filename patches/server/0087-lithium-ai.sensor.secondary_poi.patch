@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Tue, 15 Mar 2022 07:14:26 +0100
+Subject: [PATCH] lithium: ai.sensor.secondary_poi
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
+index e389f4239dc92e925d6206eb8415b423b0201c87..2bc2580a6e24e3dbf845c1f1e7be5078768b6040 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
++++ b/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
+@@ -28,7 +28,13 @@ public class SecondaryPoiSensor extends Sensor<Villager> {
+             brain.eraseMemory(MemoryModuleType.SECONDARY_JOB_SITE);
+             return;
+         }
+-        // Purpur end
++        // Purpur end
++        // Mirai start - lithium: ai.sensor.secondary_poi
++        if (entity.getVillagerData().getProfession().getSecondaryPoi().isEmpty()) {
++            entity.getBrain().eraseMemory(MemoryModuleType.SECONDARY_JOB_SITE);
++            return;
++        }
++        // Mirai end
+         ResourceKey<Level> resourceKey = world.dimension();
+         BlockPos blockPos = entity.blockPosition();
+         List<GlobalPos> list = Lists.newArrayList();

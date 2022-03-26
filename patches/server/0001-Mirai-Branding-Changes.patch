@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: etil2jz <blanchot.arthur@protonmail.ch>
-Date: Sat, 19 Mar 2022 18:08:39 +0100
+Date: Sat, 26 Mar 2022 18:18:20 +0100
 Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index e8bbf2519a75a94002b20c31a709a41eec4716aa..87021d2763b0afee57558697941ca9c1b266ac20 100644
+index 685324c601a7ad2e19e2f9e09afae2b08cc6af41..7dacfe3923f9134bf1fa7e699759bb22726fc6c7 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,7 +18,7 @@ repositories {
@@ -63,7 +63,7 @@ index 8c3c68465197fafc14849dc38a572e309931e2a2..83942f84525462a7a9c1d0c2895176ec
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java
 deleted file mode 100644
-index adafc4fd661cf080b004b86c3eaed231a0133101..0000000000000000000000000000000000000000
+index 461022af9ad85fe00329678f0f61d684d291c628..0000000000000000000000000000000000000000
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java
 +++ /dev/null
 @@ -1,136 +0,0 @@
@@ -95,46 +95,46 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -import org.jetbrains.annotations.Nullable;
 -
 -public class PufferfishVersionFetcher implements VersionFetcher {
--	
+-
 -	private static final Logger LOGGER = Logger.getLogger("PufferfishVersionFetcher");
 -	private static final HttpClient client = HttpClient.newHttpClient();
--	
+-
 -	private static final URI JENKINS_URI = URI.create("https://ci.pufferfish.host/job/Pufferfish-1.18/lastSuccessfulBuild/buildNumber");
 -	private static final String GITHUB_FORMAT = "https://api.github.com/repos/pufferfish-gg/Pufferfish/compare/ver/1.18...%s";
--	
+-
 -	private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers
 -			.mapping(
 -					HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
 -					string -> new Gson().fromJson(string, JsonObject.class)
 -			);
--	
+-
 -	@Override
 -	public long getCacheTime() {
 -		return TimeUnit.MINUTES.toMillis(30);
 -	}
--	
+-
 -	@Override
 -	public @NotNull Component getVersionMessage(final @NotNull String serverVersion) {
 -		final String[] parts = CraftServer.class.getPackage().getImplementationVersion().split("-");
 -		@NotNull Component component;
--		
+-
 -		if (parts.length != 3) {
 -			component = text("Unknown server version.", RED);
 -		} else {
 -			final String versionString = parts[2];
--			
+-
 -			try {
 -				component = this.fetchJenkinsVersion(Integer.parseInt(versionString));
 -			} catch (NumberFormatException e) {
 -				component = this.fetchGithubVersion(versionString.substring(1, versionString.length() - 1));
 -			}
 -		}
--		
+-
 -		final @Nullable Component history = this.getHistory();
 -		return history != null ? Component
 -				.join(JoinConfiguration.noSeparators(), component, Component.newline(), this.getHistory()) : component;
 -	}
--	
+-
 -	private @NotNull Component fetchJenkinsVersion(final int versionNumber) {
 -		final HttpRequest request = HttpRequest.newBuilder(JENKINS_URI).build();
 -		try {
@@ -142,7 +142,7 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -			if (response.statusCode() != 200) {
 -				return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
 -			}
--			
+-
 -			int latestVersionNumber;
 -			try {
 -				latestVersionNumber = Integer.parseInt(response.body());
@@ -150,7 +150,7 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -				LOGGER.log(Level.WARNING, "Received invalid response from Jenkins \"" + response.body() + "\".");
 -				return text("Received invalid response from server.", RED);
 -			}
--			
+-
 -			final int versionDiff = latestVersionNumber - versionNumber;
 -			return this.getResponseMessage(versionDiff);
 -		} catch (IOException | InterruptedException e) {
@@ -158,7 +158,7 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -			return text("Failed to retrieve version from server.", RED);
 -		}
 -	}
--	
+-
 -	// Based off code contributed by Techcable <Techcable@outlook.com> in Paper/GH-65
 -	private @NotNull Component fetchGithubVersion(final @NotNull String hash) {
 -		final URI uri = URI.create(String.format(GITHUB_FORMAT, hash));
@@ -168,17 +168,17 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -			if (response.statusCode() != 200) {
 -				return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
 -			}
--			
+-
 -			final JsonObject obj = response.body();
 -			final int versionDiff = obj.get("behind_by").getAsInt();
--			
+-
 -			return this.getResponseMessage(versionDiff);
 -		} catch (IOException | InterruptedException e) {
 -			LOGGER.log(Level.WARNING, "Failed to look up version from GitHub", e);
 -			return text("Failed to retrieve version from server.", RED);
 -		}
 -	}
--	
+-
 -	private @NotNull Component getResponseMessage(final int versionDiff) {
 -		return switch (Math.max(-1, Math.min(1, versionDiff))) {
 -			case -1 -> text("You are running an unsupported version of Pufferfish.", RED);
@@ -188,24 +188,24 @@ index adafc4fd661cf080b004b86c3eaed231a0133101..00000000000000000000000000000000
 -					RED);
 -		};
 -	}
--	
+-
 -	private @Nullable Component getHistory() {
 -		final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
 -		if (data == null) {
 -			return null;
 -		}
--		
+-
 -		final String oldVersion = data.getOldVersion();
 -		if (oldVersion == null) {
 -			return null;
 -		}
--		
+-
 -		return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
 -	}
 -}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 69917030089f29ca0b26e13b8182c966103e6cd6..b0f93cb36f876be78ebd2f13a2c509162e7896a0 100644
+index 53034d491bc925bcf803b42f6624d7a61d2cb971..8606fed2d305993a7b783a5e651e0859e7ab594d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -213,12 +213,12 @@ index 69917030089f29ca0b26e13b8182c966103e6cd6..b0f93cb36f876be78ebd2f13a2c50916
      @DontObfuscate
      public String getServerModName() {
 -        return org.purpurmc.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Mirai"; // Mirai - Mirai > // Purpur - Purpur > // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return org.purpurmc.purpur.PurpurConfig.serverModName; // Mirai - Mirai > // Purpur - Purpur > // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 74630b99102bbb082ce48b8e76be29fc944cf9d8..66c9eafb91a95c5987b206a70824a3ff4d0a1ed3 100644
+index 5a3323c9f21819c597a78803347f8e424ceafb22..0425854a8c7a2cb5ea43a90199f03fc3561e3264 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
@@ -265,3 +265,16 @@ index 99597258e8e88cd9e2c901c4ac3ff7faeeabee2b..e35c6c83d22ce166c59c0e1312da3a59
 +        return "1.18.2-R0.1-SNAPSHOT"; // Mirai - hardcode version, it's obviously 1.18.2
      }
  }
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 659e93fb24124318367e5b4d0b144ca1443950e9..0b845bea7518054719f5f17b7b3839d7d8a5cc28 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -235,7 +235,7 @@ public class PurpurConfig {
+         if (!TimingsManager.hiddenConfigs.contains("settings.seed")) TimingsManager.hiddenConfigs.add("settings.seed");
+     }
+ 
+-    public static String serverModName = "Purpur";
++    public static String serverModName = "Mirai";
+     private static void serverModName() {
+         serverModName = getString("settings.server-mod-name", serverModName);
+     }
