@@ -21,8 +21,8 @@ index 0cda850a050ce2d2e94e2237c3ace5d43eba4d8e..ed753a4f8f55fae2740254d3622f04ed
      private static final Logger LOGGER = LogUtils.getLogger();
 -    private final Map<Attribute, AttributeInstance> attributes = Maps.newHashMap();
 -    private final Set<AttributeInstance> dirtyAttributes = Sets.newHashSet();
-+    private final Map<Attribute, AttributeInstance> attributes = new Reference2ReferenceOpenHashMap<>(); // Mirai
-+    private final Set<AttributeInstance> dirtyAttributes = new ReferenceOpenHashSet<>(); // Mirai
++    private final Map<Attribute, AttributeInstance> attributes = new Reference2ReferenceOpenHashMap<>(0); // Mirai
++    private final Set<AttributeInstance> dirtyAttributes = new ReferenceOpenHashSet<>(0); // Mirai
      private final AttributeSupplier supplier;
      private final java.util.function.Function<Attribute, AttributeInstance> createInstance; // Pufferfish
      private final net.minecraft.world.entity.LivingEntity entity; // Purpur
