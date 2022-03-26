@@ -21,8 +21,8 @@ index 5b8e3aa4414f9e13bb5c05cf6e4fd89cb84fa1a4..20c78871c16f0d3d2d0b7bb8544fdf5b
      private static final Logger LOGGER = LogUtils.getLogger();
 -    private final Map<Attribute, AttributeInstance> attributes = Maps.newHashMap();
 -    private final Set<AttributeInstance> dirtyAttributes = Sets.newHashSet();
-+    private final Map<Attribute, AttributeInstance> attributes = new Reference2ReferenceOpenHashMap<>(); // Mirai
-+    private final Set<AttributeInstance> dirtyAttributes = new ReferenceOpenHashSet<>(); // Mirai
++    private final Map<Attribute, AttributeInstance> attributes = new Reference2ReferenceOpenHashMap<>(0); // Mirai
++    private final Set<AttributeInstance> dirtyAttributes = new ReferenceOpenHashSet<>(0); // Mirai
      private final AttributeSupplier supplier;
      private final java.util.function.Function<Attribute, AttributeInstance> createInstance; // Pufferfish
  
