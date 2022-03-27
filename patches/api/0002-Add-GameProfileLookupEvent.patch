@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 0007c6b1d81373cb6592c8b9e02f464405050f68..78cc14e2717178a66d9be30182b20859e38c2f93 100644
+index 9d7bd0f965c7dc3a60246310688aa5f93a4594a4..3a1c5a4aa8d512d50565b22a383e44b73b276ee5 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -51,6 +51,7 @@ dependencies {
