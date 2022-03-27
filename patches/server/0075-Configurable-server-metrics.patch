@@ -25,7 +25,7 @@ index 726c0fdb46619e0e0c57b7b5a65be4270acdd0eb..42e13923dd00cfcc95280b17a79a11d1
          signAllowColors = getBoolean("sign.allow-colors", signAllowColors);
      }
  
-+    public static boolean serverMetrics = false;
++    public static boolean serverMetrics = true;
 +    private static void allowServerMetrics() {
 +        serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
 +    }
