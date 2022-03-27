@@ -44,3 +44,6 @@ In order to distribute and use this server software, you need a paperclip file:
 ## License
 Patches are licensed under GPL-3.0.  
 All other files are licensed under MIT.
+
+## bStats
+[![](https://bstats.org/signatures/server-implementation/mirai.svg)](https://bstats.org/plugin/server-implementation/Mirai/14774)
