@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 00d86f0c5ad16a9624b59a9d3beba22e93a400aa..92782e749a4e78a7838f5fc24c11bb099ec87690 100644
+index 1c193394fac9f3f6d2b8e64a30abd3a0fcc34ca4..f2b1284b95bb59e49072751898b677304cc5b13e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1458,6 +1458,7 @@ public class ServerPlayer extends Player {
+@@ -1460,6 +1460,7 @@ public class ServerPlayer extends Player {
  
      @Override
      public void openTextEdit(SignBlockEntity sign) {
@@ -19,7 +19,7 @@ index 00d86f0c5ad16a9624b59a9d3beba22e93a400aa..92782e749a4e78a7838f5fc24c11bb09
          this.connection.send(new ClientboundBlockUpdatePacket(this.level, sign.getBlockPos()));
          this.connection.send(new ClientboundOpenSignEditorPacket(sign.getBlockPos()));
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index cccdde5c35eebaadd053f9b92501db980bcc2ae2..46377aa81cfe0881b672e792932603cd2724ffad 100644
+index e9c28883fad7c94d1d7267d125b3d0b040ad6c2e..c1385ede01adc87c894861d1e3321773029d05e6 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -3121,11 +3121,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser

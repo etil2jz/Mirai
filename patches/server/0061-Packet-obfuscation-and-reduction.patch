@@ -133,7 +133,7 @@ index 1d88edfd09a909044f6e3175af652914b4d06311..9031fb0e8c589b759549f4197772b6c9
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index bc72c4e07fe5ca1cb114dfc969b9e52dcbff0491..f28fd6ca39676e3ecfb2166e7777dbf8cb0b7327 100644
+index 2d7e884d25f352e0a05e9aefb0ff6e296e73c361..8b64571c85e8e36d7ed48c42e4dc5957a874ea7c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -390,7 +390,19 @@ public class ServerEntity {
@@ -158,10 +158,10 @@ index bc72c4e07fe5ca1cb114dfc969b9e52dcbff0491..f28fd6ca39676e3ecfb2166e7777dbf8
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 509e1b58bfd90265638c79a3357d0a926522274b..5c3b5f8b65234e7cca8d3188f86d910d9f023de5 100644
+index ae820263fcebd5cdcfd79e700a6e08706bbcbe80..a53b834e4abc31ed75817e0a057567bb7a02ba98 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3042,7 +3042,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -3027,7 +3027,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }

@@ -6,10 +6,10 @@ Subject: [PATCH] PaperPR Prevent entity loading causing async lookups
 Taken from https://github.com/PaperMC/Paper/pull/7553
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 03fe5b09edb0efb0305584be432f353925a99495..1d4050c10733dce05e7564c3c7f9d8f82e6de1d4 100644
+index 3fbde53a91e3ce06605768120b76806a12c94fa1..00c3aa6460eb8e53a1ec36540ef33fbb0c6b988b 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -773,6 +773,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -773,6 +773,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
      public void baseTick() {
          this.level.getProfiler().push("entityBaseTick");

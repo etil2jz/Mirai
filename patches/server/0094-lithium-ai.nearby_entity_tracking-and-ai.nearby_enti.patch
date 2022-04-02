@@ -600,7 +600,7 @@ index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 5c3b5f8b65234e7cca8d3188f86d910d9f023de5..7c57442874fe17fd054a053020b09352090dc6fa 100644
+index a53b834e4abc31ed75817e0a057567bb7a02ba98..b6fbf69f200433ab419b7e462d326b32fee2d79b 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -150,9 +150,29 @@ import org.bukkit.event.entity.EntityPoseChangeEvent;
@@ -612,7 +612,7 @@ index 5c3b5f8b65234e7cca8d3188f86d910d9f023de5..7c57442874fe17fd054a053020b09352
 +import me.jellysquid.mods.lithium.common.entity.tracker.nearby.NearbyEntityListenerMulti;
 +// JettPack end
  
- public abstract class Entity implements Nameable, EntityAccess, CommandSource, io.papermc.paper.util.KeyedObject { // Paper
+ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
 +    // JettPack start - lithium: ai.nearby_entity_tracking
 +    private NearbyEntityListenerMulti nearbyTracker = null;
@@ -684,7 +684,7 @@ index ebf19357d7e3a5e4d02ac685fa70d118a8e40eb4..a2ad44bfe3a371a663e41c084f40e9a7
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
-index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b299b3c314 100644
+index bae3db488371909c82946d6da294cda4e5a19cb5..76a9b7d823c563946e84a3e9c70ababe4476b5f4 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
 @@ -8,6 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
@@ -708,7 +708,7 @@ index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b2
  
      public LookAtPlayerGoal(Mob mob, Class<? extends LivingEntity> targetType, float range) {
          this(mob, targetType, range, 0.02F);
-@@ -43,7 +50,14 @@ public class LookAtPlayerGoal extends Goal {
+@@ -43,6 +50,14 @@ public class LookAtPlayerGoal extends Goal {
          } else {
              this.lookAtContext = TargetingConditions.forNonCombat().range((double)range);
          }
@@ -717,13 +717,13 @@ index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b2
 +        double adjustedRange = dimensions.width * 0.5D + this.lookDistance + 2D;
 +        int horizontalRange = Mth.ceil(adjustedRange);
 +        this.nearbyTracker = new NearbyEntityTracker<>(targetType, mob, new Vec3i(horizontalRange, Mth.ceil(dimensions.height + 3 + 2), horizontalRange));
- 
++
 +        mob.addListener(this.nearbyTracker);
 +        // JettPack end
+ 
      }
  
-     @Override
-@@ -56,11 +70,9 @@ public class LookAtPlayerGoal extends Goal {
+@@ -56,11 +71,9 @@ public class LookAtPlayerGoal extends Goal {
              }
  
              if (this.lookAtType == Player.class) {
