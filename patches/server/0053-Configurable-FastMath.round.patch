@@ -42,7 +42,7 @@ index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e29
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index d0b6b17b8edf80b1c0ca60b8f9eb4f9fb18ca159..c8474d7a7a75f18a78f3b3a63dd980d10da09660 100644
+index f8864424aae4ec071658e04a9296247eefa71743..36ca5eac106524edcd00c1523ec33cc3c4dbc077 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -725,12 +725,12 @@ public class PaperCommand extends Command {
@@ -100,10 +100,10 @@ index 40447d00aefb5ffedb8a2ee87155a04088f0649f..31cc0a29e89e79f616b3ee329a552896
      }
  }
 diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
-index bdd4cc040111d18b82d3ebeb5dbe2537cf148090..3a41ae0212dc99a6db53faefa7714029afaaf91c 100644
+index 0f62a766a3249d8651a11dce6e9051b162693716..f5ceac56ef5deb75a7b35f474af43768f2c4de70 100644
 --- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
 +++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
-@@ -381,11 +381,11 @@ public final class PlayerChunkLoader {
+@@ -387,11 +387,11 @@ public final class PlayerChunkLoader {
      }
  
      protected long getTargetSendPerPlayerAddend() {
@@ -118,7 +118,7 @@ index bdd4cc040111d18b82d3ebeb5dbe2537cf148090..3a41ae0212dc99a6db53faefa7714029
  
      public void onChunkPlayerTickReady(final int chunkX, final int chunkZ) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 11e2c7660818a661d506e9f143726289d99b8415..790cef5fdb99b8e1e6f023b2a2d9a680ddad48fd 100644
+index 49aad80f00a82f9e80689ae430d8e0c9739614ed..c109f7449bb5230c012f859757c1e5066b294b7c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2802,7 +2802,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -400,7 +400,7 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..4813bd6de894d0566e8631d8c71915c3
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 1cf3fe75ddc6fee55425ce5b242c370d6b2367d2..02db5f055bbf1b29cf54519afe256f967fa31d8a 100644
+index 1ff335988501b4e7349b76c886d3e6a4b0a059c1..76170843952973653e2d5c538813c4caf8f40000 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -201,4 +201,9 @@ public class MiraiConfig {

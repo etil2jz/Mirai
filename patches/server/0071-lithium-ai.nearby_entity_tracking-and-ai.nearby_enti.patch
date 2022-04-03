@@ -600,10 +600,10 @@ index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index dfcfa6493558f1e196584d6650dba39226ff91bf..69f0ec8ef68292a8ab4065c788f561d2db240661 100644
+index 2b56ccb433195c9d6a28139c619bd53a75fdfe05..3377ed02276d5deb8d5615d96f58668f9d71b99b 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -150,8 +150,29 @@ import org.bukkit.event.entity.EntityPoseChangeEvent;
+@@ -150,9 +150,30 @@ import org.bukkit.event.entity.EntityPoseChangeEvent;
  import org.bukkit.event.player.PlayerTeleportEvent;
  import org.bukkit.plugin.PluginManager;
  // CraftBukkit end
@@ -612,7 +612,8 @@ index dfcfa6493558f1e196584d6650dba39226ff91bf..69f0ec8ef68292a8ab4065c788f561d2
 +import me.jellysquid.mods.lithium.common.entity.tracker.nearby.NearbyEntityListenerMulti;
 +// JettPack end
  
- public abstract class Entity implements Nameable, EntityAccess, CommandSource, io.papermc.paper.util.KeyedObject { // Paper
+ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     protected static javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino"); // Purpur
 +
 +    // JettPack start - lithium: ai.nearby_entity_tracking
 +    private NearbyEntityListenerMulti nearbyTracker = null;
@@ -630,9 +631,9 @@ index dfcfa6493558f1e196584d6650dba39226ff91bf..69f0ec8ef68292a8ab4065c788f561d2
 +    }
 +    // JettPack end
 +
-     protected static javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino"); // Purpur
      // CraftBukkit start
      private static final int CURRENT_LEVEL = 2;
+     public boolean preserveMotion = true; // Paper - keep initial motion on first setPositionRotation
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/AvoidEntityGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/AvoidEntityGoal.java
 index ebf19357d7e3a5e4d02ac685fa70d118a8e40eb4..a2ad44bfe3a371a663e41c084f40e9a71f278f1c 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/AvoidEntityGoal.java
@@ -684,7 +685,7 @@ index ebf19357d7e3a5e4d02ac685fa70d118a8e40eb4..a2ad44bfe3a371a663e41c084f40e9a7
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
-index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b299b3c314 100644
+index bae3db488371909c82946d6da294cda4e5a19cb5..76a9b7d823c563946e84a3e9c70ababe4476b5f4 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/goal/LookAtPlayerGoal.java
 @@ -8,6 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
@@ -708,7 +709,7 @@ index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b2
  
      public LookAtPlayerGoal(Mob mob, Class<? extends LivingEntity> targetType, float range) {
          this(mob, targetType, range, 0.02F);
-@@ -43,7 +50,14 @@ public class LookAtPlayerGoal extends Goal {
+@@ -43,6 +50,14 @@ public class LookAtPlayerGoal extends Goal {
          } else {
              this.lookAtContext = TargetingConditions.forNonCombat().range((double)range);
          }
@@ -717,13 +718,13 @@ index bae3db488371909c82946d6da294cda4e5a19cb5..da1bcd0f2f0c24063593a3664155f5b2
 +        double adjustedRange = dimensions.width * 0.5D + this.lookDistance + 2D;
 +        int horizontalRange = Mth.ceil(adjustedRange);
 +        this.nearbyTracker = new NearbyEntityTracker<>(targetType, mob, new Vec3i(horizontalRange, Mth.ceil(dimensions.height + 3 + 2), horizontalRange));
- 
++
 +        mob.addListener(this.nearbyTracker);
 +        // JettPack end
+ 
      }
  
-     @Override
-@@ -56,11 +70,9 @@ public class LookAtPlayerGoal extends Goal {
+@@ -56,11 +71,9 @@ public class LookAtPlayerGoal extends Goal {
              }
  
              if (this.lookAtType == Player.class) {

@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable server metrics
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 9e8f87127e04be3174e2f5dae1b8a50c2b6468b5..f3dd2833ad2b3ff9797f1364abab3c21bbcc8ab0 100644
+index 8e0c6c3e5fb40928d2290792aaee271bea749fdd..e924a14a1d80afa1a97f160d146633294ea55476 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -123,7 +123,7 @@ public class PaperConfig {
@@ -18,7 +18,7 @@ index 9e8f87127e04be3174e2f5dae1b8a50c2b6468b5..f3dd2833ad2b3ff9797f1364abab3c21
              metricsStarted = true;
          }
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 551cf30c52bb55e7c36cc27f3700c5cd27809c35..1cf3fe75ddc6fee55425ce5b242c370d6b2367d2 100644
+index 551cf30c52bb55e7c36cc27f3700c5cd27809c35..1ff335988501b4e7349b76c886d3e6a4b0a059c1 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -196,6 +196,9 @@ public class MiraiConfig {
@@ -26,7 +26,7 @@ index 551cf30c52bb55e7c36cc27f3700c5cd27809c35..1cf3fe75ddc6fee55425ce5b242c370d
  	}
  
 -
-+    public static boolean serverMetrics = false;
++    public static boolean serverMetrics = true;
 +    private static void allowServerMetrics() {
 +        serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
 +    }

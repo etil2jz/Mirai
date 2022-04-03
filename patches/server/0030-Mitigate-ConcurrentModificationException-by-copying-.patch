@@ -8,7 +8,7 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/entity/PersistentEntitySectionManager.java b/src/main/java/net/minecraft/world/level/entity/PersistentEntitySectionManager.java
-index bd7967680d7a75caff98a827895c795f2d101f99..a3acd40f24aae3c9809b76ce6f3e1b2d20acc5b1 100644
+index 3d5f38a1ca0206e5bcae4ed49d3df7ce0967f722..649df137ac36a62e53b42b7675c606e9e57795b2 100644
 --- a/src/main/java/net/minecraft/world/level/entity/PersistentEntitySectionManager.java
 +++ b/src/main/java/net/minecraft/world/level/entity/PersistentEntitySectionManager.java
 @@ -264,23 +264,23 @@ public class PersistentEntitySectionManager<T extends EntityAccess> implements A

@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633f2c39b14 100644
+index e8e49e1bdf1ff4ea60a4feb6ec52d999cbced256..b49f53a89d9c096355d6cc20a2a59033f2637432 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
 @@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,7 +59,7 @@ index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 71cb6cde91820825d726d3821d7840f10d1958d8..fa9d73b9863e7d29523065d01cd75e93f5dfdf13 100644
+index 84211ebee22efed7b97dc02b72bb1786bb51825c..d0a746c1865e71593391d7a62f2e700434ff303c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1070,6 +1070,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -177,7 +177,7 @@ index 9c1aff17aabd062640e3f451a2ef8c50a7c62f10..78073cbb7f36950537dc65633e264c30
          }
          return false;
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index 04e836cf07b64a99f87e016834f9e365b29f0cc2..cb5ecb860d4360c0c1101e53209d3be61bbc2196 100644
+index fc5b64da74230b4e95b7d85b22cb21e7421c575b..cf4ef20d84a056d785258b78562f7d77377db683 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -141,6 +141,7 @@ public class WatchdogThread extends Thread

@@ -7,7 +7,7 @@ Original code by Minebench, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/Minebench/Origami
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index 91478d614a56d1ac371187515d4c92b2a373b65c..da82d39a6818205d6302d1c27a051a25d1c7dc3d 100644
+index fb3c3c32b89e6a99b50bd04163d29892bbd08256..73000ad17bd2720763f0fdd0aecd0dc16012d863 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 @@ -273,11 +273,13 @@ public class CraftInventory implements Inventory {

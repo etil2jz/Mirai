@@ -7,10 +7,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 69f0ec8ef68292a8ab4065c788f561d2db240661..4ea173a7a876ee0efed85382db13859df5279c62 100644
+index 3377ed02276d5deb8d5615d96f58668f9d71b99b..60ab21ff34b422ca16669991bf2f7723a8d2a30f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1797,10 +1797,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1797,10 +1797,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          }
      }
  
@@ -28,9 +28,9 @@ index 69f0ec8ef68292a8ab4065c788f561d2db240661..4ea173a7a876ee0efed85382db13859d
      public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
          this.absMoveTo(x, y, z);
          this.setYRot(yaw % 360.0F);
-@@ -4268,6 +4274,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
-         return this.getZ((2.0D * this.random.nextDouble() - 1.0D) * widthScale);
+@@ -4270,6 +4276,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
+     // Paper end - block invalid positions
  
 +    // JettPack start
 +    public final int getPositionHashCode() {
@@ -41,7 +41,7 @@ index 69f0ec8ef68292a8ab4065c788f561d2db240661..4ea173a7a876ee0efed85382db13859d
      public final void setPosRaw(double x, double y, double z) {
          // Paper start
          this.setPosRaw(x, y, z, false);
-@@ -4533,15 +4545,31 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -4540,15 +4552,31 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return true;
      }
  

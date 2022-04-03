@@ -106,7 +106,7 @@ index 0000000000000000000000000000000000000000..c99eff34c1be07508c88fe9525c3ae1a
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index efe7ba93af0b44e6282e551d47763fa9ea3df077..541d9c01112c7d6a5b91eb892b842dea88be201d 100644
+index c4b2a50ad65b4ca2f8cc5903213c70cafde3e41c..76e2bf9d6a14e0481d535250574ddc0ce57b8956 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 @@ -51,6 +51,7 @@ import net.minecraft.world.phys.AABB;

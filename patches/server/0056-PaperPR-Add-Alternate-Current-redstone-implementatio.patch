@@ -2007,7 +2007,7 @@ index 0000000000000000000000000000000000000000..5d58615073c2b2018a3625544e7e702c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index f3dd2833ad2b3ff9797f1364abab3c21bbcc8ab0..19d7ea19f91bb2ef94187d6db91f26a93a6d0be2 100644
+index e924a14a1d80afa1a97f160d146633294ea55476..af6b7a2561b689da93f6825dff08433bab96eac3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -71,8 +71,8 @@ public class PaperConfig {

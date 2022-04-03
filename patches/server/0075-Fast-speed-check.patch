@@ -12,10 +12,10 @@ doing questionable/buggy ones, and claiming breathtaking performance improvement
 any of those Spigot forks!
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 4ea173a7a876ee0efed85382db13859df5279c62..7cb6903307ec2a3235b7ae55d2b5801a503c1d2a 100644
+index 60ab21ff34b422ca16669991bf2f7723a8d2a30f..73cec5fe321eddf8ea32e0baeb41eed24f9d017d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1153,7 +1153,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+@@ -1153,7 +1153,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  }
  
                  this.tryCheckInsideBlocks();
@@ -34,7 +34,7 @@ index 4ea173a7a876ee0efed85382db13859df5279c62..7cb6903307ec2a3235b7ae55d2b5801a
                  this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
                  // Paper start - remove expensive streams from here
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 1e945edf028e38f963c7abb1ab795ac4d08dff56..78d31ab4a4c5c91745e61e1321d4b070aaa7f8f4 100644
+index 17cf2fa8c1a27863aa95970aa889fc31f21364ae..7ad2aa0ef9a3c8f71a3af56c408f42ff191b0b9d 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -215,4 +215,9 @@ public class MiraiConfig {
