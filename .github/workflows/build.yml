@@ -11,9 +11,9 @@ jobs:
       fail-fast: true
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.4.0
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v1.0.4
       - name: Set up JDK (GraalVM)
         uses: graalvm/setup-graalvm@v1
         with:
@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull Gradle Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3.0.1
         id: gradle-cache
         with:
           path: ~/.gradle
@@ -37,7 +37,7 @@ jobs:
         run: |
           ./gradlew -Dorg.gradle.jvmargs="-Dfile.encoding=UTF-8 -Djdk.nio.maxCachedBufferSize=262144 -Dgraal.CompilerConfiguration=community -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.WriteableCodeCache=true --add-modules jdk.incubator.vector" createReobfPaperclipJar --stacktrace --no-daemon
       - name: Archive Paperclip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.0.0
         with:
           name: Mirai-1.18.2
           path: build/libs/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar
@@ -47,7 +47,7 @@ jobs:
           cp build/libs/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar public/Mirai-1.18.2-R0.1-SNAPSHOT.jar
       - name: Deploy to Github Pages
         if: github.event_name != 'pull_request'
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
