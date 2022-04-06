@@ -9,7 +9,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 92782e749a4e78a7838f5fc24c11bb099ec87690..f45faebcfd632032655435876becab9974e534b5 100644
+index f2b1284b95bb59e49072751898b677304cc5b13e..777833d95c11540924f456c8c60d4e3f907b3aa4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -605,7 +605,7 @@ public class ServerPlayer extends Player {
@@ -42,7 +42,7 @@ index 92782e749a4e78a7838f5fc24c11bb099ec87690..f45faebcfd632032655435876becab99
              // CraftBukkit start - initialize oldLevel and fire PlayerLevelChangeEvent
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 1ba057cbd0ec23cd7ef3d3d1c7685f44cfe34eec..86cc31add10259a248b6044d1bcfb0a9a6bac9c6 100644
+index 9a63217add77a9121a70c4459dbdc2f3b16b489c..35e7da12b3c5aafe4ed68b9c80a83c3151a8ca86 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -247,4 +247,13 @@ public class MiraiConfig {

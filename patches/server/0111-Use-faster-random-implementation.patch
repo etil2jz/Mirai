@@ -69,7 +69,7 @@ index 0866b340a11d4650fc00a40cdb949b6e44691f8c..8eed99c1d58111b391c9c119d5ee60ec
      final MinecraftServer server;
      public final Connection connection;
 diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index 4ba1913dcaa27dfb12257d530f874e79ca4b4b5e..cc8d9811ea46116103378ae719de691cbafa167a 100644
+index 4ba1913dcaa27dfb12257d530f874e79ca4b4b5e..0dfb153c8fa587e366f903e5b1534f6545ec2b2c 100644
 --- a/src/main/java/net/minecraft/util/Mth.java
 +++ b/src/main/java/net/minecraft/util/Mth.java
 @@ -31,7 +31,7 @@ public class Mth {
@@ -104,7 +104,7 @@ index 00c3aa6460eb8e53a1ec36540ef33fbb0c6b988b..69a9baef6266445920277b3edc9ea8b1
          @Override
          public synchronized void setSeed(long seed) {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
-index 62d404d9876c371f2c3e0fb749ab6cc8ec802ca7..29d3cca5bfc49eeceaa28a05afe969ea764d5ecb 100644
+index 62d404d9876c371f2c3e0fb749ab6cc8ec802ca7..7e9ab48b7f200f416cbbe3edc1aed78c5411a730 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
 @@ -13,7 +13,7 @@ import java.util.stream.Stream;
@@ -117,7 +117,7 @@ index 62d404d9876c371f2c3e0fb749ab6cc8ec802ca7..29d3cca5bfc49eeceaa28a05afe969ea
  
      public ShufflingList() {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
-index 1dbe21a2bb6f7254d13842ead8084b801f881008..3213b0ce937e61294be65e895fb52579e86bc5ec 100644
+index 1dbe21a2bb6f7254d13842ead8084b801f881008..5c1dd8802fc161d90b6dbe73287d8669f76cb553 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
 @@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -243,7 +243,7 @@ index f74c5bb8e1ba42c77c59d481b871fd992483b128..5378e1062c6e551e0ee8ce5e28fe3e34
      private NonNullList<ItemStack> items;
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
-index b3eef862248574ee4b864107e1eb69d2418ada8c..76171c4fecdabffe34d5093fa5245f749ed01108 100644
+index b3eef862248574ee4b864107e1eb69d2418ada8c..105c35338fa14b4efcfcc6d3f7e43448017b91a2 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 @@ -23,7 +23,7 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
@@ -256,7 +256,7 @@ index b3eef862248574ee4b864107e1eb69d2418ada8c..76171c4fecdabffe34d5093fa5245f74
  
      public EnchantmentTableBlockEntity(BlockPos pos, BlockState state) {
 diff --git a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
-index 3bc8d37590698c17eab876cffdda78bb1bf0e917..40001d974b54e643e47df3f6276f89e52096b491 100644
+index 3bc8d37590698c17eab876cffdda78bb1bf0e917..32a654e383e861d7f2d57f4806fbd5e15a708294 100644
 --- a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
 +++ b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
 @@ -127,7 +127,7 @@ public class LootContext {
@@ -301,7 +301,7 @@ index 93fd9e87de3078f50431b5d80540d4335d7c79e5..8a90b13e53c1da0ede19c5f528f32936
      public CraftFirework(CraftServer server, FireworkRocketEntity entity) {
 diff --git a/src/main/java/wtf/etil/mirai/server/util/FastRandom.java b/src/main/java/wtf/etil/mirai/server/util/FastRandom.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..30d63d4c7db226c126398d5ab9e669b33968a62d
+index 0000000000000000000000000000000000000000..24527b27091930ad76a290f74b800c332d1abfad
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/server/util/FastRandom.java
 @@ -0,0 +1,64 @@

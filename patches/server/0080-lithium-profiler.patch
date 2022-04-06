@@ -7,10 +7,10 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index ed5e6232c7fce5ff309009f937f65cba7574eedb..1f193ca8bc0821bb6d01ae6c3914e3e3fb128a60 100644
+index cec2573238f90e103c85fe1468cefd9d76e3ea61..c84d9d4fbfa59eea87021665a707739c7e6e60fd 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -221,6 +221,13 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -216,6 +216,13 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return new Throwable(entity + " Added to world at " + new java.util.Date());
      }
  

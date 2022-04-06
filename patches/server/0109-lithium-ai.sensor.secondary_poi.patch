@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
-index bba08f488acffcce9ae26fe648eb49fe9a2aeec7..8a813596776ce52150e31e8788a96894b42dfdf3 100644
+index bba08f488acffcce9ae26fe648eb49fe9a2aeec7..37e19ce6b8eccc0463f0b35404b83d1ff8fb4632 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/sensing/SecondaryPoiSensor.java
 @@ -22,6 +22,12 @@ public class SecondaryPoiSensor extends Sensor<Villager> {

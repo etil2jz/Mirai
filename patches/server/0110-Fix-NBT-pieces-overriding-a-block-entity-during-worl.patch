@@ -6,7 +6,7 @@ Subject: [PATCH] Fix NBT pieces overriding a block entity during worldgen
 
 
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate.java b/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate.java
-index c5827e4d870a0bba483649d54cae23072eab2b18..332d080ad722a0252d2ae8eb83f7697c1323b4ce 100644
+index c5827e4d870a0bba483649d54cae23072eab2b18..9344d1f99d951b6e07846851bbaee7a247c7be05 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate.java
 @@ -265,7 +265,11 @@ public class StructureTemplate {

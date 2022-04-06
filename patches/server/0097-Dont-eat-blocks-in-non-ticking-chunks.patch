@@ -20,7 +20,7 @@ index 0ab662448c24ba1d3c697f8096f03c88dd622e77..f69ed1e35d141909a2f1117233a22f28
          // tested and confirmed via System.nanoTime()
          com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> playersInRange = reducedRange ? playerchunk.playersInMobSpawnRange : playerchunk.playersInChunkTickRange;
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
-index 14ed3f0524773e22a792efb8b41a9217bad50f27..47d3a88feae2e14d31da9b3ae7f65d07cfb0c840 100644
+index 99044ebe2c37ce951566e3463ddbfaeec46d2b3c..17cf979d88980746abe17fd3baf76fd106c18823 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
 @@ -32,6 +32,12 @@ public class EatBlockGoal extends Goal {
