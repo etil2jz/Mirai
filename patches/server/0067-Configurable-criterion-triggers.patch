@@ -9,10 +9,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 8ebdcef7afc2c99f8b111151a60f133c3d65ff94..6ef472066bec42be8393a750f0623928ab6e1e4b 100644
+index 5f3297250d544b58ef39154c1c94a1fc29e942fb..27b58d996899a714612ec44c601dab4a738b65b4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -614,7 +614,7 @@ public class ServerPlayer extends Player {
+@@ -615,7 +615,7 @@ public class ServerPlayer extends Player {
  
      @Override
      protected void onInsideBlock(BlockState state) {
@@ -21,7 +21,7 @@ index 8ebdcef7afc2c99f8b111151a60f133c3d65ff94..6ef472066bec42be8393a750f0623928
      }
  
      @Override
-@@ -660,7 +660,7 @@ public class ServerPlayer extends Player {
+@@ -661,7 +661,7 @@ public class ServerPlayer extends Player {
              }
          }
  
@@ -30,7 +30,7 @@ index 8ebdcef7afc2c99f8b111151a60f133c3d65ff94..6ef472066bec42be8393a750f0623928
          if (this.levitationStartPos != null) {
              CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
          }
-@@ -745,9 +745,7 @@ public class ServerPlayer extends Player {
+@@ -746,9 +746,7 @@ public class ServerPlayer extends Player {
                  this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
              }
  
@@ -39,7 +39,7 @@ index 8ebdcef7afc2c99f8b111151a60f133c3d65ff94..6ef472066bec42be8393a750f0623928
 -            }
 +            if (wtf.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) CriteriaTriggers.LOCATION.trigger(this); // Mirai
  
-             // CraftBukkit start - initialize oldLevel and fire PlayerLevelChangeEvent
+             // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 76170843952973653e2d5c538813c4caf8f40000..17cf2fa8c1a27863aa95970aa889fc31f21364ae 100644

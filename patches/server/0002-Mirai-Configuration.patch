@@ -26,10 +26,10 @@ index 119989e11c2e11aceaddec507f15d0260fba648a..59733465af83a95cb15bbe3ba3fb89b7
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setResourcePack(dedicatedserverproperties.resourcePack, this.getPackHash());
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 66c9eafb91a95c5987b206a70824a3ff4d0a1ed3..94c60dd6754176900ae88296e24a55881dc718fe 100644
+index 2ed3995f2836f6479831b6265ff837edbaeaaf3f..dc2fdff77abcc35cdfa3f60e22d34cee6c952992 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -956,6 +956,7 @@ public final class CraftServer implements Server {
+@@ -957,6 +957,7 @@ public final class CraftServer implements Server {
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
          org.purpurmc.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // Purpur

@@ -344,10 +344,10 @@ index 40b0380aa6fd052bf6376a15939c08e603f2f60c..f6b8df3493a902c1b8d0d5fe81d593f6
  
          i = Mth.clamp(i, (int) 0, (int) 15);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index ab64f85de0051fdd4ff2eaa376eeabce2670b466..6cd9e8d8fad896aee958e097ee3d74723cf174c8 100644
+index daff5a9dd98e791b3f1dc898a082ff3e08adc92e..2672786fc481845085812afb759a8870c20da079 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-@@ -236,8 +236,8 @@ public abstract class ChunkGenerator implements BiomeManager.NoiseBiomeSource {
+@@ -244,8 +244,8 @@ public abstract class ChunkGenerator implements BiomeManager.NoiseBiomeSource {
  
              for (int j1 = 0; j1 < j; ++j1) {
                  double d1 = (double) (4 * i + i * i1 * 6) + (random.nextDouble() - 0.5D) * (double) i * 2.5D;

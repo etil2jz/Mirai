@@ -5,10 +5,10 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 5dc4106efefb5400cf5504b225e1e6e5788d14f3..2e2c66670eb5431c0984bc6f6f8ca4f2e815809b 100644
+index 655f4d84a9522b7af5f3fd234d8797758d0171b5..0dc7171c3028b30ef6faff129fb4f0c07533b9c6 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -18,7 +18,7 @@ repositories {
+@@ -9,7 +9,7 @@ plugins {
  }
  
  dependencies {
@@ -17,7 +17,7 @@ index 5dc4106efefb5400cf5504b225e1e6e5788d14f3..2e2c66670eb5431c0984bc6f6f8ca4f2
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -83,13 +83,13 @@ tasks.jar {
+@@ -74,13 +74,13 @@ tasks.jar {
      manifest {
          val git = Git(rootProject.layout.projectDirectory.path)
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
@@ -29,7 +29,7 @@ index 5dc4106efefb5400cf5504b225e1e6e5788d14f3..2e2c66670eb5431c0984bc6f6f8ca4f2
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Purpur-$implementationVersion", // Pufferfish // Purpur
-+            "Implementation-Version" to "git-Mirai-$implementationVersion", // Pufferfish // Purpur // Mirai
++            "Implementation-Version" to "git-Mirai-Purpur-$implementationVersion", // Pufferfish // Purpur // Mirai
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
@@ -82,10 +82,10 @@ index 69917030089f29ca0b26e13b8182c966103e6cd6..b85cb7ebaa31e561c01e1045ec957bfd
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 5a3323c9f21819c597a78803347f8e424ceafb22..0425854a8c7a2cb5ea43a90199f03fc3561e3264 100644
+index b76c09b3472d2ac213973a3d6b3fcd5a494204a6..2ed3995f2836f6479831b6265ff837edbaeaaf3f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
+@@ -249,7 +249,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {

@@ -22,10 +22,10 @@ index 52ec153be9d7177102dd137dfc356e29173f62bd..a941e22417da81ac5ca75e4d315197f3
  
      public static BlockState getBlockDataFromRaw(final long raw) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index eaff8fbe409a88725c799fc63e709ce065ecc555..1336c3c6faebcd87711b09949f9dee82a580fad9 100644
+index e6fc3c75138b66b69def90057bf8580c2c17dc1f..45cfb335c47aa474ae4dde51364f85cbe64f77d9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -899,7 +899,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -888,7 +888,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      continue;
                  }
  
@@ -34,7 +34,7 @@ index eaff8fbe409a88725c799fc63e709ce065ecc555..1336c3c6faebcd87711b09949f9dee82
                  for (int a = 0; a < randomTickSpeed; ++a) {
                      int tickingBlocks = section.tickingList.size();
                      int index = this.randomTickRandom.nextInt(16 * 16 * 16);
-@@ -910,7 +910,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -899,7 +899,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      long raw = section.tickingList.getRaw(index);
                      int location = com.destroystokyo.paper.util.maplist.IBlockDataList.getLocationFromRaw(raw);
                      int randomX = location & 15;
