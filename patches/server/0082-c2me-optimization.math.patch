@@ -9,7 +9,7 @@ Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/C2ME-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
-index d5439c68bb7d3b54e085170e294709c067721207..a569929b596b77bcc1641715166738c6a4a444da 100644
+index d5439c68bb7d3b54e085170e294709c067721207..809dae109043f06fb9a2f1257825ef172b7ac21f 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/ImprovedNoise.java
 @@ -11,6 +11,27 @@ public final class ImprovedNoise {
@@ -92,7 +92,7 @@ index d5439c68bb7d3b54e085170e294709c067721207..a569929b596b77bcc1641715166738c6
  
      public double noiseWithDerivative(double x, double y, double z, double[] ds) {
          double d = x + this.xo;
-@@ -84,26 +109,75 @@ public final class ImprovedNoise {
+@@ -84,26 +109,76 @@ public final class ImprovedNoise {
          return this.p[hash & 255] & 255;
      }
  
@@ -126,8 +126,8 @@ index d5439c68bb7d3b54e085170e294709c067721207..a569929b596b77bcc1641715166738c6
 +        final int var2 = this.p[var0] & 0xFF;
 +        final int var3 = this.p[var1] & 0xFF;
 +        final int var4 = (var2 + sectionY) & 0xFF;
-+        final int var5 = (var2 + sectionY + 1) & 0xFF;
-+        final int var6 = (var3 + sectionY) & 0xFF;
++        final int var5 = (var3 + sectionY) & 0xFF;
++        final int var6 = (var2 + sectionY + 1) & 0xFF;
 +        final int var7 = (var3 + sectionY + 1) & 0xFF;
 +        final int var8 = this.p[var4] & 0xFF;
 +        final int var9 = this.p[var5] & 0xFF;
@@ -135,12 +135,12 @@ index d5439c68bb7d3b54e085170e294709c067721207..a569929b596b77bcc1641715166738c6
 +        final int var11 = this.p[var7] & 0xFF;
 +
 +        final int var12 = (var8 + sectionZ) & 0xFF;
-+        final int var13 = (var10 + sectionZ) & 0xFF;
-+        final int var14 = (var9 + sectionZ) & 0xFF;
++        final int var13 = (var9 + sectionZ) & 0xFF;
++        final int var14 = (var10 + sectionZ) & 0xFF;
 +        final int var15 = (var11 + sectionZ) & 0xFF;
 +        final int var16 = (var8 + sectionZ + 1) & 0xFF;
-+        final int var17 = (var10 + sectionZ + 1) & 0xFF;
-+        final int var18 = (var9 + sectionZ + 1) & 0xFF;
++        final int var17 = (var9 + sectionZ + 1) & 0xFF;
++        final int var18 = (var10 + sectionZ + 1) & 0xFF;
 +        final int var19 = (var11 + sectionZ + 1) & 0xFF;
 +        final int var20 = (this.p[var12] & 15) << 2;
 +        final int var21 = (this.p[var13] & 15) << 2;
@@ -175,8 +175,9 @@ index d5439c68bb7d3b54e085170e294709c067721207..a569929b596b77bcc1641715166738c6
 +        final double var113 = var87 + var101 * (var88 - var87);
 +        final double var114 = var93 + var101 * (var94 - var93);
 +        final double var115 = var91 + var101 * (var92 - var91);
++        final double var116 = var89 + var101 * (var90 - var89);
 +        final double var117 = var114 - var115;
-+        final double var118 = var102 * (var89 + var101 * (var90 - var89) - var113);
++        final double var118 = var102 * (var116 - var113);
 +        final double var119 = var102 * var117;
 +        final double var120 = var113 + var118;
 +        final double var121 = var115 + var119;

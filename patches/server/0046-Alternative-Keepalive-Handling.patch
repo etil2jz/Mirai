@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 817ba5872c88a3ef693bb604122b8c2147f7a57a..cccdde5c35eebaadd053f9b92501db980bcc2ae2 100644
+index 2558645719533b773f3bfc2afa1c0b780e2198fb..cb4cc9f00fad68fc8e9aa9c109cdca036b7082de 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -227,6 +227,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -40,7 +40,7 @@ index 817ba5872c88a3ef693bb604122b8c2147f7a57a..cccdde5c35eebaadd053f9b92501db98
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
-@@ -3131,6 +3147,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3136,6 +3152,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
  
      @Override
      public void handleKeepAlive(ServerboundKeepAlivePacket packet) {

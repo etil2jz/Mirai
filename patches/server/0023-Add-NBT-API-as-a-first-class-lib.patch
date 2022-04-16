@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index f1721d66b158e592c49942380f32cc7c00daa979..fd9c67c5f8fdf8f5d55be257f06335a71cfa5746 100644
+index 58f3c015bfcb6e24da58f4c4e9a312928a3ff373..88bbbb083f5c3a1c8e4de7ced7d34ea38c86a5e6 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -113,6 +113,7 @@ relocation {
+@@ -104,6 +104,7 @@ relocation {
      relocate("org.bukkit.craftbukkit" to "org.bukkit.craftbukkit.v$packageVersion") {
          exclude("org.bukkit.craftbukkit.Main*")
      }

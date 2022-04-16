@@ -5,10 +5,10 @@ Subject: [PATCH] Use faster random implementation
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 6c8c5b72cf8dbefa35e2d95088db8eacb0c227d4..f7a7d2853064b32e9b05991a471c98ffb88241b3 100644
+index 88bbbb083f5c3a1c8e4de7ced7d34ea38c86a5e6..3394e5266c69a28238b2cca1b515bc207ba0c54f 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -40,6 +40,7 @@ dependencies {
+@@ -31,6 +31,7 @@ dependencies {
      implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.1") // Paper
      implementation("org.ow2.asm:asm:9.2")
      implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation

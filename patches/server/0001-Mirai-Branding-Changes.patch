@@ -5,10 +5,10 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 3fe815647ff89d463137aff3cb08d2276dbbf827..0325ef099336cb6fab425eea6573a17f09ceb25c 100644
+index 9521971e9e597834e785b36d1657064dc1621b9b..58f3c015bfcb6e24da58f4c4e9a312928a3ff373 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -18,7 +18,7 @@ repositories {
+@@ -9,7 +9,7 @@ plugins {
  }
  
  dependencies {
@@ -17,7 +17,7 @@ index 3fe815647ff89d463137aff3cb08d2276dbbf827..0325ef099336cb6fab425eea6573a17f
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -81,13 +81,13 @@ tasks.jar {
+@@ -72,13 +72,13 @@ tasks.jar {
      manifest {
          val git = Git(rootProject.layout.projectDirectory.path)
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
@@ -82,10 +82,10 @@ index 371b0f95b23d67c9913875a3dd7888e722551f18..7ba86703433322e2b166cc263cedd6e7
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 22dc604b42b068ca7b5cbf7d3920a4696c96ad34..5d53e5905e89da69a8284db00acd08d3a11d4168 100644
+index cca4ae47f80c45e64b4e0915d938e6e394a39b8e..fd4d672eeb8bcedae0965d883fde52cfb8d1e9b4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
+@@ -249,7 +249,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -122,7 +122,7 @@ index 80553face9c70c2a3d897681e7761df85b22d464..4c7515fa391ee9b631cb9cd3da67b50a
          if (stream != null) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1e6c7d6188f4f1970b2b069a62658432d4f3d958
+index 0000000000000000000000000000000000000000..2a7ea9e238be3a253d560ebcacc433258ea636d9
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
 @@ -0,0 +1,112 @@

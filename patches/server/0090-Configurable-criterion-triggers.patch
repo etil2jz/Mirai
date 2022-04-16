@@ -9,37 +9,37 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index f2b1284b95bb59e49072751898b677304cc5b13e..777833d95c11540924f456c8c60d4e3f907b3aa4 100644
+index 1916d59df127d73f85e1b4a268198b27dcab14d6..238feee189cfcab05dc0c4e6a835d05c51dd4f17 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -605,7 +605,7 @@ public class ServerPlayer extends Player {
+@@ -606,7 +606,7 @@ public class ServerPlayer extends Player {
  
      @Override
      protected void onInsideBlock(BlockState state) {
 -        CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
-+        if (wtf.etil.mirai.MiraiConfig.criterionTriggerEnterBlock) { CriteriaTriggers.ENTER_BLOCK.trigger(this, state); } // Mirai
++        if (wtf.etil.mirai.MiraiConfig.criterionTriggerEnterBlock) CriteriaTriggers.ENTER_BLOCK.trigger(this, state); // Mirai
      }
  
      @Override
-@@ -651,7 +651,7 @@ public class ServerPlayer extends Player {
+@@ -652,7 +652,7 @@ public class ServerPlayer extends Player {
              }
          }
  
 -        CriteriaTriggers.TICK.trigger(this);
-+        if (wtf.etil.mirai.MiraiConfig.criterionTriggerTick) { CriteriaTriggers.TICK.trigger(this); } // Mirai
++        if (wtf.etil.mirai.MiraiConfig.criterionTriggerTick) CriteriaTriggers.TICK.trigger(this); // Mirai
          if (this.levitationStartPos != null) {
              CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
          }
-@@ -727,9 +727,7 @@ public class ServerPlayer extends Player {
+@@ -728,9 +728,7 @@ public class ServerPlayer extends Player {
                  this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
              }
  
 -            if (this.tickCount % 20 == 0) {
 -                CriteriaTriggers.LOCATION.trigger(this);
 -            }
-+            if (wtf.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) { CriteriaTriggers.LOCATION.trigger(this); } // Mirai
++            if (wtf.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) CriteriaTriggers.LOCATION.trigger(this); // Mirai
  
-             // CraftBukkit start - initialize oldLevel and fire PlayerLevelChangeEvent
+             // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 9a63217add77a9121a70c4459dbdc2f3b16b489c..35e7da12b3c5aafe4ed68b9c80a83c3151a8ca86 100644

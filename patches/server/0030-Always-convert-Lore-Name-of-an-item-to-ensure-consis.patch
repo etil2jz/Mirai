@@ -42,7 +42,7 @@ index 6d292e3e10351d26fec3bfe7a360481137709959..0cf1ba9d16225ca74563a07c9d60154d
          return net.minecraft.nbt.StringTag.valueOf(org.bukkit.craftbukkit.util.CraftChatMessage.toJSON(component));
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 3b0341fecee0d122d2ddf358bc615daae1c58f8b..36df6872314774ed78f7d3a0a17d1f68dffa7db0 100644
+index 1fe46049cc33c24db04fbfcde36ab275c03177bf..cbab696240a41ce68ad66291456cb88564b8d036 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -687,7 +687,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
@@ -72,7 +72,7 @@ index 3b0341fecee0d122d2ddf358bc615daae1c58f8b..36df6872314774ed78f7d3a0a17d1f68
      }
  
      // Paper start
-@@ -1547,7 +1547,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -1554,7 +1554,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
                  if (possiblyJsonInput) {
                      addTo.add(CraftChatMessage.fromJSONOrStringToJSON(entry));
                  } else {

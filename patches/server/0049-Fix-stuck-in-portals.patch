@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index c9a9e0614239a566b9bb7e728b94e65713550a2d..1c193394fac9f3f6d2b8e64a30abd3a0fcc34ca4 100644
+index 3d0a8dfa12a4a9a24ef19ec2cbfc75a60c698915..d74055592e6684df0250546b1456631b55b3da78 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1140,6 +1140,7 @@ public class ServerPlayer extends Player {
+@@ -1145,6 +1145,7 @@ public class ServerPlayer extends Player {
                  playerlist.sendPlayerPermissionLevel(this);
                  worldserver1.removePlayerImmediately(this, Entity.RemovalReason.CHANGED_DIMENSION);
                  this.unsetRemoved();
