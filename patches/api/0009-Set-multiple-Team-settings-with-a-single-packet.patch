@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Thu, 7 Apr 2022 16:35:36 -0500
+Subject: [PATCH] Set multiple Team settings with a single packet
+
+Original license: MIT
+Original project: https://github.com/Cryptite/Slice
+
+diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
+index de53b5fced3b825ab4b3626330b981b9c43898d4..52be3b2766e75c5175d5025ba61265e1c110571e 100644
+--- a/src/main/java/org/bukkit/scoreboard/Team.java
++++ b/src/main/java/org/bukkit/scoreboard/Team.java
+@@ -525,6 +525,24 @@ public interface Team {
+     boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
+     // Paper end
+ 
++    // Slice start
++    /**
++     * Fully set all team options, combining all 5 options into one packet send, rather than one packet sent
++     * for every single option change.
++     * @param displayName New display name
++     * @param prefix New prefix
++     * @param suffix New suffix
++     * @param color new color
++     * @param options A Paired list of options
++     * @throws IllegalStateException
++     */
++    void teamOptions(net.kyori.adventure.text.Component displayName,
++                     net.kyori.adventure.text.Component prefix,
++                     net.kyori.adventure.text.Component suffix,
++                     net.kyori.adventure.text.format.TextColor color,
++                     java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException;
++    // Slice end
++
+     /**
+      * Represents an option which may be applied to this team.
+      */
