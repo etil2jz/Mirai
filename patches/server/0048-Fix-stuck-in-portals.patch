@@ -46,7 +46,7 @@ index ede41bc4ab49065cc06e66189610791cab01b39d..f05dac79dc5a2bfacbe209bb36e13c4f
          loggerSuppressUnrecognizedRecipeErrors = getBoolean("logger.suppress-unrecognized-recipe-errors", loggerSuppressUnrecognizedRecipeErrors);
      }
  
-+    public static boolean playerFixStuckPortal = true;
++    public static boolean playerFixStuckPortal = false;
 +    private static void FixStuckPortal() {
 +        playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", playerFixStuckPortal);
 +    }
