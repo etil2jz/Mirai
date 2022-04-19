@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/GameRules.java b/src/main/java/net/minecraft/world/level/GameRules.java
-index e67d5012bc7af629d05bceb1b1e22162272e17aa..56506919be049a247d83a906b4477bd274033c8c 100644
+index fb2626d2a6babe531dd1849333b119ab36200d80..e22de06aab82896a7c245763e7f3563d3d0912a9 100644
 --- a/src/main/java/net/minecraft/world/level/GameRules.java
 +++ b/src/main/java/net/minecraft/world/level/GameRules.java
 @@ -27,6 +27,7 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;

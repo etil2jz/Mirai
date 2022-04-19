@@ -6,7 +6,7 @@ Subject: [PATCH] PaperPR Stop large look changes from crashing the server
 Taken from https://github.com/PaperMC/Paper/pull/7459
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index d02e26a433f4392dbf83831ab877e6700183834c..8de704cb857b89caeca1bd9d33b80d74211fd04c 100644
+index 293b56de10f72dc9df85950b77b54bcc2082b12c..b3c2ca09027966bc0235fbbf492fc2c46e0f5318 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3037,37 +3037,12 @@ public abstract class LivingEntity extends Entity {

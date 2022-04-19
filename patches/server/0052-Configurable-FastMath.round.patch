@@ -144,7 +144,7 @@ index fac8a67dd8ee3894909504df8c0910f8180d6c35..ee0022c78a87ac513837fd74c90e7166
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index f5b8e1b500da10cd0446abf82fa00a264c7f36cf..c74a0874321f32059035f6181b6c7a8d13f23759 100644
+index 9c0197d1aee122a28a34467ead80b04635a29cc7..679bdb1b442181a1638781bf48d7251d2835802a 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1506,7 +1506,7 @@ public abstract class LivingEntity extends Entity {

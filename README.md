@@ -13,11 +13,9 @@
 
 - **Fork of [Purpur](https://github.com/PurpurMC/Purpur)** with [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) patches for the best performance.
 - **Contains [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
-- **Integrates [Hydrogen](https://github.com/CaffeineMC/hydrogen-fabric)** which reduces memory consumption.
 - **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
 - **(WIP) Implements [C2ME](https://github.com/RelativityMC/C2ME-fabric)** to improve chunk generation speed, I/O and loading.
 - **Reduced bandwidth consumption and CPU usage** from avoiding sending useless packets in certain situations.
-- **New NBT cache** which reduces a lot of I/O operations from the main thread while preserving correct data.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
 - **Login location** hiding feature, which adds another security layer in the logs for admins.
 - **Toggleable metrics**, no one can collect data, not even us.
@@ -29,7 +27,7 @@
 The latest JAR file can be downloaded here:
 [Mirai-Purpur-1.18.2-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/purpur-build/1.18.2/Mirai-Purpur-1.18.2-R0.1-SNAPSHOT.jar)
 
-**Please note Java 17 is required.**
+**Please note Java >=17 is required.**
 
 You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!

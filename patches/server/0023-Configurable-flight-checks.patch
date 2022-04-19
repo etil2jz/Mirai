@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 4e298ff87da36f0c09f8d83b2b95f7585f41f14a..fbd27a05ba443b176d1f48b7039fbf0cffb6dba6 100644
+index f32474bec7a4b32808291abb26b0193061ab78be..8304ff58b4622161a70f139db7b99259935aa90b 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -331,7 +331,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser

@@ -283,10 +283,10 @@ index e32e3377ef756f59b1a25404d9fe09c8cd8224d5..3520a8ed4e4217d73e4e7f8556ab3b59
          sensorTickRates = loadTickRates("sensor");
          behaviorTickRates = loadTickRates("behavior");
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 56330536c52fa327ef89d7a08e72557c6633c8bb..81f5b86292fc14feb5e9d0ee83998c354196e285 100644
+index bd01a39767f65d959060b890afe7f9d8d426d70a..f1f3c0a7f09799a469173c5c8670aa501accbe61 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -211,8 +211,8 @@ public class PufferfishConfig {
+@@ -213,8 +213,8 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerTick;
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
