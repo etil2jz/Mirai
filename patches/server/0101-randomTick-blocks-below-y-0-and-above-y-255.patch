@@ -22,7 +22,7 @@ index 52ec153be9d7177102dd137dfc356e29173f62bd..a941e22417da81ac5ca75e4d315197f3
  
      public static BlockState getBlockDataFromRaw(final long raw) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index c84d9d4fbfa59eea87021665a707739c7e6e60fd..a7f2f146ed97a977e2e3c790f499b8c7f441bec0 100644
+index 08e6ddd05f6f1303c3fa96dd8e36b7082f4afa55..e7b00ecc0828597fa8255cf546896a0cc6c20548 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -840,7 +840,7 @@ public class ServerLevel extends Level implements WorldGenLevel {

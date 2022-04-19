@@ -42,7 +42,7 @@ index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e29
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index d0b6b17b8edf80b1c0ca60b8f9eb4f9fb18ca159..c8474d7a7a75f18a78f3b3a63dd980d10da09660 100644
+index f8864424aae4ec071658e04a9296247eefa71743..36ca5eac106524edcd00c1523ec33cc3c4dbc077 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -725,12 +725,12 @@ public class PaperCommand extends Command {
@@ -358,7 +358,7 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..4813bd6de894d0566e8631d8c71915c3
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 42e13923dd00cfcc95280b17a79a11d1567bcd6a..1ba057cbd0ec23cd7ef3d3d1c7685f44cfe34eec 100644
+index bac7a4e5b03e07ef53e126504693df0694696306..9a63217add77a9121a70c4459dbdc2f3b16b489c 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -242,4 +242,9 @@ public class MiraiConfig {

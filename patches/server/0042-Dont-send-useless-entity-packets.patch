@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 5c457f0e3906685dc7e386b2a94a6a27e4139668..bc72c4e07fe5ca1cb114dfc969b9e52dcbff0491 100644
+index 44560edcf339c1749b9df78e6e57075499d5813d..2d7e884d25f352e0a05e9aefb0ff6e296e73c361 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -190,6 +190,7 @@ public class ServerEntity {

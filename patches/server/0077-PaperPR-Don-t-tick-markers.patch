@@ -9,7 +9,7 @@ list is only used in the tick and tickPassenger methods, so we can safely not ad
 markers to it.
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index c8474d7a7a75f18a78f3b3a63dd980d10da09660..e556ccc6c586f48254b3fe8bb0f52b9a083fbc89 100644
+index 36ca5eac106524edcd00c1523ec33cc3c4dbc077..4ac91d601dd7e37b3455360b3b41b73cd66624df 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -614,7 +614,7 @@ public class PaperCommand extends Command {
@@ -22,7 +22,7 @@ index c8474d7a7a75f18a78f3b3a63dd980d10da09660..e556ccc6c586f48254b3fe8bb0f52b9a
                      }
                  });
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 4f48322fd81093d09d1b3e143475e16ec000f55d..cec2573238f90e103c85fe1468cefd9d76e3ea61 100644
+index 847198322d61e188523893d3bb020835287762d3..3bf8e24468554e4859ec5e2d74850409402528b6 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -2433,6 +2433,7 @@ public class ServerLevel extends Level implements WorldGenLevel {

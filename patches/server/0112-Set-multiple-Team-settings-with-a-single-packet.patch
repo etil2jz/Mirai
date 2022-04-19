@@ -7,7 +7,7 @@ Original license: MIT
 Original project: https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/net/minecraft/world/scores/PlayerTeam.java b/src/main/java/net/minecraft/world/scores/PlayerTeam.java
-index a0d7dcb20f161279d7fb88834df89be0187dcf7e..2c13130d5ab44cf7842779faed53a74d12826128 100644
+index a0d7dcb20f161279d7fb88834df89be0187dcf7e..ad6c8b2bbd1cf2ae16120cb0b02749eaf3f2e032 100644
 --- a/src/main/java/net/minecraft/world/scores/PlayerTeam.java
 +++ b/src/main/java/net/minecraft/world/scores/PlayerTeam.java
 @@ -28,6 +28,7 @@ public class PlayerTeam extends Team {

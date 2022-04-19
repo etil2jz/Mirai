@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable server metrics
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 38bd26b1dff4cb4f71a12b0e84f8133c28024eff..5e58f803d220e13c56f44c846db9af01d94ac974 100644
+index 9f0e4bfed860b7e1dbf73ff188013e235baa46e0..55a55a250a6201db4f76e2240040a8e0f9682ec3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -123,7 +123,7 @@ public class PaperConfig {
@@ -18,7 +18,7 @@ index 38bd26b1dff4cb4f71a12b0e84f8133c28024eff..5e58f803d220e13c56f44c846db9af01
              metricsStarted = true;
          }
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 726c0fdb46619e0e0c57b7b5a65be4270acdd0eb..42e13923dd00cfcc95280b17a79a11d1567bcd6a 100644
+index 726c0fdb46619e0e0c57b7b5a65be4270acdd0eb..bac7a4e5b03e07ef53e126504693df0694696306 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -237,4 +237,9 @@ public class MiraiConfig {
