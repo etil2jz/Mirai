@@ -1,14 +1,8 @@
 name: Build
-on: [ push, pull_request ]
+on: push
 jobs:
   build:
-    # Only run on PRs if the source branch is on someone else's repo
-    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: true
     steps:
       - name: Checkout Git Repository
         uses: actions/checkout@v2.4.0
@@ -20,6 +14,7 @@ jobs:
           version: 'latest'
           java-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: 1.18.2"
       - name: Pull Gradle Cache
         uses: actions/cache@v3.0.1
         id: gradle-cache
@@ -41,14 +36,12 @@ jobs:
         with:
           name: Mirai-1.18.2
           path: build/libs/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar
-      - name: Prepare Github Page Files
-        run: |
-          mkdir -p public
-          cp build/libs/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar public/Mirai-1.18.2-R0.1-SNAPSHOT.jar
-      - name: Deploy to Github Pages
-        if: github.event_name != 'pull_request'
-        uses: peaceiris/actions-gh-pages@v3.8.0
+      - name: Release
+        if: github.ref_name == 'ver/1.18.2'
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: build/1.18.2
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: '1.18.2'
+          prerelease: false
+          title: 'Mirai 1.18.2'
+          files: build/libs/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar
