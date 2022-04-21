@@ -11,17 +11,17 @@ Original project: https://github.com/RelativityMC/C2ME-fabric (Yarn mappings)
 Copyright (c) 2021-2022 ishland
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java b/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
-index 954e141e5617d6d52e2f3008c25fe9e2fe2f0f9a..05520be9696ee2a400735a69ed1151bebcf6e3c7 100644
+index 954e141e5617d6d52e2f3008c25fe9e2fe2f0f9a..f760f598e9fd4c2a72059334ff7ea5dbdee37696 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
-@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
- import com.mojang.datafixers.util.Either;
- import it.unimi.dsi.fastutil.ints.IntArrayList;
- import it.unimi.dsi.fastutil.ints.IntList;
+@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
+ import net.minecraft.world.level.levelgen.Heightmap;
+ import net.minecraft.world.level.levelgen.blending.Blender;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 +import java.util.ArrayList; // Mirai - c2me: worldgen vanilla bugs fixes
- import java.util.Collections;
- import java.util.EnumSet;
- import java.util.List;
+ 
+ public class ChunkStatus {
+ 
 @@ -170,7 +171,7 @@ public class ChunkStatus {
      }, (chunkstatus, worldserver, definedstructuremanager, lightenginethreaded, function, ichunkaccess) -> {
          return (CompletableFuture) function.apply(ichunkaccess);
@@ -45,142 +45,49 @@ index 954e141e5617d6d52e2f3008c25fe9e2fe2f0f9a..05520be9696ee2a400735a69ed1151be
 +    // Mirai end
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java b/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
-index 327f723e8f9e482cdaed4b77fdb4c3b5bc5a4a54..94bc393a388c632fad2e1b845e36790a37c8feb3 100644
+index 327f723e8f9e482cdaed4b77fdb4c3b5bc5a4a54..4e58c9700b2fb3cd30f5b3b6cc30ba11db88502a 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
-@@ -1,71 +1,101 @@
--package net.minecraft.world.level.levelgen.placement;
--
--import com.mojang.serialization.Codec;
--import com.mojang.serialization.codecs.RecordCodecBuilder;
--import java.util.List;
--import java.util.Optional;
--import java.util.Random;
--import java.util.stream.Stream;
--import net.minecraft.core.BlockPos;
--import net.minecraft.core.Holder;
--import net.minecraft.core.HolderSet;
--import net.minecraft.core.Registry;
--import net.minecraft.core.RegistryCodecs;
--import net.minecraft.resources.RegistryFileCodec;
--import net.minecraft.world.level.WorldGenLevel;
--import net.minecraft.world.level.chunk.ChunkGenerator;
--import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
--import org.apache.commons.lang3.mutable.MutableBoolean;
--
--public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> placement) {
--    public static final Codec<PlacedFeature> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
--        return instance.group(ConfiguredFeature.CODEC.fieldOf("feature").forGetter((placedFeature) -> {
--            return placedFeature.feature;
--        }), PlacementModifier.CODEC.listOf().fieldOf("placement").forGetter((placedFeature) -> {
--            return placedFeature.placement;
--        })).apply(instance, PlacedFeature::new);
--    });
--    public static final Codec<Holder<PlacedFeature>> CODEC = RegistryFileCodec.create(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC);
--    public static final Codec<HolderSet<PlacedFeature>> LIST_CODEC = RegistryCodecs.homogeneousList(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC);
--    public static final Codec<List<HolderSet<PlacedFeature>>> LIST_OF_LISTS_CODEC = RegistryCodecs.homogeneousList(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC, true).listOf();
--
--    public boolean place(WorldGenLevel world, ChunkGenerator generator, Random random, BlockPos pos) {
--        return this.placeWithContext(new PlacementContext(world, generator, Optional.empty()), random, pos);
--    }
--
--    public boolean placeWithBiomeCheck(WorldGenLevel world, ChunkGenerator generator, Random random, BlockPos pos) {
--        return this.placeWithContext(new PlacementContext(world, generator, Optional.of(this)), random, pos);
--    }
--
--    private boolean placeWithContext(PlacementContext context, Random random, BlockPos pos) {
--        Stream<BlockPos> stream = Stream.of(pos);
--
--        for(PlacementModifier placementModifier : this.placement) {
--            stream = stream.flatMap((posx) -> {
--                return placementModifier.getPositions(context, random, posx);
--            });
--        }
--
--        ConfiguredFeature<?, ?> configuredFeature = this.feature.value();
--        MutableBoolean mutableBoolean = new MutableBoolean();
--        stream.forEach((blockPos) -> {
--            if (configuredFeature.place(context.getLevel(), context.generator(), random, blockPos)) {
--                mutableBoolean.setTrue();
--            }
--
--        });
--        return mutableBoolean.isTrue();
--    }
--
--    public Stream<ConfiguredFeature<?, ?>> getFeatures() {
--        return this.feature.value().getFeatures();
--    }
--
--    @Override
--    public String toString() {
--        return "Placed " + this.feature;
--    }
--
--    static record test(int a) {
--    }
--}
-+package net.minecraft.world.level.levelgen.placement;
-+
-+import com.mojang.serialization.Codec;
-+import com.mojang.serialization.codecs.RecordCodecBuilder;
-+import java.util.List;
-+import java.util.Optional;
-+import java.util.Random;
-+import java.util.stream.Stream;
-+import net.minecraft.core.BlockPos;
-+import net.minecraft.core.Holder;
-+import net.minecraft.core.HolderSet;
-+import net.minecraft.core.Registry;
-+import net.minecraft.core.RegistryCodecs;
-+import net.minecraft.resources.RegistryFileCodec;
-+import net.minecraft.world.level.WorldGenLevel;
-+import net.minecraft.world.level.chunk.ChunkGenerator;
-+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-+import org.apache.commons.lang3.mutable.MutableBoolean;
+@@ -16,8 +16,15 @@ import net.minecraft.world.level.WorldGenLevel;
+ import net.minecraft.world.level.chunk.ChunkGenerator;
+ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+ import org.apache.commons.lang3.mutable.MutableBoolean;
 +// Mirai start - c2me: worldgen vanilla bugs fixes
 +import com.mojang.logging.LogUtils;
 +import org.slf4j.Logger;
 +// Mirai end
-+
-+public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> placement) {
+ 
+ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> placement) {
 +
 +    private static final Logger LOGGER = LogUtils.getLogger(); // Mirai - c2me: worldgen vanilla bugs fixes
 +
-+    public static final Codec<PlacedFeature> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
-+        return instance.group(ConfiguredFeature.CODEC.fieldOf("feature").forGetter((placedFeature) -> {
-+            return placedFeature.feature;
-+        }), PlacementModifier.CODEC.listOf().fieldOf("placement").forGetter((placedFeature) -> {
-+            return placedFeature.placement;
-+        })).apply(instance, PlacedFeature::new);
-+    });
-+    public static final Codec<Holder<PlacedFeature>> CODEC = RegistryFileCodec.create(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC);
-+    public static final Codec<HolderSet<PlacedFeature>> LIST_CODEC = RegistryCodecs.homogeneousList(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC);
-+    public static final Codec<List<HolderSet<PlacedFeature>>> LIST_OF_LISTS_CODEC = RegistryCodecs.homogeneousList(Registry.PLACED_FEATURE_REGISTRY, DIRECT_CODEC, true).listOf();
-+
-+    public boolean place(WorldGenLevel world, ChunkGenerator generator, Random random, BlockPos pos) {
-+        return this.placeWithContext(new PlacementContext(world, generator, Optional.empty()), random, pos);
-+    }
-+
-+    public boolean placeWithBiomeCheck(WorldGenLevel world, ChunkGenerator generator, Random random, BlockPos pos) {
-+        return this.placeWithContext(new PlacementContext(world, generator, Optional.of(this)), random, pos);
-+    }
-+
+     public static final Codec<PlacedFeature> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
+         return instance.group(ConfiguredFeature.CODEC.fieldOf("feature").forGetter((placedFeature) -> {
+             return placedFeature.feature;
+@@ -37,25 +44,48 @@ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<Placem
+         return this.placeWithContext(new PlacementContext(world, generator, Optional.of(this)), random, pos);
+     }
+ 
 +    // Mirai start - c2me: worldgen vanilla bugs fixes
 +    /**
 +     * @author ishland
 +     * @reason retry when stream fails
 +     */
-+    private boolean placeWithContext(PlacementContext context, Random random, BlockPos pos) {
+     private boolean placeWithContext(PlacementContext context, Random random, BlockPos pos) {
+-        Stream<BlockPos> stream = Stream.of(pos);
 +        Stream<BlockPos> stream;
-+        for (int retries = 1; ; retries ++) {
++        for (int retries = 1; ; retries++) {
 +            try {
 +                stream = Stream.of(pos);
 +
-+                for(PlacementModifier placementModifier : this.placement) {
++                for (PlacementModifier placementModifier : this.placement) {
 +                    stream = stream.flatMap(posx -> placementModifier.getPositions(context, random, posx));
 +                }
-+
+ 
+-        for(PlacementModifier placementModifier : this.placement) {
+-            stream = stream.flatMap((posx) -> {
+-                return placementModifier.getPositions(context, random, posx);
+-            });
 +                break;
 +            } catch (IllegalStateException e) {
 +                if (e.getMessage().equals("stream has already been operated upon or closed")) {
@@ -192,32 +99,36 @@ index 327f723e8f9e482cdaed4b77fdb4c3b5bc5a4a54..94bc393a388c632fad2e1b845e36790a
 +                    e.printStackTrace();
 +                }
 +            }
-+        }
-+
-+        ConfiguredFeature<?, ?> configuredFeature = this.feature.value();
+         }
+ 
+         ConfiguredFeature<?, ?> configuredFeature = this.feature.value();
+-        MutableBoolean mutableBoolean = new MutableBoolean();
+-        stream.forEach((blockPos) -> {
 +        if (configuredFeature == null) {
 +            LOGGER.error("NULL configuredFeature in PlacedFeature {}", this, new Throwable());
 +            return false;
 +        }
 +        MutableBoolean placementModifier = new MutableBoolean();
 +        stream.forEach(blockPos -> {
-+            if (configuredFeature.place(context.getLevel(), context.generator(), random, blockPos)) {
+             if (configuredFeature.place(context.getLevel(), context.generator(), random, blockPos)) {
+-                mutableBoolean.setTrue();
 +                placementModifier.setTrue();
-+            }
-+
-+        });
+             }
+-
+         });
+-        return mutableBoolean.isTrue();
 +        return placementModifier.isTrue();
-+    }
-+
-+    public Stream<ConfiguredFeature<?, ?>> getFeatures() {
-+        return this.feature.value().getFeatures();
-+    }
-+
-+    @Override
-+    public String toString() {
-+        return "Placed " + this.feature;
-+    }
-+
-+    static record test(int a) {
-+    }
-+}
+     }
++    // Mirai end
+ 
+     public Stream<ConfiguredFeature<?, ?>> getFeatures() {
+         return this.feature.value().getFeatures();
+@@ -66,6 +96,8 @@ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<Placem
+         return "Placed " + this.feature;
+     }
+ 
++    /* // Mirai - what's the point of this?
+     static record test(int a) {
+     }
++    */
+ }
