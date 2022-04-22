@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
-    decompiler("net.minecraftforge:forgeflower:1.5.498.29")
+    decompiler("org.quiltmc:quiltflower:1.8.0")
     paperclip("io.papermc:paperclip:3.0.2")
 }
 
@@ -59,7 +59,7 @@ paperweight {
     serverProject.set(project(":mirai-server"))
 
     remapRepo.set("https://maven.fabricmc.net/")
-    decompileRepo.set("https://files.minecraftforge.net/maven/")
+    decompileRepo.set("https://maven.quiltmc.org/")
 
     useStandardUpstream("pufferfish") {
         url.set(github("pufferfish-gg", "Pufferfish"))
