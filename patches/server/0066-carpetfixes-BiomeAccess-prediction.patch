@@ -1,20 +1,25 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: FX - PR0CESS <fx.e.morin@gmail.com>
-Date: Tue, 21 Dec 2021 17:59:30 +0100
-Subject: [PATCH] lithium: skipping steps in voronoi using prediction
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Fri, 22 Apr 2022 22:44:56 +0200
+Subject: [PATCH] carpetfixes: BiomeAccess prediction
 
-Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
-You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+Author: fxmorin <fx.e.morin@gmail.com>
+
+Original license: MIT
+Original project: https://github.com/fxmorin/carpet-fixes (Yarn mappings)
+
+Copyright (c) 2020 Fx Morin
 
 diff --git a/src/main/java/net/minecraft/world/level/biome/BiomeManager.java b/src/main/java/net/minecraft/world/level/biome/BiomeManager.java
-index dd3f4c2c564be1e9886b5c3ddd9ca1dfd749c028..2adc9db9485b5ed17a17f9e3033e494a813b5aeb 100644
+index dd3f4c2c564be1e9886b5c3ddd9ca1dfd749c028..57b467bcf1561f6b3b42c5e088f71460704804f7 100644
 --- a/src/main/java/net/minecraft/world/level/biome/BiomeManager.java
 +++ b/src/main/java/net/minecraft/world/level/biome/BiomeManager.java
-@@ -28,40 +28,77 @@ public class BiomeManager {
+@@ -28,41 +28,72 @@ public class BiomeManager {
          return new BiomeManager(storage, this.biomeZoomSeed);
      }
  
-+    private static final double maxOffset = 0.4500000001D; // JettPack
++    // Mirai start - carpetfixes: BiomeAccess prediction
++    private static final double maxOffset = 0.4500000001D; // Mirai - carpetfixes: BiomeAccess prediction
      public Holder<Biome> getBiome(BlockPos pos) {
 -        int i = pos.getX() - 2;
 -        int j = pos.getY() - 2;
@@ -42,35 +47,32 @@ index dd3f4c2c564be1e9886b5c3ddd9ca1dfd749c028..2adc9db9485b5ed17a17f9e3033e494a
 -            if (g > v) {
 -                o = p;
 -                g = v;
-+        // JettPack - lithium: skipping steps in voronoi using prediction
 +        int xMinus2 = pos.getX() - 2;
 +        int yMinus2 = pos.getY() - 2;
 +        int zMinus2 = pos.getZ() - 2;
 +        int x = xMinus2 >> 2; // BlockPos to BiomePos
 +        int y = yMinus2 >> 2;
 +        int z = zMinus2 >> 2;
-+        double quartX = (double)(xMinus2 & 3) / 4.0D; // quartLocal divided by 4
-+        double quartY = (double)(yMinus2 & 3) / 4.0D; // 0/4, 1/4, 2/4, 3/4
-+        double quartZ = (double)(zMinus2 & 3) / 4.0D; // [0, 0.25, 0.5, 0.75]
++        double quartX = (double) (xMinus2 & 3) / 4.0D; // quartLocal divided by 4
++        double quartY = (double) (yMinus2 & 3) / 4.0D; // 0/4, 1/4, 2/4, 3/4
++        double quartZ = (double) (zMinus2 & 3) / 4.0D; // [0, 0.25, 0.5, 0.75]
 +        int smallestX = 0;
 +        double smallestDist = Double.POSITIVE_INFINITY;
-+        for(int biomeX = 0; biomeX < 8; ++biomeX) {
++        for (int biomeX = 0; biomeX < 8; ++biomeX) {
 +            boolean everyOtherQuad = (biomeX & 4) == 0; // 1 1 1 1 0 0 0 0
 +            boolean everyOtherPair = (biomeX & 2) == 0; // 1 1 0 0 1 1 0 0
-+            boolean everyOther =     (biomeX & 1) == 0; // 1 0 1 0 1 0 1 0
-+            double quartXX = everyOtherQuad ? quartX : quartX - 1.0D; //[-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75]
++            boolean everyOther = (biomeX & 1) == 0; // 1 0 1 0 1 0 1 0
++            double quartXX = everyOtherQuad ? quartX : quartX - 1.0D; //[-1.0,-0.75,-0.5,-0.25,0.0,0.25,0.5,0.75]
 +            double quartYY = everyOtherPair ? quartY : quartY - 1.0D;
-+            double quartZZ = everyOther     ? quartZ : quartZ - 1.0D;
++            double quartZZ = everyOther ? quartZ : quartZ - 1.0D;
 +
 +            //This code block is new
-+            double maxQuartYY = 0.0D,maxQuartZZ = 0.0D;
++            double maxQuartYY = 0.0D, maxQuartZZ = 0.0D;
 +            if (biomeX != 0) {
 +                maxQuartYY = Mth.square(Math.max(quartYY + maxOffset, Math.abs(quartYY - maxOffset)));
 +                maxQuartZZ = Mth.square(Math.max(quartZZ + maxOffset, Math.abs(quartZZ - maxOffset)));
-+                double maxQuartXX = Mth.square(Math.max(quartXX + maxOffset, Math.abs(quartXX - maxOffset)));
-+                if (smallestDist < maxQuartXX + maxQuartYY + maxQuartZZ) {
-+                    continue;
-+                }
++                double maxQuartXX = Mth.square(Math.max(quartXX + maxOffset,Math.abs(quartXX - maxOffset)));
++                if (smallestDist < maxQuartXX + maxQuartYY + maxQuartZZ) continue;
 +            }
 +
 +            int xx = everyOtherQuad ? x : x + 1;
@@ -86,15 +88,11 @@ index dd3f4c2c564be1e9886b5c3ddd9ca1dfd749c028..2adc9db9485b5ed17a17f9e3033e494a
 +            seed = LinearCongruentialGenerator.next(seed, zz);
 +            double offsetX = getFiddle(seed);
 +            double sqrX = Mth.square(quartXX + offsetX);
-+            if (biomeX != 0 && smallestDist < sqrX + maxQuartYY + maxQuartZZ) {
-+                continue; // skip the rest of the loop
-+            }
++            if (biomeX != 0 && smallestDist < sqrX + maxQuartYY + maxQuartZZ) continue; //skip the rest of the loop
 +            seed = LinearCongruentialGenerator.next(seed, this.biomeZoomSeed);
 +            double offsetY = getFiddle(seed);
 +            double sqrY = Mth.square(quartYY + offsetY);
-+            if (biomeX != 0 && smallestDist < sqrX + sqrY + maxQuartZZ) {
-+                continue; // skip the rest of the loop
-+            }
++            if (biomeX != 0 && smallestDist < sqrX + sqrY + maxQuartZZ) continue; // skip the rest of the loop
 +            seed = LinearCongruentialGenerator.next(seed, this.biomeZoomSeed);
 +            double offsetZ = getFiddle(seed);
 +            double biomeDist = sqrX + sqrY + Mth.square(quartZZ + offsetZ);
@@ -109,12 +107,13 @@ index dd3f4c2c564be1e9886b5c3ddd9ca1dfd749c028..2adc9db9485b5ed17a17f9e3033e494a
 -        int x = (o & 2) == 0 ? m : m + 1;
 -        int y = (o & 1) == 0 ? n : n + 1;
 -        return this.noiseBiomeSource.getNoiseBiome(w, x, y);
-+        //Back to the orignal code
-+        int biomeX = (smallestX & 4) == 0 ? x : x + 1;
-+        int biomeY = (smallestX & 2) == 0 ? y : y + 1;
-+        int biomeZ = (smallestX & 1) == 0 ? z : z + 1;
-+        return this.noiseBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ);
-+        // JettPack end
++        return(this.noiseBiomeSource.getNoiseBiome(
++            (smallestX & 4) == 0 ? x : x + 1,
++            (smallestX & 2) == 0 ? y : y + 1,
++            (smallestX & 1) == 0 ? z : z + 1
++        ));
      }
++    // Mirai end
  
      public Holder<Biome> getNoiseBiomeAtPosition(double x, double y, double z) {
+         int i = QuartPos.fromBlock(Mth.floor(x));
