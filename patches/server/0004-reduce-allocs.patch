@@ -9,7 +9,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 76d27205b2bd08ba2b3530b46f0d9b4e2315d82e..d0b6b17b8edf80b1c0ca60b8f9eb4f9fb18ca159 100644
+index d0c55497040158d959693ef2ddf3ff03bd6df05f..f8864424aae4ec071658e04a9296247eefa71743 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -214,7 +214,7 @@ public class PaperCommand extends Command {
@@ -234,7 +234,7 @@ index 7ba86703433322e2b166cc263cedd6e7310d36a4..26841729126b022f75e55e584fe85077
  
                  ImageIO.write(bufferedimage, "PNG", bytearrayoutputstream);
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 937a93d134dc986fe23e5676d58f7619524b9bf3..5c457f0e3906685dc7e386b2a94a6a27e4139668 100644
+index d52072ab126f2fdee30bb114f3058338edd72fd5..44560edcf339c1749b9df78e6e57075499d5813d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -314,7 +314,7 @@ public class ServerEntity {
@@ -247,7 +247,7 @@ index 937a93d134dc986fe23e5676d58f7619524b9bf3..5c457f0e3906685dc7e386b2a94a6a27
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 1b6d32d8720f66908b9f1b872115fcff081f5378..4f48322fd81093d09d1b3e143475e16ec000f55d 100644
+index c63ee396e990d11e2f613f3b5a478b486076ed56..847198322d61e188523893d3bb020835287762d3 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -850,7 +850,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -269,7 +269,7 @@ index 1b6d32d8720f66908b9f1b872115fcff081f5378..4f48322fd81093d09d1b3e143475e16e
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 5bc9c51cdfd1f9d1f15d0717575899e2f038c95c..737f92266206dc0163488fa76be340ed8cf3947f 100644
+index cc6ba95f01b82c42b4e5a0a70721ef00dd335e57..4d588465faa4c63fe0dc5abbdc06bb7daa5f47b2 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -332,7 +332,7 @@ index befcb501b4b1b6330bf3cd53e00e30b01efade6f..0c4e34c02060c00bdbed6388989660ec
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 02dc93c394d37c9a84aa4a58d80615c403c54fb9..6dd4dc08949b55da7738b5bcc39c7929642db797 100644
+index 188c68d4ae46bc05c6d9c901b5c6ab883fa05ea4..080e7d6cae6d6ca4ea0c98498e30e09884f3d243 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {
@@ -393,7 +393,7 @@ index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 6a31e29bce673e698922da3c3ba8fd4d8b0adedb..02d18c67b7de0fe43e2f71cef3174644f9051466 100644
+index bf896f821b88415691312d5c725ed21bb2e3f024..73a52859c1d9798556c2d34b63c1147d81db8b03 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3032,7 +3032,7 @@ public abstract class LivingEntity extends Entity {
@@ -459,10 +459,10 @@ index ba92be2a63df29cd6eda251f8e56e9ce098d92ac..ed64ee359db734e49a84b10f14d98264
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index dc4639f905fb71435daf29c61f64621a3e2cc533..6d292e3e10351d26fec3bfe7a360481137709959 100644
+index 6837c965592d4584cfc958a1008b98791a0fc780..586ce0bec1ab2a17a3818690e47be23643cd5a48 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -956,7 +956,7 @@ public final class ItemStack {
+@@ -957,7 +957,7 @@ public final class ItemStack {
          int k;
  
          if (ItemStack.shouldShowInTooltip(i, ItemStack.TooltipPart.MODIFIERS)) {

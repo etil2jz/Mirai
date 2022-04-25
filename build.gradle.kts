@@ -4,7 +4,7 @@ plugins {
     java
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("io.papermc.paperweight.patcher") version "1.3.6-SNAPSHOT"
+    id("io.papermc.paperweight.patcher") version "1.3.7-SNAPSHOT"
 }
 
 repositories {
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
+    remapper("net.fabricmc:tiny-remapper:0.8.2:fat")
     decompiler("org.quiltmc:quiltflower:1.8.0")
     paperclip("io.papermc:paperclip:3.0.2")
 }
