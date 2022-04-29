@@ -90,7 +90,7 @@ index b332d9b6c7d5d45c2162d020899945125a1ba743..74b8147d6afa2e6eb3189a3e152493d8
 +    public static final int X_OFFSET = 38; // Mirai - private->public
      // Paper end
  
-     // Purpur start
+     public BlockPos(int x, int y, int z) {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java b/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
 index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..8a7d72caf0a04f00e3045ec157c359bd5280b1ca 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
