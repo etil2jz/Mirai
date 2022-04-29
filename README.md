@@ -25,7 +25,7 @@
 
 ## Downloads
 The latest JAR file can be downloaded here:
-[Mirai-Purpur-1.18.2-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/raw/purpur-build/1.18.2/Mirai-Purpur-1.18.2-R0.1-SNAPSHOT.jar)
+[Mirai-Purpur-1.18.2-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/releases/download/1.18.2-Purpur/mirai-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar)
 
 **Please note Java >=17 is required.**
 
