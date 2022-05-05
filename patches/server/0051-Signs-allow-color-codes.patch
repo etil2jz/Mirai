@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index d74055592e6684df0250546b1456631b55b3da78..1916d59df127d73f85e1b4a268198b27dcab14d6 100644
+index 33333d4542e0b71055d1e4fadf70a0231d3754a5..f7c6efabadf4e9383782225c5c4539f527b273f8 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1465,6 +1465,7 @@ public class ServerPlayer extends Player {
@@ -19,7 +19,7 @@ index d74055592e6684df0250546b1456631b55b3da78..1916d59df127d73f85e1b4a268198b27
          this.connection.send(new ClientboundBlockUpdatePacket(this.level, sign.getBlockPos()));
          this.connection.send(new ClientboundOpenSignEditorPacket(sign.getBlockPos()));
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index cb4cc9f00fad68fc8e9aa9c109cdca036b7082de..d108d7fe028e6894271cfb1f55db4fc2c4e1be3b 100644
+index e7fb8c7c31324f740c8ef33246d221a96b573e4d..44db239a8cf74725d25091b9d3f14a62d581f80d 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -3126,11 +3126,15 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -44,10 +44,10 @@ index cb4cc9f00fad68fc8e9aa9c109cdca036b7082de..d108d7fe028e6894271cfb1f55db4fc2
              SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), this.player.getBukkitEntity(), lines);
              this.cserver.getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 6371176fba41218a209ea59b4cafe5b2d4a685fd..7666bca74f4f68bb4e902ec2eb7c4895adbb9373 100644
+index d5bcc81a809e3c733c6fc11309bcf0913860edf6..96b70ae604695fbe651f8640be5c6d0e1a3109df 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-@@ -184,6 +184,23 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+@@ -186,6 +186,23 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
          return ClientboundBlockEntityDataPacket.create(this);
      }
  
@@ -72,7 +72,7 @@ index 6371176fba41218a209ea59b4cafe5b2d4a685fd..7666bca74f4f68bb4e902ec2eb7c4895
      public CompoundTag getUpdateTag() {
          return this.saveWithoutMetadata();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 1f6c73f15b9a289754d6f8dacad9eda5ff3fd752..726c0fdb46619e0e0c57b7b5a65be4270acdd0eb 100644
+index 6d603db2ad47c91d3c7a4ba6b6e430ad95d18049..9a4b49c6f4a96892fbca94cd6b6203a026c6d66b 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -231,8 +231,10 @@ public class MiraiConfig {

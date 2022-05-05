@@ -7,7 +7,7 @@ Original license: MIT
 Original project: https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..bc195eb01402cc5e0b4592aebdec9a8eb2b2de7f 100644
+index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..46eee49bb149910c01db377c9cc8a96da9ead797 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
 @@ -534,6 +534,24 @@ public interface Team {
@@ -28,7 +28,7 @@ index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..bc195eb01402cc5e0b4592aebdec9a8e
 +    void teamOptions(net.kyori.adventure.text.Component displayName,
 +                     net.kyori.adventure.text.Component prefix,
 +                     net.kyori.adventure.text.Component suffix,
-+                     net.kyori.adventure.text.format.TextColor color,
++                     net.kyori.adventure.text.format.NamedTextColor color,
 +                     java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException;
 +    // Slice end
 +

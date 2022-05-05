@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Thu, 5 May 2022 11:14:27 +0200
+Subject: [PATCH] Fix villagers being hurt by their own fireworks
+
+Villagers can get hit by their own fireworks in rare cases.
+See https://bugs.mojang.com/browse/MC-195326 & https://bugs.mojang.com/browse/MC-233250.
+
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index 63903bd02c6f31d3190a20d106997d4f7b777df8..ff4815ffc55da7ccc1d058098e1cec0768a314c9 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -685,6 +685,14 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+         super.die(source);
+     }
+ 
++    // Mirai start - fix villagers being hurt by their own fireworks
++    @Override
++    public boolean hurt(DamageSource source, float amount) {
++        if (source.isProjectile() && source.isExplosion() && Objects.equals(source.getMsgId(), "fireworks") && source.getEntity() instanceof Villager) return false;
++        return super.hurt(source, amount);
++    }
++    // Mirai end
++
+     public void releaseAllPois() {
+         this.releasePoi(MemoryModuleType.HOME);
+         this.releasePoi(MemoryModuleType.JOB_SITE);

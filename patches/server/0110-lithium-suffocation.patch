@@ -9,10 +9,10 @@ Original license: GNU Lesser General Public License v3.0
 Original project: https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 69a9baef6266445920277b3edc9ea8b12b1ca054..7e253adacfc14030e9149a406f7fc84dcff542c5 100644
+index 69a9baef6266445920277b3edc9ea8b12b1ca054..93eb2f4dac615859db40f3b4f4eb39d7d39f9c57 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2514,39 +2514,57 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2514,39 +2514,64 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return !this.isRemoved();
      }
  
@@ -60,6 +60,12 @@ index 69a9baef6266445920277b3edc9ea8b12b1ca054..7e253adacfc14030e9149a406f7fc84d
 +        int maxZ = Mth.floor(suffocationMaxZ);
 +
 +        Level level = this.level;
++        //skip getting blocks when the entity is outside the world height
++        //also avoids infinite loop with entities below y = Integer.MIN_VALUE (some modded servers do that)
++        if (-64 > maxY || 320 < minY) {
++            return false;
++        }
++
 +        BlockPos.MutableBlockPos blockposition = new BlockPos.MutableBlockPos();
 +        VoxelShape suffocationShape = null;
 +
@@ -72,7 +78,7 @@ index 69a9baef6266445920277b3edc9ea8b12b1ca054..7e253adacfc14030e9149a406f7fc84d
 +                        if (suffocationShape == null) {
 +                            suffocationShape = Shapes.create(new AABB(suffocationMinX, suffocationMinY, suffocationMinZ, suffocationMaxX, suffocationMaxY, suffocationMaxZ));
                          }
--
+ 
 -                        BlockState iblockdata = chunk.getBlockStateFinal(fx, fy, fz);
 -                        blockposition.set(fx, fy, fz);
 -                        if (!iblockdata.isAir() && iblockdata.isSuffocating(this.level, blockposition) && Shapes.joinIsNotEmpty(iblockdata.getCollisionShape(this.level, blockposition).move((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ()), Shapes.create(axisalignedbb), BooleanOp.AND)) {
