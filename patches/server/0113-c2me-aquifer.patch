@@ -69,7 +69,7 @@ index 0000000000000000000000000000000000000000..5e01c7bec91cd415979c0f748e0acf1b
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/core/BlockPos.java b/src/main/java/net/minecraft/core/BlockPos.java
-index b332d9b6c7d5d45c2162d020899945125a1ba743..74b8147d6afa2e6eb3189a3e152493d83df23f67 100644
+index 74bcfc898c73684bc3b2acf1b20941f4ccab052b..a6a6a74d6c832ebbcce26b17c5b00e00f6d6ec61 100644
 --- a/src/main/java/net/minecraft/core/BlockPos.java
 +++ b/src/main/java/net/minecraft/core/BlockPos.java
 @@ -37,14 +37,14 @@ public class BlockPos extends Vec3i {
@@ -92,7 +92,7 @@ index b332d9b6c7d5d45c2162d020899945125a1ba743..74b8147d6afa2e6eb3189a3e152493d8
  
      public BlockPos(int x, int y, int z) {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java b/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
-index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..8a7d72caf0a04f00e3045ec157c359bd5280b1ca 100644
+index 40605f62c4c01a20964167684691a721bc6ef166..d936aed91d58c4476c83de6bb73a630a998fa8c9 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
 @@ -11,6 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
@@ -306,13 +306,6 @@ index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..8a7d72caf0a04f00e3045ec157c359bd
 +                            } else {
 +                                result1 = 2.0;
                              }
--
--                            double ai = similarity(p, q);
--                            if (ai > 0.0D) {
--                                double aj = e * ai * this.calculatePressure(functionContext, mutableDouble, fluidStatus3, fluidStatus4);
--                                if (d + aj > 0.0D) {
--                                    this.shouldScheduleFluidUpdate = false;
--                                    return null;
 +                            double f = e * result1;
 +                            if (d + f > 0.0) {
 +                                this.shouldScheduleFluidUpdate = false;
@@ -367,7 +360,13 @@ index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..8a7d72caf0a04f00e3045ec157c359bd
 +                                        return null;
 +                                    }
 +                                }
-+
+ 
+-                            double ai = similarity(p, q);
+-                            if (ai > 0.0D) {
+-                                double aj = e * ai * this.calculatePressure(functionContext, mutableDouble, fluidStatus3, fluidStatus4);
+-                                if (d + aj > 0.0D) {
+-                                    this.shouldScheduleFluidUpdate = false;
+-                                    return null;
 +                                double h = 1.0 - (double) Math.abs(q - p) / 25.0;
 +                                if (h > 0.0) {
 +                                    double result;
@@ -576,7 +575,7 @@ index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..8a7d72caf0a04f00e3045ec157c359bd
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/LegacyRandomSource.java b/src/main/java/net/minecraft/world/level/levelgen/LegacyRandomSource.java
-index 97c806aba9991a8663ed7b05c108c87f2b167853..2b65db81d39a406e080a7b956058f008d9dee4b3 100644
+index 264058fd8a38b37518386b49d0bde59da0c5d4b7..b18befeb8bcb81ab51f38d96d812bdf5815325c8 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/LegacyRandomSource.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/LegacyRandomSource.java
 @@ -77,5 +77,11 @@ public class LegacyRandomSource implements BitRandomSource {
@@ -592,7 +591,7 @@ index 97c806aba9991a8663ed7b05c108c87f2b167853..2b65db81d39a406e080a7b956058f008
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/SingleThreadedRandomSource.java b/src/main/java/net/minecraft/world/level/levelgen/SingleThreadedRandomSource.java
-index b2989c09928b74b93b1c356c4e9a77887fc589ad..2990e3bc266bcd814cfe0ea8eb865798e25aa169 100644
+index c9c0eaf504f6148575dff074980f19971e8a82d2..abe42ba576561d0647eac6fdf46203dc963462a7 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/SingleThreadedRandomSource.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/SingleThreadedRandomSource.java
 @@ -39,4 +39,10 @@ public class SingleThreadedRandomSource implements BitRandomSource {
@@ -607,7 +606,7 @@ index b2989c09928b74b93b1c356c4e9a77887fc589ad..2990e3bc266bcd814cfe0ea8eb865798
 +    // Mirai end
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/Xoroshiro128PlusPlus.java b/src/main/java/net/minecraft/world/level/levelgen/Xoroshiro128PlusPlus.java
-index e96ac26b6788de1c372152c2a9e3ba11b1b2e132..ccc40303a46f0df98bde29e4453ac1d0d4d447e3 100644
+index 7b9a75d98eedda9a6794e097c20bbb3f95df40a8..7b82f4cedcefdbd924ba6d9665389146e02e4e2e 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/Xoroshiro128PlusPlus.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/Xoroshiro128PlusPlus.java
 @@ -27,4 +27,22 @@ public class Xoroshiro128PlusPlus {
@@ -634,7 +633,7 @@ index e96ac26b6788de1c372152c2a9e3ba11b1b2e132..ccc40303a46f0df98bde29e4453ac1d0
 +    // Mirai end
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/XoroshiroRandomSource.java b/src/main/java/net/minecraft/world/level/levelgen/XoroshiroRandomSource.java
-index b1b007adc22cdef8868202fa2e7265b50e74ab59..8fbe4f80fc4b6449019bf03bfaaa5c2e09ed9129 100644
+index 387928f261af837c47940272e161ebe00f0ee794..6e3f6454b7d5809d5e8569cbcb516f86de6418df 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/XoroshiroRandomSource.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/XoroshiroRandomSource.java
 @@ -99,6 +99,12 @@ public class XoroshiroRandomSource implements RandomSource {
