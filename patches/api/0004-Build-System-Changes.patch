@@ -3,6 +3,8 @@ From: Ben Kerllenevich <ben@omega24.dev>
 Date: Sat, 12 Jun 2021 12:35:38 -0400
 Subject: [PATCH] Build System Changes
 
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/build.gradle.kts b/build.gradle.kts
 index 40020c860dac02cf678987cce78e8d50c105a365..cb0f37378455aecdc4eae69bbc4d61a975b33ad5 100644
