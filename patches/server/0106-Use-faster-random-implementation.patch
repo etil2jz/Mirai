@@ -91,7 +91,7 @@ index 4ba1913dcaa27dfb12257d530f874e79ca4b4b5e..0dfb153c8fa587e366f903e5b1534f65
  
      public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 00c3aa6460eb8e53a1ec36540ef33fbb0c6b988b..69a9baef6266445920277b3edc9ea8b12b1ca054 100644
+index 18a65bac0c84474d9aaaa067d17cd0d092061129..1a0d0fd7d5ca7d6d5b3e0e8e834c206e25882a5d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -181,7 +181,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {

@@ -9,7 +9,7 @@ Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c007fab5d4ef47fb3b8aafd914b41ee8eb85e099..2d4b5920da945422c1bed5487600f0c82612b41a 100644
+index dcc85fc80ab3cc5dff0a99da5ad4fecd1de51b68..12e23a4be37963dbacdfba668b650cddaa5073fa 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -238,6 +238,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -33,7 +33,7 @@ index c007fab5d4ef47fb3b8aafd914b41ee8eb85e099..2d4b5920da945422c1bed5487600f0c8
          // Paper start - detailed watchdog information
          io.papermc.paper.util.TickThread.ensureTickThread("Cannot move an entity off-main");
          synchronized (this.posLock) {
-@@ -3641,6 +3648,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3642,6 +3649,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public final void setBoundingBox(AABB boundingBox) {

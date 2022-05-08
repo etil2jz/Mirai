@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-index e5b8bcfe0d69cc0deecdf54662d553f16550fd2a..73a58fe779105504afea7473d7b6b359592c5d0f 100644
+index 820ddcbc1547e2b9da3475a13d039e0cd8bc2c2a..7339170f85d51c0d3d18533d91530da41d2539d2 100644
 --- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-@@ -127,7 +127,7 @@ public class ItemEntity extends Entity {
+@@ -128,7 +128,7 @@ public class ItemEntity extends Entity {
  
              if (this.level.isClientSide) {
                  this.noPhysics = false;

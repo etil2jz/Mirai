@@ -7,7 +7,7 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 446c0bcf10e0055b94590a7bc784bee8c8686624..1e689ce45527c16b162ee2c24d0e4511d27f27f8 100644
+index dc6eb7ed35b0f6953c1582b0c6251cade08fb1f5..8e9a4acbda62ebea576a354e31f651d216a5d66b 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -855,7 +855,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -21,10 +21,10 @@ index 446c0bcf10e0055b94590a7bc784bee8c8686624..1e689ce45527c16b162ee2c24d0e4511
              try {
                  // CraftBukkit start
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 61590f2f04a797235299f1bd6b78a08f5bfe4a33..d7688e8398792a17329565cf92152285dd9f0ec4 100644
+index 7f83c9390823b42fc30d04e1d3222e2825eaad50..a1231d2347de63db9e607519328063dbed62b4c9 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -967,7 +967,8 @@ public abstract class BlockBehaviour {
+@@ -987,7 +987,8 @@ public abstract class BlockBehaviour {
                  Direction enumdirection = aenumdirection[l];
  
                  blockposition_mutableblockposition.setWithOffset(pos, enumdirection);

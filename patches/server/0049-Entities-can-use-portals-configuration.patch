@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 98d136c0cb7afc55013ce9ef80de5a74c9ba0a3e..c007fab5d4ef47fb3b8aafd914b41ee8eb85e099 100644
+index c6e807e9b4fdbff8bebf2f7f1ce92069d6070796..dcc85fc80ab3cc5dff0a99da5ad4fecd1de51b68 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2769,7 +2769,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2770,7 +2770,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          if (this.isOnPortalCooldown()) {
              if (!(wtf.etil.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
              this.setPortalCooldown();
@@ -19,7 +19,7 @@ index 98d136c0cb7afc55013ce9ef80de5a74c9ba0a3e..c007fab5d4ef47fb3b8aafd914b41ee8
              if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
                  this.portalEntrancePos = pos.immutable();
                  portalPos = BlockPos.ZERO; // Purpur
-@@ -3436,7 +3436,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3437,7 +3437,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public boolean canChangeDimensions() {
@@ -29,7 +29,7 @@ index 98d136c0cb7afc55013ce9ef80de5a74c9ba0a3e..c007fab5d4ef47fb3b8aafd914b41ee8
  
      public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index f05dac79dc5a2bfacbe209bb36e13c4f55cac311..0e80ceca8f8188b8d0eb80e130699f6f6302a8fd 100644
+index bee288d0735af17571902203936c7eb7025184f0..a1d88b8cadf6c193deb69bb577936ebd69e63b2a 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -225,6 +225,9 @@ public class MiraiConfig {

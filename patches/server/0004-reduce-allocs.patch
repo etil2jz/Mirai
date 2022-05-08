@@ -9,7 +9,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index d0c55497040158d959693ef2ddf3ff03bd6df05f..f8864424aae4ec071658e04a9296247eefa71743 100644
+index 45d1807b31f5acd5f08f729701cec4b464ad9398..e85175910454fc08704ea01e4b852136a6c6c60f 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -214,7 +214,7 @@ public class PaperCommand extends Command {
@@ -247,10 +247,10 @@ index d52072ab126f2fdee30bb114f3058338edd72fd5..44560edcf339c1749b9df78e6e570754
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index c63ee396e990d11e2f613f3b5a478b486076ed56..847198322d61e188523893d3bb020835287762d3 100644
+index 93c1f9e3e9d62cc993fedb93fe43cbeed7d39542..da6156f1d61ca20fd39f35da36c64afe62b2731b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -850,7 +850,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -851,7 +851,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -259,7 +259,7 @@ index c63ee396e990d11e2f613f3b5a478b486076ed56..847198322d61e188523893d3bb020835
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1105,7 +1105,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1106,7 +1106,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -269,7 +269,7 @@ index c63ee396e990d11e2f613f3b5a478b486076ed56..847198322d61e188523893d3bb020835
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index cc6ba95f01b82c42b4e5a0a70721ef00dd335e57..4d588465faa4c63fe0dc5abbdc06bb7daa5f47b2 100644
+index f115aabaf67976a503a76f5213dd52b7b7dfab4e..118fc9e698d7348f9a1094f954ae05ee16986987 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -332,7 +332,7 @@ index befcb501b4b1b6330bf3cd53e00e30b01efade6f..0c4e34c02060c00bdbed6388989660ec
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 188c68d4ae46bc05c6d9c901b5c6ab883fa05ea4..080e7d6cae6d6ca4ea0c98498e30e09884f3d243 100644
+index 95fe4240f3e1174ec36598f24d63f0073c13b376..1d07701efd7ff38e8cab1c915ba0d1e34f4a0ae0 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {
@@ -393,7 +393,7 @@ index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index bf896f821b88415691312d5c725ed21bb2e3f024..73a52859c1d9798556c2d34b63c1147d81db8b03 100644
+index 2fe2307a10cb2e4e2b055cbe615b3750bf8fd310..f646545ee7178717c1e3bb48e98fd2af2af745e0 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3032,7 +3032,7 @@ public abstract class LivingEntity extends Entity {
@@ -525,7 +525,7 @@ index 4257e5bf92a219f20026e4ec7e0d7323f2adf30e..24612061174b659666e3c09a44ddc597
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 8026e8ca528071bf80fecb5e96370d1d2ae799db..826783509add4485ce5c736ddf8be458c5923b37 100644
+index a96f336e3fa32bba3dbb3a12ce12f107b60e2e4f..81fa89bd86f6683d096b536243572a0fb14ad961 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -1566,7 +1566,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
