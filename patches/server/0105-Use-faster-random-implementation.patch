@@ -217,7 +217,7 @@ index 4bfebbb2e87464cd47a38a5da6275b2c662fa052..effae052c945ee49d2cbdf4a13b65670
  
      public BaseSpawner() {}
 diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
-index 855bead90dd192085f8584785504bb32e093a609..aa2ba1c387226a73186525efcbd81263c8641685 100644
+index 29f6c10e2c2626a9726d295acf12efea2b463cd3..e207a4c2de578274aa7ec8acdbccfbaf6feadae3 100644
 --- a/src/main/java/net/minecraft/world/level/Explosion.java
 +++ b/src/main/java/net/minecraft/world/level/Explosion.java
 @@ -89,7 +89,7 @@ public class Explosion {

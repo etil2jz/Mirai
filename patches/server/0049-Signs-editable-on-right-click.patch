@@ -49,7 +49,7 @@ index ebc4a745cf6f5d2ff0b02c39610bdf3c3ad34cf3..4cdd1629aaf77c349df05ca69b80eb84
                  } else {
                      return InteractionResult.PASS;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 0e80ceca8f8188b8d0eb80e130699f6f6302a8fd..1f6c73f15b9a289754d6f8dacad9eda5ff3fd752 100644
+index a1d88b8cadf6c193deb69bb577936ebd69e63b2a..6d603db2ad47c91d3c7a4ba6b6e430ad95d18049 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -230,4 +230,9 @@ public class MiraiConfig {

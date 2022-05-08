@@ -42,7 +42,7 @@ index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e29
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index f8864424aae4ec071658e04a9296247eefa71743..36ca5eac106524edcd00c1523ec33cc3c4dbc077 100644
+index e85175910454fc08704ea01e4b852136a6c6c60f..4ac91d601dd7e37b3455360b3b41b73cd66624df 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -725,12 +725,12 @@ public class PaperCommand extends Command {
@@ -126,7 +126,7 @@ index fac8a67dd8ee3894909504df8c0910f8180d6c35..ee0022c78a87ac513837fd74c90e7166
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index f26870841c5d5f00ca6bf19429459a1bcaf7e0e9..2dca7be379078465ccfb671ad594757bdc4ad750 100644
+index 1fdc19830bf4cf677df60c5760e02ae53abc85cc..57ec3ca7677fcc7390503c3002b78fb9b973226c 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1473,7 +1473,7 @@ public abstract class LivingEntity extends Entity {
@@ -304,7 +304,7 @@ index fa24d1a1a24a373b7d39a26aa865e7b84da827f7..5354b7202952ea6ddc82d6dfdbda4c46
              if (!list2.isEmpty()) {
                  WeightedRandom.getRandomItem(random, list2).ifPresent(list::add);
 diff --git a/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java b/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
-index 40b0380aa6fd052bf6376a15939c08e603f2f60c..f6b8df3493a902c1b8d0d5fe81d593f63ba464d1 100644
+index e57c5242866165e589277bd0184098c7806538ba..7d55c56e7372bd80d8f33f76a94dc6c18dd365a7 100644
 --- a/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
 @@ -61,7 +61,7 @@ public class DaylightDetectorBlock extends BaseEntityBlock {
@@ -358,7 +358,7 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..4813bd6de894d0566e8631d8c71915c3
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index bac7a4e5b03e07ef53e126504693df0694696306..9a63217add77a9121a70c4459dbdc2f3b16b489c 100644
+index 370b80c9c35fd314fc51a072d778191e101bcdee..ea85fae7be161d893610b41aafe5a8ded6ed963d 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -242,4 +242,9 @@ public class MiraiConfig {
