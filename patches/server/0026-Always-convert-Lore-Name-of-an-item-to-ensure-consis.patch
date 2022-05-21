@@ -7,7 +7,7 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 2de4a0dd0eeb60deec5e17dbaa91188db48a4a83..fb478ea2acc4833f010a219b596fd3d684990083 100644
+index bd75cf4f2273c20904570334f1455d26d75004d8..1ef186ead6a8e02b743c167e9c89fedd90bab418 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -176,9 +176,9 @@ public final class ItemStack {
@@ -42,7 +42,7 @@ index 2de4a0dd0eeb60deec5e17dbaa91188db48a4a83..fb478ea2acc4833f010a219b596fd3d6
          return net.minecraft.nbt.StringTag.valueOf(org.bukkit.craftbukkit.util.CraftChatMessage.toJSON(component));
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 1fe46049cc33c24db04fbfcde36ab275c03177bf..cbab696240a41ce68ad66291456cb88564b8d036 100644
+index 5607dc10dc1c9d2dbf4e3007890e5e89a175605e..c24793eeff34281194292bd83c5361a56ebea301 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -687,7 +687,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
@@ -72,7 +72,7 @@ index 1fe46049cc33c24db04fbfcde36ab275c03177bf..cbab696240a41ce68ad66291456cb885
      }
  
      // Paper start
-@@ -1554,7 +1554,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -1557,7 +1557,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
                  if (possiblyJsonInput) {
                      addTo.add(CraftChatMessage.fromJSONOrStringToJSON(entry));
                  } else {

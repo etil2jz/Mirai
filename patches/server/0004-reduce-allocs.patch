@@ -9,7 +9,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index d0c55497040158d959693ef2ddf3ff03bd6df05f..f8864424aae4ec071658e04a9296247eefa71743 100644
+index 45d1807b31f5acd5f08f729701cec4b464ad9398..e85175910454fc08704ea01e4b852136a6c6c60f 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
 @@ -214,7 +214,7 @@ public class PaperCommand extends Command {
@@ -247,10 +247,10 @@ index 4eb23fd9ca0cec93c66bcee120cfbb3365513792..3bb89fb55638e4050cd4524024a763dd
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 8066c874098039f75017e6bebd7981fd4804bcda..a7a589b8f7a97cf0072006e5e05d68cf625b41a1 100644
+index 72df9c6d1ac2fef090b0532da079c607f79bce89..af0f486181885fd2db68f2428475700318b6710b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -898,7 +898,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -899,7 +899,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -259,7 +259,7 @@ index 8066c874098039f75017e6bebd7981fd4804bcda..a7a589b8f7a97cf0072006e5e05d68cf
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1173,7 +1173,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1174,7 +1174,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -269,7 +269,7 @@ index 8066c874098039f75017e6bebd7981fd4804bcda..a7a589b8f7a97cf0072006e5e05d68cf
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index e095e635f0eb01ae20d6b09eebd2a56b9de1f273..f32474bec7a4b32808291abb26b0193061ab78be 100644
+index bbdfd821221bf776aa9305d2e313940d70b2af6b..4412503e8406786bc08998d996197be45d156470 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -389,7 +389,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -332,7 +332,7 @@ index 00a5731e7b1e2b84453e6d1416dce8bd9e1b1b10..11df88a1fd017a2919a304e242839bc8
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 1b58f87c75c581089ffd0710a2566eda7c644324..679ecad92d4f0c160ec8bdc52d59f95fc7bf6cdc 100644
+index 5531c672a84a9a9cd2bb43684f48fe1e977b7d44..9301211d73a14dd461d956ef17926616c4b1c44a 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {
@@ -393,7 +393,7 @@ index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 8bef96dd28ffb2de00a8d3c50f158d5e537516e6..79cfe1f538c3575244c79dae23fcab77ab6bbee1 100644
+index e74a06e61d4c396122688c2da8bbfa5e576b67ce..aa125210a610113f3953410b7ea06afa92e594f2 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3095,7 +3095,7 @@ public abstract class LivingEntity extends Entity {
@@ -406,10 +406,10 @@ index 8bef96dd28ffb2de00a8d3c50f158d5e537516e6..79cfe1f538c3575244c79dae23fcab77
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 3b75ea276347b6efcc6e2aca6dc888f5d9a8493e..5cee9023de3e71ca4c5e7087f747a665455e6061 100644
+index d016e5c833a68d4c0d2eba72b7a11f7d400a26de..5fe27fd59ff6b15fc0da52a3d50c523b0e3d8cb0 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -1040,7 +1040,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1039,7 +1039,7 @@ public abstract class Mob extends LivingEntity {
      @Override
      protected void dropCustomDeathLoot(DamageSource source, int lootingMultiplier, boolean allowDrops) {
          super.dropCustomDeathLoot(source, lootingMultiplier, allowDrops);
@@ -418,7 +418,7 @@ index 3b75ea276347b6efcc6e2aca6dc888f5d9a8493e..5cee9023de3e71ca4c5e7087f747a665
          int j = aenumitemslot.length;
  
          for (int k = 0; k < j; ++k) {
-@@ -1102,7 +1102,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1101,7 +1101,7 @@ public abstract class Mob extends LivingEntity {
              }
  
              boolean flag = true;
@@ -427,7 +427,7 @@ index 3b75ea276347b6efcc6e2aca6dc888f5d9a8493e..5cee9023de3e71ca4c5e7087f747a665
              int j = aenumitemslot.length;
  
              for (int k = 0; k < j; ++k) {
-@@ -1195,7 +1195,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1194,7 +1194,7 @@ public abstract class Mob extends LivingEntity {
          float f = difficulty.getSpecialMultiplier();
  
          this.enchantSpawnedWeapon(f);
@@ -436,7 +436,7 @@ index 3b75ea276347b6efcc6e2aca6dc888f5d9a8493e..5cee9023de3e71ca4c5e7087f747a665
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -1407,7 +1407,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1406,7 +1406,7 @@ public abstract class Mob extends LivingEntity {
              t0.setInvulnerable(this.isInvulnerable());
              if (flag) {
                  t0.setCanPickUpLoot(this.canPickUpLoot());
@@ -446,10 +446,10 @@ index 3b75ea276347b6efcc6e2aca6dc888f5d9a8493e..5cee9023de3e71ca4c5e7087f747a665
  
                  for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-index f0905d83cd47ee4dbb076515e2a90c97027ed3e9..c81f5a143259270c7d1b5f1cf4547f488003ec88 100644
+index ac41660b8d3763ff9db320b998480a025ea94740..0be4beb633bf03c8d915aee2f61826024b9fdc88 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-@@ -282,7 +282,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
+@@ -281,7 +281,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
              return;
          }
          // CraftBukkit end
@@ -459,7 +459,7 @@ index f0905d83cd47ee4dbb076515e2a90c97027ed3e9..c81f5a143259270c7d1b5f1cf4547f48
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index a999e4c82d7fe0ecf127f9132c29886d56c444e5..2de4a0dd0eeb60deec5e17dbaa91188db48a4a83 100644
+index 7471e59ad3362bc3d0bad6555fe29a9bb9ad74a6..bd75cf4f2273c20904570334f1455d26d75004d8 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -975,7 +975,7 @@ public final class ItemStack {
@@ -525,7 +525,7 @@ index 4257e5bf92a219f20026e4ec7e0d7323f2adf30e..24612061174b659666e3c09a44ddc597
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index c29fdc40b72da7ca18a1c0bbcf02162799458063..e5b2c0c0fb6e14f57fe84fa1b7db6b92d07aa983 100644
+index 40e01ed99a129a6a14f9c5cc29f046bd23d198cb..e4799a45a5c5f36cc77fc6a86dc3382caf9503df 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -1613,7 +1613,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
