@@ -406,10 +406,10 @@ index 2fe2307a10cb2e4e2b055cbe615b3750bf8fd310..f646545ee7178717c1e3bb48e98fd2af
  
          for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index d7a0fb4727e263932846a67c584da2c8d6d4e275..b317db663fb6f207a3db4354e0ab733f97e5f1f4 100644
+index 8ee0a80e3427ecef9fa15b7388a8287e26a25fd6..340589e02b316553acefee480f86cf53d5d17560 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -1011,7 +1011,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1010,7 +1010,7 @@ public abstract class Mob extends LivingEntity {
      @Override
      protected void dropCustomDeathLoot(DamageSource source, int lootingMultiplier, boolean allowDrops) {
          super.dropCustomDeathLoot(source, lootingMultiplier, allowDrops);
@@ -418,7 +418,7 @@ index d7a0fb4727e263932846a67c584da2c8d6d4e275..b317db663fb6f207a3db4354e0ab733f
          int j = aenumitemslot.length;
  
          for (int k = 0; k < j; ++k) {
-@@ -1073,7 +1073,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1072,7 +1072,7 @@ public abstract class Mob extends LivingEntity {
              }
  
              boolean flag = true;
@@ -427,7 +427,7 @@ index d7a0fb4727e263932846a67c584da2c8d6d4e275..b317db663fb6f207a3db4354e0ab733f
              int j = aenumitemslot.length;
  
              for (int k = 0; k < j; ++k) {
-@@ -1160,7 +1160,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1159,7 +1159,7 @@ public abstract class Mob extends LivingEntity {
          float f = difficulty.getSpecialMultiplier();
  
          this.enchantSpawnedWeapon(f);
@@ -436,7 +436,7 @@ index d7a0fb4727e263932846a67c584da2c8d6d4e275..b317db663fb6f207a3db4354e0ab733f
          int i = aenumitemslot.length;
  
          for (int j = 0; j < i; ++j) {
-@@ -1371,7 +1371,7 @@ public abstract class Mob extends LivingEntity {
+@@ -1370,7 +1370,7 @@ public abstract class Mob extends LivingEntity {
              t0.setInvulnerable(this.isInvulnerable());
              if (flag) {
                  t0.setCanPickUpLoot(this.canPickUpLoot());
@@ -446,10 +446,10 @@ index d7a0fb4727e263932846a67c584da2c8d6d4e275..b317db663fb6f207a3db4354e0ab733f
  
                  for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-index ba92be2a63df29cd6eda251f8e56e9ce098d92ac..ed64ee359db734e49a84b10f14d98264b504e2e4 100644
+index fc6639bd33a13c84c84603db7f9bbb1c5df239a4..814e5abe38087f6ca3322923564b59fb31b2bc83 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-@@ -230,7 +230,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
+@@ -229,7 +229,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
              return;
          }
          // CraftBukkit end
@@ -525,7 +525,7 @@ index 4257e5bf92a219f20026e4ec7e0d7323f2adf30e..24612061174b659666e3c09a44ddc597
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a96f336e3fa32bba3dbb3a12ce12f107b60e2e4f..81fa89bd86f6683d096b536243572a0fb14ad961 100644
+index b830c2199a22252116619520f407fd84eddb28f3..5df2601aecb93fd6014b70d0da645085ddec8076 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -1566,7 +1566,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

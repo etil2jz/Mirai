@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 82c65f380cd72de6895b0f46b3cd287dec2d8138..33333d4542e0b71055d1e4fadf70a0231d3754a5 100644
+index 1a9afa43a953e5634edb23ef617ead4b329ae89f..bf42644d2053de4e3c7b9e531b18230b07f094c5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1145,6 +1145,7 @@ public class ServerPlayer extends Player {
@@ -19,10 +19,10 @@ index 82c65f380cd72de6895b0f46b3cd287dec2d8138..33333d4542e0b71055d1e4fadf70a023
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 73f46c75aee498665d7664005987ee175698be6b..c6e807e9b4fdbff8bebf2f7f1ce92069d6070796 100644
+index 9b8c68069196353e4eebd113d6c2ec406df6b45f..d02bf2e1d850249e891014dec1c45e2614fe7231 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2765,12 +2765,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2759,12 +2759,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return Vec3.directionFromRotation(this.getRotationVector());
      }
  
