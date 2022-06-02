@@ -127,10 +127,10 @@ index 3dd8a189c26f41759c59c3b9d0e5282038989a9f..147beddf8ef369cdae4b1ed2dcd0d7b2
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/CompoundTag.java b/src/main/java/net/minecraft/nbt/CompoundTag.java
-index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698dc74c070 100644
+index 29f6fc5f83042713704b83f3b5257eb8b9b747f2..0211e70eede03cbe6cdc657e2265c5a1683b7b6c 100644
 --- a/src/main/java/net/minecraft/nbt/CompoundTag.java
 +++ b/src/main/java/net/minecraft/nbt/CompoundTag.java
-@@ -365,7 +365,7 @@ public class CompoundTag implements Tag {
+@@ -364,7 +364,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, ByteArrayTag.TYPE, var3));
          }
  
@@ -139,7 +139,7 @@ index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698
      }
  
      public int[] getIntArray(String key) {
-@@ -377,7 +377,7 @@ public class CompoundTag implements Tag {
+@@ -376,7 +376,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, IntArrayTag.TYPE, var3));
          }
  
@@ -148,7 +148,7 @@ index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698
      }
  
      public long[] getLongArray(String key) {
-@@ -389,7 +389,7 @@ public class CompoundTag implements Tag {
+@@ -388,7 +388,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, LongArrayTag.TYPE, var3));
          }
  
@@ -171,7 +171,7 @@ index a14b01cee7a8d7022c4fa7264d349a76be143ba5..44f441d6c102fa5bd50071cae991a8a6
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/ListTag.java b/src/main/java/net/minecraft/nbt/ListTag.java
-index 0ace8040a6d59419c1ab7bd446c3bf367e2de6b9..8e2e55362dbda83b3b9f9f8e7157ecae2cdb52f8 100644
+index 17a37d453b3d6cdb838dd7e8071bb9ad34cd2c20..1e2aca86f30c43f25aea7f18b67b4f6ddbd4c2cf 100644
 --- a/src/main/java/net/minecraft/nbt/ListTag.java
 +++ b/src/main/java/net/minecraft/nbt/ListTag.java
 @@ -221,7 +221,7 @@ public class ListTag extends CollectionTag<Tag> {
@@ -269,7 +269,7 @@ index 93c1f9e3e9d62cc993fedb93fe43cbeed7d39542..da6156f1d61ca20fd39f35da36c64afe
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index f115aabaf67976a503a76f5213dd52b7b7dfab4e..118fc9e698d7348f9a1094f954ae05ee16986987 100644
+index 676f2cd4b152984aa76903fcf4377c745775bfc8..f0e7c7c84052f29349b60ad06ec4f9ee1771f4bb 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -297,7 +297,7 @@ index f115aabaf67976a503a76f5213dd52b7b7dfab4e..118fc9e698d7348f9a1094f954ae05ee
              return;
          }
          // Paper end
-@@ -2951,7 +2951,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2952,7 +2952,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
@@ -332,7 +332,7 @@ index befcb501b4b1b6330bf3cd53e00e30b01efade6f..0c4e34c02060c00bdbed6388989660ec
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 95fe4240f3e1174ec36598f24d63f0073c13b376..1d07701efd7ff38e8cab1c915ba0d1e34f4a0ae0 100644
+index 624946f48f0811c94d05174f28d0b1fc6d5e6a00..49e27efb5fdf26f6a8026c8c17e25d87026ab45d 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {

@@ -5,7 +5,7 @@ Subject: [PATCH] Optimized default values for configs
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 7bbc7ee429716217971fab5ebc0f5f3aa5ae22be..a8a3fb78319c61ac840d4305d5fb7cb2120d7732 100644
+index 5c1aee1e41dbf32f01d5278b4942d5bfde1d05e0..c3d93042f90920aa4a453a26fd9cbaea8fb6fb4b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -251,7 +251,7 @@ public class PaperConfig {
@@ -269,7 +269,7 @@ index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa
          sensorTickRates = loadTickRates("sensor");
          behaviorTickRates = loadTickRates("behavior");
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index a820bfe38cb5765ee74c4fd7084d949477f83692..6d8f238ac5d407b05218828644b868c8418b0618 100644
+index 56a5a31b41d00ba73259a7eda5c57d08570d3e6e..f42942b8aa540b1de35f9a8f13d6d3d111175b15 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -213,8 +213,8 @@ public class PufferfishConfig {

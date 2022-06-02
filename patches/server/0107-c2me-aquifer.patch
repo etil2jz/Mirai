@@ -69,7 +69,7 @@ index 0000000000000000000000000000000000000000..5e01c7bec91cd415979c0f748e0acf1b
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/core/BlockPos.java b/src/main/java/net/minecraft/core/BlockPos.java
-index b332d9b6c7d5d45c2162d020899945125a1ba743..74b8147d6afa2e6eb3189a3e152493d83df23f67 100644
+index 63f5acd8b5aaf936b08d389c8f871bea8c5373da..51eb7043b469ac092197e83fb2eb5d32f4c3e36a 100644
 --- a/src/main/java/net/minecraft/core/BlockPos.java
 +++ b/src/main/java/net/minecraft/core/BlockPos.java
 @@ -37,14 +37,14 @@ public class BlockPos extends Vec3i {
@@ -92,7 +92,7 @@ index b332d9b6c7d5d45c2162d020899945125a1ba743..74b8147d6afa2e6eb3189a3e152493d8
  
      public BlockPos(int x, int y, int z) {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java b/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
-index 0ae7c0446d4d64ecf189bbf3473f85f3401d7616..db86bb32c9a50448c87ad1147afcfffe720d8c4c 100644
+index ed31704a1e6b4acc245c1dd570ba9905e5d25c57..e01d1fb41504e59758b4080e7dd3f54fa0e0fc4d 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/Aquifer.java
 @@ -11,6 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;

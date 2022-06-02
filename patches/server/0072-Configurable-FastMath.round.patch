@@ -291,10 +291,10 @@ index 5c16235115a9233bce1f5b30bb020d105bdca3d1..d33b62dab84beb3386a8738dd5dbcb96
  
              return super.causeFallDamage(fallDistance, damageMultiplier, damageSource);
 diff --git a/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java b/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
-index fa24d1a1a24a373b7d39a26aa865e7b84da827f7..5354b7202952ea6ddc82d6dfdbda4c4619925f37 100644
+index df4152f08b553df8895bb9e9dc39d586501ce431..3f3d7921dbea8d9daff3b5c914cb1646a858495a 100644
 --- a/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
 +++ b/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
-@@ -342,7 +342,7 @@ public class EnchantmentHelper {
+@@ -341,7 +341,7 @@ public class EnchantmentHelper {
          } else {
              level += 1 + random.nextInt(i / 4 + 1) + random.nextInt(i / 4 + 1);
              float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
@@ -358,10 +358,10 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..4813bd6de894d0566e8631d8c71915c3
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 370b80c9c35fd314fc51a072d778191e101bcdee..ea85fae7be161d893610b41aafe5a8ded6ed963d 100644
+index 21c4a287c8fc550be36fc5b60bdc458d71a9d25d..06e44d2fba48a217dc1e63a1901f6d3a45b305b9 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -242,4 +242,9 @@ public class MiraiConfig {
+@@ -235,4 +235,9 @@ public class MiraiConfig {
          serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
      }
  

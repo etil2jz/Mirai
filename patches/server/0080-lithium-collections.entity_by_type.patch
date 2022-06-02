@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java b/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
-index c490cae2c06062e5096556d49f705f8f8d3127d4..d5c188943a20887b9dcc4edfca67415f26cc5419 100644
+index faa9965d233e8a0da30a8f9cfd8430623a1b6c57..31837bba990bee50fbb1b9f8ce581d78ff9b3213 100644
 --- a/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
 +++ b/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
 @@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
@@ -18,7 +18,7 @@ index c490cae2c06062e5096556d49f705f8f8d3127d4..d5c188943a20887b9dcc4edfca67415f
  import java.util.AbstractCollection;
  import java.util.Collection;
  import java.util.Collections;
-@@ -14,7 +15,7 @@ import java.util.Map.Entry;
+@@ -13,7 +14,7 @@ import java.util.Map;
  import java.util.stream.Collectors;
  
  public class ClassInstanceMultiMap<T> extends AbstractCollection<T> {
@@ -27,7 +27,7 @@ index c490cae2c06062e5096556d49f705f8f8d3127d4..d5c188943a20887b9dcc4edfca67415f
      private final Class<T> baseClass;
      private final List<T> allInstances = Lists.newArrayList();
  
-@@ -59,7 +60,7 @@ public class ClassInstanceMultiMap<T> extends AbstractCollection<T> {
+@@ -58,7 +59,7 @@ public class ClassInstanceMultiMap<T> extends AbstractCollection<T> {
          if (!this.baseClass.isAssignableFrom(type)) {
              throw new IllegalArgumentException("Don't know how to search for " + type);
          } else {

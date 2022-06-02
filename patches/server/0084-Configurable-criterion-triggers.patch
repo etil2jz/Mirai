@@ -9,7 +9,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index f7c6efabadf4e9383782225c5c4539f527b273f8..5f2158f5a0ed66c5fb21263885f9b84624bf112a 100644
+index bf42644d2053de4e3c7b9e531b18230b07f094c5..c32cba5dbbfb31ecdf6a8762390f4a6473ebf237 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -606,7 +606,7 @@ public class ServerPlayer extends Player {
@@ -42,10 +42,10 @@ index f7c6efabadf4e9383782225c5c4539f527b273f8..5f2158f5a0ed66c5fb21263885f9b846
              // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index ea85fae7be161d893610b41aafe5a8ded6ed963d..92879795ef7a7685a9505e4f2fa4236e2f67d7bd 100644
+index 06e44d2fba48a217dc1e63a1901f6d3a45b305b9..c289ae5a720204b678b9563b3c54ad672b862107 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -247,4 +247,13 @@ public class MiraiConfig {
+@@ -240,4 +240,13 @@ public class MiraiConfig {
          riskyMathRoundOpt = getBoolean("use-risky-mathround-opt", riskyMathRoundOpt);
      }
  

@@ -600,7 +600,7 @@ index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e1609a354c6d26b8487d119540a711223926e20c..c0bcb2940b2f89518f84e5f77da92198129c49db 100644
+index 8afcbb54e7db131f162be08a8b5ac18b8691581d..3a2acd70f01de9ff5148b88e39f6e7a0155208b9 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -150,9 +150,29 @@ import org.bukkit.event.entity.EntityPoseChangeEvent;
@@ -900,7 +900,7 @@ index 9b39920baea28fe85a0bb6ada0e00a466b3ddf31..ee744cf4d5a794565decb46a7b1c7147
          this.chunkStatus = status;
          return visibility;
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-index ca091eb3bcd6f51b51c5931cd8b1ec02ec2ecd98..ece5f35846dcd3edf6348735a9c876d760289e7b 100644
+index ba8aef74c0c23a39b0e4387916a904e14d41a25a..5c2ce7fe796f80d9c4f634e4e14967f5c0765f75 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 @@ -20,6 +20,10 @@ import net.minecraft.core.SectionPos;

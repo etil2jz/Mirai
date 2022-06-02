@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
-index b84bc629eb994fbba6a9825014be260c4339b8c8..ba09161ff75dba9433da8ad2da81f92fe06d0670 100644
+index 92789a27aa2978ac323d4cdafa82391998cf0ffa..842b67327523c512f95ad64ad23d3ee4102175ea 100644
 --- a/src/main/java/net/minecraft/core/Direction.java
 +++ b/src/main/java/net/minecraft/core/Direction.java
 @@ -41,7 +41,7 @@ public enum Direction implements StringRepresentable {

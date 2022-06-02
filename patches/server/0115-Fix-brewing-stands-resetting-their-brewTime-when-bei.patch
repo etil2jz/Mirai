@@ -6,14 +6,14 @@ Subject: [PATCH] Fix brewing stands resetting their brewTime when being
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index 5c0f1488c8a8100cd39a03adeccded9984722249..b97711204dfe1f95d2c906bae176a549948b346c 100644
+index 5c0f1488c8a8100cd39a03adeccded9984722249..d0eb35ede343a09b29bed07291f10d1f741a0856 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -296,6 +296,7 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
          ContainerHelper.loadAllItems(nbt, this.items);
          this.brewTime = nbt.getShort("BrewTime");
          this.fuel = nbt.getByte("Fuel");
-+        this.ingredient = net.minecraft.core.Registry.ITEM.get(new net.minecraft.resources.ResourceLocation(nbt.getString("ingredient"))); // Mirai - fix brewing stands resetting their brewTime when being unloaded
++        this.ingredient = net.minecraft.core.Registry.ITEM.get(new net.minecraft.resources.ResourceLocation(nbt.getString("Mirai.ingredient"))); // Mirai - fix brewing stands resetting their brewTime when being unloaded
      }
  
      @Override
@@ -21,7 +21,7 @@ index 5c0f1488c8a8100cd39a03adeccded9984722249..b97711204dfe1f95d2c906bae176a549
          nbt.putShort("BrewTime", (short) this.brewTime);
          ContainerHelper.saveAllItems(nbt, this.items);
          nbt.putByte("Fuel", (byte) this.fuel);
-+        nbt.putString("ingredient", net.minecraft.core.Registry.ITEM.getKey(this.ingredient).toString()); // Mirai - fix brewing stands resetting their brewTime when being unloaded
++        nbt.putString("Mirai.ingredient", net.minecraft.core.Registry.ITEM.getKey(this.ingredient).toString()); // Mirai - fix brewing stands resetting their brewTime when being unloaded
      }
  
      @Override

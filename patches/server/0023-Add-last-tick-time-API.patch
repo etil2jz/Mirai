@@ -30,10 +30,10 @@ index 1ef00b9a0b502fac69ffdd0e233c5222dd9178ff..30156d3c983f83c4d96ce089a27ff9bf
                      this.mayHaveDelayedTasks = true;
                      this.delayedTasksMaxNextTickTime = Math.max(Util.getMillis() + 50L, this.nextTickTime);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 09a5346f7fdaf4648a7503d6893d999a787cc366..d0c36d83ff82c5640bed015393e3fec013419f54 100644
+index 20437547fd04552d5d52ea1058cd793ed1a8e903..69ddc41119dc621cf0ffa9e8e89bc761dc666b7d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2879,4 +2879,6 @@ public final class CraftServer implements Server {
+@@ -2885,4 +2885,6 @@ public final class CraftServer implements Server {
      }
  
      // Paper end

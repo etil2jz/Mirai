@@ -5,7 +5,7 @@ Subject: [PATCH] Use faster random implementation
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 88bbbb083f5c3a1c8e4de7ced7d34ea38c86a5e6..3394e5266c69a28238b2cca1b515bc207ba0c54f 100644
+index 2c7f3dcf010bf102c37fd342e935851ad48aaa8d..b020a370afb0bc6b5ec0f23ad7ae85fbcc868808 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -31,6 +31,7 @@ dependencies {
@@ -69,7 +69,7 @@ index 0866b340a11d4650fc00a40cdb949b6e44691f8c..8eed99c1d58111b391c9c119d5ee60ec
      final MinecraftServer server;
      public final Connection connection;
 diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index 4ba1913dcaa27dfb12257d530f874e79ca4b4b5e..0dfb153c8fa587e366f903e5b1534f6545ec2b2c 100644
+index 23d4efac14b391a5f654013fc549c3274c160ffa..969abe4e3bad924517f5cf72fdb95896eb681994 100644
 --- a/src/main/java/net/minecraft/util/Mth.java
 +++ b/src/main/java/net/minecraft/util/Mth.java
 @@ -31,7 +31,7 @@ public class Mth {
@@ -91,7 +91,7 @@ index 4ba1913dcaa27dfb12257d530f874e79ca4b4b5e..0dfb153c8fa587e366f903e5b1534f65
  
      public static int roundToward(int value, int divisor) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 18a65bac0c84474d9aaaa067d17cd0d092061129..1a0d0fd7d5ca7d6d5b3e0e8e834c206e25882a5d 100644
+index c80eaa107fe4ac4e3e10b958df1b8ba292f1265e..d0352fc08d078d13c8f0791986cd51da1a92b137 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -181,7 +181,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -104,7 +104,7 @@ index 18a65bac0c84474d9aaaa067d17cd0d092061129..1a0d0fd7d5ca7d6d5b3e0e8e834c206e
          @Override
          public synchronized void setSeed(long seed) {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
-index 62d404d9876c371f2c3e0fb749ab6cc8ec802ca7..7e9ab48b7f200f416cbbe3edc1aed78c5411a730 100644
+index 9783110dec117504a82c985943ffb3eab91cada7..8a676e0ed8b25ad93bf619ea86bca4cca9595325 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
 @@ -13,7 +13,7 @@ import java.util.stream.Stream;
