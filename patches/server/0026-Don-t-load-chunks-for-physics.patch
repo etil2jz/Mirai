@@ -7,7 +7,7 @@ Original code by Starlis, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/starlis/empirecraft
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index dc6eb7ed35b0f6953c1582b0c6251cade08fb1f5..8e9a4acbda62ebea576a354e31f651d216a5d66b 100644
+index f816ae7bf9a372aef8de769d4f6192e6ed9ac776..14e4f5c376126c264d59266ddeeafff764eabc40 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -855,7 +855,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
