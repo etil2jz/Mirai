@@ -5,7 +5,7 @@ Subject: [PATCH] Optimized default values for configs
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 5c1aee1e41dbf32f01d5278b4942d5bfde1d05e0..c3d93042f90920aa4a453a26fd9cbaea8fb6fb4b 100644
+index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229db84484f 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -251,7 +251,7 @@ public class PaperConfig {
@@ -269,10 +269,10 @@ index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa
          sensorTickRates = loadTickRates("sensor");
          behaviorTickRates = loadTickRates("behavior");
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 56a5a31b41d00ba73259a7eda5c57d08570d3e6e..f42942b8aa540b1de35f9a8f13d6d3d111175b15 100644
+index a125abc75ed2bbd905c8fdec442416a45264f531..e616e3ce602c876baa3f531f12506a08523ab921 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -213,8 +213,8 @@ public class PufferfishConfig {
+@@ -216,8 +216,8 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerTick;
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
@@ -283,7 +283,7 @@ index 56a5a31b41d00ba73259a7eda5c57d08570d3e6e..f42942b8aa540b1de35f9a8f13d6d3d1
  
          setComment("projectile", "Optimizes projectile settings");
      }
-@@ -232,10 +232,10 @@ public class PufferfishConfig {
+@@ -235,10 +235,10 @@ public class PufferfishConfig {
                  "This value determines how far away an entity has to be",
                  "from the player to start being effected by DEAR.");
          startDistanceSquared = startDistance * startDistance;

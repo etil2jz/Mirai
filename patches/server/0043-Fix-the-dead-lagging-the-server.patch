@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 91ab4c269ff0ee0be31941591fbd1d15c139bec2..9e6c82281a4d6c1024f20848f2bc1ccd29512bdd 100644
+index 38cb136d34cbc83dde1c766196f60a30d38005e3..5744b25104d3b73cedda3c88945dfce1db265b1e 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1776,6 +1776,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1782,6 +1782,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          this.yRotO = this.getYRot();
          this.xRotO = this.getXRot();
          this.setYHeadRot(yaw); // Paper - Update head rotation
