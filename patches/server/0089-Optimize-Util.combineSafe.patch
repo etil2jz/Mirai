@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Fri, 10 Jun 2022 12:21:26 +0200
+Subject: [PATCH] Optimize `Util.combineSafe()`
+
+
+diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
+index d95c428bea9cbc0cc0d42edaa7aaa59dccf44328..d0c58294e2b76e357ef6816823b5e380200bfef8 100644
+--- a/src/main/java/net/minecraft/Util.java
++++ b/src/main/java/net/minecraft/Util.java
+@@ -66,6 +66,7 @@ import java.util.concurrent.AbstractExecutorService;
+ import wtf.etil.mirai.server.util.ServerWorkerWrapper;
+ import net.minecraft.server.MCUtil;
+ import java.util.Collections;
++import java.util.ArrayList; // Mirai - optimize `Util.combineSafe()`
+ 
+ public class Util {
+     static final Logger LOGGER = LogUtils.getLogger();
+@@ -75,6 +76,7 @@ public class Util {
+     //private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority // Patina
+     private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
+     // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
++    private static final CompletableFuture<?>[] FUTURE_ARRAY_TEMPLATE = new CompletableFuture[0]; // Mirai - optimize `Util.combineSafe()`
+     public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
+ 
+         private final AtomicInteger count = new AtomicInteger();
+@@ -441,26 +443,20 @@ public class Util {
+         }
+     }
+ 
++    // Mirai start - optimize `Util.combineSafe()`
+     public static <V> CompletableFuture<List<V>> sequenceFailFast(List<? extends CompletableFuture<? extends V>> futures) {
+-        List<V> list = Lists.newArrayListWithCapacity(futures.size());
+-        CompletableFuture<?>[] completableFutures = new CompletableFuture[futures.size()];
+-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+-        futures.forEach((future) -> {
+-            int i = list.size();
+-            list.add((V)null);
+-            completableFutures[i] = future.whenComplete((object, throwable) -> {
+-                if (throwable != null) {
+-                    completableFuture.completeExceptionally(throwable);
+-                } else {
+-                    list.set(i, object);
++        // No method for collections, only for arrays
++        return CompletableFuture.allOf(futures.toArray(FUTURE_ARRAY_TEMPLATE))
++                .thenApply(value -> {
++                    var results = new ArrayList<V>(futures.size());
++                    for (var future : futures) {
++                        results.add(future.join());
++                    }
++                    return results;
+                 }
+-
+-            });
+-        });
+-        return CompletableFuture.allOf(completableFutures).applyToEither(completableFuture, (void_) -> {
+-            return list;
+-        });
++        );
+     }
++    // Mirai end
+ 
+     public static <T> Optional<T> ifElse(Optional<T> optional, Consumer<T> presentAction, Runnable elseAction) {
+         if (optional.isPresent()) {

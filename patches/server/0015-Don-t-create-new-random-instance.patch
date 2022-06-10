@@ -5,7 +5,7 @@ Subject: [PATCH] Don't create new random instance
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index f280aaa6d1ed35ffb5f746631c36467b63a7bd56..5f3297250d544b58ef39154c1c94a1fc29e942fb 100644
+index b717dad7145eeb7b4d1f6870779c1df9dea3261a..43ea0ea75668dace4f2b581eb10ded83abd54d32 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -372,7 +372,7 @@ public class ServerPlayer extends Player {
@@ -40,7 +40,7 @@ index a17d40d20d86453cd4ff416cc748f703982891d9..979e509310cc1a34fcbef3d6bfa05518
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 8720bc9e7e364a8c8ad9779a1377b6985a22e67f..022591686dff1b49041e227d0207f2618446da4d 100644
+index 137816b8e9995a33a931497eb2cf37b96d0dc896..c97bf1c02bc30325a42164945183465a38f1d4bd 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -121,13 +121,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

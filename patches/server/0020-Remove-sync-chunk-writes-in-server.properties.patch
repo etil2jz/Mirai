@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 59733465af83a95cb15bbe3ba3fb89b7594ee9bb..95cc4f8c2fb6b0440560b05a69e9441ea82e97e8 100644
+index 62e799cd081adfe72b95a2243570513e419844c5..fd4ae21f9259d0142dc6224ccf9f57490f928292 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -475,7 +475,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface

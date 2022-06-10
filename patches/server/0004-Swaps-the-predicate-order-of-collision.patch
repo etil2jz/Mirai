@@ -8,7 +8,7 @@ Original code by Akarin-project, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/Akarin-project/Akarin
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d58de23619321fadad3755f6110954ac462bbba1..e1e362f4bbb38aff7a55f55e5fa0edbf0f146804 100644
+index 9a083373dd81d97213bf81ffb076fe5d03dd992f..72c37ab0b430c1c955844983d51000a31f905ada 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1864,37 +1864,35 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
