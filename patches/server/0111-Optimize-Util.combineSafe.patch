@@ -5,25 +5,21 @@ Subject: [PATCH] Optimize `Util.combineSafe()`
 
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 73693a3a7faaa2be24c367e351f75aeb0d0f2208..c253f3cd2180108daefb9f4efb85bed1ce72d5fc 100644
+index 73693a3a7faaa2be24c367e351f75aeb0d0f2208..49ed7f364ef385cb591b3f7911bc1609b864d735 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -64,7 +64,8 @@ import org.slf4j.Logger;
- import java.util.concurrent.AbstractExecutorService;
+@@ -65,6 +65,7 @@ import java.util.concurrent.AbstractExecutorService;
  import wtf.etil.mirai.server.util.ServerWorkerWrapper;
  import net.minecraft.server.MCUtil;
--import java.util.Collections;
-+import java.util.Collections;
+ import java.util.Collections;
 +import java.util.ArrayList; // Mirai - optimize `Util.combineSafe()`
  
  public class Util {
      static final Logger LOGGER = LogUtils.getLogger();
-@@ -73,7 +74,8 @@ public class Util {
-     private static final AtomicInteger WORKER_COUNT = new AtomicInteger(1);
+@@ -74,6 +75,7 @@ public class Util {
      //private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority // Patina
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
--    // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
-+    // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
+     // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
 +    private static final CompletableFuture<?>[] FUTURE_ARRAY_TEMPLATE = new CompletableFuture[0]; // Mirai - optimize `Util.combineSafe()`
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
  

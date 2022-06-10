@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/Eula.java b/src/main/java/net/minecraft/server/Eula.java
-index a1d5c0f8fe2adb2ee56f3217e089211ec7c61eb0..a4eb2860367d1f4cf128637b6e9c6325be659dd4 100644
+index 30599028f6263fbf61ab95d68573073426db19db..9e169c96fa1bc9dea9efb27cb996b4dd5d2a4c0c 100644
 --- a/src/main/java/net/minecraft/server/Eula.java
 +++ b/src/main/java/net/minecraft/server/Eula.java
 @@ -16,12 +16,26 @@ public class Eula {

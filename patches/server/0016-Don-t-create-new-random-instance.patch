@@ -5,7 +5,7 @@ Subject: [PATCH] Don't create new random instance
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 22452aa7eefa350c3b0d0d19a23c76c8ec811de3..3d0a8dfa12a4a9a24ef19ec2cbfc75a60c698915 100644
+index a6edf5117d4ae03d8294e7bb74dd2d77048895a5..1a9afa43a953e5634edb23ef617ead4b329ae89f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -367,7 +367,7 @@ public class ServerPlayer extends Player {
@@ -27,7 +27,7 @@ index 22452aa7eefa350c3b0d0d19a23c76c8ec811de3..3d0a8dfa12a4a9a24ef19ec2cbfc75a6
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
 diff --git a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
-index a17d40d20d86453cd4ff416cc748f703982891d9..979e509310cc1a34fcbef3d6bfa05518929209bf 100644
+index 55c66f59c3946f79d8d0bd4dacd27dafb6090646..4bc858dc779a4553384091d5dd4e96911223302b 100644
 --- a/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
 +++ b/src/main/java/net/minecraft/server/rcon/thread/QueryThreadGs4.java
 @@ -348,7 +348,7 @@ public class QueryThreadGs4 extends GenericThread {
@@ -40,7 +40,7 @@ index a17d40d20d86453cd4ff416cc748f703982891d9..979e509310cc1a34fcbef3d6bfa05518
          }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 7b17359f558ac7bfbd14e902abc552c5a0658b91..3ec6d9692ca15ef84d6bd846c571efbd62cd823b 100644
+index 8fb58a59181fdf3a6ca5710d42eac060fc756395..af603994275c93842d2c3b6e9a7fcf0b0fbad168 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -121,13 +121,14 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

@@ -7,7 +7,7 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
-index 74210dc2eef63da7360b1f833bb59b278419fb2b..859d2e82f21efa1232e7e69f787840b16ed4bd4b 100644
+index 2ad47b33aea2493b2cdc0431849ecd50a12f9146..ba8aef74c0c23a39b0e4387916a904e14d41a25a 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySectionStorage.java
 @@ -32,33 +32,66 @@ public class EntitySectionStorage<T extends EntityAccess> {

@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index d6a57cdad2c92521a800cb18d060d9d6d627a8c0..0ace819f156ac4a50660d9bcb257d633f2c39b14 100644
+index e8e49e1bdf1ff4ea60a4feb6ec52d999cbced256..b49f53a89d9c096355d6cc20a2a59033f2637432 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
 @@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
@@ -177,7 +177,7 @@ index 9c1aff17aabd062640e3f451a2ef8c50a7c62f10..78073cbb7f36950537dc65633e264c30
          }
          return false;
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index bee38307494188800886a1622fed229b88dbd8f1..a45c2c569e0ab7205b8c180c3e150f3d421f648a 100644
+index 24fefa521093448e608e217af7b88a6397a4b054..f3400bdf23f79098c7e7b68f6b93aa65ca5b09dd 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -141,6 +141,7 @@ public class WatchdogThread extends Thread

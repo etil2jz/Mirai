@@ -104,7 +104,7 @@ index 0000000000000000000000000000000000000000..d2b00d9a91b60716d5f458048df3d944
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index 10a126d11d84287d82abd22f084490cf2683372e..4ba1913dcaa27dfb12257d530f874e79ca4b4b5e 100644
+index 42e0c370092eb6c190dbf3b279649d47b81950af..23d4efac14b391a5f654013fc549c3274c160ffa 100644
 --- a/src/main/java/net/minecraft/util/Mth.java
 +++ b/src/main/java/net/minecraft/util/Mth.java
 @@ -8,6 +8,7 @@ import net.minecraft.core.Vec3i;
