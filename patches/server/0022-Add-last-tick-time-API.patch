@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d0a746c1865e71593391d7a62f2e700434ff303c..49aad80f00a82f9e80689ae430d8e0c9739614ed 100644
+index f89560eabf68732cb96f48e30a32b387b494a5ec..74f93492f8302cb66d3af419c9979b1fad2e2420 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1174,6 +1174,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1175,6 +1175,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
      // Paper End
      // Spigot End
  
@@ -19,7 +19,7 @@ index d0a746c1865e71593391d7a62f2e700434ff303c..49aad80f00a82f9e80689ae430d8e0c9
      protected void runServer() {
          try {
              long serverStartTime = Util.getNanos(); // Paper
-@@ -1244,7 +1246,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1245,7 +1247,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      this.nextTickTime += 50L;
                      this.startMetricsRecordingTick();
                      this.profiler.push("tick");
@@ -30,10 +30,10 @@ index d0a746c1865e71593391d7a62f2e700434ff303c..49aad80f00a82f9e80689ae430d8e0c9
                      this.mayHaveDelayedTasks = true;
                      // Purpur start - tps catchup
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 73c226cad87e29212836121bf2bd7aa2e84930ad..a5f94b9f451044cea04eae17ae610ecd1962ebaf 100644
+index 511f229379f79721167dba9b97f86c8c9aa80ef9..a4496e5c0e670398f31c5f556470d16af66aef57 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2920,4 +2920,11 @@ public final class CraftServer implements Server {
+@@ -2933,4 +2933,11 @@ public final class CraftServer implements Server {
          return getServer().lagging;
      }
      // Purpur end

@@ -7,10 +7,10 @@ Original code by CaffeineMC, licensed under GNU Lesser General Public License v3
 You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java b/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
-index d5c188943a20887b9dcc4edfca67415f26cc5419..c19e74119aff6071308a12a4b919e111fe5cbd69 100644
+index 31837bba990bee50fbb1b9f8ce581d78ff9b3213..6a2fb50eb785e4cd29aac285c360da557f59652a 100644
 --- a/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
 +++ b/src/main/java/net/minecraft/util/ClassInstanceMultiMap.java
-@@ -57,15 +57,32 @@ public class ClassInstanceMultiMap<T> extends AbstractCollection<T> {
+@@ -56,15 +56,32 @@ public class ClassInstanceMultiMap<T> extends AbstractCollection<T> {
      }
  
      public <S> Collection<S> find(Class<S> type) {

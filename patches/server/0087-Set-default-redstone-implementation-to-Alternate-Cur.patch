@@ -5,10 +5,10 @@ Subject: [PATCH] Set default redstone implementation to Alternate Current
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 026c6ac268a1f8678be764a2f6f699026c87b90a..e29d40f1dacff7403f3879c3158228ba2733c836 100644
+index 3053d0d2f3c8a1ec8db89cd38ced2afca5b840f4..6984ed8a6a0d0ad4b933d01665c2f078c288ffcb 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-@@ -85,11 +85,11 @@ public class PaperWorldConfig {
+@@ -90,11 +90,11 @@ public class PaperWorldConfig {
      public enum RedstoneImplementation {
          VANILLA, EIGENCRAFT, ALTERNATE_CURRENT
      }
@@ -22,7 +22,7 @@ index 026c6ac268a1f8678be764a2f6f699026c87b90a..e29d40f1dacff7403f3879c3158228ba
              if (config.contains("world-settings.default.use-faster-eigencraft-redstone")) {
                  implementation = config.getBoolean("world-settings.default.use-faster-eigencraft-redstone") ? "eigencraft" : "vanilla";
                  config.set("world-settings.default.redstone-implementation", implementation);
-@@ -100,7 +100,7 @@ public class PaperWorldConfig {
+@@ -105,7 +105,7 @@ public class PaperWorldConfig {
              }
              remove("use-faster-eigencraft-redstone");
          } else {

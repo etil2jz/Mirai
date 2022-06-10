@@ -5,10 +5,10 @@ Subject: [PATCH] Optimize `Util.combineSafe()`
 
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index d95c428bea9cbc0cc0d42edaa7aaa59dccf44328..d0c58294e2b76e357ef6816823b5e380200bfef8 100644
+index 73693a3a7faaa2be24c367e351f75aeb0d0f2208..49ed7f364ef385cb591b3f7911bc1609b864d735 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -66,6 +66,7 @@ import java.util.concurrent.AbstractExecutorService;
+@@ -65,6 +65,7 @@ import java.util.concurrent.AbstractExecutorService;
  import wtf.etil.mirai.server.util.ServerWorkerWrapper;
  import net.minecraft.server.MCUtil;
  import java.util.Collections;
@@ -16,7 +16,7 @@ index d95c428bea9cbc0cc0d42edaa7aaa59dccf44328..d0c58294e2b76e357ef6816823b5e380
  
  public class Util {
      static final Logger LOGGER = LogUtils.getLogger();
-@@ -75,6 +76,7 @@ public class Util {
+@@ -74,6 +75,7 @@ public class Util {
      //private static final ExecutorService BOOTSTRAP_EXECUTOR = makeExecutor("Bootstrap", -2); // Paper - add -2 priority // Patina
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
      // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
@@ -24,7 +24,7 @@ index d95c428bea9cbc0cc0d42edaa7aaa59dccf44328..d0c58294e2b76e357ef6816823b5e380
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
  
          private final AtomicInteger count = new AtomicInteger();
-@@ -441,26 +443,20 @@ public class Util {
+@@ -440,26 +442,20 @@ public class Util {
          }
      }
  

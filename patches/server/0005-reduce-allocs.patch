@@ -9,10 +9,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 45d1807b31f5acd5f08f729701cec4b464ad9398..e85175910454fc08704ea01e4b852136a6c6c60f 100644
+index febb35091d32735ae2fe846170bd2c46d1449723..785c4399a1f9c1d0915e840aadd67bc3238cd961 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-@@ -214,7 +214,7 @@ public class PaperCommand extends Command {
+@@ -221,7 +221,7 @@ public class PaperCommand extends Command {
              case "version":
                  Command ver = MinecraftServer.getServer().server.getCommandMap().getCommand("version");
                  if (ver != null) {
@@ -127,10 +127,10 @@ index 3dd8a189c26f41759c59c3b9d0e5282038989a9f..147beddf8ef369cdae4b1ed2dcd0d7b2
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/CompoundTag.java b/src/main/java/net/minecraft/nbt/CompoundTag.java
-index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698dc74c070 100644
+index 29f6fc5f83042713704b83f3b5257eb8b9b747f2..0211e70eede03cbe6cdc657e2265c5a1683b7b6c 100644
 --- a/src/main/java/net/minecraft/nbt/CompoundTag.java
 +++ b/src/main/java/net/minecraft/nbt/CompoundTag.java
-@@ -365,7 +365,7 @@ public class CompoundTag implements Tag {
+@@ -364,7 +364,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, ByteArrayTag.TYPE, var3));
          }
  
@@ -139,7 +139,7 @@ index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698
      }
  
      public int[] getIntArray(String key) {
-@@ -377,7 +377,7 @@ public class CompoundTag implements Tag {
+@@ -376,7 +376,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, IntArrayTag.TYPE, var3));
          }
  
@@ -148,7 +148,7 @@ index 7c9800706eb032903f706459e1694ccacf62ddb7..be4888b86187567bd2cfd62572720698
      }
  
      public long[] getLongArray(String key) {
-@@ -389,7 +389,7 @@ public class CompoundTag implements Tag {
+@@ -388,7 +388,7 @@ public class CompoundTag implements Tag {
              throw new ReportedException(this.createReport(key, LongArrayTag.TYPE, var3));
          }
  
@@ -171,7 +171,7 @@ index a14b01cee7a8d7022c4fa7264d349a76be143ba5..44f441d6c102fa5bd50071cae991a8a6
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/ListTag.java b/src/main/java/net/minecraft/nbt/ListTag.java
-index 0ace8040a6d59419c1ab7bd446c3bf367e2de6b9..8e2e55362dbda83b3b9f9f8e7157ecae2cdb52f8 100644
+index 17a37d453b3d6cdb838dd7e8071bb9ad34cd2c20..1e2aca86f30c43f25aea7f18b67b4f6ddbd4c2cf 100644
 --- a/src/main/java/net/minecraft/nbt/ListTag.java
 +++ b/src/main/java/net/minecraft/nbt/ListTag.java
 @@ -221,7 +221,7 @@ public class ListTag extends CollectionTag<Tag> {
@@ -219,10 +219,10 @@ index 1e0d261439255091a6f61485c0747231fbd5b1db..490f5d86df7fff6537c7080361a7df80
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b85cb7ebaa31e561c01e1045ec957bfd8218314d..46f5d50f2fd9a744cdbcdd83ae12695af4d99ec3 100644
+index fa24e6065760259c4c31ffb5132eb7731e2bc02a..7b6bca8d10af3e8a58ca3ff4ec4a8348f54a8ba6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1437,8 +1437,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1438,8 +1438,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -269,7 +269,7 @@ index 72df9c6d1ac2fef090b0532da079c607f79bce89..af0f486181885fd2db68f24284757003
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index bbdfd821221bf776aa9305d2e313940d70b2af6b..4412503e8406786bc08998d996197be45d156470 100644
+index 9916b862e4836bffb6dc033d5900c63045b6ec48..5b2fb8a38ea89ea25e9136f19022b5822b557732 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -389,7 +389,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -297,7 +297,7 @@ index bbdfd821221bf776aa9305d2e313940d70b2af6b..4412503e8406786bc08998d996197be4
              return;
          }
          // Paper end
-@@ -3036,7 +3036,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3037,7 +3037,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(com.destroystokyo.paper.PaperConfig.autoRecipeIncrement) > com.destroystokyo.paper.PaperConfig.autoRecipeLimit) {
@@ -332,7 +332,7 @@ index 00a5731e7b1e2b84453e6d1416dce8bd9e1b1b10..11df88a1fd017a2919a304e242839bc8
  
          final String s;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 5531c672a84a9a9cd2bb43684f48fe1e977b7d44..9301211d73a14dd461d956ef17926616c4b1c44a 100644
+index 7574f8c60b69f5a9281a8c888b8e131e73bb1676..02c6a6eaa75839a039fd27408b227b7500482013 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -316,7 +316,7 @@ public abstract class PlayerList {
@@ -393,7 +393,7 @@ index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e74a06e61d4c396122688c2da8bbfa5e576b67ce..aa125210a610113f3953410b7ea06afa92e594f2 100644
+index 8a09cda8b3c17b197f68997d0a6fe34b46af9c6e..643ab6574beb4b3ca4354f51c3a8b05bb8fe1f22 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3095,7 +3095,7 @@ public abstract class LivingEntity extends Entity {

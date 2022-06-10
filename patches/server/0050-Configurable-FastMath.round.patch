@@ -42,24 +42,24 @@ index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e29
 +}
 \ No newline at end of file
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index e85175910454fc08704ea01e4b852136a6c6c60f..4ac91d601dd7e37b3455360b3b41b73cd66624df 100644
+index 785c4399a1f9c1d0915e840aadd67bc3238cd961..cbdc850c21fde8612e3fe3ed10dce77622f8f9a5 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-@@ -725,12 +725,12 @@ public class PaperCommand extends Command {
+@@ -740,12 +740,12 @@ public class PaperCommand extends Command {
                      ++relitChunks[0];
-                     sender.getBukkitEntity().sendMessage(
-                             ChatColor.BLUE + "Relit chunk " + ChatColor.DARK_AQUA + chunkPos + ChatColor.BLUE +
--                                    ", progress: " + ChatColor.DARK_AQUA + (int)(Math.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%"
-+                                    ", progress: " + ChatColor.DARK_AQUA + (int)(carpetfixes.helpers.FastMath.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%"
-                     );
+                     sender.getBukkitEntity().sendMessage(text().color(DARK_AQUA).append(
+                         text("Relit chunk ", BLUE), text(chunkPos.toString()),
+-                        text(", progress: ", BLUE), text((int)(Math.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%")
++                        text(", progress: ", BLUE), text((int)(carpetfixes.helpers.FastMath.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%")
+                     ));
                  },
                  (int totalRelit) -> {
                      final long end = System.nanoTime();
 -                    final long diff = Math.round(1.0e-6*(end - start));
 +                    final long diff = carpetfixes.helpers.FastMath.round(1.0e-6*(end - start));
-                     sender.getBukkitEntity().sendMessage(
-                             ChatColor.BLUE + "Relit " + ChatColor.DARK_AQUA + totalRelit + ChatColor.BLUE + " chunks. Took " +
-                                     ChatColor.DARK_AQUA + diff + "ms"
+                     sender.getBukkitEntity().sendMessage(text().color(DARK_AQUA).append(
+                         text("Relit ", BLUE), text(totalRelit),
+                         text(" chunks. Took ", BLUE), text(diff + "ms")
 diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
 index f9251183df72ddc56662fd3f02acf21641a2200c..ea1bad145e529ac36bf335cf4d5339b2d88b282f 100644
 --- a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
@@ -118,10 +118,10 @@ index 12bcf96ec1ba4314c7ea2eab9f3d140559f1dc08..b19f7053d39509ffa4a2aa3e462ecc74
  
      public void onChunkPlayerTickReady(final int chunkX, final int chunkZ) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 49aad80f00a82f9e80689ae430d8e0c9739614ed..c109f7449bb5230c012f859757c1e5066b294b7c 100644
+index 74f93492f8302cb66d3af419c9979b1fad2e2420..5ee8f06b7b52b8dbef06b95f5602a3d26da8fe17 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2802,7 +2802,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2805,7 +2805,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      }
  
                      double overuseCount = (double)overuse/(double)MAX_CHUNK_EXEC_TIME;
@@ -144,7 +144,7 @@ index fac8a67dd8ee3894909504df8c0910f8180d6c35..ee0022c78a87ac513837fd74c90e7166
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 90adca73cfa4e3d0998502264cda746d64ac1b70..e3943fa6042c8674146aa68013f500d55f85dced 100644
+index 763653ce3325ce7301808da1cba42ed743649b7d..8cba72266dfce29bb7275550676f4e222e8ce201 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1506,7 +1506,7 @@ public abstract class LivingEntity extends Entity {
@@ -318,10 +318,10 @@ index 22eb757844a3704b00fa6ed5e6e1c7941c2cf652..393b38d945822702465be5305ca0f39b
                  toDrop = experienceLevel * 7;
              }
 diff --git a/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java b/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
-index 3496b82f488830ab64169d6d72ed0c258bce788f..42f7cfbebee52c632e3a7aff408d00c807672c9c 100644
+index 216e89e54ecb5f436b495ec41a34d95369c2c5af..b2b634a7ff826dc1b31d7b4679fe084537310565 100644
 --- a/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
 +++ b/src/main/java/net/minecraft/world/item/enchantment/EnchantmentHelper.java
-@@ -365,7 +365,7 @@ public class EnchantmentHelper {
+@@ -364,7 +364,7 @@ public class EnchantmentHelper {
          } else {
              level += 1 + random.nextInt(i / 4 + 1) + random.nextInt(i / 4 + 1);
              float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
