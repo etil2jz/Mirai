@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Thu, 2 Dec 2021 16:06:46 +0100
+Subject: [PATCH] Mirai Configuration
+
+
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 79b26045a68ebb9b01e5bd06abbccaaef5489777..3dd9204c639737ad0c508d2d4a0ac8bc61c74910 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -1897,6 +1897,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+         }
+         // Paper end
+ 
++        // Mirai start
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getMiraiConfig() {
++            throw new UnsupportedOperationException("Not supported yet.");
++        }
++
++        @NotNull
++        public java.util.Properties getServerProperties() {
++            throw new UnsupportedOperationException("Not supported yet.");
++        }
++        // Mirai end
++
+         /**
+          * Sends the component to the player
+          *

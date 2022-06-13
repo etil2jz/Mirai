@@ -1,0 +1,134 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Wed, 20 Apr 2022 13:03:37 +0200
+Subject: [PATCH] c2me: worldgen vanilla bugs fixes
+
+Author: ishland <ishlandmc@yeah.net>
+
+Original license: MIT
+Original project: https://github.com/RelativityMC/C2ME-fabric (Yarn mappings)
+
+Copyright (c) 2021-2022 ishland
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java b/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
+index 954e141e5617d6d52e2f3008c25fe9e2fe2f0f9a..f760f598e9fd4c2a72059334ff7ea5dbdee37696 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkStatus.java
+@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
+ import net.minecraft.world.level.levelgen.Heightmap;
+ import net.minecraft.world.level.levelgen.blending.Blender;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
++import java.util.ArrayList; // Mirai - c2me: worldgen vanilla bugs fixes
+ 
+ public class ChunkStatus {
+ 
+@@ -170,7 +171,7 @@ public class ChunkStatus {
+     }, (chunkstatus, worldserver, definedstructuremanager, lightenginethreaded, function, ichunkaccess) -> {
+         return (CompletableFuture) function.apply(ichunkaccess);
+     });
+-    private static final List<ChunkStatus> STATUS_BY_RANGE = ImmutableList.of(ChunkStatus.FULL, ChunkStatus.FEATURES, ChunkStatus.LIQUID_CARVERS, ChunkStatus.BIOMES, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, new ChunkStatus[0]);
++    private static List<ChunkStatus> STATUS_BY_RANGE = ImmutableList.of(ChunkStatus.FULL, ChunkStatus.FEATURES, ChunkStatus.LIQUID_CARVERS, ChunkStatus.BIOMES, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, new ChunkStatus[0]); // Mirai - remove final
+     private static final IntList RANGE_BY_STATUS = (IntList) Util.make(new IntArrayList(ChunkStatus.getStatusList().size()), (intarraylist) -> {
+         int i = 0;
+ 
+@@ -352,4 +353,12 @@ public class ChunkStatus {
+ 
+         void doWork(ChunkStatus targetStatus, ServerLevel world, ChunkGenerator chunkGenerator, List<ChunkAccess> chunks, ChunkAccess chunk);
+     }
++
++    // Mirai start - c2me: worldgen vanilla bugs fixes
++    static {
++        final List<ChunkStatus> distanceToStatus = new ArrayList<>(STATUS_BY_RANGE);
++        distanceToStatus.add(ChunkStatus.STRUCTURE_STARTS);
++        STATUS_BY_RANGE = ImmutableList.copyOf(distanceToStatus);
++    }
++    // Mirai end
+ }
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java b/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
+index 327f723e8f9e482cdaed4b77fdb4c3b5bc5a4a54..4e58c9700b2fb3cd30f5b3b6cc30ba11db88502a 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/placement/PlacedFeature.java
+@@ -16,8 +16,15 @@ import net.minecraft.world.level.WorldGenLevel;
+ import net.minecraft.world.level.chunk.ChunkGenerator;
+ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+ import org.apache.commons.lang3.mutable.MutableBoolean;
++// Mirai start - c2me: worldgen vanilla bugs fixes
++import com.mojang.logging.LogUtils;
++import org.slf4j.Logger;
++// Mirai end
+ 
+ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> placement) {
++
++    private static final Logger LOGGER = LogUtils.getLogger(); // Mirai - c2me: worldgen vanilla bugs fixes
++
+     public static final Codec<PlacedFeature> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
+         return instance.group(ConfiguredFeature.CODEC.fieldOf("feature").forGetter((placedFeature) -> {
+             return placedFeature.feature;
+@@ -37,25 +44,48 @@ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<Placem
+         return this.placeWithContext(new PlacementContext(world, generator, Optional.of(this)), random, pos);
+     }
+ 
++    // Mirai start - c2me: worldgen vanilla bugs fixes
++    /**
++     * @author ishland
++     * @reason retry when stream fails
++     */
+     private boolean placeWithContext(PlacementContext context, Random random, BlockPos pos) {
+-        Stream<BlockPos> stream = Stream.of(pos);
++        Stream<BlockPos> stream;
++        for (int retries = 1; ; retries++) {
++            try {
++                stream = Stream.of(pos);
++
++                for (PlacementModifier placementModifier : this.placement) {
++                    stream = stream.flatMap(posx -> placementModifier.getPositions(context, random, posx));
++                }
+ 
+-        for(PlacementModifier placementModifier : this.placement) {
+-            stream = stream.flatMap((posx) -> {
+-                return placementModifier.getPositions(context, random, posx);
+-            });
++                break;
++            } catch (IllegalStateException e) {
++                if (e.getMessage().equals("stream has already been operated upon or closed")) {
++                    if (retries == 3) {
++                        System.err.println("Retry failed, throwing exception");
++                        throw e;
++                    }
++                    System.err.println(String.format("Possible graalvm issue, retrying... (attempt %d)", retries + 1));
++                    e.printStackTrace();
++                }
++            }
+         }
+ 
+         ConfiguredFeature<?, ?> configuredFeature = this.feature.value();
+-        MutableBoolean mutableBoolean = new MutableBoolean();
+-        stream.forEach((blockPos) -> {
++        if (configuredFeature == null) {
++            LOGGER.error("NULL configuredFeature in PlacedFeature {}", this, new Throwable());
++            return false;
++        }
++        MutableBoolean placementModifier = new MutableBoolean();
++        stream.forEach(blockPos -> {
+             if (configuredFeature.place(context.getLevel(), context.generator(), random, blockPos)) {
+-                mutableBoolean.setTrue();
++                placementModifier.setTrue();
+             }
+-
+         });
+-        return mutableBoolean.isTrue();
++        return placementModifier.isTrue();
+     }
++    // Mirai end
+ 
+     public Stream<ConfiguredFeature<?, ?>> getFeatures() {
+         return this.feature.value().getFeatures();
+@@ -66,6 +96,8 @@ public record PlacedFeature(Holder<ConfiguredFeature<?, ?>> feature, List<Placem
+         return "Placed " + this.feature;
+     }
+ 
++    /* // Mirai - what's the point of this?
+     static record test(int a) {
+     }
++    */
+ }

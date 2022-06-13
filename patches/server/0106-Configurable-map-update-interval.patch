@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Thu, 21 Apr 2022 19:43:31 +0200
+Subject: [PATCH] Configurable map update interval
+
+
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+index 6a78374b6ab3198571df7e17023d371667ebb24b..efdcbbc5e70fc283a703462955ad3a1944998012 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+@@ -624,7 +624,7 @@ public class MapItemSavedData extends SavedData {
+         @Nullable
+         Packet<?> nextUpdatePacket(int mapId) {
+             MapItemSavedData.MapPatch worldmap_b;
+-            if (!this.dirtyData && this.tick % 5 != 0) { this.tick++; return null; } // Paper - this won't end up sending, so don't render it!
++            if (!this.dirtyData && this.tick % wtf.etil.mirai.MiraiConfig.mapUpdateInterval != 0) { this.tick++; return null; } // Paper - this won't end up sending, so don't render it! // Mirai - configurable map update interval
+             boolean vanillaMaps = shouldUseVanillaMap(); // Paper
+             org.bukkit.craftbukkit.map.RenderData render = !vanillaMaps ? MapItemSavedData.this.mapView.render((org.bukkit.craftbukkit.entity.CraftPlayer) this.player.getBukkitEntity()) : MapItemSavedData.this.vanillaRender; // CraftBukkit // Paper
+ 
+@@ -637,7 +637,7 @@ public class MapItemSavedData extends SavedData {
+ 
+             Collection collection;
+ 
+-            if ((true || this.dirtyDecorations) && this.tick++ % 5 == 0) { // CraftBukkit - custom maps don't update this yet
++            if ((true || this.dirtyDecorations) && this.tick++ % wtf.etil.mirai.MiraiConfig.mapUpdateInterval == 0) { // CraftBukkit - custom maps don't update this yet // Mirai - configurable map update interval
+                 this.dirtyDecorations = false;
+                 // CraftBukkit start
+                 java.util.Collection<MapDecoration> icons = new java.util.ArrayList<MapDecoration>();
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index d304bc013ec2bd119d1af25163c694b8d09807f1..9503662a0723b2badbc4e28c3d1d0d1987d68630 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -254,4 +254,9 @@ public class MiraiConfig {
+         fastSpeedCheck = getBoolean("fast-speed-check", fastSpeedCheck);
+     }
+ 
++    public static int mapUpdateInterval = 5;
++    private static void mapUpdate() {
++        mapUpdateInterval = getInt("map-update-interval", mapUpdateInterval);
++    }
++
+ }
+\ No newline at end of file

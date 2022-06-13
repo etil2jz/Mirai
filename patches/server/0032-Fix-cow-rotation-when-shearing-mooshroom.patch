@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Fri, 3 May 2019 23:53:16 -0500
+Subject: [PATCH] Fix cow rotation when shearing mooshroom
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java b/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java
+index 6d4dc4b09278eca509f86655c6562fb4b05d5069..53a081af5b6a386ebde1765c7cedff372ffbd7b2 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java
++++ b/src/main/java/net/minecraft/world/entity/animal/MushroomCow.java
+@@ -180,7 +180,13 @@ public class MushroomCow extends Cow implements Shearable {
+ 
+             entitycow.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+             entitycow.setHealth(this.getHealth());
++            // Purpur start
++            entitycow.copyPosition(this);
+             entitycow.yBodyRot = this.yBodyRot;
++            entitycow.setYHeadRot(this.getYHeadRot());
++            entitycow.yRotO = this.yRotO;
++            entitycow.xRotO = this.xRotO;
++            // Purpur end
+             if (this.hasCustomName()) {
+                 entitycow.setCustomName(this.getCustomName());
+                 entitycow.setCustomNameVisible(this.isCustomNameVisible());

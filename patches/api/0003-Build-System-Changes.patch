@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ben Kerllenevich <ben@omega24.dev>
+Date: Sat, 12 Jun 2021 12:35:38 -0400
+Subject: [PATCH] Build System Changes
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 3a1c5a4aa8d512d50565b22a383e44b73b276ee5..ea01ad75a874944a16f817f0a27e12b251111192 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -103,6 +103,8 @@ tasks.jar {
+ }
+ 
+ tasks.withType<Javadoc> {
++    (options as StandardJavadocDocletOptions).addStringOption("-add-modules", "jdk.incubator.vector") // Purpur - our javadocs need this for pufferfish's SIMD patch
++    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet") // Purpur - silence Paper's bajillion javadoc warnings
+     val options = options as StandardJavadocDocletOptions
+     options.overview = "src/main/javadoc/overview.html"
+     options.isDocFilesSubDirs = true

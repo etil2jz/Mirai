@@ -1,0 +1,372 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Sun, 3 Apr 2022 10:38:26 +0200
+Subject: [PATCH] Use faster random implementation
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 0321eac313212c717cf02889589bbc5f73c7d6ca..5b62c64b14efb69410c691fd9db0e943bb15432b 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -31,6 +31,7 @@ dependencies {
+     implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.1") // Paper
+     implementation("org.ow2.asm:asm:9.2")
+     implementation("org.ow2.asm:asm-commons:9.2") // Paper - ASM event executor generation
++    implementation("org.apache.commons:commons-rng-core:1.4") // Mirai - Use faster random implementation
+     runtimeOnly("org.xerial:sqlite-jdbc:3.36.0.3")
+     runtimeOnly("mysql:mysql-connector-java:8.0.27")
+     runtimeOnly("com.lmax:disruptor:3.4.4") // Paper
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+index 20cfe7b9b7127ddeb97aa91d759fc17b4a548eaf..056f767c546e90cc6302aa0add7c2897d14d80e7 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+@@ -13,7 +13,7 @@ import java.util.UUID;
+ 
+ public class PaperLootableInventoryData {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom();
+ 
+     private long lastFill = -1;
+     private long nextRefill = -1;
+diff --git a/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java b/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java
+index a5d3aa309d3fdaab9e0fea2dfb91a080a3ac1193..6e33c31aaf470d84707180e25a237832ea3d11fc 100644
+--- a/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java
++++ b/src/main/java/me/jellysquid/mods/lithium/common/cached_blockpos_iteration/IterateOutwardsCache.java
+@@ -22,7 +22,7 @@ public class IterateOutwardsCache {
+     public IterateOutwardsCache(int capacity) {
+         this.capacity = capacity;
+         this.table = new ConcurrentHashMap<>(31);
+-        this.random = new Random();
++        this.random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     }
+ 
+     private void fillPositionsWithIterateOutwards(LongList entry, int xRange, int yRange, int zRange) {
+diff --git a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+index edc5b0fde13cecf1da371972bd040d7ca38a690b..d41e64afb0f1895ae8b800a9c2b336ebd08410ff 100644
+--- a/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
++++ b/src/main/java/net/minecraft/server/commands/SpreadPlayersCommand.java
+@@ -65,7 +65,7 @@ public class SpreadPlayersCommand {
+         if (maxY < j) {
+             throw SpreadPlayersCommand.ERROR_INVALID_MAX_HEIGHT.create(maxY, j);
+         } else {
+-            Random random = new Random();
++            Random random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+             double d0 = (double) (center.x - maxRange);
+             double d1 = (double) (center.y - maxRange);
+             double d2 = (double) (center.x + maxRange);
+diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+index 0866b340a11d4650fc00a40cdb949b6e44691f8c..8eed99c1d58111b391c9c119d5ee60ec54b4d1f2 100644
+--- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+@@ -48,7 +48,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+     private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger(0);
+     static final Logger LOGGER = LogUtils.getLogger();
+     private static final int MAX_TICKS_BEFORE_LOGIN = 600;
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private final byte[] nonce = new byte[4];
+     final MinecraftServer server;
+     public final Connection connection;
+diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
+index 23d4efac14b391a5f654013fc549c3274c160ffa..969abe4e3bad924517f5cf72fdb95896eb681994 100644
+--- a/src/main/java/net/minecraft/util/Mth.java
++++ b/src/main/java/net/minecraft/util/Mth.java
+@@ -31,7 +31,7 @@ public class Mth {
+         }
+ 
+     });
+-    private static final Random RANDOM = new Random(); // Mirai - too lazy to edit correctly this line
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     public static float[] getSinTable() { return SIN; } // Mirai
+     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+     private static final double ONE_SIXTH = 0.16666666666666666D;
+@@ -758,7 +758,7 @@ public class Mth {
+     }
+ 
+     public static double wobble(double d) {
+-        return d + (2.0D * (new Random((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D;
++        return d + (2.0D * (new wtf.etil.mirai.server.util.FastRandom((long)floor(d * 3000.0D))).nextDouble() - 1.0D) * 1.0E-7D / 2.0D; // Mirai - Use faster random implementation
+     }
+ 
+     public static int roundToward(int value, int divisor) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index a3465acd25061d2b0833e8cae00403579e647b0b..77bff90134f142fb968c8a285d7c70f8951b3e87 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -181,7 +181,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     }
+ 
+     // Paper start
+-    public static Random SHARED_RANDOM = new Random() {
++    public static Random SHARED_RANDOM = new wtf.etil.mirai.server.util.FastRandom() { // Mirai - Use faster random implementation
+         private boolean locked = false;
+         @Override
+         public synchronized void setSeed(long seed) {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
+index 9783110dec117504a82c985943ffb3eab91cada7..8a676e0ed8b25ad93bf619ea86bca4cca9595325 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/ShufflingList.java
+@@ -13,7 +13,7 @@ import java.util.stream.Stream;
+ 
+ public class ShufflingList<U> {
+     public final List<ShufflingList.WeightedEntry<U>> entries; // Paper - public
+-    private final Random random = new Random();
++    private final Random random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private final boolean isUnsafe; // Paper
+ 
+     public ShufflingList() {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+index 1dbe21a2bb6f7254d13842ead8084b801f881008..5c1dd8802fc161d90b6dbe73287d8669f76cb553 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
++++ b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+ 
+ public abstract class Sensor<E extends LivingEntity> {
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private static final int DEFAULT_SCAN_RATE = 20;
+     protected static final int TARGETING_RANGE = 16;
+     private static final TargetingConditions TARGET_CONDITIONS = TargetingConditions.forNonCombat().range(16.0D);
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+index 57f593e5f797d646ceb70fa61ec2e966cf4dabc1..62d6bcb3f47afae75d167b1ca6e70e256bcaf25c 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinAi.java
+@@ -373,7 +373,7 @@ public class PiglinAi {
+     }
+ 
+     private static boolean wantsToDance(LivingEntity piglin, LivingEntity target) {
+-        return target.getType() != EntityType.HOGLIN ? false : (new Random(piglin.level.getGameTime())).nextFloat() < 0.1F;
++        return target.getType() != EntityType.HOGLIN ? false : (new wtf.etil.mirai.server.util.FastRandom(piglin.level.getGameTime())).nextFloat() < 0.1F; // Mirai - Use faster random implementation
+     }
+ 
+     protected static boolean wantsToPickup(Piglin piglin, ItemStack stack) {
+diff --git a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+index 4e478c30714a8e4cd95f02e73615d166836d1e4b..6c942839a30f50c44acda5e4379f2088878c70a4 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
++++ b/src/main/java/net/minecraft/world/entity/npc/WanderingTraderSpawner.java
+@@ -35,7 +35,7 @@ public class WanderingTraderSpawner implements CustomSpawner {
+     private static final int SPAWN_CHANCE_INCREASE = 25;
+     private static final int SPAWN_ONE_IN_X_CHANCE = 10;
+     private static final int NUMBER_OF_SPAWN_ATTEMPTS = 10;
+-    private final Random random = new Random();
++    private final Random random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private final ServerLevelData serverLevelData;
+     private int tickDelay;
+     private int spawnDelay;
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+index 3789a0db398766f0fbc9e5ac5bf4228a0a0dac88..e8a6e619bf9c22792a938f8ebebe635466865ff6 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
+@@ -79,7 +79,7 @@ public class FishingHook extends Projectile {
+ 
+     private FishingHook(EntityType<? extends FishingHook> type, Level world, int luckOfTheSeaLevel, int lureLevel) {
+         super(type, world);
+-        this.syncronizedRandom = new Random();
++        this.syncronizedRandom = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+         this.openWater = true;
+         this.currentState = FishingHook.FishHookState.FLYING;
+         this.noCulling = true;
+diff --git a/src/main/java/net/minecraft/world/entity/raid/Raid.java b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+index a078f637ed005dfad5c2c2f601e4ba5964ba7f8d..501378c380fa165bd34f48ad590354f452494217 100644
+--- a/src/main/java/net/minecraft/world/entity/raid/Raid.java
++++ b/src/main/java/net/minecraft/world/entity/raid/Raid.java
+@@ -110,7 +110,7 @@ public class Raid {
+ 
+     public Raid(int id, ServerLevel world, BlockPos pos) {
+         this.raidEvent = new ServerBossEvent(Raid.RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+-        this.random = new Random();
++        this.random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+         this.waveSpawnPos = Optional.empty();
+         this.id = id;
+         this.level = world;
+@@ -124,7 +124,7 @@ public class Raid {
+ 
+     public Raid(ServerLevel world, CompoundTag nbt) {
+         this.raidEvent = new ServerBossEvent(Raid.RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+-        this.random = new Random();
++        this.random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+         this.waveSpawnPos = Optional.empty();
+         this.level = world;
+         this.id = nbt.getInt("Id");
+diff --git a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+index ea7b670aa6308bbe9919afced02a9067da20f0ce..bbeba8aecc05c47c668c105149fb67609cfd5aa7 100644
+--- a/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/EnchantmentMenu.java
+@@ -72,7 +72,7 @@ public class EnchantmentMenu extends AbstractContainerMenu {
+             }
+             // CraftBukkit end
+         };
+-        this.random = new Random();
++        this.random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+         this.enchantmentSeed = DataSlot.standalone();
+         this.costs = new int[3];
+         this.enchantClue = new int[]{-1, -1, -1};
+diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+index 4bfebbb2e87464cd47a38a5da6275b2c662fa052..effae052c945ee49d2cbdf4a13b65670706357aa 100644
+--- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
++++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+@@ -41,7 +41,7 @@ public abstract class BaseSpawner {
+     public int maxNearbyEntities = 6;
+     public int requiredPlayerRange = 16;
+     public int spawnRange = 4;
+-    private final Random random = new Random();
++    private final Random random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private int tickDelay = 0; // Paper
+ 
+     public BaseSpawner() {}
+diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
+index 29f6c10e2c2626a9726d295acf12efea2b463cd3..e207a4c2de578274aa7ec8acdbccfbaf6feadae3 100644
+--- a/src/main/java/net/minecraft/world/level/Explosion.java
++++ b/src/main/java/net/minecraft/world/level/Explosion.java
+@@ -89,7 +89,7 @@ public class Explosion {
+     }
+ 
+     public Explosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType) {
+-        this.random = new Random();
++        this.random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+         this.toBlow = Lists.newArrayList();
+         this.hitPlayers = Maps.newHashMap();
+         this.level = world;
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+index f74c5bb8e1ba42c77c59d481b871fd992483b128..5378e1062c6e551e0ee8ce5e28fe3e34bda43818 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+@@ -21,7 +21,7 @@ import org.bukkit.entity.HumanEntity;
+ 
+ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+ 
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     public static final int CONTAINER_SIZE = 9;
+     private NonNullList<ItemStack> items;
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+index b3eef862248574ee4b864107e1eb69d2418ada8c..105c35338fa14b4efcfcc6d3f7e43448017b91a2 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+@@ -23,7 +23,7 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
+     public float rot;
+     public float oRot;
+     public float tRot;
+-    private static final Random RANDOM = new Random();
++    private static final Random RANDOM = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     private Component name;
+ 
+     public EnchantmentTableBlockEntity(BlockPos pos, BlockState state) {
+diff --git a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
+index 3bc8d37590698c17eab876cffdda78bb1bf0e917..32a654e383e861d7f2d57f4806fbd5e15a708294 100644
+--- a/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
++++ b/src/main/java/net/minecraft/world/level/storage/loot/LootContext.java
+@@ -127,7 +127,7 @@ public class LootContext {
+ 
+         public LootContext.Builder withOptionalRandomSeed(long seed) {
+             if (seed != 0L) {
+-                this.random = new Random(seed);
++                this.random = new wtf.etil.mirai.server.util.FastRandom(seed); // Mirai - Use faster random implementation
+             }
+ 
+             return this;
+@@ -137,7 +137,7 @@ public class LootContext {
+             if (seed == 0L) {
+                 this.random = random;
+             } else {
+-                this.random = new Random(seed);
++                this.random = new wtf.etil.mirai.server.util.FastRandom(seed); // Mirai - Use faster random implementation
+             }
+ 
+             return this;
+@@ -201,7 +201,7 @@ public class LootContext {
+                 } else {
+                     Random random = this.random;
+                     if (random == null) {
+-                        random = new Random();
++                        random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+                     }
+ 
+                     MinecraftServer minecraftServer = this.level.getServer();
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+index 93fd9e87de3078f50431b5d80540d4335d7c79e5..8a90b13e53c1da0ede19c5f528f32936b74fd0a0 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftFirework.java
+@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
+ 
+ public class CraftFirework extends CraftProjectile implements Firework {
+ 
+-    private final Random random = new Random();
++    private final Random random = new wtf.etil.mirai.server.util.FastRandom(); // Mirai - Use faster random implementation
+     //private CraftItemStack item; // Paper - Remove usage, not accurate representation of current item.
+ 
+     public CraftFirework(CraftServer server, FireworkRocketEntity entity) {
+diff --git a/src/main/java/wtf/etil/mirai/server/util/FastRandom.java b/src/main/java/wtf/etil/mirai/server/util/FastRandom.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..24527b27091930ad76a290f74b800c332d1abfad
+--- /dev/null
++++ b/src/main/java/wtf/etil/mirai/server/util/FastRandom.java
+@@ -0,0 +1,64 @@
++package wtf.etil.mirai.server.util;
++
++import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
++
++import java.util.Random;
++import java.util.SplittableRandom;
++
++public class FastRandom extends Random {
++
++    private XoRoShiRo128PlusPlus random;
++
++    public FastRandom() {
++        super();
++        SplittableRandom randomseed = new SplittableRandom();
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    public FastRandom(long seed) {
++        super(seed);
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    @Override
++    public boolean nextBoolean() {
++        return random.nextBoolean();
++    }
++
++    @Override
++    public int nextInt() {
++        return random.nextInt();
++    }
++
++    @Override
++    public float nextFloat() {
++        return (float) random.nextDouble();
++    }
++
++    @Override
++    public double nextDouble() {
++        return random.nextDouble();
++    }
++
++    @Override
++    public synchronized void setSeed(long seed) {
++        SplittableRandom randomseed = new SplittableRandom(seed);
++        this.random = new XoRoShiRo128PlusPlus(randomseed.nextLong(), randomseed.nextLong());
++    }
++
++    @Override
++    public void nextBytes(byte[] bytes) {
++        random.nextBytes(bytes);
++    }
++
++    @Override
++    public int nextInt(int bound) {
++        return random.nextInt(bound);
++    }
++
++    @Override
++    public long nextLong() {
++        return random.nextLong();
++    }
++}
+\ No newline at end of file

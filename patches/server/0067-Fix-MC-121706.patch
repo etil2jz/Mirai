@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Etil <81570777+etil2jz@users.noreply.github.com>
+Date: Sun, 2 Jan 2022 20:37:30 +0100
+Subject: [PATCH] Fix MC-121706
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/RangedBowAttackGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/RangedBowAttackGoal.java
+index 048effbc4d25669801b467be61ee4b88dd4ea9b7..5b93358a24dab1dbe66f0a74c22f1977e3c60e50 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/goal/RangedBowAttackGoal.java
++++ b/src/main/java/net/minecraft/world/entity/ai/goal/RangedBowAttackGoal.java
+@@ -111,10 +111,10 @@ public class RangedBowAttackGoal<T extends Monster & RangedAttackMob> extends Go
+ 
+                 this.mob.getMoveControl().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+                 this.mob.lookAt(livingEntity, 30.0F, 30.0F);
+-            } else {
+-                this.mob.getLookControl().setLookAt(livingEntity, 30.0F, 30.0F);
+             }
+ 
++            this.mob.getLookControl().setLookAt(livingEntity, 30.0F, 30.0F); // Mirai - fix MC-121706
++
+             if (this.mob.isUsingItem()) {
+                 if (!bl && this.seeTime < -60) {
+                     this.mob.stopUsingItem();

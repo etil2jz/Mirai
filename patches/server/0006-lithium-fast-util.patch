@@ -1,0 +1,94 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: 2No2Name <2No2Name@web.de>
+Date: Tue, 14 Dec 2021 12:04:01 -0500
+Subject: [PATCH] lithium: fast util
+
+Original code by CaffeineMC, licensed under GNU Lesser General Public License v3.0
+You can find the original code on https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/core/Direction.java b/src/main/java/net/minecraft/core/Direction.java
+index a75a7a83bea89db4e4a4ca1c06233b3f4350fa73..4be4d9e6611dc3b7a34dbf2f5d6990bc0980ee63 100644
+--- a/src/main/java/net/minecraft/core/Direction.java
++++ b/src/main/java/net/minecraft/core/Direction.java
+@@ -191,7 +191,7 @@ public enum Direction implements StringRepresentable {
+     }
+ 
+     public Direction getOpposite() {
+-        return from3DDataValue(this.oppositeIndex);
++        return VALUES[this.oppositeIndex]; // JettPack - lithium: fast_util
+     }
+ 
+     public Direction getClockWise(Direction.Axis axis) {
+@@ -441,7 +441,7 @@ public enum Direction implements StringRepresentable {
+     }
+ 
+     public static Direction getRandom(Random random) {
+-        return Util.getRandom(VALUES, random);
++        return VALUES[random.nextInt(VALUES.length)]; // JettPack - lithium: fast_util
+     }
+ 
+     public static Direction getNearest(double x, double y, double z) {
+diff --git a/src/main/java/net/minecraft/world/phys/AABB.java b/src/main/java/net/minecraft/world/phys/AABB.java
+index 0d24ed60976d862c14cca4af0f6efc15f7c52c7e..9c1e6287b290df11072e1d7b892e77ae10c95af1 100644
+--- a/src/main/java/net/minecraft/world/phys/AABB.java
++++ b/src/main/java/net/minecraft/world/phys/AABB.java
+@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
+ import net.minecraft.util.Mth;
+ import net.minecraft.world.level.levelgen.structure.BoundingBox;
++import net.minecraft.core.Direction; // JettPack
+ 
+ public class AABB {
+     private static final double EPSILON = 1.0E-7D;
+@@ -16,6 +17,15 @@ public class AABB {
+     public final double maxY;
+     public final double maxZ;
+ 
++    // JettPack start - lithium: fast_util
++    static {
++        assert Direction.Axis.X.ordinal() == 0;
++        assert Direction.Axis.Y.ordinal() == 1;
++        assert Direction.Axis.Z.ordinal() == 2;
++        assert Direction.Axis.values().length == 3;
++    }
++    // JettPack end
++
+     public AABB(double x1, double y1, double z1, double x2, double y2, double z2) {
+         this.minX = Math.min(x1, x2);
+         this.minY = Math.min(y1, y2);
+@@ -81,11 +91,33 @@ public class AABB {
+     }
+ 
+     public double min(Direction.Axis axis) {
+-        return axis.choose(this.minX, this.minY, this.minZ);
++        // JettPack start - lithium: fast_util
++        switch (axis.ordinal()) {
++            case 0: //X
++                return this.minX;
++            case 1: //Y
++                return this.minY;
++            case 2: //Z
++                return this.minZ;
++        }
++
++        throw new IllegalArgumentException();
++        // JettPack end
+     }
+ 
+     public double max(Direction.Axis axis) {
+-        return axis.choose(this.maxX, this.maxY, this.maxZ);
++        // JettPack start - lithium: fast_util
++        switch (axis.ordinal()) {
++            case 0: //X
++                return this.maxX;
++            case 1: //Y
++                return this.maxY;
++            case 2: //Z
++                return this.maxZ;
++        }
++
++        throw new IllegalArgumentException();
++        // JettPack end
+     }
+ 
+     @Override
