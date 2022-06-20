@@ -7,7 +7,7 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 26841729126b022f75e55e584fe850771dedd4cd..38754510081b130e045900bec6d7e0a9cb47b767 100644
+index 20cb2968a7aa5975126ba337f7b6157fb8b5b0fe..7b7c3b5627d88137d61fe0b0933dad9cba755b6b 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -185,7 +185,7 @@ import org.bukkit.event.server.ServerLoadEvent;
@@ -19,7 +19,7 @@ index 26841729126b022f75e55e584fe850771dedd4cd..38754510081b130e045900bec6d7e0a9
  
      private static MinecraftServer SERVER; // Paper
      public static final Logger LOGGER = LogUtils.getLogger();
-@@ -1352,19 +1352,21 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1353,19 +1353,21 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
  
      @Override
@@ -43,7 +43,7 @@ index 26841729126b022f75e55e584fe850771dedd4cd..38754510081b130e045900bec6d7e0a9
  
      @Override
      public boolean pollTask() {
-@@ -1396,10 +1398,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1397,10 +1399,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          }
      }
  
@@ -74,7 +74,7 @@ index b42e32bd1a6a669f498b577ec04661c4ba651198..fed79d31c36b9fafbdc71461e27b1f4e
          @Override
          protected boolean scheduleExecutables() {
 diff --git a/src/main/java/net/minecraft/util/thread/BlockableEventLoop.java b/src/main/java/net/minecraft/util/thread/BlockableEventLoop.java
-index 6158420c629d6acdaafb01a7e00d788023e922d1..9321e3a8b2f6f2eaebfa55679f287429d009e834 100644
+index 7a4ade1a4190bf4fbb048919ae2be230f7b80fff..8bf10c68c233a445902a143eaeb5252247c74a75 100644
 --- a/src/main/java/net/minecraft/util/thread/BlockableEventLoop.java
 +++ b/src/main/java/net/minecraft/util/thread/BlockableEventLoop.java
 @@ -29,7 +29,7 @@ public abstract class BlockableEventLoop<R extends Runnable> implements Profiler

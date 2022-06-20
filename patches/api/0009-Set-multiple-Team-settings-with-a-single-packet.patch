@@ -7,10 +7,10 @@ Original license: MIT
 Original project: https://github.com/Cryptite/Slice
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..46eee49bb149910c01db377c9cc8a96da9ead797 100644
+index 06a5d3177ca7ab90c3fd9d2053b2ec5e887c7c62..7c3a317475ed15bafe152699905427b91793647d 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
-@@ -534,6 +534,24 @@ public interface Team {
+@@ -532,6 +532,24 @@ public interface Team {
      boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
      // Paper end
  

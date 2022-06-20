@@ -9,10 +9,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 45d1807b31f5acd5f08f729701cec4b464ad9398..e85175910454fc08704ea01e4b852136a6c6c60f 100644
+index febb35091d32735ae2fe846170bd2c46d1449723..785c4399a1f9c1d0915e840aadd67bc3238cd961 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-@@ -214,7 +214,7 @@ public class PaperCommand extends Command {
+@@ -221,7 +221,7 @@ public class PaperCommand extends Command {
              case "version":
                  Command ver = MinecraftServer.getServer().server.getCommandMap().getCommand("version");
                  if (ver != null) {
@@ -127,7 +127,7 @@ index 3dd8a189c26f41759c59c3b9d0e5282038989a9f..147beddf8ef369cdae4b1ed2dcd0d7b2
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/CompoundTag.java b/src/main/java/net/minecraft/nbt/CompoundTag.java
-index 29f6fc5f83042713704b83f3b5257eb8b9b747f2..0211e70eede03cbe6cdc657e2265c5a1683b7b6c 100644
+index 912fd5135e89348bdd3c0a8b6c07860ebc106df3..beecf9d1effea5cd12d1f826cc8071cd83b5a4d5 100644
 --- a/src/main/java/net/minecraft/nbt/CompoundTag.java
 +++ b/src/main/java/net/minecraft/nbt/CompoundTag.java
 @@ -364,7 +364,7 @@ public class CompoundTag implements Tag {
@@ -171,7 +171,7 @@ index a14b01cee7a8d7022c4fa7264d349a76be143ba5..44f441d6c102fa5bd50071cae991a8a6
  
      @Override
 diff --git a/src/main/java/net/minecraft/nbt/ListTag.java b/src/main/java/net/minecraft/nbt/ListTag.java
-index 17a37d453b3d6cdb838dd7e8071bb9ad34cd2c20..1e2aca86f30c43f25aea7f18b67b4f6ddbd4c2cf 100644
+index 69423244a1b6658e2c6ad4a7c5329e140b7155a8..7a6e18eeae824f17dff5b2b8bfa70e9981edec0a 100644
 --- a/src/main/java/net/minecraft/nbt/ListTag.java
 +++ b/src/main/java/net/minecraft/nbt/ListTag.java
 @@ -221,7 +221,7 @@ public class ListTag extends CollectionTag<Tag> {
@@ -219,10 +219,10 @@ index 1e0d261439255091a6f61485c0747231fbd5b1db..490f5d86df7fff6537c7080361a7df80
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 7ba86703433322e2b166cc263cedd6e7310d36a4..26841729126b022f75e55e584fe850771dedd4cd 100644
+index b1d9eceb953ca42652eb4e59f1fe4f02e57d5ba9..20cb2968a7aa5975126ba337f7b6157fb8b5b0fe 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1412,8 +1412,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1413,8 +1413,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -269,7 +269,7 @@ index 93c1f9e3e9d62cc993fedb93fe43cbeed7d39542..da6156f1d61ca20fd39f35da36c64afe
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 676f2cd4b152984aa76903fcf4377c745775bfc8..f0e7c7c84052f29349b60ad06ec4f9ee1771f4bb 100644
+index f98c6804ef8ec33551857606800295712f2e9057..351f1ead6ab46ab56ff3ff5bc8a1fa6a262dee3f 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -359,7 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -367,7 +367,7 @@ index 4fd709a550bf8da1e996894a1ca6b91206c31e9e..63c0fe30ff035b6b5c1b4b35d3ad6c64
  
      // CraftBukkit start
 diff --git a/src/main/java/net/minecraft/util/ZeroBitStorage.java b/src/main/java/net/minecraft/util/ZeroBitStorage.java
-index eec830f9924f1458e9d3035192408f31a0b87871..225324615cc5d20b928714695f62adee91f43c5a 100644
+index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c81c22d647 100644
 --- a/src/main/java/net/minecraft/util/ZeroBitStorage.java
 +++ b/src/main/java/net/minecraft/util/ZeroBitStorage.java
 @@ -5,7 +5,7 @@ import java.util.function.IntConsumer;
@@ -380,7 +380,7 @@ index eec830f9924f1458e9d3035192408f31a0b87871..225324615cc5d20b928714695f62adee
  
      public ZeroBitStorage(int size) {
 diff --git a/src/main/java/net/minecraft/world/entity/EquipmentSlot.java b/src/main/java/net/minecraft/world/entity/EquipmentSlot.java
-index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc4e86ea06 100644
+index c82bb38b5b1c9204daef21455723d21509ad1c44..47425ce7091ed8afaa2573901225c92d387005e6 100644
 --- a/src/main/java/net/minecraft/world/entity/EquipmentSlot.java
 +++ b/src/main/java/net/minecraft/world/entity/EquipmentSlot.java
 @@ -13,6 +13,8 @@ public enum EquipmentSlot {
@@ -393,7 +393,7 @@ index b68e7db2fbb085c2b25af3e93d501fbaac98893b..d7d39f11fdf4646a78868c22310e77fc
          this.type = type;
          this.index = entityId;
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 2fe2307a10cb2e4e2b055cbe615b3750bf8fd310..f646545ee7178717c1e3bb48e98fd2af2af745e0 100644
+index 33fbb85228f1570e40f2a825489362626bea3912..f1e4efef12e37c9f99fbb1361ba551fc42b76017 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3032,7 +3032,7 @@ public abstract class LivingEntity extends Entity {
@@ -500,7 +500,7 @@ index ef36f0a9b1849dd3152c0a1c81cded5c4f06aa3c..946bb3c6a59d0e611d28549ceee8946b
      // CraftBukkit start
      static {
 diff --git a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
-index 4257e5bf92a219f20026e4ec7e0d7323f2adf30e..24612061174b659666e3c09a44ddc597b34f549a 100644
+index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..b9579e3d1610ddcb5251baa2dd9462e0557c4cf4 100644
 --- a/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
 +++ b/src/main/java/net/minecraft/world/level/EntityBasedExplosionDamageCalculator.java
 @@ -15,9 +15,17 @@ public class EntityBasedExplosionDamageCalculator extends ExplosionDamageCalcula

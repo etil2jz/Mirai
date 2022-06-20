@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: etil2jz <blanchot.arthur@protonmail.ch>
 Date: Sun, 8 May 2022 13:13:02 +0200
-Subject: [PATCH] Optimized default values for configs
+Subject: [PATCH] Optimize default values
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229db84484f 100644
+index 7333e60f404f6f85a2bcb1f8f031a180314abd32..8867385546249dac81ba006df83b5e95239b347a 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -251,7 +251,7 @@ public class PaperConfig {
@@ -13,7 +13,7 @@ index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229
          // Pufferfish end
          boolean verboseTimings = getBoolean("timings.verbose", true);
 -        TimingsManager.url = getString("timings.url", "https://timings.aikar.co/");
-+        TimingsManager.url = getString("timings.url", "https://timin.gs/"); // Mirai - optimized default values for configs
++        TimingsManager.url = getString("timings.url", "https://timin.gs/"); // Mirai - optimize default values
          if (!TimingsManager.url.endsWith("/")) {
              TimingsManager.url += "/";
          }
@@ -22,10 +22,10 @@ index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229
      }
  
 -    public static int regionFileCacheSize = 256;
-+    public static int regionFileCacheSize = 512; // Mirai - optimized default values for configs
++    public static int regionFileCacheSize = 512; // Mirai - optimize default values
      private static void regionFileCacheSize() {
 -        regionFileCacheSize = Math.max(getInt("settings.region-file-cache-size", 256), 4);
-+        regionFileCacheSize = Math.max(getInt("settings.region-file-cache-size", 512), 4); // Mirai - optimized default values for configs
++        regionFileCacheSize = Math.max(getInt("settings.region-file-cache-size", 512), 4); // Mirai - optimize default values
      }
  
      public static boolean enablePlayerCollisions = true;
@@ -34,10 +34,10 @@ index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229
      }
  
 -    public static boolean useAlternativeLuckFormula = false;
-+    public static boolean useAlternativeLuckFormula = true; // Mirai - optimized default values for configs
++    public static boolean useAlternativeLuckFormula = true; // Mirai - optimize default values
      private static void useAlternativeLuckFormula() {
 -        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
-+        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", true); // Mirai - optimized default values for configs
++        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", true); // Mirai - optimize default values
          if (useAlternativeLuckFormula) {
              Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
          }
@@ -46,24 +46,47 @@ index 7333e60f404f6f85a2bcb1f8f031a180314abd32..fb631ae7580806385399944aaca54229
      }
  
 -    public static int maxBookPageSize = 2560;
-+    public static int maxBookPageSize = 512; // Mirai - optimized default values for configs
++    public static int maxBookPageSize = 512; // Mirai - optimize default values
      public static double maxBookTotalSizeMultiplier = 0.98D;
      private static void maxBookSize() {
          maxBookPageSize = Math.min(8192, getInt("settings.book-size.page-max", maxBookPageSize));
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa66fbdce8 100644
+index 1fa17557091e430559ed7645090b26a0bcb2c8fc..d72ee5fa085310b09f9638f95e7001d8697b0e87 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-@@ -153,7 +153,7 @@ public class PaperWorldConfig {
+@@ -90,11 +90,11 @@ public class PaperWorldConfig {
+     public enum RedstoneImplementation {
+         VANILLA, EIGENCRAFT, ALTERNATE_CURRENT
+     }
+-    public RedstoneImplementation redstoneImplementation = RedstoneImplementation.VANILLA;
++    public RedstoneImplementation redstoneImplementation = RedstoneImplementation.ALTERNATE_CURRENT; // Mirai - optimize default values
+     private void redstoneImplementation() {
+         String implementation;
+         if (PaperConfig.version < 27) {
+-            implementation = "vanilla";
++            implementation = "alternate-current"; // Mirai - optimize default values
+             if (config.contains("world-settings.default.use-faster-eigencraft-redstone")) {
+                 implementation = config.getBoolean("world-settings.default.use-faster-eigencraft-redstone") ? "eigencraft" : "vanilla";
+                 config.set("world-settings.default.redstone-implementation", implementation);
+@@ -105,7 +105,7 @@ public class PaperWorldConfig {
+             }
+             remove("use-faster-eigencraft-redstone");
+         } else {
+-            implementation = this.getString("redstone-implementation", "vanilla").toLowerCase().trim();
++            implementation = this.getString("redstone-implementation", "alternate-current").toLowerCase().trim(); // Mirai - optimize default values
+         }
+         switch (implementation) {
+             default:
+@@ -158,7 +158,7 @@ public class PaperWorldConfig {
          wanderingTraderSpawnChanceMax = getInt("wandering-trader.spawn-chance-max", wanderingTraderSpawnChanceMax);
      }
  
 -    public boolean fixClimbingBypassingCrammingRule = false;
-+    public boolean fixClimbingBypassingCrammingRule = true; // Mirai - optimized default values for configs
++    public boolean fixClimbingBypassingCrammingRule = true; // Mirai - optimize default values
      private void fixClimbingBypassingCrammingRule() {
          fixClimbingBypassingCrammingRule = getBoolean("fix-climbing-bypassing-cramming-rule", fixClimbingBypassingCrammingRule);
      }
-@@ -191,12 +191,26 @@ public class PaperWorldConfig {
+@@ -196,12 +196,26 @@ public class PaperWorldConfig {
  
      public Map<net.minecraft.world.entity.EntityType<?>, Integer> entityPerChunkSaveLimits = new HashMap<>();
      private void entityPerChunkSaveLimits() {
@@ -73,7 +96,7 @@ index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa
 -        getInt("entity-per-chunk-save-limit.arrow", -1);
 -        getInt("entity-per-chunk-save-limit.fireball", -1);
 -        getInt("entity-per-chunk-save-limit.small_fireball", -1);
-+        // Mirai start - optimized default values for configs
++        // Mirai start - optimize default values
 +        getInt("entity-per-chunk-save-limit.experience_orb", 16);
 +        getInt("entity-per-chunk-save-limit.snowball", 8);
 +        getInt("entity-per-chunk-save-limit.ender_pearl", 8);
@@ -96,167 +119,165 @@ index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa
  
          addEntityPerChunkSaveLimitsFromSection(config.getConfigurationSection("world-settings.default.entity-per-chunk-save-limit"), entityPerChunkSaveLimits);
          addEntityPerChunkSaveLimitsFromSection(config.getConfigurationSection("world-settings." + worldName + ".entity-per-chunk-save-limit"), entityPerChunkSaveLimits);
-@@ -237,9 +251,9 @@ public class PaperWorldConfig {
+@@ -242,9 +256,9 @@ public class PaperWorldConfig {
          }
      }
  
 -    public int maxAutoSaveChunksPerTick = 24;
-+    public int maxAutoSaveChunksPerTick = 12; // Mirai - optimized default values for configs
++    public int maxAutoSaveChunksPerTick = 12; // Mirai - optimize default values
      private void maxAutoSaveChunksPerTick() {
 -        maxAutoSaveChunksPerTick = getInt("max-auto-save-chunks-per-tick", 24);
-+        maxAutoSaveChunksPerTick = getInt("max-auto-save-chunks-per-tick", 12); // Mirai - optimized default values for configs
++        maxAutoSaveChunksPerTick = getInt("max-auto-save-chunks-per-tick", 12); // Mirai - optimize default values
      }
  
      private boolean getBoolean(String path, boolean def) {
-@@ -321,7 +335,7 @@ public class PaperWorldConfig {
+@@ -331,7 +345,7 @@ public class PaperWorldConfig {
  
      public boolean nerfedMobsShouldJump;
      private void nerfedMobsShouldJump() {
 -        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", false);
-+        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", true); // Mirai - optimized default values for configs
++        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", true); // Mirai - optimize default values
      }
  
      public final Reference2IntMap<MobCategory> softDespawnDistances = new Reference2IntOpenHashMap<>(MobCategory.values().length);
-@@ -396,7 +410,7 @@ public class PaperWorldConfig {
+@@ -406,7 +420,7 @@ public class PaperWorldConfig {
  
      public boolean optimizeExplosions;
      private void optimizeExplosions() {
 -        optimizeExplosions = getBoolean("optimize-explosions", false);
-+        optimizeExplosions = getBoolean("optimize-explosions", true); // Mirai - optimized default values for configs
++        optimizeExplosions = getBoolean("optimize-explosions", true); // Mirai - optimize default values
          log("Optimize explosions: " + optimizeExplosions);
      }
  
-@@ -417,7 +431,7 @@ public class PaperWorldConfig {
+@@ -427,7 +441,7 @@ public class PaperWorldConfig {
  
      public int mobSpawnerTickRate;
      private void mobSpawnerTickRate() {
 -        mobSpawnerTickRate = getInt("mob-spawner-tick-rate", 1);
-+        mobSpawnerTickRate = getInt("mob-spawner-tick-rate", 2); // Mirai - optimized default values for configs
++        mobSpawnerTickRate = getInt("mob-spawner-tick-rate", 2); // Mirai - optimize default values
      }
  
      public Integer waterAnimalMaxSpawnHeight;
-@@ -440,12 +454,12 @@ public class PaperWorldConfig {
+@@ -450,12 +464,12 @@ public class PaperWorldConfig {
  
      public int containerUpdateTickRate;
      private void containerUpdateTickRate() {
 -        containerUpdateTickRate = getInt("container-update-tick-rate", 1);
-+        containerUpdateTickRate = getInt("container-update-tick-rate", 3); // Mirai - optimized default values for configs
++        containerUpdateTickRate = getInt("container-update-tick-rate", 3); // Mirai - optimize default values
      }
  
      public boolean disableChestCatDetection;
      private void disableChestCatDetection() {
 -        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", false);
-+        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", true); // Mirai - optimized default values for configs
++        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", true); // Mirai - optimize default values
      }
  
      public boolean disablePlayerCrits;
-@@ -487,14 +501,14 @@ public class PaperWorldConfig {
+@@ -497,14 +511,14 @@ public class PaperWorldConfig {
          nonPlayerEntitiesOnScoreboards = getBoolean("allow-non-player-entities-on-scoreboards", false);
      }
  
 -    public int nonPlayerArrowDespawnRate = -1;
 -    public int creativeArrowDespawnRate = -1;
-+    public int nonPlayerArrowDespawnRate = 20; // Mirai - optimized default values for configs
-+    public int creativeArrowDespawnRate = 20; // Mirai - optimized default values for configs
++    public int nonPlayerArrowDespawnRate = 20; // Mirai - optimize default values
++    public int creativeArrowDespawnRate = 20; // Mirai - optimize default values
      private void nonPlayerArrowDespawnRate() {
 -        nonPlayerArrowDespawnRate = getInt("non-player-arrow-despawn-rate", -1);
-+        nonPlayerArrowDespawnRate = getInt("non-player-arrow-despawn-rate", 20); // Mirai - optimized default values for configs
++        nonPlayerArrowDespawnRate = getInt("non-player-arrow-despawn-rate", 20); // Mirai - optimize default values
          if (nonPlayerArrowDespawnRate == -1) {
              nonPlayerArrowDespawnRate = spigotConfig.arrowDespawnRate;
          }
 -        creativeArrowDespawnRate = getInt("creative-arrow-despawn-rate", -1);
-+        creativeArrowDespawnRate = getInt("creative-arrow-despawn-rate", 20); // Mirai - optimized default values for configs
++        creativeArrowDespawnRate = getInt("creative-arrow-despawn-rate", 20); // Mirai - optimize default values
          if (creativeArrowDespawnRate == -1) {
              creativeArrowDespawnRate = spigotConfig.arrowDespawnRate;
          }
-@@ -520,7 +534,7 @@ public class PaperWorldConfig {
+@@ -530,7 +544,7 @@ public class PaperWorldConfig {
          fixedInhabitedTime = getInt("fixed-chunk-inhabited-time", -1);
      }
  
 -    public int grassUpdateRate = 1;
-+    public int grassUpdateRate = 4; // Mirai - optimized default values for configs
++    public int grassUpdateRate = 4; // Mirai - optimize default values
      private void grassUpdateRate() {
          grassUpdateRate = Math.max(0, getInt("grass-spread-tick-rate", grassUpdateRate));
          log("Grass Spread Tick Rate: " + grassUpdateRate);
-@@ -591,7 +605,7 @@ public class PaperWorldConfig {
-         }
+@@ -612,7 +626,7 @@ public class PaperWorldConfig {
+         treasureMapsAlreadyDiscoveredLootTable = getBooleanOrNull("treasure-maps-find-already-discovered.loot-tables", treasureMapsAlreadyDiscoveredLootTable);
      }
  
 -    public int maxCollisionsPerEntity = 8;
-+    public int maxCollisionsPerEntity = 2; // Mirai - optimized default values for configs
++    public int maxCollisionsPerEntity = 2; // Mirai - optimize default values
      private void maxEntityCollision() {
          maxCollisionsPerEntity = getInt( "max-entity-collisions", this.spigotConfig.getInt("max-entity-collisions", this.maxCollisionsPerEntity, false) );
          log( "Max Entity Collisions: " + maxCollisionsPerEntity );
-@@ -630,17 +644,17 @@ public class PaperWorldConfig {
+@@ -651,17 +665,17 @@ public class PaperWorldConfig {
          scanForLegacyEnderDragon = getBoolean("game-mechanics.scan-for-legacy-ender-dragon", true);
      }
  
 -    public boolean ironGolemsCanSpawnInAir = false;
-+    public boolean ironGolemsCanSpawnInAir = true; // Mirai - optimized default values for configs
++    public boolean ironGolemsCanSpawnInAir = true; // Mirai - optimize default values
      private void ironGolemsCanSpawnInAir() {
          ironGolemsCanSpawnInAir = getBoolean("iron-golems-can-spawn-in-air", ironGolemsCanSpawnInAir);
      }
  
 -    public boolean armorStandEntityLookups = true;
-+    public boolean armorStandEntityLookups = false; // Mirai - optimized default values for configs
++    public boolean armorStandEntityLookups = false; // Mirai - optimize default values
      private void armorStandEntityLookups() {
 -        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", true);
-+        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", false); // Mirai - optimized default values for configs
++        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", false); // Mirai - optimize default values
      }
  
 -    public boolean armorStandTick = true;
-+    public boolean armorStandTick = false; // Mirai - optimized default values for configs
++    public boolean armorStandTick = false; // Mirai - optimize default values
      private void armorStandTick() {
          this.armorStandTick = this.getBoolean("armor-stands-tick", this.armorStandTick);
          log("ArmorStand ticking is " + (this.armorStandTick ? "enabled" : "disabled") + " by default");
-@@ -652,9 +666,9 @@ public class PaperWorldConfig {
+@@ -673,9 +687,9 @@ public class PaperWorldConfig {
          log("Water over lava flow speed: " + waterOverLavaFlowSpeed);
      }
  
 -    public boolean preventMovingIntoUnloadedChunks = false;
-+    public boolean preventMovingIntoUnloadedChunks = true; // Mirai - optimized default values for configs
++    public boolean preventMovingIntoUnloadedChunks = true; // Mirai - optimize default values
      private void preventMovingIntoUnloadedChunks() {
 -        preventMovingIntoUnloadedChunks = getBoolean("prevent-moving-into-unloaded-chunks", false);
-+        preventMovingIntoUnloadedChunks = getBoolean("prevent-moving-into-unloaded-chunks", true); // Mirai - optimized default values for configs
++        preventMovingIntoUnloadedChunks = getBoolean("prevent-moving-into-unloaded-chunks", true); // Mirai - optimize default values
      }
  
      public enum DuplicateUUIDMode {
-@@ -737,8 +751,8 @@ public class PaperWorldConfig {
-     }
+@@ -759,7 +773,7 @@ public class PaperWorldConfig {
  
      public boolean cooldownHopperWhenFull = true;
--    public boolean disableHopperMoveEvents = false;
+     public boolean disableHopperMoveEvents = false;
 -    public boolean hoppersIgnoreOccludingBlocks = false;
-+    public boolean disableHopperMoveEvents = true; // Mirai - optimized default values for configs
-+    public boolean hoppersIgnoreOccludingBlocks = true; // Mirai - optimized default values for configs
++    public boolean hoppersIgnoreOccludingBlocks = true; // Mirai - optimize default values
      private void hopperOptimizations() {
          cooldownHopperWhenFull = getBoolean("hopper.cooldown-when-full", cooldownHopperWhenFull);
          log("Cooldown Hoppers when Full: " + (cooldownHopperWhenFull ? "enabled" : "disabled"));
-@@ -911,7 +925,7 @@ public class PaperWorldConfig {
+@@ -932,7 +946,7 @@ public class PaperWorldConfig {
          enderDragonsDeathAlwaysPlacesDragonEgg = getBoolean("ender-dragons-death-always-places-dragon-egg", enderDragonsDeathAlwaysPlacesDragonEgg);
      }
  
 -    public boolean updatePathfindingOnBlockUpdate = true;
-+    public boolean updatePathfindingOnBlockUpdate = false; // Mirai - optimized default values for configs
++    public boolean updatePathfindingOnBlockUpdate = false; // Mirai - optimize default values
      private void setUpdatePathfindingOnBlockUpdate() {
          updatePathfindingOnBlockUpdate = getBoolean("update-pathfinding-on-block-update", this.updatePathfindingOnBlockUpdate);
      }
-@@ -939,7 +953,7 @@ public class PaperWorldConfig {
+@@ -960,7 +974,7 @@ public class PaperWorldConfig {
  
      public long delayChunkUnloadsBy;
      private void delayChunkUnloadsBy() {
 -        delayChunkUnloadsBy = PaperConfig.getSeconds(getString("delay-chunk-unloads-by", "10s"));
-+        delayChunkUnloadsBy = PaperConfig.getSeconds(getString("delay-chunk-unloads-by", "5s")); // Mirai - optimized default values for configs
++        delayChunkUnloadsBy = PaperConfig.getSeconds(getString("delay-chunk-unloads-by", "5s")); // Mirai - optimize default values
          if (delayChunkUnloadsBy > 0) {
              log("Delaying chunk unloads by " + delayChunkUnloadsBy + " seconds");
              delayChunkUnloadsBy *= 20;
-@@ -989,8 +1003,15 @@ public class PaperWorldConfig {
+@@ -1010,8 +1024,15 @@ public class PaperWorldConfig {
      private com.google.common.collect.Table<String, String, Integer> sensorTickRates;
      private com.google.common.collect.Table<String, String, Integer> behaviorTickRates;
      private void tickRates() {
 -        config.addDefault("world-settings.default.tick-rates.sensor.villager.secondarypoisensor", 40);
 -        config.addDefault("world-settings.default.tick-rates.behavior.villager.validatenearbypoi", -1); // Example
-+        // Mirai start - optimized default values for configs
++        // Mirai start - optimize default values
 +        config.addDefault("world-settings.default.tick-rates.sensor.villager.secondarypoisensor", 80);
 +        config.addDefault("world-settings.default.tick-rates.sensor.villager.nearestbedsensor", 80);
 +        config.addDefault("world-settings.default.tick-rates.sensor.villager.villagerbabiessensor", 40);
@@ -269,48 +290,36 @@ index fba36a0fd7036ba516e14c8d3521b470b0df17d1..39e49aca16128b2ffe1cbde0ecbb47fa
          sensorTickRates = loadTickRates("sensor");
          behaviorTickRates = loadTickRates("behavior");
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index a125abc75ed2bbd905c8fdec442416a45264f531..e616e3ce602c876baa3f531f12506a08523ab921 100644
+index a125abc75ed2bbd905c8fdec442416a45264f531..010baf2744dd096ae3df2f7cf2478e6c677d6dac 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -216,8 +216,8 @@ public class PufferfishConfig {
+@@ -216,9 +216,8 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerTick;
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
 -        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
 -        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
-+        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); // Mirai - optimized default values for configs
-+        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed."); // Mirai - optimized default values for configs
- 
+-
++        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); // Mirai - optimize default values
++        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed."); // Mirai - optimize default values
          setComment("projectile", "Optimizes projectile settings");
      }
-@@ -235,10 +235,10 @@ public class PufferfishConfig {
+ 
+@@ -235,10 +234,10 @@ public class PufferfishConfig {
                  "This value determines how far away an entity has to be",
                  "from the player to start being effected by DEAR.");
          startDistanceSquared = startDistance * startDistance;
 -        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 20,
-+        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 30, // Mirai - optimized default values for configs
++        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 30, // Mirai - optimize default values
                  "This value defines how often in ticks, the furthest entity",
                  "will get their pathfinders and behaviors ticked. 20 = 1s");
 -        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 8,
-+        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 7, // Mirai - optimized default values for configs
++        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 7, // Mirai - optimize default values
                  "This value defines how much distance modifies an entity's",
                  "tick frequency. freq = (distanceToPlayer^2) / (2^value)",
                  "If you want further away entities to tick less often, use 7.",
-diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index d509187ca63963fdd7f1a44d89d2aa1a1b1ce3bd..efe021c6a6bb63d0181c0bf2a256dab90b88726f 100644
---- a/src/main/java/org/spigotmc/SpigotConfig.java
-+++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -335,7 +335,7 @@ public class SpigotConfig
-     public static boolean saveUserCacheOnStopOnly;
-     private static void saveUserCacheOnStopOnly()
-     {
--        SpigotConfig.saveUserCacheOnStopOnly = SpigotConfig.getBoolean( "settings.save-user-cache-on-stop-only", false );
-+        SpigotConfig.saveUserCacheOnStopOnly = SpigotConfig.getBoolean( "settings.save-user-cache-on-stop-only", true ); // Mirai - optimized default values for configs
-     }
- 
-     public static double movedWronglyThreshold;
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index c405457a775df902540602dfb4cdcd6872d35e2a..8681f9af84a5813d45efaf2524f02155d13cf187 100644
+index c405457a775df902540602dfb4cdcd6872d35e2a..39746244225767ed76f78a67a6f5b510df698050 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -150,14 +150,14 @@ public class SpigotWorldConfig
@@ -318,7 +327,7 @@ index c405457a775df902540602dfb4cdcd6872d35e2a..8681f9af84a5813d45efaf2524f02155
      private void itemMerge()
      {
 -        this.itemMerge = this.getDouble("merge-radius.item", 2.5 );
-+        this.itemMerge = this.getDouble("merge-radius.item", 3.5 ); // Mirai - optimized default values for configs
++        this.itemMerge = this.getDouble("merge-radius.item", 3.5 ); // Mirai - optimize default values
          this.log( "Item Merge Radius: " + this.itemMerge );
      }
  
@@ -326,7 +335,7 @@ index c405457a775df902540602dfb4cdcd6872d35e2a..8681f9af84a5813d45efaf2524f02155
      private void expMerge()
      {
 -        this.expMerge = this.getDouble("merge-radius.exp", 3.0 );
-+        this.expMerge = this.getDouble("merge-radius.exp", 4.0 ); // Mirai - optimized default values for configs
++        this.expMerge = this.getDouble("merge-radius.exp", 4.0 ); // Mirai - optimize default values
          this.log( "Experience Merge Radius: " + this.expMerge );
      }
  
@@ -336,44 +345,44 @@ index c405457a775df902540602dfb4cdcd6872d35e2a..8681f9af84a5813d45efaf2524f02155
  
 -    public int animalActivationRange = 32;
 -    public int monsterActivationRange = 32;
-+    public int animalActivationRange = 16; // Mirai - optimized default values for configs
-+    public int monsterActivationRange = 24; // Mirai - optimized default values for configs
++    public int animalActivationRange = 16; // Mirai - optimize default values
++    public int monsterActivationRange = 24; // Mirai - optimize default values
      public int raiderActivationRange = 48;
 -    public int miscActivationRange = 16;
-+    public int miscActivationRange = 8; // Mirai - optimized default values for configs
++    public int miscActivationRange = 8; // Mirai - optimize default values
      // Paper start
 -    public int flyingMonsterActivationRange = 32;
 -    public int waterActivationRange = 16;
 -    public int villagerActivationRange = 32;
 -    public int wakeUpInactiveAnimals = 4;
-+    public int flyingMonsterActivationRange = 48; // Mirai - optimized default values for configs
-+    public int waterActivationRange = 8; // Mirai - optimized default values for configs
-+    public int villagerActivationRange = 16; // Mirai - optimized default values for configs
-+    public int wakeUpInactiveAnimals = 2; // Mirai - optimized default values for configs
++    public int flyingMonsterActivationRange = 48; // Mirai - optimize default values
++    public int waterActivationRange = 8; // Mirai - optimize default values
++    public int villagerActivationRange = 16; // Mirai - optimize default values
++    public int wakeUpInactiveAnimals = 2; // Mirai - optimize default values
      public int wakeUpInactiveAnimalsEvery = 60*20;
 -    public int wakeUpInactiveAnimalsFor = 5*20;
 -    public int wakeUpInactiveMonsters = 8;
-+    public int wakeUpInactiveAnimalsFor = 2*20; // Mirai - optimized default values for configs
-+    public int wakeUpInactiveMonsters = 4; // Mirai - optimized default values for configs
++    public int wakeUpInactiveAnimalsFor = 2*20; // Mirai - optimize default values
++    public int wakeUpInactiveMonsters = 4; // Mirai - optimize default values
      public int wakeUpInactiveMonstersEvery = 20*20;
 -    public int wakeUpInactiveMonstersFor = 5*20;
 -    public int wakeUpInactiveVillagers = 4;
-+    public int wakeUpInactiveMonstersFor = 3*20; // Mirai - optimized default values for configs
-+    public int wakeUpInactiveVillagers = 1; // Mirai - optimized default values for configs
++    public int wakeUpInactiveMonstersFor = 3*20; // Mirai - optimize default values
++    public int wakeUpInactiveVillagers = 1; // Mirai - optimize default values
      public int wakeUpInactiveVillagersEvery = 30*20;
 -    public int wakeUpInactiveVillagersFor = 5*20;
 -    public int wakeUpInactiveFlying = 8;
-+    public int wakeUpInactiveVillagersFor = 20; // Mirai - optimized default values for configs
-+    public int wakeUpInactiveFlying = 1; // Mirai - optimized default values for configs
++    public int wakeUpInactiveVillagersFor = 20; // Mirai - optimize default values
++    public int wakeUpInactiveFlying = 1; // Mirai - optimize default values
      public int wakeUpInactiveFlyingEvery = 10*20;
 -    public int wakeUpInactiveFlyingFor = 5*20;
-+    public int wakeUpInactiveFlyingFor = 3*20; // Mirai - optimized default values for configs
++    public int wakeUpInactiveFlyingFor = 3*20; // Mirai - optimize default values
      public int villagersWorkImmunityAfter = 5*20;
      public int villagersWorkImmunityFor = 20;
      public boolean villagersActiveForPanic = true;
      // Paper end
 -    public boolean tickInactiveVillagers = true;
-+    public boolean tickInactiveVillagers = false; // Mirai - optimized default values for configs
++    public boolean tickInactiveVillagers = false; // Mirai - optimize default values
      public boolean ignoreSpectatorActivation = false;
      private void activationRange()
      {
@@ -382,15 +391,29 @@ index c405457a775df902540602dfb4cdcd6872d35e2a..8681f9af84a5813d45efaf2524f02155
      private void arrowDespawnRate()
      {
 -        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 1200 );
-+        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 300 ); // Mirai - optimized default values for configs
++        this.arrowDespawnRate = this.getInt( "arrow-despawn-rate", 300 ); // Mirai - optimize default values
          this.tridentDespawnRate = this.getInt( "trident-despawn-rate", this.arrowDespawnRate );
          this.log( "Arrow Despawn Rate: " + this.arrowDespawnRate + " Trident Respawn Rate:" + this.tridentDespawnRate );
      }
 diff --git a/src/main/resources/configurations/bukkit.yml b/src/main/resources/configurations/bukkit.yml
-index 97239f7aadd761f6f709a6d6c913e577651a87df..3ed0852d0d891c3f0a9270e0c14473b3dab893f2 100644
+index 97239f7aadd761f6f709a6d6c913e577651a87df..2efe5fde815cafcf30ed94022bdd520747069b17 100644
 --- a/src/main/resources/configurations/bukkit.yml
 +++ b/src/main/resources/configurations/bukkit.yml
-@@ -34,11 +34,11 @@ chunk-gc:
+@@ -25,20 +25,20 @@ settings:
+ spawn-limits:
+     monsters: 70
+     animals: 10
+-    water-animals: 5
+-    water-ambient: 20
+-    water-underground-creature: 5
+-    axolotls: 5
+-    ambient: 15
++    water-animals: 2
++    water-ambient: 2
++    water-underground-creature: 3
++    axolotls: 3
++    ambient: 1
+ chunk-gc:
      period-in-ticks: 600
  ticks-per:
      animal-spawns: 400

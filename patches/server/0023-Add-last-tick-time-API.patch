@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 1ef00b9a0b502fac69ffdd0e233c5222dd9178ff..30156d3c983f83c4d96ce089a27ff9bfed29555e 100644
+index ae3a5097380035f306d88ac1d68244956b2a450b..087bfe20fe5de1d2bc672f9a7da751ee317581fd 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1160,6 +1160,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1161,6 +1161,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
      // Paper End
      // Spigot End
  
@@ -19,7 +19,7 @@ index 1ef00b9a0b502fac69ffdd0e233c5222dd9178ff..30156d3c983f83c4d96ce089a27ff9bf
      protected void runServer() {
          try {
              long serverStartTime = Util.getNanos(); // Paper
-@@ -1225,7 +1227,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1226,7 +1228,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      this.nextTickTime += 50L;
                      this.startMetricsRecordingTick();
                      this.profiler.push("tick");
@@ -30,10 +30,10 @@ index 1ef00b9a0b502fac69ffdd0e233c5222dd9178ff..30156d3c983f83c4d96ce089a27ff9bf
                      this.mayHaveDelayedTasks = true;
                      this.delayedTasksMaxNextTickTime = Math.max(Util.getMillis() + 50L, this.nextTickTime);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 20437547fd04552d5d52ea1058cd793ed1a8e903..69ddc41119dc621cf0ffa9e8e89bc761dc666b7d 100644
+index f42b8569a8f026c1e585c64b72335d1664c5b3d6..2adf5c337534696b8b3fa5f9450ee5f3f668730c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2885,4 +2885,6 @@ public final class CraftServer implements Server {
+@@ -2892,4 +2892,6 @@ public final class CraftServer implements Server {
      }
  
      // Paper end

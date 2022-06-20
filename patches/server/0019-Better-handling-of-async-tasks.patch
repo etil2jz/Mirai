@@ -59,10 +59,10 @@ index e8e49e1bdf1ff4ea60a4feb6ec52d999cbced256..b49f53a89d9c096355d6cc20a2a59033
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 38754510081b130e045900bec6d7e0a9cb47b767..1ef00b9a0b502fac69ffdd0e233c5222dd9178ff 100644
+index 7b7c3b5627d88137d61fe0b0933dad9cba755b6b..ae3a5097380035f306d88ac1d68244956b2a450b 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1059,6 +1059,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1060,6 +1060,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          LOGGER.info("Flushing Chunk IO");
          com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.close(true, true); // Paper
          LOGGER.info("Closing Thread Pool");
@@ -70,7 +70,7 @@ index 38754510081b130e045900bec6d7e0a9cb47b767..1ef00b9a0b502fac69ffdd0e233c5222
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1506,6 +1507,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1507,6 +1508,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
@@ -78,7 +78,7 @@ index 38754510081b130e045900bec6d7e0a9cb47b767..1ef00b9a0b502fac69ffdd0e233c5222
              this.runAllTasks();
          }
          // Paper end
-@@ -2749,6 +2751,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2752,6 +2754,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
              return;
          }
  

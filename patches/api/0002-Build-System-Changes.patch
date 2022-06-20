@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 3a1c5a4aa8d512d50565b22a383e44b73b276ee5..ea01ad75a874944a16f817f0a27e12b251111192 100644
+index 0676517d0cbf444d663994f08551bedbe9fd124d..31e97c899204f5ff4e5f90088070102cc418e54e 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -103,6 +103,8 @@ tasks.jar {
+@@ -104,6 +104,8 @@ tasks.jar {
  }
  
  tasks.withType<Javadoc> {

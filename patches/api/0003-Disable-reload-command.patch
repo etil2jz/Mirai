@@ -15,7 +15,7 @@ index 0c7ba0718de2b93d013968ca0fec34ffd423990f..535800197c43f43c30854d2b19310780
      public boolean execute(@NotNull CommandSender sender, @NotNull String currentAlias, @NotNull String[] args) { // Paper
          if (!testPermission(sender)) return true;
 +        // Yatopia start - disable reload command
-+        if (Boolean.parseBoolean(System.getProperty("Mirai.DisableReloadCommand", "true"))) {
++        if (Boolean.parseBoolean(System.getProperty("mirai.DisableReloadCommand", "true"))) {
 +            sender.sendMessage(ChatColor.RED + "Operation denied.");
 +            sender.sendMessage(ChatColor.YELLOW + "Reload command SHOULD NEVER EVER EVER be used in whatever circumstances.");
 +            sender.sendMessage(ChatColor.YELLOW + "Mirai has intentionally disabled it in order to stop you using it, instead of restarting your server.");
