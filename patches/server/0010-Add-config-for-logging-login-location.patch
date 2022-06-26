@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 49e27efb5fdf26f6a8026c8c17e25d87026ab45d..15b5d142a8261f397ab2ab939d92aeb5701e28fb 100644
+index 4030818ff51eca95e1c2ec38c7eca5bff79a0a4a..348fadecea776f2aea24664d340ce0955455d8af 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -494,7 +494,13 @@ public abstract class PlayerList {
+@@ -497,7 +497,13 @@ public abstract class PlayerList {
          }
          // Paper end
          // CraftBukkit - Moved from above, added world
@@ -26,10 +26,10 @@ index 49e27efb5fdf26f6a8026c8c17e25d87026ab45d..15b5d142a8261f397ab2ab939d92aeb5
  
      public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 5b30b329959811f99f13f32166574f90e765bcb1..63d750d5858d20304b9608697ae618eb97cb6eb6 100644
+index 5b30b329959811f99f13f32166574f90e765bcb1..ce82453b1ee3514cfbe10b94184d1c210867bed9 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -184,6 +184,11 @@ public class MiraiConfig {
+@@ -184,6 +184,9 @@ public class MiraiConfig {
  
      // Mirai - settings below
  
@@ -38,8 +38,6 @@ index 5b30b329959811f99f13f32166574f90e765bcb1..63d750d5858d20304b9608697ae618eb
 +    private static void logPlayerLoc() {
 +        logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
 +    }
-+
-+
  
  }
 \ No newline at end of file

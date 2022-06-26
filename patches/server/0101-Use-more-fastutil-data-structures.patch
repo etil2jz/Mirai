@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: nopjmp <kthompson@hey.com>
+Date: Mon, 20 Dec 2021 19:16:11 -0600
+Subject: [PATCH] Use more fastutil data structures
+
+Original license: MIT
+Original project: https://github.com/nopjmp/Dionysus
+
+Copyright 2021 Kayla Thompson
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerHandshakePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerHandshakePacketListenerImpl.java
+index 08b21f5a7a07f44f8044f56991fb6723cd8f3eea..ac254e4fe3973a8cb3321e96c651847e387d9f0e 100644
+--- a/src/main/java/net/minecraft/server/network/ServerHandshakePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerHandshakePacketListenerImpl.java
+@@ -12,8 +12,14 @@ import net.minecraft.server.MinecraftServer;
+ 
+ // CraftBukkit start
+ import java.net.InetAddress;
+-import java.util.HashMap;
++//import java.util.HashMap; // Dionysus
+ // CraftBukkit end
++// Dionysus start
++import it.unimi.dsi.fastutil.objects.Object2LongMap;
++import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
++import java.util.Iterator;
++import java.util.Map;
++// Dionysus end
+ 
+ public class ServerHandshakePacketListenerImpl implements ServerHandshakePacketListener {
+ 
+@@ -23,7 +29,7 @@ public class ServerHandshakePacketListenerImpl implements ServerHandshakePacketL
+     static final java.util.regex.Pattern PROP_PATTERN = java.util.regex.Pattern.compile("\\w{0,16}");
+     // Spigot end
+     // CraftBukkit start - add fields
+-    private static final HashMap<InetAddress, Long> throttleTracker = new HashMap<InetAddress, Long>();
++    private static final Object2LongOpenHashMap<InetAddress> throttleTracker = new Object2LongOpenHashMap<>(); // Dionysus
+     private static int throttleCounter = 0;
+     // CraftBukkit end
+     private static final Component IGNORE_STATUS_REASON = Component.literal("Ignoring status request");
+@@ -49,7 +55,7 @@ public class ServerHandshakePacketListenerImpl implements ServerHandshakePacketL
+                     InetAddress address = ((java.net.InetSocketAddress) this.connection.getRemoteAddress()).getAddress();
+ 
+                     synchronized (ServerHandshakePacketListenerImpl.throttleTracker) {
+-                        if (ServerHandshakePacketListenerImpl.throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - ServerHandshakePacketListenerImpl.throttleTracker.get(address) < connectionThrottle) {
++                        if (ServerHandshakePacketListenerImpl.throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - ServerHandshakePacketListenerImpl.throttleTracker.getLong(address) < connectionThrottle) { // Dionysus
+                             ServerHandshakePacketListenerImpl.throttleTracker.put(address, currentTime);
+                             Component chatmessage = io.papermc.paper.adventure.PaperAdventure.asVanilla(io.papermc.paper.configuration.GlobalConfiguration.get().messages.kick.connectionThrottle); // Paper - Configurable connection throttle kick message
+                             this.connection.send(new ClientboundLoginDisconnectPacket(chatmessage));
+@@ -63,13 +69,7 @@ public class ServerHandshakePacketListenerImpl implements ServerHandshakePacketL
+                             ServerHandshakePacketListenerImpl.throttleCounter = 0;
+ 
+                             // Cleanup stale entries
+-                            java.util.Iterator iter = ServerHandshakePacketListenerImpl.throttleTracker.entrySet().iterator();
+-                            while (iter.hasNext()) {
+-                                java.util.Map.Entry<InetAddress, Long> entry = (java.util.Map.Entry) iter.next();
+-                                if (entry.getValue() > connectionThrottle) {
+-                                    iter.remove();
+-                                }
+-                            }
++                            throttleTracker.object2LongEntrySet().removeIf(entry -> entry.getLongValue() > connectionThrottle); // Dionysus
+                         }
+                     }
+                     } // Paper - add closing bracket for if check above

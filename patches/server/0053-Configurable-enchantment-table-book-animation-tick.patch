@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+Date: Fri, 24 Jun 2022 20:10:19 +0200
+Subject: [PATCH] Configurable enchantment table book animation tick
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+index 2341a5a249d455628165fc6ba508fc6d70c3dbfb..5a144c724eb6045909febf1fe32367179a3e04a3 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+@@ -48,6 +48,7 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
+     }
+ 
+     public static void bookAnimationTick(Level world, BlockPos pos, BlockState state, EnchantmentTableBlockEntity blockEntity) {
++        if (!wtf.etil.mirai.MiraiConfig.bookAnimationTick) return; // Mirai - skip enchantment table book tick
+         blockEntity.oOpen = blockEntity.open;
+         blockEntity.oRot = blockEntity.rot;
+         Player player = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 3.0D, false);
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index ceaa59b1da54daefe36cac93bfa7e8e7285203f0..d2519c1d1e87dc367b631ac1ea2d5d51af2ebb84 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -234,4 +234,9 @@ public class MiraiConfig {
+         entitiesCanUsePortals = getBoolean("entities-can-use-portals", entitiesCanUsePortals);
+     }
+ 
++    public static boolean bookAnimationTick = false;
++    private static void bookTicking() {
++        bookAnimationTick = getBoolean("enchantment-table-book-animation-tick", bookAnimationTick);
++    }
++
+ }
+\ No newline at end of file

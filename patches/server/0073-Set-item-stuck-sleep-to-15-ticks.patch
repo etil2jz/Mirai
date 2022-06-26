@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: tr7zw <tr7zw@live.de>
+Date: Fri, 31 Jul 2020 21:48:14 -0500
+Subject: [PATCH] Set item stuck sleep to 15 ticks
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+index 64c8eefa0302b04b416cd4912c01c50feddf1301..b9abfa591bf535de3805f7bb2b3f3401c8a4c1f6 100644
+--- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+@@ -138,7 +138,7 @@ public class ItemEntity extends Entity {
+ 
+             if (this.level.isClientSide) {
+                 this.noPhysics = false;
+-            } else {
++            } else if (!this.onGround || this.noPhysics || this.tickCount % 15 == 0) { // Mirai
+                 this.noPhysics = !this.level.noCollision(this, this.getBoundingBox().deflate(1.0E-7D));
+                 if (this.noPhysics) {
+                     this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());

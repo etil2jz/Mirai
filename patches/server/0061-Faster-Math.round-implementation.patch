@@ -1,0 +1,394 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: FX - PR0CESS <fx.e.morin@gmail.com>
+Date: Wed, 22 Dec 2021 18:39:21 +0100
+Subject: [PATCH] Faster Math.round implementation
+
+Original code by fxmorin, licensed under MIT
+You can find the original code on https://github.com/fxmorin/carpet-fixes
+
+diff --git a/src/main/java/carpetfixes/helpers/FastMath.java b/src/main/java/carpetfixes/helpers/FastMath.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..da81a142d2b072f846f9905a0d5b8e293763284a
+--- /dev/null
++++ b/src/main/java/carpetfixes/helpers/FastMath.java
+@@ -0,0 +1,28 @@
++package carpetfixes.helpers;
++
++public class FastMath {
++
++    /**
++     * @author FX - PR0CESS
++     * ~1.25x faster than {@link Math#round(float)}
++     */
++    public static int round(float a) {
++        if (wtf.etil.mirai.MiraiConfig.riskyMathRoundOpt) {
++            return a > 0F ? (int)(a + .5F) : (int)(a - .5F);
++        } else {
++            return Math.round(a);
++        }
++    }
++
++    /**
++     * @author FX - PR0CESS
++     * ~1.28x faster than {@link Math#round(double)}
++     */
++    public static long round(double a) {
++        if (wtf.etil.mirai.MiraiConfig.riskyMathRoundOpt) {
++            return a > 0D ? (long)(a + .5D) : (long)(a - .5D);
++        } else {
++            return Math.round(a);
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
+index bb220f27f5d472514d9a1620a40ed50fcb31ae16..a1aa0265ce807e6f40575094fd84b8aedf2be793 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
++++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
+@@ -734,12 +734,12 @@ public class PaperCommand extends Command {
+                     ++relitChunks[0];
+                     sender.getBukkitEntity().sendMessage(text().color(DARK_AQUA).append(
+                         text("Relit chunk ", BLUE), text(chunkPos.toString()),
+-                        text(", progress: ", BLUE), text((int)(Math.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%")
++                        text(", progress: ", BLUE), text((int)(carpetfixes.helpers.FastMath.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%")
+                     ));
+                 },
+                 (int totalRelit) -> {
+                     final long end = System.nanoTime();
+-                    final long diff = Math.round(1.0e-6*(end - start));
++                    final long diff = carpetfixes.helpers.FastMath.round(1.0e-6*(end - start));
+                     sender.getBukkitEntity().sendMessage(text().color(DARK_AQUA).append(
+                         text("Relit ", BLUE), text(totalRelit),
+                         text(" chunks. Took ", BLUE), text(diff + "ms")
+diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
+index f9251183df72ddc56662fd3f02acf21641a2200c..ea1bad145e529ac36bf335cf4d5339b2d88b282f 100644
+--- a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
++++ b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
+@@ -81,6 +81,6 @@ public class RAMDetails extends JList<String> {
+     }
+ 
+     private static String format(double tps) {
+-        return ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 );
++        return ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( carpetfixes.helpers.FastMath.round( tps * 100.0 ) / 100.0, 20.0 );
+     }
+ }
+diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMGraph.java b/src/main/java/com/destroystokyo/paper/gui/RAMGraph.java
+index c3e54da4ab6440811aab2f9dd1e218802ac13285..2a38ea32f2d4a01be556fdf11254d5910c54f997 100644
+--- a/src/main/java/com/destroystokyo/paper/gui/RAMGraph.java
++++ b/src/main/java/com/destroystokyo/paper/gui/RAMGraph.java
+@@ -128,7 +128,7 @@ public class RAMGraph extends JComponent {
+             graphics.setColor(data.getLineColor());
+             graphics.fillOval(m.x - 2, 100 - used - 2, 5, 5);
+             setToolTipText(String.format("<html><body>Used: %s mb (%s%%)<br/>%s</body></html>",
+-                Math.round(data.getUsedMem() / 1024F / 1024F),
++                carpetfixes.helpers.FastMath.round(data.getUsedMem() / 1024F / 1024F),
+                 used, getTime(m.x)));
+         }
+     }
+diff --git a/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java b/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java
+index 40447d00aefb5ffedb8a2ee87155a04088f0649f..31cc0a29e89e79f616b3ee329a5528961edaa2de 100644
+--- a/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java
++++ b/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java
+@@ -25,7 +25,7 @@ public class TPSCollector extends LiveCollector {
+         long[] times = MinecraftServer.getServer().tickTimes5s.getTimes();
+         double mspt = ((double) Arrays.stream(times).sum() / (double) times.length) * 1.0E-6D;
+ 
+-        this.report(TPS, Math.min(20D, Math.round(Bukkit.getServer().getTPS()[0] * 100d) / 100d));
+-        this.report(MSPT, (double) Math.round(mspt * 100d) / 100d);
++        this.report(TPS, Math.min(20D, carpetfixes.helpers.FastMath.round(Bukkit.getServer().getTPS()[0] * 100d) / 100d));
++        this.report(MSPT, (double) carpetfixes.helpers.FastMath.round(mspt * 100d) / 100d);
+     }
+ }
+diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+index b53402903eb6845df361daf6b05a668608ad7b63..df60ee5ec4f98e815499dd1dfe94a0b62d1f1fbf 100644
+--- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
++++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+@@ -387,11 +387,11 @@ public final class PlayerChunkLoader {
+     }
+ 
+     protected long getTargetSendPerPlayerAddend() {
+-        return GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate <= 1.0 ? 0L : (long)Math.round(1.0e9 / GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate);
++        return GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate <= 1.0 ? 0L : (long)carpetfixes.helpers.FastMath.round(1.0e9 / GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate);
+     }
+ 
+     protected long getMaxSendAddend() {
+-        return GlobalConfiguration.get().chunkLoading.globalMaxChunkSendRate <= 1.0 ? 0L : (long)Math.round(1.0e9 / GlobalConfiguration.get().chunkLoading.globalMaxChunkSendRate);
++        return GlobalConfiguration.get().chunkLoading.globalMaxChunkSendRate <= 1.0 ? 0L : (long)carpetfixes.helpers.FastMath.round(1.0e9 / GlobalConfiguration.get().chunkLoading.globalMaxChunkSendRate);
+     }
+ 
+     public void onChunkPlayerTickReady(final int chunkX, final int chunkZ) {
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index a578b872a357b19236ef1217344d3cdeffc64f9b..d43aac359f49c0c7e83954277d2eb0871491810d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -2749,7 +2749,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+                     }
+ 
+                     double overuseCount = (double)overuse/(double)MAX_CHUNK_EXEC_TIME;
+-                    long extraSleep = (long)Math.round(overuseCount*CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME);
++                    long extraSleep = (long)carpetfixes.helpers.FastMath.round(overuseCount*CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME);
+ 
+                     lastMidTickExecute = currTime + extraSleep;
+                     return;
+diff --git a/src/main/java/net/minecraft/server/gui/StatsComponent.java b/src/main/java/net/minecraft/server/gui/StatsComponent.java
+index 88f10d729aa1e0a01790521821d691a0ecd373a2..df2c8dffd626eab0e03b1b62940a52fa83f6edaf 100644
+--- a/src/main/java/net/minecraft/server/gui/StatsComponent.java
++++ b/src/main/java/net/minecraft/server/gui/StatsComponent.java
+@@ -88,7 +88,7 @@ public class StatsComponent extends JComponent {
+ 
+     // Paper - start Add tps entry
+     private static String format(double tps) {
+-        return (( tps > 21.0 ) ? "*" : "") + Math.min(Math.round(tps * 100.0) / 100.0, 20.0); // only print * at 21, we commonly peak to 20.02 as the tick sleep is not accurate enough, stop the noise
++        return (( tps > 21.0 ) ? "*" : "") + Math.min(carpetfixes.helpers.FastMath.round(tps * 100.0) / 100.0, 20.0); // only print * at 21, we commonly peak to 20.02 as the tick sleep is not accurate enough, stop the noise
+     }
+     // Paper end
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index f6af6dc1c686d477212cd68031d4983f85234a7f..a42f5e16e18586d4a72cdfd517e7796728701d6c 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -1496,7 +1496,7 @@ public abstract class LivingEntity extends Entity {
+             if (this instanceof ServerPlayer) {
+                 CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayer) this, source, f1, amount, flag);
+                 if (f2 > 0.0F && f2 < 3.4028235E37F) {
+-                    ((ServerPlayer) this).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(f2 * 10.0F));
++                    ((ServerPlayer) this).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, carpetfixes.helpers.FastMath.round(f2 * 10.0F));
+                 }
+             }
+ 
+@@ -2025,9 +2025,9 @@ public abstract class LivingEntity extends Entity {
+ 
+                 if (f3 > 0.0F && f3 < 3.4028235E37F) {
+                     if (this instanceof ServerPlayer) {
+-                        ((ServerPlayer) this).awardStat(Stats.DAMAGE_RESISTED, Math.round(f3 * 10.0F));
++                        ((ServerPlayer) this).awardStat(Stats.DAMAGE_RESISTED, carpetfixes.helpers.FastMath.round(f3 * 10.0F));
+                     } else if (source.getEntity() instanceof ServerPlayer) {
+-                        ((ServerPlayer) source.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(f3 * 10.0F));
++                        ((ServerPlayer) source.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, carpetfixes.helpers.FastMath.round(f3 * 10.0F));
+                     }
+                 }
+             }
+@@ -2139,9 +2139,9 @@ public abstract class LivingEntity extends Entity {
+                 float f3 = (float) -event.getDamage(DamageModifier.RESISTANCE);
+                 if (f3 > 0.0F && f3 < 3.4028235E37F) {
+                     if (this instanceof ServerPlayer) {
+-                        ((ServerPlayer) this).awardStat(Stats.DAMAGE_RESISTED, Math.round(f3 * 10.0F));
++                        ((ServerPlayer) this).awardStat(Stats.DAMAGE_RESISTED, carpetfixes.helpers.FastMath.round(f3 * 10.0F));
+                     } else if (damagesource.getEntity() instanceof ServerPlayer) {
+-                        ((ServerPlayer) damagesource.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(f3 * 10.0F));
++                        ((ServerPlayer) damagesource.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, carpetfixes.helpers.FastMath.round(f3 * 10.0F));
+                     }
+                 }
+             }
+@@ -2173,10 +2173,10 @@ public abstract class LivingEntity extends Entity {
+             float f2 = absorptionModifier;
+ 
+             if (f2 > 0.0F && f2 < 3.4028235E37F && this instanceof net.minecraft.world.entity.player.Player) {
+-                ((net.minecraft.world.entity.player.Player) this).awardStat(Stats.DAMAGE_ABSORBED, Math.round(f2 * 10.0F));
++                ((net.minecraft.world.entity.player.Player) this).awardStat(Stats.DAMAGE_ABSORBED, carpetfixes.helpers.FastMath.round(f2 * 10.0F));
+             }
+             if (f2 > 0.0F && f2 < 3.4028235E37F && damagesource.getEntity() instanceof ServerPlayer) {
+-                ((ServerPlayer) damagesource.getEntity()).awardStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round(f2 * 10.0F));
++                ((ServerPlayer) damagesource.getEntity()).awardStat(Stats.DAMAGE_DEALT_ABSORBED, carpetfixes.helpers.FastMath.round(f2 * 10.0F));
+             }
+ 
+             if (f > 0 || !human) {
+@@ -2184,7 +2184,7 @@ public abstract class LivingEntity extends Entity {
+                     // PAIL: Be sure to drag all this code from the EntityHuman subclass each update.
+                     ((net.minecraft.world.entity.player.Player) this).causeFoodExhaustion(damagesource.getFoodExhaustion(), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.DAMAGED); // CraftBukkit - EntityExhaustionEvent
+                     if (f < 3.4028235E37F) {
+-                        ((net.minecraft.world.entity.player.Player) this).awardStat(Stats.DAMAGE_TAKEN, Math.round(f * 10.0F));
++                        ((net.minecraft.world.entity.player.Player) this).awardStat(Stats.DAMAGE_TAKEN, carpetfixes.helpers.FastMath.round(f * 10.0F));
+                     }
+                 }
+                 // CraftBukkit end
+@@ -2206,7 +2206,7 @@ public abstract class LivingEntity extends Entity {
+                         CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayer) this, damagesource, f, originalDamage, true);
+                         f2 = (float) -event.getDamage(DamageModifier.BLOCKING);
+                         if (f2 > 0.0F && f2 < 3.4028235E37F) {
+-                            ((ServerPlayer) this).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(originalDamage * 10.0F));
++                            ((ServerPlayer) this).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, carpetfixes.helpers.FastMath.round(originalDamage * 10.0F));
+                         }
+                     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index b22e4068407f3012b62683abd060509829e61c62..fc01e48c0e2c7f4e56379cb8b89c78e7a874c053 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1084,7 +1084,7 @@ public abstract class Player extends LivingEntity {
+             float f2 = f1 - f;
+ 
+             if (f2 > 0.0F && f2 < 3.4028235E37F) {
+-                this.awardStat(Stats.DAMAGE_ABSORBED, Math.round(f2 * 10.0F));
++                this.awardStat(Stats.DAMAGE_ABSORBED, carpetfixes.helpers.FastMath.round(f2 * 10.0F));
+             }
+ 
+             if (f != 0.0F) {
+@@ -1094,7 +1094,7 @@ public abstract class Player extends LivingEntity {
+                 this.setHealth(this.getHealth() - f);
+                 this.getCombatTracker().recordDamage(damagesource, f3, f);
+                 if (f < 3.4028235E37F) {
+-                    this.awardStat(Stats.DAMAGE_TAKEN, Math.round(f * 10.0F));
++                    this.awardStat(Stats.DAMAGE_TAKEN, carpetfixes.helpers.FastMath.round(f * 10.0F));
+                 }
+ 
+             }
+@@ -1420,7 +1420,7 @@ public abstract class Player extends LivingEntity {
+                         if (target instanceof LivingEntity) {
+                             float f5 = f3 - ((LivingEntity) target).getHealth();
+ 
+-                            this.awardStat(Stats.DAMAGE_DEALT, Math.round(f5 * 10.0F));
++                            this.awardStat(Stats.DAMAGE_DEALT, carpetfixes.helpers.FastMath.round(f5 * 10.0F));
+                             if (j > 0) {
+                                 // CraftBukkit start - Call a combust event when somebody hits with a fire enchanted item
+                                 EntityCombustByEntityEvent combustEvent = new EntityCombustByEntityEvent(this.getBukkitEntity(), target.getBukkitEntity(), j * 4);
+@@ -1689,29 +1689,29 @@ public abstract class Player extends LivingEntity {
+             int i;
+ 
+             if (this.isSwimming()) {
+-                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                 if (i > 0) {
+                     this.awardStat(Stats.SWIM_ONE_CM, i);
+                     this.causeFoodExhaustion(level.spigotConfig.swimMultiplier * (float) i * 0.01F, EntityExhaustionEvent.ExhaustionReason.SWIM); // CraftBukkit - EntityExhaustionEvent // Spigot
+                 }
+             } else if (this.isEyeInFluid(FluidTags.WATER)) {
+-                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                 if (i > 0) {
+                     this.awardStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
+                     this.causeFoodExhaustion(level.spigotConfig.swimMultiplier * (float) i * 0.01F, EntityExhaustionEvent.ExhaustionReason.WALK_UNDERWATER); // CraftBukkit - EntityExhaustionEvent // Spigot
+                 }
+             } else if (this.isInWater()) {
+-                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                 if (i > 0) {
+                     this.awardStat(Stats.WALK_ON_WATER_ONE_CM, i);
+                     this.causeFoodExhaustion(level.spigotConfig.swimMultiplier * (float) i * 0.01F, EntityExhaustionEvent.ExhaustionReason.WALK_ON_WATER); // CraftBukkit - EntityExhaustionEvent // Spigot
+                 }
+             } else if (this.onClimbable()) {
+                 if (dy > 0.0D) {
+-                    this.awardStat(Stats.CLIMB_ONE_CM, (int) Math.round(dy * 100.0D));
++                    this.awardStat(Stats.CLIMB_ONE_CM, (int) carpetfixes.helpers.FastMath.round(dy * 100.0D));
+                 }
+             } else if (this.onGround) {
+-                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                 if (i > 0) {
+                     if (this.isSprinting()) {
+                         this.awardStat(Stats.SPRINT_ONE_CM, i);
+@@ -1725,10 +1725,10 @@ public abstract class Player extends LivingEntity {
+                     }
+                 }
+             } else if (this.isFallFlying()) {
+-                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                 this.awardStat(Stats.AVIATE_ONE_CM, i);
+             } else {
+-                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
++                i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                 if (i > 25) {
+                     this.awardStat(Stats.FLY_ONE_CM, i);
+                 }
+@@ -1739,7 +1739,7 @@ public abstract class Player extends LivingEntity {
+ 
+     public void checkRidingStatistics(double dx, double dy, double dz) {
+         if (this.isPassenger()) {
+-            int i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
++            int i = carpetfixes.helpers.FastMath.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+ 
+             if (i > 0) {
+                 Entity entity = this.getVehicle();
+@@ -1766,7 +1766,7 @@ public abstract class Player extends LivingEntity {
+             return false;
+         } else {
+             if (fallDistance >= 2.0F) {
+-                this.awardStat(Stats.FALL_ONE_CM, (int) Math.round((double) fallDistance * 100.0D));
++                this.awardStat(Stats.FALL_ONE_CM, (int) carpetfixes.helpers.FastMath.round((double) fallDistance * 100.0D));
+             }
+ 
+             return super.causeFallDamage(fallDistance, damageMultiplier, damageSource);
+diff --git a/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java b/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
+index 16504b8be08064e61b013fa943f692816612cbd0..c5b39234822626b4ff948464409ca415250619e9 100644
+--- a/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/DaylightDetectorBlock.java
+@@ -62,7 +62,7 @@ public class DaylightDetectorBlock extends BaseEntityBlock {
+             float f1 = f < 3.1415927F ? 0.0F : 6.2831855F;
+ 
+             f += (f1 - f) * 0.2F;
+-            i = Math.round((float) i * Mth.cos(f));
++            i = carpetfixes.helpers.FastMath.round((float) i * Mth.cos(f));
+         }
+ 
+         i = Mth.clamp(i, (int) 0, (int) 15);
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+index 264ca51c2f2a5ff69688372b71ad7355366bac1a..01fcbe8445de6d024b17c205d9363faa6b2dfa39 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+@@ -249,8 +249,8 @@ public abstract class ChunkGenerator {
+ 
+             for (int j1 = 0; j1 < j; ++j1) {
+                 double d1 = (double) (4 * i + i * i1 * 6) + (randomsource.nextDouble() - 0.5D) * (double) i * 2.5D;
+-                int k1 = (int) Math.round(Math.cos(d0) * d1);
+-                int l1 = (int) Math.round(Math.sin(d0) * d1);
++                int k1 = (int) carpetfixes.helpers.FastMath.round(Math.cos(d0) * d1);
++                int l1 = (int) carpetfixes.helpers.FastMath.round(Math.sin(d0) * d1);
+                 BiomeSource worldchunkmanager = this.biomeSource;
+                 int i2 = SectionPos.sectionToBlockCoord(k1, 8);
+                 int j2 = SectionPos.sectionToBlockCoord(l1, 8);
+diff --git a/src/main/java/net/minecraft/world/level/storage/loot/functions/LootingEnchantFunction.java b/src/main/java/net/minecraft/world/level/storage/loot/functions/LootingEnchantFunction.java
+index 31918fa2eb38e42a5ea5366e559f25ea9d7d59ae..f512f1e0c46b96f831fdea3073e57c6bfd9c69eb 100644
+--- a/src/main/java/net/minecraft/world/level/storage/loot/functions/LootingEnchantFunction.java
++++ b/src/main/java/net/minecraft/world/level/storage/loot/functions/LootingEnchantFunction.java
+@@ -61,7 +61,7 @@ public class LootingEnchantFunction extends LootItemConditionalFunction {
+ 
+             float f = (float) i * this.value.getFloat(context);
+ 
+-            stack.grow(Math.round(f));
++            stack.grow(carpetfixes.helpers.FastMath.round(f));
+             if (this.hasLimit() && stack.getCount() > this.limit) {
+                 stack.setCount(this.limit);
+             }
+diff --git a/src/main/java/net/minecraft/world/phys/shapes/Shapes.java b/src/main/java/net/minecraft/world/phys/shapes/Shapes.java
+index 731c7dd15f131dc124be6af8f342b122cb89491b..3ca1a2599a211374cb95e73fdc8c8b3069496660 100644
+--- a/src/main/java/net/minecraft/world/phys/shapes/Shapes.java
++++ b/src/main/java/net/minecraft/world/phys/shapes/Shapes.java
+@@ -59,8 +59,8 @@ public final class Shapes {
+                 int j = 1 << i;
+                 double d = min * (double)j;
+                 double e = max * (double)j;
+-                boolean bl = Math.abs(d - (double)Math.round(d)) < 1.0E-7D * (double)j;
+-                boolean bl2 = Math.abs(e - (double)Math.round(e)) < 1.0E-7D * (double)j;
++                boolean bl = Math.abs(d - (double)carpetfixes.helpers.FastMath.round(d)) < 1.0E-7D * (double)j;
++                boolean bl2 = Math.abs(e - (double)carpetfixes.helpers.FastMath.round(e)) < 1.0E-7D * (double)j;
+                 if (bl && bl2) {
+                     return i;
+                 }
+diff --git a/src/main/java/org/spigotmc/TicksPerSecondCommand.java b/src/main/java/org/spigotmc/TicksPerSecondCommand.java
+index 0ecac76577eb440a0c3104ef4603acec826c474d..4813bd6de894d0566e8631d8c71915c38c1da0f8 100644
+--- a/src/main/java/org/spigotmc/TicksPerSecondCommand.java
++++ b/src/main/java/org/spigotmc/TicksPerSecondCommand.java
+@@ -52,7 +52,7 @@ public class TicksPerSecondCommand extends Command
+     private static String format(double tps) // Paper - Made static
+     {
+         return ( ( tps > 18.0 ) ? ChatColor.GREEN : ( tps > 16.0 ) ? ChatColor.YELLOW : ChatColor.RED ).toString()
+-                + ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 ); // Paper - only print * at 21, we commonly peak to 20.02 as the tick sleep is not accurate enough, stop the noise
++                + ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( carpetfixes.helpers.FastMath.round( tps * 100.0 ) / 100.0, 20.0 ); // Paper - only print * at 21, we commonly peak to 20.02 as the tick sleep is not accurate enough, stop the noise
+     }
+ 
+     // Yatopia start - Last tick time API
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 4ef25b6203371b9c22275e1015ea75d870acf8da..2cd6f76c378f3666617e33a0b7dca439316aa325 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -244,4 +244,9 @@ public class MiraiConfig {
+         serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
+     }
+ 
++    public static boolean riskyMathRoundOpt = true;
++    private static void fastMathRound() {
++        riskyMathRoundOpt = getBoolean("use-risky-mathround-opt", riskyMathRoundOpt);
++    }
++
+ }
+\ No newline at end of file

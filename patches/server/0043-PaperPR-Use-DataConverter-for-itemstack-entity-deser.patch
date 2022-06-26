@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jake Potrebic <15055071+Machine-Maker@users.noreply.github.com>
+Date: Fri, 10 Dec 2021 08:15:36 -0500
+Subject: [PATCH] PaperPR Use DataConverter for itemstack/entity
+ deserialization
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index ae2965796f5c0a5c8629159714a245557c17f423..aa9a533f3301395bb15bb74605df2d4b9cd5ac92 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -453,8 +453,8 @@ public final class CraftMagicNumbers implements UnsafeValues {
+ 
+         CompoundTag compound = deserializeNbtFromBytes(data);
+         int dataVersion = compound.getInt("DataVersion");
+-        Dynamic<Tag> converted = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<Tag>(NbtOps.INSTANCE, compound), dataVersion, getDataVersion());
+-        return CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.of((CompoundTag) converted.getValue()));
++        compound = ca.spottedleaf.dataconverter.minecraft.MCDataConverter.convertTag(ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry.ITEM_STACK, compound, dataVersion, getDataVersion()); // Paper - rewrite dataconverter
++        return CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.of(compound));
+     }
+ 
+     @Override
+@@ -474,8 +474,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+ 
+         CompoundTag compound = deserializeNbtFromBytes(data);
+         int dataVersion = compound.getInt("DataVersion");
+-        Dynamic<Tag> converted = DataFixers.getDataFixer().update(References.ENTITY_TREE, new Dynamic<>(NbtOps.INSTANCE, compound), dataVersion, getDataVersion());
+-        compound = (CompoundTag) converted.getValue();
++        compound = ca.spottedleaf.dataconverter.minecraft.MCDataConverter.convertTag(ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry.ENTITY, compound, dataVersion, getDataVersion()); // Paper - rewrite dataconverter
+         if (!preserveUUID) compound.remove("UUID"); // Generate a new UUID so we don't have to worry about deserializing the same entity twice
+         return net.minecraft.world.entity.EntityType.create(compound, ((org.bukkit.craftbukkit.CraftWorld) world).getHandle())
+             .orElseThrow(() -> new IllegalArgumentException("An ID was not found for the data. Did you downgrade?")).getBukkitEntity();

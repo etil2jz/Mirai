@@ -7,62 +7,70 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 15b5d142a8261f397ab2ab939d92aeb5701e28fb..ba8e58fe70f16dbc0b64a92264d29c91461d2cdf 100644
+index 348fadecea776f2aea24664d340ce0955455d8af..db4b6d7fe91c1a071a833db842f664ec6ba51932 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -754,13 +754,19 @@ public abstract class PlayerList {
+@@ -757,13 +757,19 @@ public abstract class PlayerList {
          if (getBans().isBanned(gameprofile) && (gameprofilebanentry = getBans().get(gameprofile)) != null) {
              // Paper end
  
-+            if (!gameprofilebanentry.hasExpired()) { // Yatopia
-             chatmessage = new TranslatableComponent("multiplayer.disconnect.banned.reason", new Object[]{gameprofilebanentry.getReason()});
-             if (gameprofilebanentry.getExpires() != null) {
-                 chatmessage.append((Component) (new TranslatableComponent("multiplayer.disconnect.banned.expiration", new Object[]{PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())})));
-             }
- 
-             // return chatmessage;
+-            ichatmutablecomponent = Component.translatable("multiplayer.disconnect.banned.reason", gameprofilebanentry.getReason());
+-            if (gameprofilebanentry.getExpires() != null) {
+-                ichatmutablecomponent.append((Component) Component.translatable("multiplayer.disconnect.banned.expiration", PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())));
+-            }
 +            // Yatopia start - Stop wasting resources on JsonList#get
-             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
-+        } else {
-+            getBans().remove(gameprofile);
-+        }
-+        // Yatopia end
-         } else if (!this.isWhitelisted(gameprofile, event)) { // Paper
-             //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
-             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
++            if (!gameprofilebanentry.hasExpired()) {
++                ichatmutablecomponent = Component.translatable("multiplayer.disconnect.banned.reason", gameprofilebanentry.getReason());
++                if (gameprofilebanentry.getExpires() != null) {
++                    ichatmutablecomponent.append((Component) Component.translatable("multiplayer.disconnect.banned.expiration", PlayerList.BAN_DATE_FORMAT.format(gameprofilebanentry.getExpires())));
++                }
+ 
+-            // return chatmessage;
+-            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
++                // return chatmessage;
++                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
++            } else {
++                getBans().remove(gameprofile);
++            }
++            // Yatopia end
+         } else if (!this.isWhiteListed(gameprofile, event)) { // Paper
+             //ichatmutablecomponent = Component.translatable("multiplayer.disconnect.not_whitelisted"); // Paper
+             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(org.spigotmc.SpigotConfig.whitelistMessage)); // Spigot // Paper - Adventure - moved to isWhitelisted
 diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
-index 63c0fe30ff035b6b5c1b4b35d3ad6c649d94e421..f01621bf34da2ea877e010834511c119664a03b7 100644
+index 63c0fe30ff035b6b5c1b4b35d3ad6c649d94e421..109e08e098a6c1ca1ba3dc2a9a293eaf9d5d7cb7 100644
 --- a/src/main/java/net/minecraft/server/players/StoredUserList.java
 +++ b/src/main/java/net/minecraft/server/players/StoredUserList.java
-@@ -73,9 +73,14 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+@@ -73,9 +73,12 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
          // Paper start
          // this.g();
          // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
-+        // Yatopia start - only remove if it expires and has been requested (Stop wasting resources on JsonList#get)
+-        return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
++        // Yatopia start - Stop wasting resources on JsonList#get
 +        return this.map.get(this.getKeyForUser(key));
-+        /*
-         return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
++        /*return (V) this.map.computeIfPresent(this.getKeyForUser(key), (k, v) -> {
              return v.hasExpired() ? null : v;
-         });
-+        */
-+        // Sugarcane end
+-        });
++        });*/
++        // Yatopia end
          // Paper end
      }
  
-@@ -150,6 +155,8 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+@@ -150,7 +153,8 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
      public void save() throws IOException {
          this.removeExpired(); // Paper - remove expired values before saving
          JsonArray jsonarray = new JsonArray();
-+        // Yatopia start - we're nuking streams wherever possible (Stop wasting resources on JsonList#get)
-+        /*
-         Stream<JsonObject> stream = this.map.values().stream().map((jsonlistentry) -> { // CraftBukkit - decompile error
+-        Stream<JsonObject> stream = this.map.values().stream().map((jsonlistentry) -> { // CraftBukkit - decompile error
++        // Yatopia start - Stop wasting resources on JsonList#get
++        /*Stream<JsonObject> stream = this.map.values().stream().map((jsonlistentry) -> { // CraftBukkit - decompile error
              JsonObject jsonobject = new JsonObject();
  
-@@ -159,6 +166,13 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+             Objects.requireNonNull(jsonlistentry);
+@@ -158,7 +162,13 @@ public abstract class StoredUserList<K, V extends StoredUserEntry<K>> {
+         });
  
          Objects.requireNonNull(jsonarray);
-         stream.forEach(jsonarray::add);
-+        */
+-        stream.forEach(jsonarray::add);
++        stream.forEach(jsonarray::add);*/
 +        for (V value : this.map.values()) {
 +            JsonObject obj = new JsonObject();
 +            value.serialize(obj);

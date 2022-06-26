@@ -1,0 +1,195 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Thu, 8 Jul 2021 17:00:21 -0400
+Subject: [PATCH] Better handling of async tasks
+
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
+index c0fdc5a79107f8694a514a12d5526bd431fc45e9..eeb20c5b9365a04db45e738793f6c10a4f2b759e 100644
+--- a/src/main/java/net/minecraft/server/MCUtil.java
++++ b/src/main/java/net/minecraft/server/MCUtil.java
+@@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
+ import java.util.function.BiConsumer;
+ import java.util.function.Consumer;
+ import java.util.function.Supplier;
++import java.util.concurrent.SynchronousQueue; // JettPack
++import java.util.concurrent.ConcurrentLinkedQueue; // JettPack
+ 
+ public final class MCUtil {
++    public static final ConcurrentLinkedQueue smallAsyncTasks = new ConcurrentLinkedQueue(); // JettPack
+     public static final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
+-        0, 2, 60L, TimeUnit.SECONDS,
+-        new LinkedBlockingQueue<>(),
++        4, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, // JettPack
++        new SynchronousQueue<Runnable>(), // JettPack
+         new ThreadFactoryBuilder()
+             .setNameFormat("Paper Async Task Handler Thread - %1$d")
+             .setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(MinecraftServer.LOGGER))
+@@ -74,6 +77,30 @@ public final class MCUtil {
+ 
+     public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
+ 
++    // JettPack start
++    public static void flushAsyncTasks() {
++        if (!smallAsyncTasks.isEmpty()) {
++            asyncExecutor.submit(() -> {
++            Runnable runnable;
++            while((runnable = (Runnable)smallAsyncTasks.poll()) != null) {
++                    runnable.run();
++                }
++            });
++        }
++    }
++
++    public static void flushAsyncTasksMidTick() {
++        int i = smallAsyncTasks.size() < 16 ? smallAsyncTasks.size() : 16; // if smallAsyncTasks is over size 16, only execute 16 tasks
++        asyncExecutor.submit(() -> {
++            Runnable runnable;
++            int i_tmp = 0;
++            while((runnable = (Runnable)smallAsyncTasks.poll()) != null && i_tmp != i-1) {
++                runnable.run();
++                i_tmp += 1;
++            }
++        });
++    }
++    // JettPack end
+ 
+     public static Runnable once(Runnable run) {
+         AtomicBoolean ran = new AtomicBoolean(false);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 513b333a7bf8f68a2528e31d9a5e658b107b6469..e6e16685aff8266c1edd7d6e3a16e65f4dfb5162 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1017,6 +1017,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         LOGGER.info("Flushing Chunk IO");
+         com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.close(true, true); // Paper
+         LOGGER.info("Closing Thread Pool");
++        MCUtil.flushAsyncTasks(); // JettPack
+         Util.shutdownExecutors(); // Paper
+         LOGGER.info("Closing Server");
+         try {
+@@ -1469,6 +1470,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         io.papermc.paper.util.CachedLists.reset(); // Paper
+         // Paper start - move executeAll() into full server tick timing
+         try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
++            MCUtil.flushAsyncTasks(); // JettPack
+             this.runAllTasks();
+         }
+         // Paper end
+@@ -2721,6 +2723,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             return;
+         }
+ 
++        MCUtil.flushAsyncTasksMidTick(); // JettPack
+         co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
+         try {
+             for (;;) {
+diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+index 9903316fe3164a987a7745104c2f1875ca0c0a47..62c4f737022fa226be1e1140cc4bafa009023d2f 100644
+--- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
+@@ -133,6 +133,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+     }
+ 
+     // Paper start - Cache authenticator threads
++    /* // JettPack
+     private static final AtomicInteger threadId = new AtomicInteger(0);
+     private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
+             r -> {
+@@ -142,7 +143,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+ 
+                 return ret;
+             }
+-    );
++    );*/
+     // Paper end
+     // Spigot start
+     public void initUUID()
+@@ -329,7 +330,8 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+                 // Paper end
+                 // Spigot start
+             // Paper start - Cache authenticator threads
+-            authenticatorPool.execute(new Runnable() {
++            //authenticatorPool.execute(new Runnable() { // JettPack
++            net.minecraft.server.MCUtil.asyncExecutor.execute(new Runnable() { // JettPack
+                     @Override
+                     public void run() {
+                         try {
+@@ -385,7 +387,8 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+         }
+ 
+         // Paper start - Cache authenticator threads
+-        authenticatorPool.execute(new Runnable() {
++        //authenticatorPool.execute(new Runnable() { // JettPack
++        net.minecraft.server.MCUtil.asyncExecutor.execute(new Runnable() { // JettPack
+             public void run() {
+                 GameProfile gameprofile = ServerLoginPacketListenerImpl.this.gameProfile;
+ 
+@@ -533,7 +536,8 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener
+             }
+ 
+             // Proceed with login
+-            authenticatorPool.execute(() -> {
++            //authenticatorPool.execute(() -> { // JettPack
++            net.minecraft.server.MCUtil.asyncExecutor.execute(() -> { // JettPack
+                 try {
+                     new LoginHandler().fireEvents();
+                 } catch (Exception ex) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
+index 9c1aff17aabd062640e3f451a2ef8c50a7c62f10..29eda0db104fe13fb268ebe0750e5e3e1600efcc 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
+@@ -32,23 +32,29 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.concurrent.Executor;
+ import java.util.concurrent.Executors;
++/* // JettPack
+ import java.util.concurrent.SynchronousQueue;
+ import java.util.concurrent.ThreadPoolExecutor;
+ import java.util.concurrent.TimeUnit;
++*/
+ 
+ public class CraftAsyncScheduler extends CraftScheduler {
+ 
++    /* // JettPack
+     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(
+             4, Integer.MAX_VALUE,30L, TimeUnit.SECONDS, new SynchronousQueue<>(),
+             new ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
++    */
+     private final Executor management = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+             .setNameFormat("Craft Async Scheduler Management Thread").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
+     private final List<CraftTask> temp = new ArrayList<>();
+ 
+     CraftAsyncScheduler() {
+         super(true);
++        /* // JettPack
+         executor.allowCoreThreadTimeOut(true);
+         executor.prestartAllCoreThreads();
++        */
+     }
+ 
+     @Override
+@@ -93,7 +99,8 @@ public class CraftAsyncScheduler extends CraftScheduler {
+     private boolean executeTask(CraftTask task) {
+         if (isValid(task)) {
+             this.runners.put(task.getTaskId(), task);
+-            this.executor.execute(new ServerSchedulerReportingWrapper(task));
++            //this.executor.execute(new ServerSchedulerReportingWrapper(task));
++            net.minecraft.server.MCUtil.asyncExecutor.execute(new ServerSchedulerReportingWrapper(task)); // JettPack
+             return true;
+         }
+         return false;
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index d568fc92d03c313a782796cc720a1ebb1a5ad8be..adfd28b4b34ff0b161076b4b03f7d93fecb09573 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -140,6 +140,7 @@ public class WatchdogThread extends Thread
+     {
+         while ( !this.stopping )
+         {
++            net.minecraft.server.MCUtil.flushAsyncTasks(); // JettPack
+             //
+             // Paper start
+             Logger log = Bukkit.getServer().getLogger();

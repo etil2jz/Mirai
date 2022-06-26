@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Mon, 17 Aug 2020 19:32:05 -0500
+Subject: [PATCH] Entities can use portals configuration
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 0317d540944f92b3486459f1db4dd3c2b4631a21..c89a3ea4a60180cd76d5b49cc0c8df975ebf4b22 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2861,7 +2861,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         if (this.isOnPortalCooldown()) {
+             if (!(wtf.etil.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
+             this.setPortalCooldown();
+-        } else {
++        } else if (wtf.etil.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer) { // Purpur
+             if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
+                 this.portalEntrancePos = pos.immutable();
+                 portalPos = BlockPos.ZERO; // Purpur
+@@ -3527,7 +3527,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     }
+ 
+     public boolean canChangeDimensions() {
+-        return isAlive() && valid; // Paper
++        return isAlive() && valid && (wtf.etil.mirai.MiraiConfig.entitiesCanUsePortals || this instanceof ServerPlayer); // Paper // Purpur
+     }
+ 
+     public float getBlockExplosionResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState blockState, FluidState fluidState, float max) {
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 718f8979bb801edc6310e58376f412a2c66b13a4..ceaa59b1da54daefe36cac93bfa7e8e7285203f0 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -229,4 +229,9 @@ public class MiraiConfig {
+         playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", playerFixStuckPortal);
+     }
+ 
++    public static boolean entitiesCanUsePortals = true;
++    private static void entitiesPortal() {
++        entitiesCanUsePortals = getBoolean("entities-can-use-portals", entitiesCanUsePortals);
++    }
++
+ }
+\ No newline at end of file
