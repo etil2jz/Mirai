@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tom <cryptite@gmail.com>
 Date: Thu, 23 Sep 2021 08:56:42 -0500
-Subject: [PATCH] Don't send equipment updates if only durability changed
+Subject: [PATCH] Don't send fire packets if player has Fire Resistance
 
 Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
