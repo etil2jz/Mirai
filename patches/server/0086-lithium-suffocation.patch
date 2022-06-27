@@ -9,7 +9,7 @@ Original license: GNU Lesser General Public License v3.0
 Original project: https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6b4370f8dffdaebb861ec59d0dad3fe54c696083..b0b0eb5441623b4a4ac27c63eef2474686dcfb0a 100644
+index 6b4370f8dffdaebb861ec59d0dad3fe54c696083..20d6e75850bb5b7c19dabce78c20e484956fa2f6 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2606,39 +2606,64 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -62,7 +62,7 @@ index 6b4370f8dffdaebb861ec59d0dad3fe54c696083..b0b0eb5441623b4a4ac27c63eef24746
 +        Level level = this.level;
 +        //skip getting blocks when the entity is outside the world height
 +        //also avoids infinite loop with entities below y = Integer.MIN_VALUE (some modded servers do that)
-+        if (-64 > maxY || 320 < minY) {
++        if (level.getMinBuildHeight() > maxY || level.getMaxBuildHeight() < minY) {
 +            return false;
 +        }
 +

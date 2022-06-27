@@ -570,7 +570,7 @@ index 0000000000000000000000000000000000000000..673d4b02a4baf779efa64c1d7b4fc284
 \ No newline at end of file
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/tuples/WorldSectionBox.java b/src/main/java/me/jellysquid/mods/lithium/common/util/tuples/WorldSectionBox.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7506a979e
+index 0000000000000000000000000000000000000000..178fc249777c9997e9586ffe099e54c9b1e1322a
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/lithium/common/util/tuples/WorldSectionBox.java
 @@ -0,0 +1,24 @@
@@ -586,10 +586,10 @@ index 0000000000000000000000000000000000000000..ffc44c333f0dbaf07cc2c68ac390e0a7
 +                              int chunkZ2) {
 +    public static WorldSectionBox entityAccessBox(Level world, AABB box) {
 +        int minX = SectionPos.posToSectionCoord((double)box.minX - 2.0D);
-+        int minY = SectionPos.posToSectionCoord((double)box.minY - 2.0D);
++        int minY = SectionPos.posToSectionCoord((double)box.minY - 4.0D);
 +        int minZ = SectionPos.posToSectionCoord((double)box.minZ - 2.0D);
 +        int maxX = SectionPos.posToSectionCoord((double)box.maxX + 2.0D) + 1;
-+        int maxY = SectionPos.posToSectionCoord((double)box.maxY + 2.0D) + 1;
++        int maxY = SectionPos.posToSectionCoord((double)box.maxY) + 1;
 +        int maxZ = SectionPos.posToSectionCoord((double)box.maxZ + 2.0D) + 1;
 +        return new WorldSectionBox(world, minX, minY, minZ, maxX, maxY, maxZ);
 +    }

@@ -189,7 +189,7 @@ index fb84d703b4461343d50510d7c9be32fc1f09ed22..3da6b30febc98e5392e42d39c5bd69a8
      private double sampleWithDerivative(int sectionX, int sectionY, int sectionZ, double localX, double localY, double localZ, double[] ds) {
          int i = this.p(sectionX);
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java b/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
-index 02d176dd374b806cb004056964c1c4ee9e73072b..a8eb8a16074dd2f340d91095ba5e4880959fd377 100644
+index 02d176dd374b806cb004056964c1c4ee9e73072b..d9db7842a3dfe9432f436047417b0ff18a25b627 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/synth/PerlinNoise.java
 @@ -25,6 +25,10 @@ public class PerlinNoise {
@@ -260,7 +260,7 @@ index 02d176dd374b806cb004056964c1c4ee9e73072b..a8eb8a16074dd2f340d91095ba5e4880
 +     */
      public static double wrap(double value) {
 -        return value - (double)Mth.lfloor(value / 3.3554432E7D + 0.5D) * 3.3554432E7D;
-+        return value - Mth.floor(value / 3.3554432E7 + 0.5) * 3.3554432E7;
++        return value - Mth.lfloor(value / 3.3554432E7 + 0.5) * 3.3554432E7;
      }
 +    // Mirai end
  

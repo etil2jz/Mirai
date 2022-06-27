@@ -8,7 +8,7 @@ Original license: GPLv3
 Original project: https://github.com/Akarin-project/Akarin
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b0b0eb5441623b4a4ac27c63eef2474686dcfb0a..d98e538454f189a2800566345066f4f5a0e365a5 100644
+index 20d6e75850bb5b7c19dabce78c20e484956fa2f6..c5dd7a8f8bf3f294266d17eea3a09c0ed7866957 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2006,8 +2006,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {

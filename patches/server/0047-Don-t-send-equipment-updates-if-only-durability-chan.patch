@@ -6,22 +6,16 @@ Subject: [PATCH] Don't send equipment updates if only durability changed
 Original code by Cryptite, licensed under MIT
 You can find the original code on https://github.com/Cryptite/Slice
 
-diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index fadf8ab93cd9c4a4644e06d3b77dba0aaea1f421..e80ea887fc80b009c1cdced06de21f013689cfa4 100644
---- a/src/main/java/net/minecraft/world/entity/Entity.java
-+++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -877,7 +877,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index b7a9f16fb75d7664b6788d20d9b4a07459866dac..f6af6dc1c686d477212cd68031d4983f85234a7f 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3084,7 +3084,7 @@ public abstract class LivingEntity extends Entity {
  
-         this.checkOutOfWorld();
-         if (!this.level.isClientSide) {
--            this.setSharedFlagOnFire(this.remainingFireTicks > 0);
-+            // Slice start
-+            if (this instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
-+                this.setSharedFlagOnFire(this.remainingFireTicks > 0 && !livingEntity.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE));
-+            } else {
-+                this.setSharedFlagOnFire(this.remainingFireTicks > 0);
-+            }
-+            // Slice end
-         }
+             ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
  
-         this.firstTick = false;
+-            if (!ItemStack.matches(itemstack1, itemstack)) {
++            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) { // Slice
+                 // Paper start - PlayerArmorChangeEvent
+                 if (this instanceof ServerPlayer && enumitemslot.getType() == EquipmentSlot.Type.ARMOR) {
+                     final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
