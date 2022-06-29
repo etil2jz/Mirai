@@ -34,10 +34,10 @@ index 9fc77dc845fc993ebb9d96f9af107f7e1e8e8a39..6b4370f8dffdaebb861ec59d0dad3fe5
                  this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
                  // Paper start - remove expensive streams from here
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index e86875be3f0e723d3242c9809cd05e767ee49ea4..e2d86b2845cbc17ef418d4421bde71134f407ae5 100644
+index 4ace3c19551ea1cc5079d0570f5f0e70f1cae6a5..4da53712474506e80c265ee38e1e1e88f51e3ec9 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -258,4 +258,9 @@ public class MiraiConfig {
+@@ -253,4 +253,9 @@ public class MiraiConfig {
          criterionTriggerLocation = getBoolean("criterion-trigger.location", criterionTriggerLocation);
      }
  

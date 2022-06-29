@@ -27,10 +27,10 @@ index 67b88da702b780f79c0496cb17f1e6f1f8dd6c2b..712707da510977bfa1ce4b991fd8a8f5
                  // CraftBukkit start
                  java.util.Collection<MapDecoration> icons = new java.util.ArrayList<MapDecoration>();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index e2d86b2845cbc17ef418d4421bde71134f407ae5..02b630ed8ac8ad07b9571dc15d4c18165b7062d6 100644
+index 4da53712474506e80c265ee38e1e1e88f51e3ec9..ea398d72cdbec80add81971f3cf34b750e9448ae 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -263,4 +263,9 @@ public class MiraiConfig {
+@@ -258,4 +258,9 @@ public class MiraiConfig {
          fastSpeedCheck = getBoolean("fast-speed-check", fastSpeedCheck);
      }
  

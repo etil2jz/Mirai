@@ -6,7 +6,7 @@ Subject: [PATCH] PaperPR Add more collision code skipping logic
 Taken from https://github.com/PaperMC/Paper/pull/7581
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index a03930ebdb3ebc766db4414eee38c6aa4c39fc56..08e50fb20be2f1a4266c1bfe59eb8fe83c6942ab 100644
+index 4a0ef94baec5b16ca0eee8d971851a08038b1825..10fe0a33e7d2663e27413b3affe035e91de37255 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3439,6 +3439,10 @@ public abstract class LivingEntity extends Entity {

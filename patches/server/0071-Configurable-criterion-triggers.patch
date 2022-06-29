@@ -42,11 +42,11 @@ index f5aca2054dcad52301b9b99e44fbd3723aabdad7..f120e10679d38f3db22315f16a00622a
              // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 2cd6f76c378f3666617e33a0b7dca439316aa325..e86875be3f0e723d3242c9809cd05e767ee49ea4 100644
+index 4ef25b6203371b9c22275e1015ea75d870acf8da..4ace3c19551ea1cc5079d0570f5f0e70f1cae6a5 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -249,4 +249,13 @@ public class MiraiConfig {
-         riskyMathRoundOpt = getBoolean("use-risky-mathround-opt", riskyMathRoundOpt);
+@@ -244,4 +244,13 @@ public class MiraiConfig {
+         serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
      }
  
 +    public static boolean criterionTriggerEnterBlock = true;

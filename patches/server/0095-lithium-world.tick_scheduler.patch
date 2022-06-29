@@ -3,6 +3,8 @@ From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
 Date: Fri, 24 Jun 2022 21:17:05 +0200
 Subject: [PATCH] lithium: world.tick_scheduler
 
+Original license: GPLv3
+Original project: https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/world/scheduler/OrderedTickQueue.java b/src/main/java/me/jellysquid/mods/lithium/common/world/scheduler/OrderedTickQueue.java
 new file mode 100644

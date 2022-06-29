@@ -10,7 +10,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index fc01e48c0e2c7f4e56379cb8b89c78e7a874c053..8f0bc485597167caef4ed01e787181fff0bd2598 100644
+index b22e4068407f3012b62683abd060509829e61c62..da94849a59825b6b2ca886df3080d026e1720418 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -283,19 +283,21 @@ public abstract class Player extends LivingEntity {
