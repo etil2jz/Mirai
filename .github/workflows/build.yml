@@ -5,17 +5,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@latest
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.4
+        uses: gradle/wrapper-validation-action@latest
       - name: Set up JDK (GraalVM)
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@latest
         with:
           version: 'latest'
           java-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull Gradle Cache
-        uses: actions/cache@v3.0.1
+        uses: actions/cache@latest
         id: gradle-cache
         with:
           path: ~/.gradle
@@ -32,7 +32,7 @@ jobs:
         run: |
           ./gradlew -Dorg.gradle.jvmargs="-Dfile.encoding=UTF-8 -Djdk.nio.maxCachedBufferSize=262144 -Dgraal.CompilerConfiguration=community -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.WriteableCodeCache=true --add-modules jdk.incubator.vector" createReobfPaperclipJar --stacktrace --no-daemon
       - name: Archive Paperclip
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@latest
         with:
           name: Mirai-1.19
           path: build/libs/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar
