@@ -14,7 +14,6 @@ jobs:
           version: 'latest'
           java-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: 1.19"
       - name: Pull Gradle Cache
         uses: actions/cache@v3.0.1
         id: gradle-cache
