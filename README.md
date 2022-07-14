@@ -27,7 +27,7 @@
 The latest JAR file can be downloaded here:
 [Mirai-1.19-R0.1-SNAPSHOT.jar](https://github.com/etil2jz/Mirai/releases/download/1.19/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar)
 
-**Please note Java >=17 is required.**
+**Please note Java >= 17 is required.**
 
 You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
