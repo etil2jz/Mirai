@@ -3,6 +3,9 @@ From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
 Date: Sat, 16 Jul 2022 18:12:38 +0200
 Subject: [PATCH] Implement Velocity VarInt optimizations
 
+Original license: GPLv3
+Original project: https://github.com/PaperMC/Velocity
+Paper pull request: https://github.com/PaperMC/Paper/pull/6957
 
 diff --git a/src/main/java/net/minecraft/network/FriendlyByteBuf.java b/src/main/java/net/minecraft/network/FriendlyByteBuf.java
 index 35377576ed182814051c11f902e02e8e921e84e3..8747a55d8818d4526939070fa29a12ab643f0798 100644
