@@ -7,31 +7,33 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index de0513b38e5fa0138f1cee6bb633561be12449fc..ef0625c0f860eeedcdc1e3b8801e15631c76cb7a 100644
+index de0513b38e5fa0138f1cee6bb633561be12449fc..c0325b9cb56dc09c005c277a8fdc5970b78093f8 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-@@ -185,6 +185,7 @@ public class PlayerAdvancements {
+@@ -184,7 +184,7 @@ public class PlayerAdvancements {
+ 
                          if (advancement == null) {
                              // CraftBukkit start
-                             if (entry.getKey().getNamespace().equals("minecraft")) {
-+                                if (!wtf.etil.mirai.MiraiConfig.loggerSuppressIgnoredAdvancementWarnings) // Purpur
+-                            if (entry.getKey().getNamespace().equals("minecraft")) {
++                            if (!wtf.etil.mirai.MiraiConfig.loggerSuppressIgnoredAdvancementWarnings && entry.getKey().getNamespace().equals("minecraft")) { // Purpur
                                  PlayerAdvancements.LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", entry.getKey(), this.file);
                              }
                              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index f000c822ed4563b5b840936852bc7d8e030763e3..d37ba3fec0e4011629a5fbc88d377d52267ad395 100644
+index f000c822ed4563b5b840936852bc7d8e030763e3..4538e459f35d2e08fbacee71cec142a2db4b1371 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-@@ -293,6 +293,7 @@ public class WorldGenRegion implements WorldGenLevel {
- 
+@@ -294,7 +294,7 @@ public class WorldGenRegion implements WorldGenLevel {
              return true;
          } else {
-+            if (!wtf.etil.mirai.MiraiConfig.loggerSuppressSetBlockFarChunk) // Purpur
              // Paper start
-             if (!hasSetFarWarned) {
+-            if (!hasSetFarWarned) {
++            if (!wtf.etil.mirai.MiraiConfig.loggerSuppressSetBlockFarChunk && !hasSetFarWarned) { // Purpur
              Util.logAndPauseIfInIde("Detected setBlock in a far chunk [" + i + ", " + j + "], pos: " + pos + ", status: " + this.generatingStatus + (this.currentlyGenerating == null ? "" : ", currently generating: " + (String) this.currentlyGenerating.get()));
+             hasSetFarWarned = true;
+             if (this.getServer() != null && this.getServer().isDebugging()) {
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 531cbee70d491adf5dee3b7c3ee10d0859506245..3c2fc286a481fad43a3c545485ef229760b4cacf 100644
+index 785e9e9b4408c1193cb3680a3b55f90a8f0d5b0a..aa5d0865f4d3c1e68f9fc06e49bea8889318371d 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -2182,7 +2182,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -40,18 +42,19 @@ index 531cbee70d491adf5dee3b7c3ee10d0859506245..3c2fc286a481fad43a3c545485ef2297
          } else {
 -            if (this.isChatExpired(instant)) {
 +            if (!wtf.etil.mirai.MiraiConfig.loggerSuppressSentExpiredChat && this.isChatExpired(instant)) { // Purpur
-                 ServerGamePacketListenerImpl.LOGGER.warn("{} sent expired chat: '{}'. Is the client/server system time unsynchronized?", this.player.getName().getString(), s);
+                 ServerGamePacketListenerImpl.LOGGER.warn("{} sent expired chat: '{}'. Is the client/server system time unsynchronized? c: {} s: {}", this.player.getName().getString(), s, instant.getEpochSecond(), Instant.now().getEpochSecond()); // Paper
              }
  
 diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-index d13ed3069e944d138442ea440ac3eaf8d44c18d3..c19367bdad3997aa7aac609762f9cf731433adfc 100644
+index d13ed3069e944d138442ea440ac3eaf8d44c18d3..f87a9e76f098300f68f62ced69cf1c49aef32b69 100644
 --- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 +++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-@@ -122,6 +122,7 @@ public class ServerRecipeBook extends RecipeBook {
+@@ -121,7 +121,7 @@ public class ServerRecipeBook extends RecipeBook {
+                 ResourceLocation minecraftkey = new ResourceLocation(s);
                  Optional<? extends Recipe<?>> optional = recipeManager.byKey(minecraftkey);
  
-                 if (!optional.isPresent()) {
-+                    if (!wtf.etil.mirai.MiraiConfig.loggerSuppressUnrecognizedRecipeErrors) // Purpur
+-                if (!optional.isPresent()) {
++                if (!wtf.etil.mirai.MiraiConfig.loggerSuppressUnrecognizedRecipeErrors && !optional.isPresent()) { // Purpur
                      ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", minecraftkey);
                  } else {
                      handler.accept((Recipe) optional.get());
@@ -68,24 +71,34 @@ index b2a15c986c7500a0ce227a54cb61ec3f5378f6f3..d243af83f3159d8a4d56d08dab022b31
          if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
              new Exception().printStackTrace();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 954bc508fea71af719c3203f0d4c93125976fdb8..8d3dcc1ebacd86412858680a9b3f8c018890b02b 100644
+index eda02eabbdb3c8d2cfe8c524fe9f5dfcca1089d8..65a77864c368545c14d1bb28fb0a91323e286158 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -211,4 +211,17 @@ public class MiraiConfig {
-         useAlternateKeepAlive = getBoolean("use-alternate-keepalive", useAlternateKeepAlive);
+@@ -166,4 +166,27 @@ public class MiraiConfig {
+                                     "This can drastically reduce players timeouts due to a bad connection.");
      }
  
-+    public static boolean loggerSuppressInitLegacyMaterialError = true;
-+    public static boolean loggerSuppressIgnoredAdvancementWarnings = true;
-+    public static boolean loggerSuppressUnrecognizedRecipeErrors = true;
-+    public static boolean loggerSuppressSetBlockFarChunk = true;
-+    public static boolean loggerSuppressSentExpiredChat = true;
++    public static boolean loggerSuppressInitLegacyMaterialError;
++    public static boolean loggerSuppressIgnoredAdvancementWarnings;
++    public static boolean loggerSuppressUnrecognizedRecipeErrors;
++    public static boolean loggerSuppressSetBlockFarChunk;
++    public static boolean loggerSuppressSentExpiredChat;
 +    private static void loggerSettings() {
-+        loggerSuppressInitLegacyMaterialError = getBoolean("logger.suppress-init-legacy-material-errors", loggerSuppressInitLegacyMaterialError);
-+        loggerSuppressIgnoredAdvancementWarnings = getBoolean("logger.suppress-ignored-advancement-warnings", loggerSuppressIgnoredAdvancementWarnings);
-+        loggerSuppressUnrecognizedRecipeErrors = getBoolean("logger.suppress-unrecognized-recipe-errors", loggerSuppressUnrecognizedRecipeErrors);
-+        loggerSuppressSetBlockFarChunk = getBoolean("logger.suppress-setblock-in-far-chunk-errors", loggerSuppressSetBlockFarChunk);
-+        loggerSuppressSentExpiredChat = getBoolean("logger.suppress-sent-expired-chat", loggerSuppressSentExpiredChat);
++        loggerSuppressInitLegacyMaterialError = getBoolean("logger.suppress-init-legacy-material-errors", true,
++                                                    "Whether or not server should stop saying",
++                                                    "'Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!'");
++        loggerSuppressIgnoredAdvancementWarnings = getBoolean("logger.suppress-ignored-advancement-warnings", true,
++                                                    "Whether or not server should stop saying",
++                                                    "'Ignored advancement '{}' in progress file {} - it doesn't exist anymore?'");
++        loggerSuppressUnrecognizedRecipeErrors = getBoolean("logger.suppress-unrecognized-recipe-errors", true,
++                                                    "Whether or not server should stop saying",
++                                                    "'Tried to load unrecognized recipe: {} removed now.'");
++        loggerSuppressSetBlockFarChunk = getBoolean("logger.suppress-setblock-in-far-chunk-errors", true,
++                                            "Whether or not server should stop saying",
++                                            "'Detected setBlock in a far chunk.'");
++        loggerSuppressSentExpiredChat = getBoolean("logger.suppress-sent-expired-chat", true,
++                                            "Whether or not server should stop saying",
++                                            "'{} sent expired chat: '{}'. Is the client/server system time unsynchronized?'");
 +    }
 +
  }

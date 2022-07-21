@@ -26,18 +26,18 @@ index 4030818ff51eca95e1c2ec38c7eca5bff79a0a4a..348fadecea776f2aea24664d340ce095
  
      public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 5b30b329959811f99f13f32166574f90e765bcb1..ce82453b1ee3514cfbe10b94184d1c210867bed9 100644
+index 50ec3059c0af3ebf561394f542d8fff1f5d66e9d..10bcda92607b04b255819a6c70358131e97baa1a 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -184,6 +184,9 @@ public class MiraiConfig {
+@@ -131,4 +131,10 @@ public class MiraiConfig {
+         return config.getStringList(key);
+     }
  
-     // Mirai - settings below
- 
--    
-+    public static boolean logPlayerLoginLoc = true;
++    public static boolean logPlayerLoginLoc;
 +    private static void logPlayerLoc() {
-+        logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
++        logPlayerLoginLoc = getBoolean("log-player-login-location", true,
++                                "Whether or not player login location should be written in logs.");
 +    }
- 
++
  }
 \ No newline at end of file

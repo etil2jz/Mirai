@@ -309,7 +309,7 @@ index acae3eb30e0689048937f479dc3070f0688abdad..9c2b79655f2c63a208c7087d5d897db0
      int onResize(int newBits, T object);
  }
 diff --git a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
-index 08e1309e618377d170c446a1568c21b7bf4e5683..0b4f66d0ef963d6f47b20469b7a1e3f6c3da7c83 100644
+index 18c4f815888fee0c85ebbb485d21063ce0d143fb..59bb7c4ca7202cf80493dcc8da1233c89c5cde40 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
 @@ -22,8 +22,23 @@ import net.minecraft.util.Mth;
@@ -336,7 +336,7 @@ index 08e1309e618377d170c446a1568c21b7bf4e5683..0b4f66d0ef963d6f47b20469b7a1e3f6
      private static final int MIN_PALETTE_BITS = 0;
      private final PaletteResize<T> dummyPaletteResize = (newSize, added) -> {
          return 0;
-@@ -298,30 +313,54 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
+@@ -299,30 +314,54 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
      public synchronized PalettedContainerRO.PackedData<T> pack(IdMap<T> idMap, PalettedContainer.Strategy strategy) { // Paper - synchronize
          this.acquire();
  
@@ -408,7 +408,7 @@ index 08e1309e618377d170c446a1568c21b7bf4e5683..0b4f66d0ef963d6f47b20469b7a1e3f6
      }
  
      private static <T> void swapPalette(int[] is, IntUnaryOperator intUnaryOperator) {
-@@ -361,17 +400,37 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
+@@ -362,17 +401,37 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
  
      @Override
      public void count(PalettedContainer.CountConsumer<T> counter) {

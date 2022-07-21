@@ -12,14 +12,15 @@ doing questionable/buggy ones, and claiming breathtaking performance improvement
 any of those Spigot forks!
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 9fc77dc845fc993ebb9d96f9af107f7e1e8e8a39..6b4370f8dffdaebb861ec59d0dad3fe54c696083 100644
+index ecc7085ecb33f4a2bc08b49ca0889ca41a015c8c..c7c4f4489f9226d87b6d9f0f77d25806e8d80b75 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1224,7 +1224,16 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1225,7 +1225,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  }
  
                  this.tryCheckInsideBlocks();
 -                float f2 = this.getBlockSpeedFactor();
++                // NFT-Worlds start
 +                float f2;
 +                if (wtf.etil.mirai.MiraiConfig.fastSpeedCheck) {
 +                    if (this.getDeltaMovement().x == 0 && this.getDeltaMovement().z == 0) {
@@ -30,20 +31,23 @@ index 9fc77dc845fc993ebb9d96f9af107f7e1e8e8a39..6b4370f8dffdaebb861ec59d0dad3fe5
 +                } else {
 +                    f2 = this.getBlockSpeedFactor();
 +                }
++                // NFT-Worlds stop
  
                  this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
                  // Paper start - remove expensive streams from here
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 4ace3c19551ea1cc5079d0570f5f0e70f1cae6a5..4da53712474506e80c265ee38e1e1e88f51e3ec9 100644
+index 6fb5f2f9bb1dc881eff5bc4a6edfcb1d3c7dc161..04d08c44f56a4af207b8240ca1d9d34790ead16d 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -253,4 +253,9 @@ public class MiraiConfig {
-         criterionTriggerLocation = getBoolean("criterion-trigger.location", criterionTriggerLocation);
+@@ -221,4 +221,11 @@ public class MiraiConfig {
+                                         "Whether or not server should listen to location triggers.");
      }
  
-+    public static boolean fastSpeedCheck = true;
++    public static boolean fastSpeedCheck;
 +    private static void speedCheck() {
-+        fastSpeedCheck = getBoolean("fast-speed-check", fastSpeedCheck);
++        fastSpeedCheck = getBoolean("fast-speed-check", true,
++                            "Whether or not server should use a faster method",
++                            "to check when entity delta movement is null.");
 +    }
 +
  }

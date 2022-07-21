@@ -7,10 +7,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 3e232156774b9df5be318dc6dc5035b326f1f1b3..43ae13cc8c3c1e7ed183d11fccba3ba3af14c8f4 100644
+index ea461ff0b13a3ccba2f0ed02b9268712eaf728c1..6d98648934c23cd99694718ff52474fcba76bab4 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -402,7 +402,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -394,7 +394,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          BufferedWriter bufferedwriter = Files.newBufferedWriter(file);
  
          try {

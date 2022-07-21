@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index ab084c7590ff777889dccbbb821bb099cdd7e215..1329314774a15be493703dac0031e8849865295f 100644
+index f4e12d6a122dc66505289651de105cfac5dd7b86..8058c98db187aa4525d30ac4bd1e70c6babdaa87 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -342,7 +342,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -29,19 +29,21 @@ index ab084c7590ff777889dccbbb821bb099cdd7e215..1329314774a15be493703dac0031e884
                      this.disconnect(io.papermc.paper.configuration.GlobalConfiguration.get().messages.kick.flyingVehicle, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                      return;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 667eaabe95e9b44cad64dd5aba5ac693f4d726ed..8740dbbc4068ad329eb53ee13683a77903fe6d02 100644
+index 2849478bde14769d1202ca15ecaa8a341f1043a3..7ff2d1e0124757401b4e70158bbe5ada18614aa3 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -194,4 +194,11 @@ public class MiraiConfig {
-         maxBees = getInt("max-bees-in-hive", maxBees);
+@@ -144,4 +144,13 @@ public class MiraiConfig {
+                     "Allowing more bees in a hive can reduce the number of ticking hives.");
      }
  
-+    public static boolean checkFlying = true;
-+    public static boolean checkVehicleFlying = true;
++    public static boolean checkFlying;
++    public static boolean checkVehicleFlying;
 +    private static void flightChecks() {
-+		checkFlying = getBoolean("checks.flight", checkFlying);
-+		checkVehicleFlying = getBoolean("checks.vehicle-flight", checkVehicleFlying);
-+	}
++        checkFlying = getBoolean("checks.flight", true,
++                            "Whether or not vanilla anticheat should check for players flying.");
++        checkVehicleFlying = getBoolean("checks.vehicle-flight", true,
++                                "Whether or not vanilla anticheat should check for passengers flying.");
++    }
 +
  }
 \ No newline at end of file

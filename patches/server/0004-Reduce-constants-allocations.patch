@@ -8,51 +8,40 @@ This patch includes code from the lithium project under the GNU Lesser General P
 Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
-diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index 8ec20f17a3f8c39ae3ebf3fb630f98b35283ba88..bb220f27f5d472514d9a1620a40ed50fcb31ae16 100644
---- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
-+++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-@@ -218,7 +218,7 @@ public class PaperCommand extends Command {
-             case "version":
-                 Command ver = MinecraftServer.getServer().server.getCommandMap().getCommand("version");
-                 if (ver != null) {
--                    ver.execute(sender, commandLabel, new String[0]);
-+                    ver.execute(sender, commandLabel, me.titaniumtown.Constants.EMPTY_string_arr); // JettPack
-                     break;
-                 }
-                 // else - fall through to default
 diff --git a/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java b/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
-index 0133ea6feb1ab88f021f66855669f58367e7420b..027b9a6a917aae43357c7a7b5595e6cf64fdbd22 100644
+index 0133ea6feb1ab88f021f66855669f58367e7420b..5f4ad69862b24b568b9e907563289624d196d6ea 100644
 --- a/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
 +++ b/src/main/java/com/destroystokyo/paper/util/maplist/EntityList.java
-@@ -17,9 +17,7 @@ public final class EntityList implements Iterable<Entity> {
+@@ -17,9 +17,9 @@ public final class EntityList implements Iterable<Entity> {
          this.entityToIndex.defaultReturnValue(Integer.MIN_VALUE);
      }
  
 -    protected static final Entity[] EMPTY_LIST = new Entity[0];
--
++    //protected static final Entity[] EMPTY_LIST = new Entity[0]; // JettPack
+ 
 -    protected Entity[] entities = EMPTY_LIST;
 +    protected Entity[] entities = me.titaniumtown.Constants.EMPTY_entity_arr; // JettPack
      protected int count;
  
      public int size() {
 diff --git a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
-index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..52ec153be9d7177102dd137dfc356e29173f62bd 100644
+index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..093170c13b3980791373fb240c9ec6c5adfc1519 100644
 --- a/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
 +++ b/src/main/java/com/destroystokyo/paper/util/maplist/IBlockDataList.java
-@@ -20,9 +20,7 @@ public final class IBlockDataList {
+@@ -20,9 +20,9 @@ public final class IBlockDataList {
          this.map.defaultReturnValue(Long.MAX_VALUE);
      }
  
 -    private static final long[] EMPTY_LIST = new long[0];
--
++    //private static final long[] EMPTY_LIST = new long[0]; // JettPack
+ 
 -    private long[] byIndex = EMPTY_LIST;
 +    private long[] byIndex = me.titaniumtown.Constants.EMPTY_long_arr; // JettPack
      private int size;
  
      public static int getLocationKey(final int x, final int y, final int z) {
 diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
-index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..d3cdf40330a99af729412a7a537ec705c16cc327 100644
+index 85882eeb86d7b74db0219aa65783946d8083885d..06bcf27bf42ad1b6259999c25fe7ae80eab1263e 100644
 --- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 +++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 @@ -63,7 +63,7 @@ public final class ChunkEntitySlices {
@@ -64,15 +53,16 @@ index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..d3cdf40330a99af729412a7a537ec705
      }
      // Paper end - optimise CraftChunk#getEntities
  
-@@ -189,7 +189,6 @@ public final class ChunkEntitySlices {
+@@ -189,7 +189,7 @@ public final class ChunkEntitySlices {
  
      protected static final class BasicEntityList<E extends Entity> {
  
 -        protected static final Entity[] EMPTY = new Entity[0];
++        //protected static final Entity[] EMPTY = new Entity[0]; // JettPack
          protected static final int DEFAULT_CAPACITY = 4;
  
          protected E[] storage;
-@@ -200,7 +199,7 @@ public final class ChunkEntitySlices {
+@@ -200,7 +200,7 @@ public final class ChunkEntitySlices {
          }
  
          public BasicEntityList(final int cap) {
@@ -81,7 +71,7 @@ index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..d3cdf40330a99af729412a7a537ec705
          }
  
          public boolean isEmpty() {
-@@ -212,7 +211,7 @@ public final class ChunkEntitySlices {
+@@ -212,7 +212,7 @@ public final class ChunkEntitySlices {
          }
  
          private void resize() {
@@ -92,15 +82,17 @@ index 47b5f75d9f27cf3ab947fd1f69cbd609fb9f2749..d3cdf40330a99af729412a7a537ec705
                  this.storage = Arrays.copyOf(this.storage, this.storage.length * 2);
 diff --git a/src/main/java/me/titaniumtown/Constants.java b/src/main/java/me/titaniumtown/Constants.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1a39467fcbb849c79bea21a020b4270a2850e02c
+index 0000000000000000000000000000000000000000..60bf30759a26c04c0f79ba739426aab1de955243
 --- /dev/null
 +++ b/src/main/java/me/titaniumtown/Constants.java
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,16 @@
 +package me.titaniumtown;
 +
 +import net.minecraft.core.BlockPos;
 +
 +public final class Constants {
++    private Constants() {}
++
 +    public static final Object[] EMPTY_object_arr = new Object[0];
 +    public static final int[] EMPTY_int_arr = new int[0];
 +    public static final int[] ZERO_int_arr = new int[]{0};
@@ -217,7 +209,7 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fc3d65885cc704f807ddcb07561b4a529827166c..ed25891919bbd372b042f343d3b3360fb1654ca3 100644
+index e995aa81665bdf582f753acec3f0584f0060c851..f895903aaf0a69c65947c91f7f486f04991434d8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1371,8 +1371,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -232,10 +224,10 @@ index fc3d65885cc704f807ddcb07561b4a529827166c..ed25891919bbd372b042f343d3b3360f
  
                  ImageIO.write(bufferedimage, "PNG", bytearrayoutputstream);
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 1eb912ad97f9663bf6bd336ad739f2552b0a5c9b..9901ffe9de585a73e9ef32c700b1e8702f8786d3 100644
+index 871bce7f5acc1b9a058496f41d962ec2e724f620..f4569f8e53fc22a8a580fcaebbe773b497c11304 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -303,7 +303,7 @@ public class ServerEntity {
+@@ -307,7 +307,7 @@ public class ServerEntity {
  
          if (this.entity instanceof LivingEntity) {
              List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
@@ -245,7 +237,7 @@ index 1eb912ad97f9663bf6bd336ad739f2552b0a5c9b..9901ffe9de585a73e9ef32c700b1e870
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index d0cfbaf3fd5573f33ad3afc47a35157c0da5233a..1936cd779223f0ca7f6fa266725560fef40c3653 100644
+index 32a39a150a3d2bbae95a726901f3f46363e34ecf..7b80dfb72b191bd86e5e4443efc87713814b6c4c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -871,7 +871,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -267,7 +259,7 @@ index d0cfbaf3fd5573f33ad3afc47a35157c0da5233a..1936cd779223f0ca7f6fa266725560fe
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 60373551c49386652de286127636b61f31e88527..ab084c7590ff777889dccbbb821bb099cdd7e215 100644
+index 0960025c64fe2e8c055fcbf6e695ff90c1f41cd9..f4e12d6a122dc66505289651de105cfac5dd7b86 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -385,7 +385,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -433,10 +425,10 @@ index e8e60ea8b9e97ed87be78752f398ab25ba8e9a1b..9980df9128dfc51f2afbca8f4aa2031e
  
                  for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-index 7fe5908020c4577c1e4d6c00af382cf536351d96..5bad71b56b45085c01ae2b0ab95067c85cad1f61 100644
+index cff0ed9ae6e79f84870343e43574f384dd73ea88..79f5390cbbe014687010b110bcf572bdcff3339d 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/ZombieVillager.java
-@@ -227,7 +227,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
+@@ -233,7 +233,7 @@ public class ZombieVillager extends Zombie implements VillagerDataHolder {
              return;
          }
          // CraftBukkit end
@@ -512,10 +504,10 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..b9579e3d1610ddcb5251baa2dd9462e0
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a26799f92db1699d2d5173e2e93be29273e1a317..a4e29b171a4f47bafdc9ff278ca00a071b4269c0 100644
+index a2a0bc4874a031c964a5cdb5bc26494cd01351eb..670e2ae1ef532089c0ba76d96f6ca23535599b1d 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -1522,7 +1522,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1521,7 +1521,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public org.bukkit.entity.Entity[] getChunkEntities(int chunkX, int chunkZ) {
          io.papermc.paper.world.ChunkEntitySlices slices = this.entitySliceManager.getChunk(chunkX, chunkZ);
          if (slices == null) {

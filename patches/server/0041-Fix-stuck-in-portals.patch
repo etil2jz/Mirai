@@ -19,10 +19,10 @@ index 226a3a698e3863296481753434a716a793cb5d51..f5aca2054dcad52301b9b99e44fbd372
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a277646003fbec7e4bc8ca301a0934eeeac1151d..0317d540944f92b3486459f1db4dd3c2b4631a21 100644
+index f85573a6ea0b670bb42252b17bcf88969f5521b4..884ff7229c9f2ecc9f204c488617b37543a0b033 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2856,12 +2856,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2865,12 +2865,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return Vec3.directionFromRotation(this.getRotationVector());
      }
  
@@ -39,16 +39,18 @@ index a277646003fbec7e4bc8ca301a0934eeeac1151d..0317d540944f92b3486459f1db4dd3c2
  
              this.isInsidePortal = true;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 8d3dcc1ebacd86412858680a9b3f8c018890b02b..718f8979bb801edc6310e58376f412a2c66b13a4 100644
+index 65a77864c368545c14d1bb28fb0a91323e286158..3bb4fa37604543df1f3bf036fdd824ac7f87fa24 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -224,4 +224,9 @@ public class MiraiConfig {
-         loggerSuppressSentExpiredChat = getBoolean("logger.suppress-sent-expired-chat", loggerSuppressSentExpiredChat);
+@@ -189,4 +189,11 @@ public class MiraiConfig {
+                                             "'{} sent expired chat: '{}'. Is the client/server system time unsynchronized?'");
      }
  
-+    public static boolean playerFixStuckPortal = false;
-+    private static void FixStuckPortal() {
-+        playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", playerFixStuckPortal);
++    public static boolean playerFixStuckPortal;
++    private static void fixStuckPortal() {
++        playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", false,
++                                    "Whether or not players can reset portal cooldown by",
++                                    "walking to another block in case they are stuck.");
 +    }
 +
  }

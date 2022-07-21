@@ -7,7 +7,7 @@ Original license: GPLv3
 Original project: https://github.com/Electroid/SportPaper
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 20d9fe4a88c49a9952eb06ee37dbaa0f2908b0a9..da074718d933e5460f126bc5c24ba18765e776eb 100644
+index 05b895c79accf2f10f54a9868e6b9c10e1e5e687..50daf0762ae2eded8e5e42db12bcdb06ed183225 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -1539,6 +1539,7 @@ public class ServerLevel extends Level implements WorldGenLevel {

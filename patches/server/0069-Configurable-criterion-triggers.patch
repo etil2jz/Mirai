@@ -42,20 +42,23 @@ index f5aca2054dcad52301b9b99e44fbd3723aabdad7..f120e10679d38f3db22315f16a00622a
              // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
              if (this.oldLevel == -1) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 4ef25b6203371b9c22275e1015ea75d870acf8da..4ace3c19551ea1cc5079d0570f5f0e70f1cae6a5 100644
+index e34fa6934a59fbead5ba4f4329a20507378e727a..6fb5f2f9bb1dc881eff5bc4a6edfcb1d3c7dc161 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -244,4 +244,13 @@ public class MiraiConfig {
-         serverMetrics = getBoolean("enable-server-metrics", serverMetrics);
+@@ -209,4 +209,16 @@ public class MiraiConfig {
+                                 "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
      }
  
-+    public static boolean criterionTriggerEnterBlock = true;
-+    public static boolean criterionTriggerTick = true;
-+    public static boolean criterionTriggerLocation = true;
++    public static boolean criterionTriggerEnterBlock;
++    public static boolean criterionTriggerTick;
++    public static boolean criterionTriggerLocation;
 +    private static void criterionTriggers() {
-+        criterionTriggerEnterBlock = getBoolean("criterion-trigger.enter-block", criterionTriggerEnterBlock);
-+        criterionTriggerTick = getBoolean("criterion-trigger.tick", criterionTriggerTick);
-+        criterionTriggerLocation = getBoolean("criterion-trigger.location", criterionTriggerLocation);
++        criterionTriggerEnterBlock = getBoolean("criterion-trigger.enter-block", true,
++                                        "Whether or not server should listen to block enter triggers.");
++        criterionTriggerTick = getBoolean("criterion-trigger.tick", true,
++                                    "Whether or not server should listen to tick triggers.");
++        criterionTriggerLocation = getBoolean("criterion-trigger.location", true,
++                                        "Whether or not server should listen to location triggers.");
 +    }
 +
  }

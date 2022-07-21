@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index e134963fa97ea886c7cf4af8ab0ba53b6010fe41..1b731114520a1607b5c42774d86d9ed51f21da3f 100644
+index b7f56d1909272bb02591b6e08aed78943ab96ba1..c67c7ba95537ff39bf4a4f4c490698b49dcb0849 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
 @@ -1826,7 +1826,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider

@@ -27,16 +27,18 @@ index 67b88da702b780f79c0496cb17f1e6f1f8dd6c2b..712707da510977bfa1ce4b991fd8a8f5
                  // CraftBukkit start
                  java.util.Collection<MapDecoration> icons = new java.util.ArrayList<MapDecoration>();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 4da53712474506e80c265ee38e1e1e88f51e3ec9..ea398d72cdbec80add81971f3cf34b750e9448ae 100644
+index 04d08c44f56a4af207b8240ca1d9d34790ead16d..0e1ff578af49eaa44508119b16fae67744041150 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -258,4 +258,9 @@ public class MiraiConfig {
-         fastSpeedCheck = getBoolean("fast-speed-check", fastSpeedCheck);
+@@ -228,4 +228,11 @@ public class MiraiConfig {
+                             "to check when entity delta movement is null.");
      }
  
-+    public static int mapUpdateInterval = 5;
++    public static int mapUpdateInterval;
 +    private static void mapUpdate() {
-+        mapUpdateInterval = getInt("map-update-interval", mapUpdateInterval);
++        mapUpdateInterval = getInt("map-update-interval", 5,
++                                "This value defines how often a map refresh, in tick.",
++                                "A second is 20 ticks.");
 +    }
 +
  }

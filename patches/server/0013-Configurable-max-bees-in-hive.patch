@@ -18,16 +18,18 @@ index 41c9f074203915c31c1ae7a160ce509c13383f84..ce56e8ca4b4f866eddcf0849c3b53928
      public BeehiveBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.BEEHIVE, pos, state);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index ce82453b1ee3514cfbe10b94184d1c210867bed9..667eaabe95e9b44cad64dd5aba5ac693f4d726ed 100644
+index 10bcda92607b04b255819a6c70358131e97baa1a..2849478bde14769d1202ca15ecaa8a341f1043a3 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -189,4 +189,9 @@ public class MiraiConfig {
-         logPlayerLoginLoc = getBoolean("log-player-login-location", logPlayerLoginLoc);
+@@ -137,4 +137,11 @@ public class MiraiConfig {
+                                 "Whether or not player login location should be written in logs.");
      }
  
-+    public static int maxBees = 3;
++    public static int maxBees;
 +    private static void maximumBees() {
-+        maxBees = getInt("max-bees-in-hive", maxBees);
++        maxBees = getInt("max-bees-in-hive", 3,
++                    "This value defines how many bees can fit in a hive.",
++                    "Allowing more bees in a hive can reduce the number of ticking hives.");
 +    }
 +
  }

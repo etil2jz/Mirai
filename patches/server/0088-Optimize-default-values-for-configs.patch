@@ -5,23 +5,41 @@ Subject: [PATCH] Optimize default values for configs
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index a125abc75ed2bbd905c8fdec442416a45264f531..70b100822193486a63c84bda23398ae8aac3a51d 100644
+index 09827eaa9f6adf49385a33aa60b3a6bf4005a982..49fa028efe1a34d9f37b95866c0824fcf210f338 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -216,8 +216,10 @@ public class PufferfishConfig {
+@@ -216,7 +216,7 @@ public class PufferfishConfig {
+ 	public static boolean enableAsyncEntityTracker;
+ 	public static boolean enableAsyncEntityTrackerInitialized;
+ 	private static void asyncEntityTracker() {
+-		boolean temp = getBoolean("enable-async-entity-tracker", false,
++		boolean temp = getBoolean("enable-async-entity-tracker", true, // Mirai - optimize default values for configs
+ 				"Whether or not async entity tracking should be enabled.");
+ 		if (!enableAsyncEntityTrackerInitialized) {
+ 			enableAsyncEntityTrackerInitialized = true;
+@@ -227,7 +227,7 @@ public class PufferfishConfig {
+ 	public static boolean enableAsyncPathfinding;
+ 	public static boolean enableAsyncPathfindingInitialized;
+ 	private static void asyncPathfinding() {
+-		boolean temp = getBoolean("enable-async-pathfinding", false,
++		boolean temp = getBoolean("enable-async-pathfinding", true, // Mirai - optimize default values for configs
+ 				"Whether or not async pathfinding should be enabled.");
+ 		if (!enableAsyncPathfindingInitialized) {
+ 			enableAsyncPathfindingInitialized = true;
+@@ -238,8 +238,10 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerTick;
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
 -        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
 -        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +        // Mirai start - optimize default values for configs
-+        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
++        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); 
 +        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +        // Mirai end
  
          setComment("projectile", "Optimizes projectile settings");
      }
-@@ -235,10 +237,10 @@ public class PufferfishConfig {
+@@ -257,10 +259,10 @@ public class PufferfishConfig {
                  "This value determines how far away an entity has to be",
                  "from the player to start being effected by DEAR.");
          startDistanceSquared = startDistance * startDistance;
@@ -69,7 +87,7 @@ index bc72131afa1ae9986ee311a9b371e97c8feb38f8..c54341d03a1ef78d075236968a000e00
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071dee523fc 100644
+index e2c612dd55fcb2769fb06f7878b8d0873f2be139..102468a21cd8386f6505b8e3982349c1e7a9943b 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 @@ -114,8 +114,10 @@ public class WorldConfiguration extends ConfigurationPart {
@@ -85,15 +103,6 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
          }
  
          public Spawning spawning;
-@@ -174,7 +176,7 @@ public class WorldConfiguration extends ConfigurationPart {
-             public boolean allChunksAreSlimeChunks = false;
-             @Constraint(Constraints.BelowZeroDoubleToDefault.class)
-             public DoubleOrDefault skeletonHorseThunderSpawnChance = DoubleOrDefault.USE_DEFAULT;
--            public boolean ironGolemsCanSpawnInAir = false;
-+            public boolean ironGolemsCanSpawnInAir = true; // Mirai - optimize default values for configs
-             public boolean countAllMobsForSpawning = false;
-             public int monsterSpawnMaxLightLevel = -1;
-             public DuplicateUUID duplicateUuid;
 @@ -198,8 +200,10 @@ public class WorldConfiguration extends ConfigurationPart {
          public Behavior behavior;
  
@@ -137,7 +146,7 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
          public boolean allowPlayerCrammingDamage = false;
      }
  
-@@ -399,18 +403,34 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -399,18 +403,33 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Chunks extends ConfigurationPart {
          public AutosavePeriod autoSaveInterval = AutosavePeriod.def();
@@ -151,7 +160,7 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
 +        public Duration delayChunkUnloadsBy = Duration.of("5s");
 +        // Mirai end
          public Reference2IntMap<EntityType<?>> entityPerChunkSaveLimit = Util.make(new Reference2IntOpenHashMap<>(Registry.ENTITY_TYPE.size()), map -> {
-             map.defaultReturnValue(-1);
+-            map.defaultReturnValue(-1);
 -            map.put(EntityType.EXPERIENCE_ORB, -1);
 -            map.put(EntityType.SNOWBALL, -1);
 -            map.put(EntityType.ENDER_PEARL, -1);
@@ -181,7 +190,7 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
          });
      }
  
-@@ -424,11 +444,22 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -424,11 +443,22 @@ public class WorldConfiguration extends ConfigurationPart {
      public TickRates tickRates;
  
      public class TickRates extends ConfigurationPart {
@@ -209,7 +218,7 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
      }
  
      @Setting(FeatureSeedsGeneration.FEATURE_SEEDS_KEY)
-@@ -436,7 +467,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -436,7 +466,7 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class FeatureSeeds extends ConfigurationPart.Post {
          @Setting(FeatureSeedsGeneration.GENERATE_KEY)
@@ -218,7 +227,7 @@ index 32f0cd29d1198fe320d10ccfe0b02f8632ac12aa..d503fd87f968354c1473dbe1679a6071
          @Setting(FeatureSeedsGeneration.FEATURES_KEY)
          public Reference2LongMap<Holder<ConfiguredFeature<?, ?>>> features = new Reference2LongOpenHashMap<>();
  
-@@ -450,9 +481,9 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -450,9 +480,9 @@ public class WorldConfiguration extends ConfigurationPart {
  
      public class Misc extends ConfigurationPart {
          public int lightQueueSize = 20;
@@ -244,7 +253,7 @@ index 5d162f59fc5ef9adf7fa762b137bbcfca745d9c5..c7c8a77e3af96720434e361b04186d57
  
      public static double movedWronglyThreshold;
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 5a16e64d1555a74acca98966f1a6b2269280f366..75584d048d6fe154fc80e5132e72b03fd707d104 100644
+index ce61f9e8a835bc5e2d3815e337ed9785f9d06f04..217c8f8364ba8d1e509dea9ec0de4b6832db8a51 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -150,14 +150,14 @@ public class SpigotWorldConfig
@@ -286,11 +295,10 @@ index 5a16e64d1555a74acca98966f1a6b2269280f366..75584d048d6fe154fc80e5132e72b03f
 -    public int miscActivationRange = 16;
 +    public int miscActivationRange = 8;
      // Paper start
--    public int flyingMonsterActivationRange = 32;
+     public int flyingMonsterActivationRange = 32;
 -    public int waterActivationRange = 16;
 -    public int villagerActivationRange = 32;
 -    public int wakeUpInactiveAnimals = 4;
-+    public int flyingMonsterActivationRange = 48;
 +    public int waterActivationRange = 8;
 +    public int villagerActivationRange = 16;
 +    public int wakeUpInactiveAnimals = 2;

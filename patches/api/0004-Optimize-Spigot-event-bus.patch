@@ -24,10 +24,10 @@ index 419aec56b0e3fa8bcec2ea7f340caa3456b57d00..8530d926931a54ed1300c40cd1e0908b
              }
          }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index aed2209b66f11a0d03473cf19437f3da0e9e573a..1e482ee08b2c0b155ac0a64f0913155f9612b83f 100644
+index 6aba652af2b2f054ad22c77e4e59f0ed3eddc685..8c9b19888430421a8cdef91d707fb43efc7b15ea 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -648,11 +648,15 @@ public final class SimplePluginManager implements PluginManager {
+@@ -653,11 +653,15 @@ public final class SimplePluginManager implements PluginManager {
      @Override
      public void callEvent(@NotNull Event event) {
          // Paper - replace callEvent by merging to below method

@@ -7,11 +7,11 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index c81520efe726efa7d6ac61c37f8eadc3cda5bc97..083b68897759640ca041a9d781b7ba7a07e5f8df 100644
+index 1fded3a30eb934f7826d5e47659983e5b6691600..e69be14b25f2a8686473da5806c4930469e2074b 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -177,8 +177,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
- 
+@@ -176,8 +176,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public final com.destroystokyo.paper.antixray.ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPos lastPhysicsProblem; // Spigot
 -    private org.spigotmc.TickLimiter entityLimiter;
@@ -21,7 +21,7 @@ index c81520efe726efa7d6ac61c37f8eadc3cda5bc97..083b68897759640ca041a9d781b7ba7a
      private int tileTickPosition;
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
-@@ -372,8 +372,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -371,8 +371,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          // CraftBukkit end
          timings = new co.aikar.timings.WorldTimingsHandler(this); // Paper - code below can generate new world and access timings
          this.keepSpawnInMemory = this.paperConfig().spawn.keepSpawnLoaded; // Paper
@@ -33,23 +33,22 @@ index c81520efe726efa7d6ac61c37f8eadc3cda5bc97..083b68897759640ca041a9d781b7ba7a
          this.entitySliceManager = new io.papermc.paper.world.EntitySliceManager((ServerLevel)this); // Paper
      }
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index bbf15fbb889670e57bd86377590a1b3abe80b96d..5a16e64d1555a74acca98966f1a6b2269280f366 100644
+index bbf15fbb889670e57bd86377590a1b3abe80b96d..ce61f9e8a835bc5e2d3815e337ed9785f9d06f04 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -435,6 +435,7 @@ public class SpigotWorldConfig
          this.hangingTickFrequency = this.getInt( "hanging-tick-frequency", 100 );
      }
  
-+    /* // JettPack - remove tick limiter
++    /* JettPack - remove tick limiter
      public int tileMaxTickTime;
      public int entityMaxTickTime;
      private void maxTickTimes()
-@@ -442,7 +443,7 @@ public class SpigotWorldConfig
-         this.tileMaxTickTime = this.getInt("max-tick-time.tile", 50);
+@@ -443,6 +444,7 @@ public class SpigotWorldConfig
          this.entityMaxTickTime = this.getInt("max-tick-time.entity", 50);
          this.log("Tile Max Tick Time: " + this.tileMaxTickTime + "ms Entity max Tick Time: " + this.entityMaxTickTime + "ms");
--    }
-+    }*/
+     }
++    */
  
      public int thunderChance;
      private void thunderChance()

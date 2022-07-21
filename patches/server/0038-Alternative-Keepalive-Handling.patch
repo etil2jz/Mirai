@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index a3b5b52f7e597dc128281eb8ff9c60e0836bab98..531cbee70d491adf5dee3b7c3ee10d0859506245 100644
+index fc37001445d50f88bc274eb501914d9db49dce40..785e9e9b4408c1193cb3680a3b55f90a8f0d5b0a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -245,6 +245,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
@@ -58,16 +58,18 @@ index a3b5b52f7e597dc128281eb8ff9c60e0836bab98..531cbee70d491adf5dee3b7c3ee10d08
          if (this.keepAlivePending && packet.getId() == this.keepAliveChallenge) {
              int i = (int) (Util.getMillis() - this.keepAliveTime);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 0d5ebaad9c3dcedf6554e41074ecaff7659ff510..954bc508fea71af719c3203f0d4c93125976fdb8 100644
+index 15121a29de7a5b6b6ae062449221ad586ead655e..eda02eabbdb3c8d2cfe8c524fe9f5dfcca1089d8 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -206,4 +206,9 @@ public class MiraiConfig {
-         dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", dontSendUselessEntityPackets);
+@@ -159,4 +159,11 @@ public class MiraiConfig {
+                                         "Whether or not server should send entity packets with null movements.");
      }
  
-+    public static boolean useAlternateKeepAlive = true;
-+    private static void useAlternateKeepAlive() {
-+        useAlternateKeepAlive = getBoolean("use-alternate-keepalive", useAlternateKeepAlive);
++    public static boolean useAlternateKeepAlive;
++    private static void alternateKeepAlive() {
++        useAlternateKeepAlive = getBoolean("use-alternate-keepalive", true,
++                                    "Whether or not server should use an alternative keepalive algorithm.",
++                                    "This can drastically reduce players timeouts due to a bad connection.");
 +    }
 +
  }
