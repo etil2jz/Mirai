@@ -45,3 +45,5 @@ All other files are licensed under MIT.
 
 ## bStats
 [![](https://bstats.org/signatures/server-implementation/mirai.svg)](https://bstats.org/plugin/server-implementation/Mirai/14774)
+
+Made with <span style="color: #e25555;">&#9829;</span> on Earth.
