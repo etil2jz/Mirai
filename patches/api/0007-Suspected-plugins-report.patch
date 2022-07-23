@@ -6,10 +6,10 @@ Subject: [PATCH] Suspected plugins report
 Added "Suspected Plugins" to Watchdog, crash reports and exception messages
 
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index a18724748aca4032981f1123055a9abefa77d9e1..cd09dcb1a41cbea5ef9f726281a82b7d362efacb 100644
+index b29143e6a49f004c74a72768b2ba40455b3165c8..6fc4cc09e2d2a7408957e971e24846a1a907958f 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -623,7 +623,11 @@ public final class SimplePluginManager implements PluginManager {
+@@ -624,7 +624,11 @@ public final class SimplePluginManager implements PluginManager {
      // Paper start
      private void handlePluginException(String msg, Throwable ex, Plugin plugin) {
          gg.pufferfish.pufferfish.sentry.SentryContext.setPluginContext(plugin); // Pufferfish
@@ -22,7 +22,7 @@ index a18724748aca4032981f1123055a9abefa77d9e1..cd09dcb1a41cbea5ef9f726281a82b7d
          gg.pufferfish.pufferfish.sentry.SentryContext.removePluginContext(); // Pufferfish
          callEvent(new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerPluginEnableDisableException(msg, ex, plugin)));
      }
-@@ -697,7 +701,11 @@ public final class SimplePluginManager implements PluginManager {
+@@ -698,7 +702,11 @@ public final class SimplePluginManager implements PluginManager {
                  gg.pufferfish.pufferfish.sentry.SentryContext.setEventContext(event, registration); // Pufferfish
                  // Paper start - error reporting
                  String msg = "Could not pass event " + event.getEventName() + " to " + registration.getPlugin().getDescription().getFullName();
@@ -35,7 +35,7 @@ index a18724748aca4032981f1123055a9abefa77d9e1..cd09dcb1a41cbea5ef9f726281a82b7d
                  gg.pufferfish.pufferfish.sentry.SentryContext.removeEventContext(); // Pufferfish
                  if (!(event instanceof com.destroystokyo.paper.event.server.ServerExceptionEvent)) { // We don't want to cause an endless event loop
                      callEvent(new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerEventException(msg, ex, registration.getPlugin(), registration.getListener(), event)));
-@@ -983,4 +991,10 @@ public final class SimplePluginManager implements PluginManager {
+@@ -989,4 +997,10 @@ public final class SimplePluginManager implements PluginManager {
      }
      // Paper end
  

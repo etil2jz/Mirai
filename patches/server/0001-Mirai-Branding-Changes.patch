@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 74c91f79576e85618fefb79be8d313ba871701c7..17867a1cbf2e4aec601b2bc836a2b3a808feb5b7 100644
+index 74c91f79576e85618fefb79be8d313ba871701c7..cd031f03e38d40976e039fda5055584caa0aee85 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,7 +9,7 @@ plugins {
@@ -17,24 +17,17 @@ index 74c91f79576e85618fefb79be8d313ba871701c7..17867a1cbf2e4aec601b2bc836a2b3a8
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.19-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -78,13 +78,13 @@ tasks.jar {
-     manifest {
-         val git = Git(rootProject.layout.projectDirectory.path)
-         val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
--        val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
-+        val implementationVersion = System.getenv("BUILD_NUMBER") ?: gitHash // Mirai - removed quotation marks
-         val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
-         val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
+@@ -84,7 +84,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Pufferfish-$implementationVersion", // Pufferfish
-+            "Implementation-Version" to "git-Mirai-$implementationVersion", // Mirai // Pufferfish
++            "Implementation-Version" to "git-Mirai-$implementationVersion", // Pufferfish // Mirai
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 061716934ba0a1f01e4d85d664034f72b3c7a765..0db2c292fe1fd1504f6d50b7bfa5121598b762c1 100644
+index 061716934ba0a1f01e4d85d664034f72b3c7a765..b26821d74eb4a03317dd36afe9e1259ff920aff8 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
@@ -42,7 +35,7 @@ index 061716934ba0a1f01e4d85d664034f72b3c7a765..0db2c292fe1fd1504f6d50b7bfa51215
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Pufferfish", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
-+                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Mirai
++                Metrics metrics = new Metrics("Mirai", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish // Mirai
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
@@ -55,6 +48,161 @@ index 061716934ba0a1f01e4d85d664034f72b3c7a765..0db2c292fe1fd1504f6d50b7bfa51215
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+deleted file mode 100644
+index bf42969859545a8a520923ef1836ffa4a5cc24a0..0000000000000000000000000000000000000000
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ /dev/null
+@@ -1,149 +0,0 @@
+-package com.destroystokyo.paper;
+-
+-import com.destroystokyo.paper.util.VersionFetcher;
+-import com.google.common.base.Charsets;
+-import com.google.common.io.Resources;
+-import com.google.gson.*;
+-import net.kyori.adventure.text.Component;
+-import net.kyori.adventure.text.event.ClickEvent;
+-import net.kyori.adventure.text.format.NamedTextColor;
+-import net.kyori.adventure.text.format.TextDecoration;
+-import net.kyori.adventure.text.TextComponent;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-import java.io.*;
+-import java.net.HttpURLConnection;
+-import java.net.URL;
+-import java.util.stream.StreamSupport;
+-
+-public class PaperVersionFetcher implements VersionFetcher {
+-    private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
+-    private static final String GITHUB_BRANCH_NAME = "master";
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
+-    private static @Nullable String mcVer;
+-
+-    @Override
+-    public long getCacheTime() {
+-        return 720000;
+-    }
+-
+-    @Nonnull
+-    @Override
+-    public Component getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
+-        final Component history = getHistory();
+-
+-        return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
+-    }
+-
+-    private static @Nullable String getMinecraftVersion() {
+-        if (mcVer == null) {
+-            java.util.regex.Matcher matcher = VER_PATTERN.matcher(org.bukkit.Bukkit.getBukkitVersion());
+-            if (matcher.find()) {
+-                String result = matcher.group();
+-                mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
+-            } else {
+-                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to PaperMC!");
+-                org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
+-                org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
+-            }
+-        }
+-
+-        return mcVer;
+-    }
+-
+-    private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
+-        int distance;
+-        try {
+-            int jenkinsBuild = Integer.parseInt(versionInfo);
+-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+-        } catch (NumberFormatException ignored) {
+-            versionInfo = versionInfo.replace("\"", "");
+-            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
+-        }
+-
+-        switch (distance) {
+-            case -1:
+-                return Component.text("Error obtaining version information", NamedTextColor.YELLOW);
+-            case 0:
+-                return Component.text("You are running the latest version", NamedTextColor.GREEN);
+-            case -2:
+-                return Component.text("Unknown version", NamedTextColor.YELLOW);
+-            default:
+-                return Component.text("You are " + distance + " version(s) behind", NamedTextColor.YELLOW)
+-                        .append(Component.newline())
+-                        .append(Component.text("Download the new version at: ")
+-                                .append(Component.text(DOWNLOAD_PAGE, NamedTextColor.GOLD)
+-                                        .hoverEvent(Component.text("Click to open", NamedTextColor.WHITE))
+-                                        .clickEvent(ClickEvent.openUrl(DOWNLOAD_PAGE))));
+-        }
+-    }
+-
+-    private static int fetchDistanceFromSiteApi(int jenkinsBuild, @Nullable String siteApiVersion) {
+-        if (siteApiVersion == null) { return -1; }
+-        try {
+-            try (BufferedReader reader = Resources.asCharSource(
+-                new URL("https://api.papermc.io/v2/projects/paper/versions/" + siteApiVersion),
+-                Charsets.UTF_8
+-            ).openBufferedStream()) {
+-                JsonObject json = new Gson().fromJson(reader, JsonObject.class);
+-                JsonArray builds = json.getAsJsonArray("builds");
+-                int latest = StreamSupport.stream(builds.spliterator(), false)
+-                    .mapToInt(e -> e.getAsInt())
+-                    .max()
+-                    .getAsInt();
+-                return latest - jenkinsBuild;
+-            } catch (JsonSyntaxException ex) {
+-                ex.printStackTrace();
+-                return -1;
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-            return -1;
+-        }
+-    }
+-
+-    // Contributed by Techcable <Techcable@outlook.com> in GH-65
+-    private static int fetchDistanceFromGitHub(@Nonnull String repo, @Nonnull String branch, @Nonnull String hash) {
+-        try {
+-            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
+-            connection.connect();
+-            if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) return -2; // Unknown commit
+-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8))) {
+-                JsonObject obj = new Gson().fromJson(reader, JsonObject.class);
+-                String status = obj.get("status").getAsString();
+-                switch (status) {
+-                    case "identical":
+-                        return 0;
+-                    case "behind":
+-                        return obj.get("behind_by").getAsInt();
+-                    default:
+-                        return -1;
+-                }
+-            } catch (JsonSyntaxException | NumberFormatException e) {
+-                e.printStackTrace();
+-                return -1;
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-            return -1;
+-        }
+-    }
+-
+-    @Nullable
+-    private Component getHistory() {
+-        final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
+-        if (data == null) {
+-            return null;
+-        }
+-
+-        final String oldVersion = data.getOldVersion();
+-        if (oldVersion == null) {
+-            return null;
+-        }
+-
+-        return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
+-    }
+-}
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 index b0390eedb507d27426d1e1d73bd4ab63aec89ebe..509a9a5326d94200ca3d7a83ae47c6bb093d6969 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
@@ -69,10 +217,19 @@ index b0390eedb507d27426d1e1d73bd4ab63aec89ebe..509a9a5326d94200ca3d7a83ae47c6bb
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 7fd7c3be306d93201a61bb616f8c09cb066d4204..e995aa81665bdf582f753acec3f0584f0060c851 100644
+index 67c4cd2fb3c64432b0390c9d497ef7067577c64a..cd704d013024088ba4fbf7a04daeb0135e794651 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1656,7 +1656,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -911,7 +911,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         shutdownThread = Thread.currentThread();
+         org.spigotmc.WatchdogThread.doStop(); // Paper
+         if (!isSameThread()) {
+-            MinecraftServer.LOGGER.info("Stopping main thread (Ignore any thread death message you see! - DO NOT REPORT THREAD DEATH TO PAPER)");
++            MinecraftServer.LOGGER.info("Stopping main thread (Ignore any thread death message you see! - DO NOT REPORT THREAD DEATH TO MIRAI)"); // Mirai
+             while (this.getRunningThread().isAlive()) {
+                 this.getRunningThread().stop();
+                 try {
+@@ -1657,7 +1657,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -82,7 +239,7 @@ index 7fd7c3be306d93201a61bb616f8c09cb066d4204..e995aa81665bdf582f753acec3f0584f
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b5de069683a615be9b9b33c3d8e61e46bbbec8e3..2aece16c65245337e59f7b08d6fcd76916055fc2 100644
+index 9a8a7eff47d40d6de558f0946c450531b3984f44..920b905c91cc37acb09e26add02acdf5e026bd91 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
@@ -108,38 +265,104 @@ index 2d9c98931df5d1c54adcfba78a9136841764f853..ae2965796f5c0a5c8629159714a24555
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 80553face9c70c2a3d897681e7761df85b22d464..4c7515fa391ee9b631cb9cd3da67b50a9378e7fc 100644
+index 80553face9c70c2a3d897681e7761df85b22d464..bcdb4fd83b665a6f96b6d6e989f2cfe2370cc0db 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-@@ -11,7 +11,7 @@ public final class Versioning {
-     public static String getBukkitVersion() {
-         String result = "Unknown-Version";
+@@ -8,22 +8,27 @@ import java.util.logging.Logger;
+ import org.bukkit.Bukkit;
+ 
+ public final class Versioning {
+-    public static String getBukkitVersion() {
+-        String result = "Unknown-Version";
++    // Mirai start - cache getBukkitVersion
++    public static String bukkitVersion;
++    static {
++        bukkitVersion = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.pufferfish.pufferfish/pufferfish-api/pom.properties"); // Pufferfish
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/wtf.etil.mirai/mirai-api/pom.properties"); // Mirai
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/wtf.etil.mirai/mirai-api/pom.properties"); // Pufferfish // Mirai
          Properties properties = new Properties();
  
          if (stream != null) {
+             try {
+                 properties.load(stream);
+ 
+-                result = properties.getProperty("version");
++                bukkitVersion = properties.getProperty("version");
+             } catch (IOException ex) {
+                 Logger.getLogger(Versioning.class.getName()).log(Level.SEVERE, "Could not get Bukkit version!", ex);
+             }
+         }
++    }
++    // Mirai end
+ 
+-        return result;
++    public static String getBukkitVersion() {
++        return bukkitVersion; // Mirai
+     }
+ }
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index d568fc92d03c313a782796cc720a1ebb1a5ad8be..413bcdb0389718a73047a114e6f5d05d96bdcf43 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -155,14 +155,14 @@ public class WatchdogThread extends Thread
+                 if (isLongTimeout) {
+                 // Paper end
+                 log.log( Level.SEVERE, "------------------------------" );
+-                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Paper bug." ); // Paper
++                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Mirai bug." ); // Paper // Mirai
+                 log.log( Level.SEVERE, "If you see a plugin in the Server thread dump below, then please report it to that author" );
+                 log.log( Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring" );
+                 log.log( Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once" );
+                 log.log( Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes" );
+-                log.log( Level.SEVERE, "If you are unsure or still think this is a Paper bug, please report this to https://github.com/PaperMC/Paper/issues" );
++                log.log( Level.SEVERE, "If you are unsure or still think this is a Mirai bug, please report this to https://github.com/etil2jz/Mirai/issues" ); // Mirai
+                 log.log( Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports" );
+-                log.log( Level.SEVERE, "Paper version: " + Bukkit.getServer().getVersion() );
++                log.log( Level.SEVERE, "Mirai version: " + Bukkit.getServer().getVersion() ); // Mirai
+                 //
+                 if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
+                 {
+@@ -185,12 +185,12 @@ public class WatchdogThread extends Thread
+                 // Paper end
+                 } else
+                 {
+-                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---");
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO MIRAI - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---"); // Mirai
+                     log.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
+                 }
+                 // Paper end - Different message for short timeout
+                 log.log( Level.SEVERE, "------------------------------" );
+-                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
++                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Mirai!):" ); // Paper // Mirai
+                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 this.dumpTickingInfo(); // Paper - log detailed tick information
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
+@@ -206,7 +206,7 @@ public class WatchdogThread extends Thread
+                     WatchdogThread.dumpThread( thread, log );
+                 }
+                 } else {
+-                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO MIRAI - THIS IS NOT A BUG OR A CRASH ---"); // Mirai
+                 }
+ 
+                 log.log( Level.SEVERE, "------------------------------" );
 diff --git a/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b01fd6deb9b437bfd499558334fea422de22b522
+index 0000000000000000000000000000000000000000..c7c63b18ded2b3467e8e748729ed4a1937f1551f
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
-@@ -0,0 +1,106 @@
+@@ -0,0 +1,136 @@
 +package wtf.etil.mirai;
++
++import static net.kyori.adventure.text.Component.text;
++import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
++import static net.kyori.adventure.text.format.NamedTextColor.RED;
 +
 +import com.destroystokyo.paper.VersionHistoryManager;
 +import com.destroystokyo.paper.util.VersionFetcher;
 +import com.google.gson.Gson;
 +import com.google.gson.JsonObject;
-+import net.kyori.adventure.text.Component;
-+import net.kyori.adventure.text.JoinConfiguration;
-+import net.kyori.adventure.text.format.NamedTextColor;
-+import net.kyori.adventure.text.format.TextDecoration;
-+import org.bukkit.craftbukkit.CraftServer;
-+import org.jetbrains.annotations.NotNull;
-+import org.jetbrains.annotations.Nullable;
-+
 +import java.io.IOException;
 +import java.net.URI;
 +import java.net.http.HttpClient;
@@ -149,22 +372,27 @@ index 0000000000000000000000000000000000000000..b01fd6deb9b437bfd499558334fea422
 +import java.util.concurrent.TimeUnit;
 +import java.util.logging.Level;
 +import java.util.logging.Logger;
-+
-+import static net.kyori.adventure.text.Component.text;
-+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
-+import static net.kyori.adventure.text.format.NamedTextColor.RED;
++import net.kyori.adventure.text.Component;
++import net.kyori.adventure.text.JoinConfiguration;
++import net.kyori.adventure.text.format.NamedTextColor;
++import net.kyori.adventure.text.format.TextDecoration;
++import org.bukkit.craftbukkit.CraftServer;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public class MiraiVersionFetcher implements VersionFetcher {
 +
 +    private static final Logger LOGGER = Logger.getLogger("MiraiVersionFetcher");
 +    private static final HttpClient client = HttpClient.newHttpClient();
 +
++    private static final URI JENKINS_URI = URI.create("https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/buildNumber");
 +    private static final String GITHUB_FORMAT = "https://api.github.com/repos/etil2jz/Mirai/compare/ver/1.19...%s";
 +
-+    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers.mapping(
-+            HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
-+            string -> new Gson().fromJson(string, JsonObject.class)
-+    );
++    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers
++            .mapping(
++                    HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
++                    string -> new Gson().fromJson(string, JsonObject.class)
++            );
 +
 +    @Override
 +    public long getCacheTime() {
@@ -179,11 +407,42 @@ index 0000000000000000000000000000000000000000..b01fd6deb9b437bfd499558334fea422
 +        if (parts.length != 3) {
 +            component = text("Unknown server version.", RED);
 +        } else {
-+            component = this.fetchGithubVersion(parts[2]);
++            final String versionString = parts[2];
++
++            try {
++                component = this.fetchJenkinsVersion(Integer.parseInt(versionString));
++            } catch (NumberFormatException e) {
++                component = this.fetchGithubVersion(versionString.substring(1, versionString.length() - 1));
++            }
 +        }
 +
 +        final @Nullable Component history = this.getHistory();
-+        return history != null ? Component.join(JoinConfiguration.noSeparators(), component, Component.newline(), this.getHistory()) : component;
++        return history != null ? Component
++                .join(JoinConfiguration.noSeparators(), component, Component.newline(), this.getHistory()) : component;
++    }
++
++    private @NotNull Component fetchJenkinsVersion(final int versionNumber) {
++        final HttpRequest request = HttpRequest.newBuilder(JENKINS_URI).build();
++        try {
++            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
++            if (response.statusCode() != 200) {
++                return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
++            }
++
++            int latestVersionNumber;
++            try {
++                latestVersionNumber = Integer.parseInt(response.body());
++            } catch (NumberFormatException e) {
++                LOGGER.log(Level.WARNING, "Received invalid response from Jenkins \"" + response.body() + "\".");
++                return text("Received invalid response from server.", RED);
++            }
++
++            final int versionDiff = latestVersionNumber - versionNumber;
++            return this.getResponseMessage(versionDiff);
++        } catch (IOException | InterruptedException e) {
++            LOGGER.log(Level.WARNING, "Failed to look up version from Jenkins", e);
++            return text("Failed to retrieve version from server.", RED);
++        }
 +    }
 +
 +    // Based off code contributed by Techcable <Techcable@outlook.com> in Paper/GH-65
@@ -208,13 +467,11 @@ index 0000000000000000000000000000000000000000..b01fd6deb9b437bfd499558334fea422
 +
 +    private @NotNull Component getResponseMessage(final int versionDiff) {
 +        return switch (Math.max(-1, Math.min(1, versionDiff))) {
-+            case -1 ->
-+                text("You are running an unsupported version of Mirai.", RED);
-+            case 0 ->
-+                text("You are on the latest version!", GREEN);
-+            default ->
-+                text("You are running " + versionDiff + " version" + (versionDiff == 1 ? "" : "s") + " beyond. " +
-+                    "Please update your server when possible to maintain stability, security, and receive the latest optimizations.", RED);
++            case -1 -> text("You are running an unsupported version of Mirai.", RED);
++            case 0 -> text("You are on the latest version!", GREEN);
++            default -> text("You are running " + versionDiff + " version" + (versionDiff == 1 ? "" : "s") + " beyond. " +
++                            "Please update your server when possible to maintain stability, security, and receive the latest optimizations.",
++                    RED);
 +        };
 +    }
 +
