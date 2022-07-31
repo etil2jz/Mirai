@@ -349,7 +349,7 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..413bcdb0389718a73047a114e6f5d05d
                  log.log( Level.SEVERE, "------------------------------" );
 diff --git a/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c7c63b18ded2b3467e8e748729ed4a1937f1551f
+index 0000000000000000000000000000000000000000..55c0edecc8d7b51e1ec7bbda3db24102bfa35333
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/MiraiVersionFetcher.java
 @@ -0,0 +1,136 @@
@@ -386,7 +386,7 @@ index 0000000000000000000000000000000000000000..c7c63b18ded2b3467e8e748729ed4a19
 +    private static final HttpClient client = HttpClient.newHttpClient();
 +
 +    private static final URI JENKINS_URI = URI.create("https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/buildNumber");
-+    private static final String GITHUB_FORMAT = "https://api.github.com/repos/etil2jz/Mirai/compare/ver/1.19...%s";
++    private static final String GITHUB_FORMAT = "https://api.github.com/repos/etil2jz/Mirai/compare/ver/1.19.1...%s";
 +
 +    private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers
 +            .mapping(
