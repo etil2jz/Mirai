@@ -1,0 +1,65 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Mykyta Komarnytskyy <nkomarn@hotmail.com>
+Date: Sat, 24 Oct 2020 21:08:17 -0500
+Subject: [PATCH] Configurable criterion triggers
+
+This patch adds toggles for three criterion triggers that are called every tick. These can be very unnecessary, and especially in the case of CriterionTriggerEnterBlock, quite heavy.
+
+Original code by YatopiaMC, licensed under MIT
+You can find the original code on https://github.com/YatopiaMC/Yatopia
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 666189dae2400decc3d5bf97e073301e2de40472..2392913f2c221882bfdf324b671486a05a87ea76 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -615,7 +615,7 @@ public class ServerPlayer extends Player {
+ 
+     @Override
+     protected void onInsideBlock(BlockState state) {
+-        CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
++        if (wtf.etil.mirai.MiraiConfig.criterionTriggerEnterBlock) CriteriaTriggers.ENTER_BLOCK.trigger(this, state); // Mirai
+     }
+ 
+     @Override
+@@ -661,7 +661,7 @@ public class ServerPlayer extends Player {
+             }
+         }
+ 
+-        CriteriaTriggers.TICK.trigger(this);
++        if (wtf.etil.mirai.MiraiConfig.criterionTriggerTick) CriteriaTriggers.TICK.trigger(this); // Mirai
+         if (this.levitationStartPos != null) {
+             CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
+         }
+@@ -737,9 +737,7 @@ public class ServerPlayer extends Player {
+                 this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
+             }
+ 
+-            if (this.tickCount % 20 == 0) {
+-                CriteriaTriggers.LOCATION.trigger(this);
+-            }
++            if (wtf.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) CriteriaTriggers.LOCATION.trigger(this); // Mirai
+ 
+             // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
+             if (this.oldLevel == -1) {
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 9bc1e365e0c96907f6fb2b5cd67a12c87d0cf7ed..aa6e4eae07182d74632b7b4ee0844a979a630686 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -209,4 +209,16 @@ public class MiraiConfig {
+                                 "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
+     }
+ 
++    public static boolean criterionTriggerEnterBlock;
++    public static boolean criterionTriggerTick;
++    public static boolean criterionTriggerLocation;
++    private static void criterionTriggers() {
++        criterionTriggerEnterBlock = getBoolean("criterion-trigger.enter-block", true,
++                                        "Whether or not server should listen to block enter triggers.");
++        criterionTriggerTick = getBoolean("criterion-trigger.tick", true,
++                                    "Whether or not server should listen to tick triggers.");
++        criterionTriggerLocation = getBoolean("criterion-trigger.location", true,
++                                        "Whether or not server should listen to location triggers.");
++    }
++
+ }
+\ No newline at end of file

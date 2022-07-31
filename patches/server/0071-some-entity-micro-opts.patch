@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Fri, 14 Jan 2022 12:00:42 -0500
+Subject: [PATCH] some entity micro opts
+
+Original code by Titaniumtown, licensed under GNU General Public License v3.0
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 95ad50a86077d42e9c9429635d1eaf3b1ba8c098..9806c35f4ebb1c7541852d3c995a30d6372bdf6f 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1886,12 +1886,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         }
+     }
+ 
++    // JettPack start - allow passing BlockPos to getLightLevelDependentMagicValue
+     /** @deprecated */
+     @Deprecated
+     public float getLightLevelDependentMagicValue() {
+-        return this.level.hasChunkAt(this.getBlockX(), this.getBlockZ()) ? this.level.getLightLevelDependentMagicValue(new BlockPos(this.getX(), this.getEyeY(), this.getZ())) : 0.0F;
++        return this.level.getLightLevelDependentMagicValue(new BlockPos(this.getX(), this.getEyeY(), this.getZ()));
+     }
+ 
++    public float getLightLevelDependentMagicValue(BlockPos pos) {
++        return this.level.hasChunkAt(this.getBlockX(), this.getBlockZ()) ? this.level.getLightLevelDependentMagicValue(pos) : 0.0F;
++    }
++    // JettPack end
++
+     public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
+         this.absMoveTo(x, y, z);
+         this.setYRot(yaw % 360.0F);
+@@ -4329,6 +4335,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     }
+     // Paper end - block invalid positions
+ 
++    // JettPack start
++    public final int getPositionHashCode() {
++        return this.position.hashCode();
++    }
++    // JettPack end
++
+     public final void setPosRaw(double x, double y, double z) {
+         // Paper start
+         this.setPosRaw(x, y, z, false);
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index 9980df9128dfc51f2afbca8f4aa2031e3728796a..a60cca663da4200d482c19d0b41a9514825a1e9b 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -1641,15 +1641,31 @@ public abstract class Mob extends LivingEntity {
+ 
+     }
+ 
++    // JettPack start - cache eye blockpos
++    private BlockPos cached_eye_blockpos;
++    private int cached_position_hashcode;
++    // JettPack end
+     public boolean isSunBurnTick() {
+         if (this.level.isDay() && !this.level.isClientSide) {
+-            float f = this.getLightLevelDependentMagicValue();
+-            BlockPos blockposition = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
++            // JettPack start - optimizations and cache eye blockpos
++            int positionHashCode = this.getPositionHashCode();
++            if (this.cached_position_hashcode != positionHashCode) {
++                this.cached_eye_blockpos = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
++                this.cached_position_hashcode = positionHashCode;
++            }
++
++            float f = this.getLightLevelDependentMagicValue(cached_eye_blockpos); // Pass BlockPos to getBrightness
++
++            // Check brightness first
++            if (f <= 0.5F) return false;
++            if (this.random.nextFloat() * 30.0F >= (f - 0.4F) * 2.0F) return false;
++
+             boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
+ 
+-            if (f > 0.5F && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && !flag && this.level.canSeeSky(blockposition)) {
++            if (!flag && this.level.canSeeSky(this.cached_eye_blockpos)) { // JettPack - move brightness checks up
+                 return true;
+             }
++            // JettPack end
+         }
+ 
+         return false;

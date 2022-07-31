@@ -1,0 +1,100 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <blanchot.arthur@protonmail.ch>
+Date: Fri, 8 Apr 2022 22:21:48 +0200
+Subject: [PATCH] lithium: suffocation
+
+Author: 2No2Name <2No2Name@web.de>
+
+Original license: GNU Lesser General Public License v3.0
+Original project: https://github.com/CaffeineMC/lithium-fabric (Yarn mappings)
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 91db9f3a066ef9a7a9c9c0eddc5ecb41f9024bd9..ed4d8ad6c7b6c08045710e6e8135d7b633d950fc 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2613,39 +2613,64 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         return !this.isRemoved();
+     }
+ 
++    // Mirai start - lithium: suffocation
++    /**
++     * @author 2No2Name
++     * @reason Avoid stream code, use optimized chunk section iteration order
++     */
+     public boolean isInWall() {
++        // [VanillaCopy] The whole method functionality including bug below. Cannot use ChunkAwareBlockCollisionSweeper due to ignoring of oversized blocks
+         if (this.noPhysics) {
+             return false;
+-        } else {
+-            float f = this.dimensions.width * 0.8F;
+-            AABB axisalignedbb = AABB.ofSize(this.getEyePosition(), (double) f, 1.0E-6D, (double) f);
+-
+-            BlockPos.MutableBlockPos blockposition = new BlockPos.MutableBlockPos();
+-            int minX = Mth.floor(axisalignedbb.minX);
+-            int minY = Mth.floor(axisalignedbb.minY);
+-            int minZ = Mth.floor(axisalignedbb.minZ);
+-            int maxX = Mth.floor(axisalignedbb.maxX);
+-            int maxY = Mth.floor(axisalignedbb.maxY);
+-            int maxZ = Mth.floor(axisalignedbb.maxZ);
+-            for (int fz = minZ; fz <= maxZ; ++fz) {
+-                for (int fx = minX; fx <= maxX; ++fx) {
+-                    for (int fy = minY; fy <= maxY; ++fy) {
+-                        net.minecraft.world.level.chunk.LevelChunk chunk = (net.minecraft.world.level.chunk.LevelChunk)this.level.getChunkIfLoadedImmediately(fx >> 4, fz >> 4);
+-                        if (chunk == null) {
+-                            continue;
++        }
++        Vec3 position = this.getEyePosition();
++        double suffocationRadius = Math.abs((double) (this.dimensions.width * 0.8f) / 2.0);
++
++        double suffocationMinX = position.x - suffocationRadius;
++        double suffocationMinY = position.y - 5.0E-7;
++        double suffocationMinZ = position.z - suffocationRadius;
++        double suffocationMaxX = position.x + suffocationRadius;
++        double suffocationMaxY = position.y + 5.0E-7;
++        double suffocationMaxZ = position.z + suffocationRadius;
++        int minX = Mth.floor(suffocationMinX);
++        int minY = Mth.floor(suffocationMinY);
++        int minZ = Mth.floor(suffocationMinZ);
++        int maxX = Mth.floor(suffocationMaxX);
++        int maxY = Mth.floor(suffocationMaxY);
++        int maxZ = Mth.floor(suffocationMaxZ);
++
++        Level level = this.level;
++        //skip getting blocks when the entity is outside the world height
++        //also avoids infinite loop with entities below y = Integer.MIN_VALUE (some modded servers do that)
++        if (level.getMinBuildHeight() > maxY || level.getMaxBuildHeight() < minY) {
++            return false;
++        }
++
++        BlockPos.MutableBlockPos blockposition = new BlockPos.MutableBlockPos();
++        VoxelShape suffocationShape = null;
++
++        for (int y = minY; y <= maxY; y++) {
++            for (int z = minZ; z <= maxZ; z++) {
++                for (int x = minX; x <= maxX; x++) {
++                    blockposition.set(x, y, z);
++                    BlockState iblockdata = level.getBlockState(blockposition);
++                    if (!iblockdata.isAir() && iblockdata.isSuffocating(this.level, blockposition)) {
++                        if (suffocationShape == null) {
++                            suffocationShape = Shapes.create(new AABB(suffocationMinX, suffocationMinY, suffocationMinZ, suffocationMaxX, suffocationMaxY, suffocationMaxZ));
+                         }
+ 
+-                        BlockState iblockdata = chunk.getBlockStateFinal(fx, fy, fz);
+-                        blockposition.set(fx, fy, fz);
+-                        if (!iblockdata.isAir() && iblockdata.isSuffocating(this.level, blockposition) && Shapes.joinIsNotEmpty(iblockdata.getCollisionShape(this.level, blockposition).move((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ()), Shapes.create(axisalignedbb), BooleanOp.AND)) {
++                        if (Shapes.joinIsNotEmpty(iblockdata.getCollisionShape(this.level, blockposition).
++                                        move(blockposition.getX(), blockposition.getY(), blockposition.getZ()),
++                                suffocationShape, BooleanOp.AND)) {
+                             return true;
+                         }
+                     }
+                 }
+             }
+-            return false;
+         }
++        return false;
+     }
++    // Mirai end
+ 
+     public InteractionResult interact(Player player, InteractionHand hand) {
+         return InteractionResult.PASS;

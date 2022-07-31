@@ -7,10 +7,10 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index c540b695282e2cca97cc4e3320d641befa19c1c6..eee3347a5fd1b1f4eb0bbee29483f0a81868cf16 100644
+index cdb7aea969b56f59d88f60bc3744e4932228c50a..59ecf5ff33617a6b9d2a3ae317315484235da804 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -77,7 +77,7 @@ public class Util {
+@@ -79,7 +79,7 @@ public class Util {
      private static final int DEFAULT_MAX_THREADS = 255;
      private static final String MAX_THREADS_SYSTEM_PROPERTY = "max.bg.threads";
      private static final AtomicInteger WORKER_COUNT = new AtomicInteger(1);
@@ -19,7 +19,7 @@ index c540b695282e2cca97cc4e3320d641befa19c1c6..eee3347a5fd1b1f4eb0bbee29483f0a8
      private static final ExecutorService BACKGROUND_EXECUTOR = makeExecutor("Main", -1); // Paper - add -1 priority
      // Paper start - don't submit BLOCKING PROFILE LOOKUPS to the world gen thread
      public static final ExecutorService PROFILE_EXECUTOR = Executors.newFixedThreadPool(2, new java.util.concurrent.ThreadFactory() {
-@@ -200,7 +200,7 @@ public class Util {
+@@ -207,7 +207,7 @@ public class Util {
      }
  
      public static ExecutorService bootstrapExecutor() {

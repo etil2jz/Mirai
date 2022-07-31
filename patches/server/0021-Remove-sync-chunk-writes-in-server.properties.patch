@@ -7,20 +7,20 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index ea461ff0b13a3ccba2f0ed02b9268712eaf728c1..6d98648934c23cd99694718ff52474fcba76bab4 100644
+index 2ef1d4feff67f9e618dc96bd1a3a086ddff25673..aec14ff5235686a3e02b66eb3ad05fed2c4756b4 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -394,7 +394,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          BufferedWriter bufferedwriter = Files.newBufferedWriter(file);
  
          try {
--            bufferedwriter.write(String.format("sync-chunk-writes=%s%n", dedicatedserverproperties.syncChunkWrites));
-+            //bufferedwriter.write(String.format("sync-chunk-writes=%s%n", dedicatedserverproperties.syncChunkWrites)); // JettPack - remove 'sync-chunk-writes' in server.properties
-             bufferedwriter.write(String.format("gamemode=%s%n", dedicatedserverproperties.gamemode));
-             bufferedwriter.write(String.format("spawn-monsters=%s%n", dedicatedserverproperties.spawnMonsters));
-             bufferedwriter.write(String.format("entity-broadcast-range-percentage=%d%n", dedicatedserverproperties.entityBroadcastRangePercentage));
+-            bufferedwriter.write(String.format(Locale.ROOT, "sync-chunk-writes=%s%n", dedicatedserverproperties.syncChunkWrites));
++            //bufferedwriter.write(String.format(Locale.ROOT, "sync-chunk-writes=%s%n", dedicatedserverproperties.syncChunkWrites)); // JettPack - remove 'sync-chunk-writes' in server.properties
+             bufferedwriter.write(String.format(Locale.ROOT, "gamemode=%s%n", dedicatedserverproperties.gamemode));
+             bufferedwriter.write(String.format(Locale.ROOT, "spawn-monsters=%s%n", dedicatedserverproperties.spawnMonsters));
+             bufferedwriter.write(String.format(Locale.ROOT, "entity-broadcast-range-percentage=%d%n", dedicatedserverproperties.entityBroadcastRangePercentage));
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
-index 26345494ce190b5cd2ab58dd7d4b046796767b20..80c73f43987a66b941b456951f60c7a27082c36f 100644
+index a32cfa75a9bea896f558bab646d0868391b069a9..3e4a3915cdf29fc964e0314ce01d156dd2f4f873 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
 @@ -136,7 +136,7 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie

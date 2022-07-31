@@ -8,10 +8,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index db4b6d7fe91c1a071a833db842f664ec6ba51932..7502f715849fdefc96ad9808cd2070d366bb85da 100644
+index 35717f36244df395b89416e6caecbd9e7726fa95..d8050543f6112c095e459500cc8c38cb1c485284 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1031,22 +1031,22 @@ public abstract class PlayerList {
+@@ -1032,22 +1032,22 @@ public abstract class PlayerList {
      }
  
      public void tick() {
@@ -22,7 +22,7 @@ index db4b6d7fe91c1a071a833db842f664ec6ba51932..7502f715849fdefc96ad9808cd2070d3
 -
 -                target.connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.UPDATE_LATENCY, this.players.stream().filter(new Predicate<ServerPlayer>() {
 -                    @Override
--                    public boolean apply(ServerPlayer input) {
+-                    public boolean test(ServerPlayer input) {
 -                        return target.getBukkitEntity().canSee(input.getBukkitEntity());
 -                    }
 -                }).collect(Collectors.toList())));
@@ -48,10 +48,10 @@ index db4b6d7fe91c1a071a833db842f664ec6ba51932..7502f715849fdefc96ad9808cd2070d3
  
      public void broadcastAll(Packet<?> packet) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 287520f91e22309e1268be1940e0fafb628980a9..384d00b9e5767752ecee946c9c596ff0927b8364 100644
+index 9f34358dfcb95104c5bb9e63fbe295e6e049a55d..2f1fdb19c6e5ac4cadd5586970dbbd5a8f6fabf8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1736,7 +1736,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1827,7 +1827,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public boolean canSee(org.bukkit.entity.Entity entity) {

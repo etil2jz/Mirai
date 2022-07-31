@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: cswhite2000 <18whitechristop@gmail.com>
+Date: Sun, 5 Aug 2018 15:00:46 -0700
+Subject: [PATCH] Fix head rotation packet spam
+
+Original license: GPLv3
+Original project: https://github.com/Electroid/SportPaper
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index 4197961b2f03a5151b396d0d09bf5cb9ab6481e7..09be313aefd5dda15bd4db6ee0324b2aec879744 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -346,8 +346,10 @@ public class ServerEntity {
+         }
+ 
+         // CraftBukkit start - Fix for nonsensical head yaw
+-        this.yHeadRotp = Mth.floor(this.entity.getYHeadRot() * 256.0F / 360.0F);
+-        consumer.accept(new ClientboundRotateHeadPacket(this.entity, (byte) this.yHeadRotp));
++        if (this.entity instanceof LivingEntity) { // SportPaper - Fix head rotation packet spam
++            this.yHeadRotp = Mth.floor(this.entity.getYHeadRot() * 256.0F / 360.0F);
++            consumer.accept(new ClientboundRotateHeadPacket(this.entity, (byte) this.yHeadRotp));
++        }
+         // CraftBukkit end
+ 
+         if (this.entity instanceof LivingEntity) {

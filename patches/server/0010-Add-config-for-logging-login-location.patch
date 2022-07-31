@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 4030818ff51eca95e1c2ec38c7eca5bff79a0a4a..348fadecea776f2aea24664d340ce0955455d8af 100644
+index affcdfcc60a3c68a719115c7e3fc06b81e94eda6..70b680e15e6ec34c82b9d4467979b9133b042af1 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -497,7 +497,13 @@ public abstract class PlayerList {
+@@ -498,7 +498,13 @@ public abstract class PlayerList {
          }
          // Paper end
          // CraftBukkit - Moved from above, added world

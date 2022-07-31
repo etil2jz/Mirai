@@ -217,10 +217,10 @@ index b0390eedb507d27426d1e1d73bd4ab63aec89ebe..509a9a5326d94200ca3d7a83ae47c6bb
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 67c4cd2fb3c64432b0390c9d497ef7067577c64a..cd704d013024088ba4fbf7a04daeb0135e794651 100644
+index d66c60918313b0ede41ed96aa82e11fb2230f95b..d92c69e902d7631634c2762f0a8339c966ad9f7d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -911,7 +911,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -252,7 +252,7 @@ index 9a8a7eff47d40d6de558f0946c450531b3984f44..920b905c91cc37acb09e26add02acdf5
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 2d9c98931df5d1c54adcfba78a9136841764f853..ae2965796f5c0a5c8629159714a245557c17f423 100644
+index a912b96a4e099c7e90cbba37218972f830188d24..738bde117ab28a197018e7f2a47462d6d9b60e5f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
