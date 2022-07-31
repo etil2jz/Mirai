@@ -25,7 +25,7 @@
 
 ## Downloads
 The latest JAR file can be downloaded here:
-[Mirai-1.19-R0.1-SNAPSHOT.jar](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/artifact/build/libs/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar)
+[mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/7/artifact/build/libs/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar)
 
 **Please note Java >= 17 is required.**
 
