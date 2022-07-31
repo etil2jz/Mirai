@@ -379,7 +379,7 @@ index 7908360dd47937b2cb702e381802b7b278a5198e..f31fd07ce34f798f54d4fae1ccfa2263
 +                storage.compact(this.data.palette(), compactedPalette, array);
 +
 +                // If the palette didn't change during compaction, do a simple copy of the data array
-+                if (hashPalette != null && hashPalette.getSize() == compactedPalette.getSize() && storage.getBits() == paletteProvider.calculateBitsForSerialization(idMap, hashPalette.getSize())) { // paletteSize can de-sync from palette - see https://github.com/CaffeineMC/lithium-fabric/issues/279
++                if (hashPalette != null && hashPalette.getSize() == compactedPalette.getSize() && storage.getBits() == paletteProvider.calculateBitsForSerialization(idList, hashPalette.getSize())) { // paletteSize can de-sync from palette - see https://github.com/CaffeineMC/lithium-fabric/issues/279
 +                    data = this.asOptional(storage.getRaw().clone());
 +                    elements = hashPalette.getElements();
 +                } else {
