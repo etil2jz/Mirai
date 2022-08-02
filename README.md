@@ -24,8 +24,8 @@
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
-The latest JAR file can be downloaded here:
-[Mirai-1.19-R0.1-SNAPSHOT.jar](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/artifact/build/libs/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar)
+The latest successful build can be downloaded here:
+[Mirai-1.19-R0.1-SNAPSHOT.jar](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/)
 
 **Please note Java >= 17 is required.**
 
