@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+Date: Tue, 2 Aug 2022 14:48:12 +0200
+Subject: [PATCH] Configurable chat message signatures
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 2392913f2c221882bfdf324b671486a05a87ea76..a66912570d7308dd8ec818ede625a377b8bcd1fa 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1955,7 +1955,7 @@ public class ServerPlayer extends Player {
+     }
+ 
+     public void sendServerStatus(ServerStatus metadata) {
+-        this.connection.send(new ClientboundServerDataPacket(metadata.getDescription(), metadata.getFavicon(), metadata.previewsChat(), metadata.enforcesSecureChat()));
++        this.connection.send(new ClientboundServerDataPacket(metadata.getDescription(), metadata.getFavicon(), metadata.previewsChat(), metadata.enforcesSecureChat() || wtf.etil.mirai.MiraiConfig.chatMessageSignatures)); // Mirai - Configurable chat message signatures
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index d8050543f6112c095e459500cc8c38cb1c485284..5e8344dfa56a9456cfbaa9b2fbb982d78c2ac510 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1434,6 +1434,13 @@ public abstract class PlayerList {
+     private void broadcastChatMessage(PlayerChatMessage playerchatmessage, Predicate<ServerPlayer> shouldSendFiltered, @Nullable ServerPlayer entityplayer, ChatSender chatsender, ChatType.Bound chatmessagetype_a) {
+         boolean flag = this.verifyChatTrusted(playerchatmessage, chatsender);
+ 
++        // Mirai start - Configurable chat message signatures
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) {
++            flag = true;
++            playerchatmessage = PlayerChatMessage.system(playerchatmessage.signedContent());
++        }
++        // Mirai end
++
+         this.server.logChatMessage(playerchatmessage.serverContent(), chatmessagetype_a, flag ? null : "Not Secure");
+         OutgoingPlayerChatMessage outgoingplayerchatmessage = OutgoingPlayerChatMessage.create(playerchatmessage);
+         boolean flag1 = playerchatmessage.isFullyFiltered();
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 42da3cbd8bf1f1960fad09f6563087cab1e3fbee..72de28f361f4e7f652f715fc210488fff3c8a604 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -244,4 +244,12 @@ public class MiraiConfig {
+                             "Whether or not Math.hypot should be replaced by a faster version.");
+     }
+ 
++    public static boolean chatMessageSignatures;
++    private static void chatreport() {
++        chatMessageSignatures = getBoolean("disable-chat-reports", false,
++                                    "Whether or not players should be able to report chat messages.",
++                                    "It also disables the popup when joining a server without",
++                                    "'secure chat', such as offline-mode servers.");
++    }
++
+ }
+\ No newline at end of file
