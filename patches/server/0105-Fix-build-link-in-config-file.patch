@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: F1rsi <filatovn38@gmail.com>
+Date: Thu, 4 Aug 2022 00:18:19 +0300
+Subject: [PATCH] Fix build link in config file.
+
+
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 72de28f361f4e7f652f715fc210488fff3c8a604..6e1e293e6b5590bff8d7da4c8fb82f17a2802911 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -54,7 +54,7 @@ public class MiraiConfig {
+         setComment("info",
+                 "Mirai Configuration",
+                 "Join our Discord at https://discord.gg/DdH6Yfu9gM",
+-                "Download new builds at https://github.com/etil2jz/Mirai/releases");
++                "Download new builds at https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/");
+ 
+         for (Method method : MiraiConfig.class.getDeclaredMethods()) {
+             if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&
+@@ -252,4 +252,4 @@ public class MiraiConfig {
+                                     "'secure chat', such as offline-mode servers.");
+     }
+ 
+-}
+\ No newline at end of file
++}
