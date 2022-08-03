@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+Date: Wed, 3 Aug 2022 18:36:13 +0200
+Subject: [PATCH] PaperPR Separate Command Sending to Separate Thread Pool
+
+Taken from https://github.com/PaperMC/Paper/pull/8170
+
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index 91bb48f66aad86c76b2e7d2e70e84ca0e1a50212..ceb8e8db5813d5dd052a6a0079ae37e393b043fb 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -34,7 +34,6 @@ import net.minecraft.network.chat.ComponentUtils;
+ import net.minecraft.network.chat.HoverEvent;
+ import net.minecraft.network.chat.MutableComponent;
+ import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
+-import net.minecraft.server.MinecraftServer;
+ import net.minecraft.server.commands.AdvancementCommands;
+ import net.minecraft.server.commands.AttributeCommand;
+ import net.minecraft.server.commands.BanIpCommands;
+@@ -374,9 +373,20 @@ public class Commands {
+         // CraftBukkit start
+         // Register Vanilla commands into builtRoot as before
+         // Paper start - Async command map building
+-        net.minecraft.server.MCUtil.scheduleAsyncTask(() -> this.sendAsync(player));
++        COMMAND_SENDING_POOL.execute(() -> {
++            this.sendAsync(player);
++        });
+     }
+ 
++    public static final java.util.concurrent.ThreadPoolExecutor COMMAND_SENDING_POOL = new java.util.concurrent.ThreadPoolExecutor(
++        0, 2, 60L, java.util.concurrent.TimeUnit.SECONDS,
++        new java.util.concurrent.LinkedBlockingQueue<>(),
++        new com.google.common.util.concurrent.ThreadFactoryBuilder()
++            .setNameFormat("Paper Async Command Builder Thread Pool - %1$d")
++            .setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER))
++            .build()
++    );
++
+     private void sendAsync(ServerPlayer player) {
+         // Paper end - Async command map building
+         Map<CommandNode<CommandSourceStack>, CommandNode<SharedSuggestionProvider>> map = Maps.newIdentityHashMap(); // Use identity to prevent aliasing issues
+@@ -398,7 +408,7 @@ public class Commands {
+         }
+         // Paper start - Async command map building
+         new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandSourceStack>(player.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
+-        MinecraftServer.getServer().execute(() -> {
++        net.minecraft.server.MinecraftServer.getServer().execute(() -> {
+            runSync(player, bukkit, rootcommandnode);
+         });
+     }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index acd9ca84f4f208c8264ac6560bea85d1e568404f..f5f42508ea95e25ad698678c81927489b71c3e1c 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -928,6 +928,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         }
+ 
+         MinecraftServer.LOGGER.info("Stopping server");
++        Commands.COMMAND_SENDING_POOL.shutdownNow(); // Paper - Shutdown and don't bother finishing
+         MinecraftTimings.stopServer(); // Paper
+         // CraftBukkit start
+         if (this.server != null) {
