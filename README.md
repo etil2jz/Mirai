@@ -5,7 +5,7 @@
   <h4>Mirai is ❗under heavy development❗ and contributions are welcome!</h4>
   <h5><b>This project is experimental, its usage in production environment is discouraged if you are not ready to face possible bugs.</b></h5>
   
-  ![Build status](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build/ver/1.19?style=for-the-badge)
+  [![Build status](https://img.shields.io/github/workflow/status/etil2jz/Mirai/Build/ver/1.19?style=for-the-badge)](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild)
   [![Discord](https://img.shields.io/discord/928402257605701683?color=5865F2&label=discord&style=for-the-badge)](https://discord.gg/DdH6Yfu9gM)
 </div>
 
