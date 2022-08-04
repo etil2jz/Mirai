@@ -1,0 +1,1932 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: BillyGalbreath <blake.galbreath@gmail.com>
+Date: Sat, 16 Jul 2022 21:37:10 -0500
+Subject: [PATCH] Remove Mojang Profiler
+
+Original license: MIT
+Original project: https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index ceb8e8db5813d5dd052a6a0079ae37e393b043fb..4291f9d996fb41f2c6180777ebc518679db4709e 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -137,7 +137,7 @@ public class Commands {
+         CloneCommands.register(this.dispatcher, commandRegistryAccess);
+         DataCommands.register(this.dispatcher);
+         DataPackCommand.register(this.dispatcher);
+-        DebugCommand.register(this.dispatcher);
++        //DebugCommand.register(this.dispatcher); // Purpur
+         DefaultGameModeCommands.register(this.dispatcher);
+         DifficultyCommand.register(this.dispatcher);
+         EffectCommands.register(this.dispatcher);
+@@ -292,9 +292,9 @@ public class Commands {
+     public int performCommand(ParseResults<CommandSourceStack> parseresults, String s, String label) { // CraftBukkit
+         CommandSourceStack commandlistenerwrapper = (CommandSourceStack) parseresults.getContext().getSource();
+ 
+-        commandlistenerwrapper.getServer().getProfiler().push(() -> {
++        /*commandlistenerwrapper.getServer().getProfiler().push(() -> { // Purpur
+             return "/" + s;
+-        });
++        });*/ // Purpur
+ 
+         byte b0;
+ 
+@@ -357,7 +357,7 @@ public class Commands {
+                 b0 = 0;
+             }
+         } finally {
+-            commandlistenerwrapper.getServer().getProfiler().pop();
++            //commandlistenerwrapper.getServer().getProfiler().pop(); // Purpur
+         }
+ 
+         return b0;
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index f5f42508ea95e25ad698678c81927489b71c3e1c..c03a0acaff532907e7912817546695fe04844f79 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -325,13 +325,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     public MinecraftServer(OptionSet options, DataPackConfig datapackconfiguration, DynamicOps<Tag> registryreadops, Thread thread, LevelStorageSource.LevelStorageAccess convertable_conversionsession, PackRepository resourcepackrepository, WorldStem worldstem, Proxy proxy, DataFixer datafixer, Services services, ChunkProgressListenerFactory worldloadlistenerfactory) {
+         super("Server");
+         SERVER = this; // Paper - better singleton
+-        this.metricsRecorder = InactiveMetricsRecorder.INSTANCE;
+-        this.profiler = this.metricsRecorder.getProfiler();
+-        this.onMetricsRecordingStopped = (methodprofilerresults) -> {
++        //this.metricsRecorder = InactiveMetricsRecorder.INSTANCE; // Purpur
++        //this.profiler = this.metricsRecorder.getProfiler(); // Purpur
++        /*this.onMetricsRecordingStopped = (methodprofilerresults) -> { // Purpur
+             this.stopRecordingMetrics();
+-        };
+-        this.onMetricsRecordingFinished = (path) -> {
+-        };
++        };*/ // Purpur
++        //this.onMetricsRecordingFinished = (path) -> { // Purpur
++        //}; // Purpur
+         this.status = new ServerStatus();
+         this.random = RandomSource.create();
+         this.port = -1;
+@@ -923,9 +923,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         }
+         // Paper end
+         // CraftBukkit end
+-        if (this.metricsRecorder.isRecording()) {
++        /*if (this.metricsRecorder.isRecording()) { // Purpur
+             this.cancelRecordingMetrics();
+-        }
++        }*/ // Purpur
+ 
+         MinecraftServer.LOGGER.info("Stopping server");
+         Commands.COMMAND_SENDING_POOL.shutdownNow(); // Paper - Shutdown and don't bother finishing
+@@ -1189,25 +1189,25 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+                 }
+                 // Spigot end
+ 
+-                if (this.debugCommandProfilerDelayStart) {
++                /*if (this.debugCommandProfilerDelayStart) { // Purpur
+                     this.debugCommandProfilerDelayStart = false;
+                     this.debugCommandProfiler = new MinecraftServer.TimeProfiler(Util.getNanos(), this.tickCount);
+-                }
++                }*/ // Purpur
+ 
+                 //MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit // Paper - don't overwrite current tick time
+                 lastTick = curTime;
+                 this.nextTickTime += 50L;
+-                this.startMetricsRecordingTick();
+-                this.profiler.push("tick");
++                //this.startMetricsRecordingTick(); // Purpur
++                //this.profiler.push("tick"); // Purpur
+                 long tickStart = System.nanoTime(); // Yatopia
+                 this.tickServer(this::haveTime);
+                 lastTickTime = java.time.Duration.ofNanos(System.nanoTime() - tickStart); // Yatopia
+-                this.profiler.popPush("nextTickWait");
++                //this.profiler.popPush("nextTickWait"); // Purpur
+                 this.mayHaveDelayedTasks = true;
+                 this.delayedTasksMaxNextTickTime = Math.max(Util.getMillis() + 50L, this.nextTickTime);
+                 this.waitUntilNextTick();
+-                this.profiler.pop();
+-                this.endMetricsRecordingTick();
++                //this.profiler.pop(); // Purpur
++                //this.endMetricsRecordingTick(); // Purpur
+                 this.isReady = true;
+                 JvmProfiler.INSTANCE.onServerTick(this.averageTickTime);
+             }
+@@ -1371,7 +1371,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+ 
+     /* // Patina
+     public void doRunTask(TickTask ticktask) { // CraftBukkit - decompile error
+-        this.getProfiler().incrementCounter("runTask");
++        //this.getProfiler().incrementCounter("runTask"); // Purpur
+         super.doRunTask(ticktask);
+     }
+     */
+@@ -1457,7 +1457,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         if (playerSaveInterval < 0) {
+             playerSaveInterval = autosavePeriod;
+         }
+-        this.profiler.push("save");
++        //this.profiler.push("save"); // Purpur
+         final boolean fullSave = autosavePeriod > 0 && this.tickCount % autosavePeriod == 0;
+         try {
+             this.isSaving = true;
+@@ -1472,7 +1472,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         } finally {
+             this.isSaving = false;
+         }
+-        this.profiler.pop();
++        //this.profiler.pop(); // Purpur
+         // Paper end
+         io.papermc.paper.util.CachedLists.reset(); // Paper
+         // Paper start - move executeAll() into full server tick timing
+@@ -1486,7 +1486,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         long remaining = (TICK_TIME - (endTime - lastTick)) - catchupTime;
+         new com.destroystokyo.paper.event.server.ServerTickEndEvent(this.tickCount, ((double)(endTime - lastTick) / 1000000D), remaining).callEvent();
+         // Paper end
+-        this.profiler.push("tallying");
++        //this.profiler.push("tallying"); // Purpur
+         long l = this.tickTimes[this.tickCount % 100] = Util.getNanos() - i;
+ 
+         this.averageTickTime = this.averageTickTime * 0.8F + (float) l / 1000000.0F * 0.19999999F;
+@@ -1499,7 +1499,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         // Paper end
+ 
+         this.frameTimer.logFrameDuration(i1 - i);
+-        this.profiler.pop();
++        //this.profiler.pop(); // Purpur
+         org.spigotmc.WatchdogThread.tick(); // Spigot
+         co.aikar.timings.TimingsManager.FULL_SERVER_TICK.stopTiming(); // Paper
+     }
+@@ -1508,11 +1508,11 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         MinecraftTimings.bukkitSchedulerTimer.startTiming(); // Spigot // Paper
+         this.server.getScheduler().mainThreadHeartbeat(this.tickCount); // CraftBukkit
+         MinecraftTimings.bukkitSchedulerTimer.stopTiming(); // Spigot // Paper
+-        this.profiler.push("commandFunctions");
++        //this.profiler.push("commandFunctions"); // Purpur
+         MinecraftTimings.commandFunctionsTimer.startTiming(); // Spigot // Paper
+         this.getFunctions().tick();
+         MinecraftTimings.commandFunctionsTimer.stopTiming(); // Spigot // Paper
+-        this.profiler.popPush("levels");
++        //this.profiler.popPush("levels"); // Purpur
+         Iterator iterator = this.getAllLevels().iterator();
+ 
+         // CraftBukkit start
+@@ -1552,18 +1552,18 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             worldserver.hasEntityMoveEvent =  io.papermc.paper.event.entity.EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper
+             net.minecraft.world.level.block.entity.HopperBlockEntity.skipHopperEvents = worldserver.paperConfig().hopper.disableMoveEvent || org.bukkit.event.inventory.InventoryMoveItemEvent.getHandlerList().getRegisteredListeners().length == 0; // Paper
+ 
+-            this.profiler.push(() -> {
++            /*this.profiler.push(() -> { // Purpur
+                 return worldserver + " " + worldserver.dimension().location();
+-            });
++            });*/ // Purpur
+             /* Drop global time updates
+             if (this.tickCount % 20 == 0) {
+-                this.profiler.push("timeSync");
++                //this.profiler.push("timeSync"); // Purpur
+                 this.playerList.broadcastAll(new PacketPlayOutUpdateTime(worldserver.getGameTime(), worldserver.getDayTime(), worldserver.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)), worldserver.dimension());
+-                this.profiler.pop();
++                //this.profiler.pop(); // Purpur
+             }
+             // CraftBukkit end */
+ 
+-            this.profiler.push("tick");
++            //this.profiler.push("tick"); // Purpur
+ 
+             try {
+                 worldserver.timings.doTick.startTiming(); // Spigot
+@@ -1589,17 +1589,17 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+                 throw new ReportedException(crashreport);
+             }
+ 
+-            this.profiler.pop();
+-            this.profiler.pop();
++            //this.profiler.pop(); // Purpur
++            //this.profiler.pop(); // Purpur
+             worldserver.explosionDensityCache.clear(); // Paper - Optimize explosions
+         }
+         this.isIteratingOverLevels = false; // Paper
+ 
+-        this.profiler.popPush("connection");
++        //this.profiler.popPush("connection"); // Purpur
+         MinecraftTimings.connectionTimer.startTiming(); // Spigot
+         this.getConnection().tick();
+         MinecraftTimings.connectionTimer.stopTiming(); // Spigot
+-        this.profiler.popPush("players");
++        //this.profiler.popPush("players"); // Purpur
+         MinecraftTimings.playerListTimer.startTiming(); // Spigot // Paper
+         this.playerList.tick();
+         MinecraftTimings.playerListTimer.stopTiming(); // Spigot // Paper
+@@ -1607,7 +1607,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             GameTestTicker.SINGLETON.tick();
+         }
+ 
+-        this.profiler.popPush("server gui refresh");
++        //this.profiler.popPush("server gui refresh"); // Purpur
+ 
+         MinecraftTimings.tickablesTimer.startTiming(); // Spigot // Paper
+         for (int i = 0; i < this.tickables.size(); ++i) {
+@@ -1615,7 +1615,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+         }
+         MinecraftTimings.tickablesTimer.stopTiming(); // Spigot // Paper
+ 
+-        this.profiler.pop();
++        //this.profiler.pop(); // Purpur
+     }
+ 
+     public boolean isNetherEnabled() {
+@@ -2252,7 +2252,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     }
+ 
+     public ProfilerFiller getProfiler() {
+-        if (gg.pufferfish.pufferfish.PufferfishConfig.disableMethodProfiler) return net.minecraft.util.profiling.InactiveProfiler.INSTANCE;
++        if (true || gg.pufferfish.pufferfish.PufferfishConfig.disableMethodProfiler) return net.minecraft.util.profiling.InactiveProfiler.INSTANCE; // Purpur
+         return this.profiler;
+     }
+ 
+@@ -2492,7 +2492,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     // CraftBukkit end
+ 
+     private void startMetricsRecordingTick() {
+-        if (this.willStartRecordingMetrics) {
++        if (false && this.willStartRecordingMetrics) { // Purpur
+             this.metricsRecorder = ActiveMetricsRecorder.createStarted(new ServerMetricsSamplersProvider(Util.timeSource, this.isDedicatedServer()), Util.timeSource, Util.ioPool(), new MetricsPersister("server"), this.onMetricsRecordingStopped, (path) -> {
+                 this.executeBlocking(() -> {
+                     this.saveDebugReport(path.resolve("server"));
+@@ -2502,40 +2502,40 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+             this.willStartRecordingMetrics = false;
+         }
+ 
+-        this.profiler = SingleTickProfiler.decorateFiller(this.metricsRecorder.getProfiler(), SingleTickProfiler.createTickProfiler("Server"));
+-        this.metricsRecorder.startTick();
+-        this.profiler.startTick();
++        //this.profiler = SingleTickProfiler.decorateFiller(this.metricsRecorder.getProfiler(), SingleTickProfiler.createTickProfiler("Server")); // Purpur
++        //this.metricsRecorder.startTick(); // Purpur
++        //this.profiler.startTick(); // Purpur
+     }
+ 
+     private void endMetricsRecordingTick() {
+-        this.profiler.endTick();
+-        this.metricsRecorder.endTick();
++        //this.profiler.endTick(); // Purpur
++        //this.metricsRecorder.endTick(); // Purpur
+     }
+ 
+     public boolean isRecordingMetrics() {
+-        return this.metricsRecorder.isRecording();
++        return false; //this.metricsRecorder.isRecording(); // Purpur
+     }
+ 
+     public void startRecordingMetrics(Consumer<ProfileResults> resultConsumer, Consumer<Path> dumpConsumer) {
+-        this.onMetricsRecordingStopped = (methodprofilerresults) -> {
++        /*this.onMetricsRecordingStopped = (methodprofilerresults) -> { // Purpur
+             this.stopRecordingMetrics();
+             resultConsumer.accept(methodprofilerresults);
+         };
+         this.onMetricsRecordingFinished = dumpConsumer;
+-        this.willStartRecordingMetrics = true;
++        this.willStartRecordingMetrics = true;*/ // Purpur
+     }
+ 
+     public void stopRecordingMetrics() {
+-        this.metricsRecorder = InactiveMetricsRecorder.INSTANCE;
++        //this.metricsRecorder = InactiveMetricsRecorder.INSTANCE; // Purpur
+     }
+ 
+     public void finishRecordingMetrics() {
+-        this.metricsRecorder.end();
++        //this.metricsRecorder.end(); // Purpur
+     }
+ 
+     public void cancelRecordingMetrics() {
+-        this.metricsRecorder.cancel();
+-        this.profiler = this.metricsRecorder.getProfiler();
++        //this.metricsRecorder.cancel(); // Purpur
++        //this.profiler = this.metricsRecorder.getProfiler(); // Purpur
+     }
+ 
+     public Path getWorldPath(LevelResource worldSavePath) {
+@@ -2580,15 +2580,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     }
+ 
+     public boolean isTimeProfilerRunning() {
+-        return this.debugCommandProfilerDelayStart || this.debugCommandProfiler != null;
++        return false; //this.debugCommandProfilerDelayStart || this.debugCommandProfiler != null; // Purpur
+     }
+ 
+     public void startTimeProfiler() {
+-        this.debugCommandProfilerDelayStart = true;
++        //this.debugCommandProfilerDelayStart = true; // Purpur
+     }
+ 
+     public ProfileResults stopTimeProfiler() {
+-        if (this.debugCommandProfiler == null) {
++        if (true || this.debugCommandProfiler == null) { // Purpur
+             return EmptyProfileResults.EMPTY;
+         } else {
+             ProfileResults methodprofilerresults = this.debugCommandProfiler.stop(Util.getNanos(), this.tickCount);
+diff --git a/src/main/java/net/minecraft/server/ServerFunctionManager.java b/src/main/java/net/minecraft/server/ServerFunctionManager.java
+index 1a958686290e2ab0b03aa6189fef13f25fb13f5f..3052746b6da404dc9ece72a45fadac48c0e5a2a6 100644
+--- a/src/main/java/net/minecraft/server/ServerFunctionManager.java
++++ b/src/main/java/net/minecraft/server/ServerFunctionManager.java
+@@ -58,10 +58,10 @@ public class ServerFunctionManager {
+     }
+ 
+     private void executeTagFunctions(Collection<CommandFunction> functions, ResourceLocation label) {
+-        ProfilerFiller gameprofilerfiller = this.server.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.server.getProfiler(); // Purpur
+ 
+         Objects.requireNonNull(label);
+-        gameprofilerfiller.push(label::toString);
++        //gameprofilerfiller.push(label::toString); // Purpur
+         Iterator iterator = functions.iterator();
+ 
+         while (iterator.hasNext()) {
+@@ -70,7 +70,7 @@ public class ServerFunctionManager {
+             this.execute(customfunction, this.getGameLoopSender());
+         }
+ 
+-        this.server.getProfiler().pop();
++        //this.server.getProfiler().pop(); // Purpur
+     }
+ 
+     public int execute(CommandFunction function, CommandSourceStack source) {
+@@ -178,10 +178,10 @@ public class ServerFunctionManager {
+ 
+                 try {
+                     ServerFunctionManager.QueuedCommand customfunctiondata_b = (ServerFunctionManager.QueuedCommand) this.commandQueue.removeFirst();
+-                    ProfilerFiller gameprofilerfiller = ServerFunctionManager.this.server.getProfiler();
++                    //ProfilerFiller gameprofilerfiller = ServerFunctionManager.this.server.getProfiler(); // Purpur
+ 
+                     Objects.requireNonNull(customfunctiondata_b);
+-                    gameprofilerfiller.push(customfunctiondata_b::toString);
++                    //gameprofilerfiller.push(customfunctiondata_b::toString); // Purpur
+                     this.depth = customfunctiondata_b.depth;
+                     customfunctiondata_b.execute(ServerFunctionManager.this, this.commandQueue, i, this.tracer);
+                     if (!this.nestedCalls.isEmpty()) {
+@@ -193,7 +193,7 @@ public class ServerFunctionManager {
+                         this.nestedCalls.clear();
+                     }
+                 } finally {
+-                    ServerFunctionManager.this.server.getProfiler().pop();
++                    //ServerFunctionManager.this.server.getProfiler().pop(); // Purpur
+                 }
+ 
+                 ++j;
+diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
+index 629ee5ece4819608fe12db64b817edeeb777d1fc..244dd772b5de6bf02688518e19aab1619f42a3bc 100644
+--- a/src/main/java/net/minecraft/server/level/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
+@@ -1001,20 +1001,20 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+     }
+ 
+     protected void tick(BooleanSupplier shouldKeepTicking) {
+-        ProfilerFiller gameprofilerfiller = this.level.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.level.getProfiler(); // Purpur
+ 
+         try (Timing ignored = this.level.timings.poiUnload.startTiming()) { // Paper
+-        gameprofilerfiller.push("poi");
++        //gameprofilerfiller.push("poi"); // Purpur
+         this.poiManager.tick(shouldKeepTicking);
+         } // Paper
+-        gameprofilerfiller.popPush("chunk_unload");
++        //gameprofilerfiller.popPush("chunk_unload"); // Purpur
+         if (!this.level.noSave()) {
+             try (Timing ignored = this.level.timings.chunkUnload.startTiming()) { // Paper
+             this.processUnloads(shouldKeepTicking);
+             } // Paper
+         }
+ 
+-        gameprofilerfiller.pop();
++        //gameprofilerfiller.pop(); // Purpur
+     }
+ 
+     public boolean hasWork() {
+@@ -1171,7 +1171,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         // Paper start - Async chunk io
+         final java.util.function.BiFunction<ChunkSerializer.InProgressChunkHolder, Throwable, Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> syncLoadComplete = (chunkHolder, ioThrowable) -> {
+             try (Timing ignored = this.level.timings.chunkLoad.startTimingIfSync()) { // Paper
+-                this.level.getProfiler().incrementCounter("chunkLoad");
++                //this.level.getProfiler().incrementCounter("chunkLoad"); // Purpur
+                 if (ioThrowable != null) {
+                     return this.handleChunkLoadFailure(ioThrowable, pos);
+                 }
+@@ -1267,9 +1267,9 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+             return this.getDependencyStatus(requiredStatus, i);
+         });
+ 
+-        this.level.getProfiler().incrementCounter(() -> {
++        /*this.level.getProfiler().incrementCounter(() -> { // Purpur
+             return "chunkGenerate " + requiredStatus.getName();
+-        });
++        });*/ // Purpur
+         Executor executor = (runnable) -> {
+             // Paper start - optimize chunk status progression without jumping through thread pool
+             if (holder.canAdvanceStatus()) {
+@@ -1569,7 +1569,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+                     }
+                 }
+ 
+-                this.level.getProfiler().incrementCounter("chunkSave");
++                //this.level.getProfiler().incrementCounter("chunkSave"); // Purpur
+                 CompoundTag nbttagcompound;
+                 try (co.aikar.timings.Timing ignored1 = this.level.timings.chunkSaveDataSerialization.startTiming()) { // Paper
+                     nbttagcompound = ChunkSerializer.write(this.level, chunk);
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 998a1faa9f7ea2fb0d522c941c5e2cf90cb1c6da..54118af6bfb03db033326b07aad05ee88a1109ca 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -631,9 +631,9 @@ public class ServerChunkCache extends ChunkSource {
+                 return ifLoaded;
+             }
+             // Paper end
+-            ProfilerFiller gameprofilerfiller = this.level.getProfiler();
++            //ProfilerFiller gameprofilerfiller = this.level.getProfiler(); // Purpur
+ 
+-            gameprofilerfiller.incrementCounter("getChunk");
++            //gameprofilerfiller.incrementCounter("getChunk"); // Purpur
+             long k = ChunkPos.asLong(x, z);
+ 
+             ChunkAccess ichunkaccess;
+@@ -647,7 +647,7 @@ public class ServerChunkCache extends ChunkSource {
+                 }
+             }
+ 
+-            gameprofilerfiller.incrementCounter("getChunkCacheMiss");
++            //gameprofilerfiller.incrementCounter("getChunkCacheMiss"); // Purpur
+             CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> completablefuture = this.getChunkFutureMainThread(x, z, leastStatus, create, true); // Paper
+             ServerChunkCache.MainThreadExecutor chunkproviderserver_b = this.mainThreadProcessor;
+ 
+@@ -746,13 +746,13 @@ public class ServerChunkCache extends ChunkSource {
+             this.distanceManager.addTicket(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Paper - prevent plugin unloads from removing our ticket
+             if (isUrgent) this.distanceManager.markUrgent(chunkcoordintpair); // Paper - Chunk priority
+             if (this.chunkAbsent(playerchunk, l)) {
+-                ProfilerFiller gameprofilerfiller = this.level.getProfiler();
++                //ProfilerFiller gameprofilerfiller = this.level.getProfiler(); // Purpur
+ 
+-                gameprofilerfiller.push("chunkLoad");
++                //gameprofilerfiller.push("chunkLoad"); // Purpur
+                 distanceManager.delayDistanceManagerTick = false; // Paper - Chunk priority - ensure this is never false
+                 this.runDistanceManagerUpdates();
+                 playerchunk = this.getVisibleChunkIfPresent(k);
+-                gameprofilerfiller.pop();
++                //gameprofilerfiller.pop(); // Purpur
+                 if (this.chunkAbsent(playerchunk, l)) {
+                     this.distanceManager.removeTicket(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Paper
+                     throw (IllegalStateException) Util.pauseInIde(new IllegalStateException("No chunk holder after ticket has been added"));
+@@ -887,24 +887,24 @@ public class ServerChunkCache extends ChunkSource {
+     // CraftBukkit start - modelled on below
+     public void purgeUnload() {
+         if (true) return; // Paper - tickets will be removed later, this behavior isn't really well accounted for by the chunk system
+-        this.level.getProfiler().push("purge");
++        //this.level.getProfiler().push("purge"); // Purpur
+         this.distanceManager.purgeStaleTickets();
+         this.runDistanceManagerUpdates();
+-        this.level.getProfiler().popPush("unload");
++        //this.level.getProfiler().popPush("unload"); // Purpur
+         this.chunkMap.tick(() -> true);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         this.clearCache();
+     }
+     // CraftBukkit end
+ 
+     @Override
+     public void tick(BooleanSupplier shouldKeepTicking, boolean tickChunks) {
+-        this.level.getProfiler().push("purge");
++        //this.level.getProfiler().push("purge"); // Purpur
+         this.level.timings.doChunkMap.startTiming(); // Spigot
+         this.distanceManager.purgeStaleTickets();
+         this.runDistanceManagerUpdates();
+         this.level.timings.doChunkMap.stopTiming(); // Spigot
+-        this.level.getProfiler().popPush("chunks");
++        //this.level.getProfiler().popPush("chunks"); // Purpur
+         if (tickChunks) {
+             this.level.timings.chunks.startTiming(); // Paper - timings
+             this.chunkMap.playerChunkManager.tick(); // Paper - this is mostly is to account for view distance changes
+@@ -913,10 +913,10 @@ public class ServerChunkCache extends ChunkSource {
+         }
+ 
+         this.level.timings.doChunkUnload.startTiming(); // Spigot
+-        this.level.getProfiler().popPush("unload");
++        //this.level.getProfiler().popPush("unload"); // Purpur
+         this.chunkMap.tick(shouldKeepTicking);
+         this.level.timings.doChunkUnload.stopTiming(); // Spigot
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         this.clearCache();
+     }
+ 
+@@ -962,14 +962,14 @@ public class ServerChunkCache extends ChunkSource {
+             }
+             // Paper end - optimize isOutisdeRange
+             LevelData worlddata = this.level.getLevelData();
+-            ProfilerFiller gameprofilerfiller = this.level.getProfiler();
++            //ProfilerFiller gameprofilerfiller = this.level.getProfiler(); // Purpur
+ 
+-            gameprofilerfiller.push("pollingChunks");
++            //gameprofilerfiller.push("pollingChunks"); // Purpur
+             this.level.resetIceAndSnowTick(); // Pufferfish - reset ice & snow tick random
+             int k = this.level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
+             boolean flag1 = level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) != 0L && worlddata.getGameTime() % level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) == 0L; // CraftBukkit
+ 
+-            gameprofilerfiller.push("naturalSpawnCount");
++            //gameprofilerfiller.push("naturalSpawnCount"); // Purpur
+             this.level.timings.countNaturalMobs.startTiming(); // Paper - timings
+             int l = this.distanceManager.getNaturalSpawnChunkCount();
+             // Paper start - per player mob spawning
+@@ -994,13 +994,13 @@ public class ServerChunkCache extends ChunkSource {
+             this.level.timings.countNaturalMobs.stopTiming(); // Paper - timings
+ 
+             //this.lastSpawnState = spawnercreature_d; // Pufferfish - this is managed asynchronously
+-            gameprofilerfiller.popPush("filteringLoadedChunks");
++            //gameprofilerfiller.popPush("filteringLoadedChunks"); // Purpur
+             // Paper - moved down
+             this.level.timings.chunkTicks.startTiming(); // Paper
+ 
+             // Paper - moved down
+ 
+-            gameprofilerfiller.popPush("spawnAndTick");
++            //gameprofilerfiller.popPush("spawnAndTick"); // Purpur
+             boolean flag2 = this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && !this.level.players().isEmpty(); // CraftBukkit
+ 
+             // Paper - only shuffle if per-player mob spawning is disabled
+@@ -1051,15 +1051,15 @@ public class ServerChunkCache extends ChunkSource {
+             }
+             // Paper end - optimise chunk tick iteration
+             this.level.timings.chunkTicks.stopTiming(); // Paper
+-            gameprofilerfiller.popPush("customSpawners");
++            //gameprofilerfiller.popPush("customSpawners"); // Purpur
+             if (flag2) {
+                 try (co.aikar.timings.Timing ignored = this.level.timings.miscMobSpawning.startTiming()) { // Paper - timings
+                 this.level.tickCustomSpawners(this.spawnEnemies, this.spawnFriendlies);
+                 } // Paper - timings
+             }
+-            gameprofilerfiller.pop();
++            //gameprofilerfiller.pop(); // Purpur
+             // Paper start - use set of chunks requiring updates, rather than iterating every single one loaded
+-            gameprofilerfiller.popPush("broadcast");
++            //gameprofilerfiller.popPush("broadcast"); // Purpur
+             this.level.timings.broadcastChunkUpdates.startTiming(); // Paper - timing
+             if (!this.chunkMap.needsChangeBroadcasting.isEmpty()) {
+                 ReferenceOpenHashSet<ChunkHolder> copy = this.chunkMap.needsChangeBroadcasting.clone();
+@@ -1073,7 +1073,7 @@ public class ServerChunkCache extends ChunkSource {
+                 }
+             }
+             this.level.timings.broadcastChunkUpdates.stopTiming(); // Paper - timing
+-            gameprofilerfiller.pop();
++            //gameprofilerfiller.pop(); // Purpur
+             // Paper end - use set of chunks requiring updates, rather than iterating every single one loaded
+             // Paper start - controlled flush for entity tracker packets
+             List<net.minecraft.network.Connection> disabledFlushes = new java.util.ArrayList<>(this.level.players.size());
+@@ -1281,7 +1281,7 @@ public class ServerChunkCache extends ChunkSource {
+ 
+         @Override
+         protected void doRunTask(Runnable task) {
+-            ServerChunkCache.this.level.getProfiler().incrementCounter("runTask");
++            //ServerChunkCache.this.level.getProfiler().incrementCounter("runTask"); // Purpur
+             super.doRunTask(task);
+         }
+ 
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index a9bb78d68adac54729a954f766ad993989bfee77..d2a5fef04ede02700c566280599d2aac6f7ec249 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -602,12 +602,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+             }
+         }
+         // Paper end - optimise checkDespawn
+-        ProfilerFiller gameprofilerfiller = this.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.getProfiler(); // Purpur
+ 
+         this.handlingTick = true;
+-        gameprofilerfiller.push("world border");
++        //gameprofilerfiller.push("world border"); // Purpur
+         this.getWorldBorder().tick();
+-        gameprofilerfiller.popPush("weather");
++        //gameprofilerfiller.popPush("weather"); // Purpur
+         this.advanceWeatherCycle();
+         int i = this.getGameRules().getInt(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE);
+         long j;
+@@ -634,32 +634,32 @@ public class ServerLevel extends Level implements WorldGenLevel {
+ 
+         this.updateSkyBrightness();
+         this.tickTime();
+-        gameprofilerfiller.popPush("tickPending");
++        //gameprofilerfiller.popPush("tickPending"); // Purpur
+         timings.scheduledBlocks.startTiming(); // Paper
+         if (!this.isDebug()) {
+             j = this.getGameTime();
+-            gameprofilerfiller.push("blockTicks");
++            //gameprofilerfiller.push("blockTicks"); // Purpur
+             this.blockTicks.tick(j, 65536, this::tickBlock);
+-            gameprofilerfiller.popPush("fluidTicks");
++            //gameprofilerfiller.popPush("fluidTicks"); // Purpur
+             this.fluidTicks.tick(j, 65536, this::tickFluid);
+-            gameprofilerfiller.pop();
++            //gameprofilerfiller.pop(); // Purpur
+         }
+         timings.scheduledBlocks.stopTiming(); // Paper
+ 
+-        gameprofilerfiller.popPush("raid");
++        //gameprofilerfiller.popPush("raid"); // Purpur
+         this.timings.raids.startTiming(); // Paper - timings
+         this.raids.tick();
+         this.timings.raids.stopTiming(); // Paper - timings
+-        gameprofilerfiller.popPush("chunkSource");
++        //gameprofilerfiller.popPush("chunkSource"); // Purpur
+         this.timings.chunkProviderTick.startTiming(); // Paper - timings
+         this.getChunkSource().tick(shouldKeepTicking, true);
+         this.timings.chunkProviderTick.stopTiming(); // Paper - timings
+-        gameprofilerfiller.popPush("blockEvents");
++        //gameprofilerfiller.popPush("blockEvents"); // Purpur
+         timings.doSounds.startTiming(); // Spigot
+         this.runBlockEvents();
+         timings.doSounds.stopTiming(); // Spigot
+         this.handlingTick = false;
+-        gameprofilerfiller.pop();
++        //gameprofilerfiller.pop(); // Purpur
+         boolean flag = true || !this.players.isEmpty() || !this.getForcedChunks().isEmpty(); // CraftBukkit - this prevents entity cleanup, other issues on servers with no players
+ 
+         if (flag) {
+@@ -667,12 +667,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         }
+ 
+         if (flag || this.emptyTime++ < 300) {
+-            gameprofilerfiller.push("entities");
++            //gameprofilerfiller.push("entities"); // Purpur
+             timings.tickEntities.startTiming(); // Spigot
+             if (this.dragonFight != null) {
+-                gameprofilerfiller.push("dragonFight");
++                //gameprofilerfiller.push("dragonFight"); // Purpur
+                 this.dragonFight.tick();
+-                gameprofilerfiller.pop();
++                //gameprofilerfiller.pop(); // Purpur
+             }
+ 
+             org.spigotmc.ActivationRange.activateEntities(this); // Spigot
+@@ -682,9 +682,9 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                     if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
+                         entity.discard();
+                     } else {
+-                        gameprofilerfiller.push("checkDespawn");
++                        //gameprofilerfiller.push("checkDespawn"); // Purpur
+                         entity.checkDespawn();
+-                        gameprofilerfiller.pop();
++                        //gameprofilerfiller.pop(); // Purpur
+                         if (true || this.chunkSource.chunkMap.getDistanceManager().inEntityTickingRange(entity.chunkPosition().toLong())) { // Paper - now always true if in the ticking list
+                             Entity entity1 = entity.getVehicle();
+ 
+@@ -696,7 +696,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                                 entity.stopRiding();
+                             }
+ 
+-                            gameprofilerfiller.push("tick");
++                            //gameprofilerfiller.push("tick"); // Purpur
+                         // Pufferfish start - copied from this.guardEntityTick
+                         try {
+                             this.tickNonPassenger(entity); // Pufferfish - changed
+@@ -711,22 +711,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                             // Paper end
+                         }
+                         // Pufferfish end
+-                            gameprofilerfiller.pop();
++                            //gameprofilerfiller.pop(); // Purpur
+                         }
+                     }
+                 }
+             });
+             timings.entityTick.stopTiming(); // Spigot
+             timings.tickEntities.stopTiming(); // Spigot
+-            gameprofilerfiller.pop();
++            //gameprofilerfiller.pop(); // Purpur
+             this.tickBlockEntities();
+         }
+ 
+-        gameprofilerfiller.push("entityManagement");
++        //gameprofilerfiller.push("entityManagement"); // Purpur
+         this.entityManager.tick();
+-        gameprofilerfiller.popPush("gameEvents");
++        //gameprofilerfiller.popPush("gameEvents"); // Purpur
+         this.sendGameEvents();
+-        gameprofilerfiller.pop();
++        //gameprofilerfiller.pop(); // Purpur
+     }
+ 
+     @Override
+@@ -787,9 +787,9 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         boolean flag = this.isRaining();
+         int j = chunkcoordintpair.getMinBlockX();
+         int k = chunkcoordintpair.getMinBlockZ();
+-        ProfilerFiller gameprofilerfiller = this.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.getProfiler(); // Purpur
+ 
+-        gameprofilerfiller.push("thunder");
++        //gameprofilerfiller.push("thunder"); // Purpur
+         final BlockPos.MutableBlockPos blockposition = this.chunkTickMutablePosition; // Paper - use mutable to reduce allocation rate, final to force compile fail on change
+ 
+         if (!this.paperConfig().environment.disableThunder && flag && this.isThundering() && this.spigotConfig.thunderChance > 0 && /*this.random.nextInt(this.spigotConfig.thunderChance) == 0 &&*/ chunk.shouldDoLightning(this.random)) { // Spigot // Paper - disable thunder // Pufferfish - replace random with shouldDoLightning
+@@ -815,7 +815,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+             }
+         }
+ 
+-        gameprofilerfiller.popPush("iceandsnow");
++        //gameprofilerfiller.popPush("iceandsnow"); // Purpur
+         if (!this.paperConfig().environment.disableIceAndSnow && (this.currentIceAndSnowTick++ & 15) == 0) { // Paper - Disable ice and snow // Paper - optimise random ticking  // Pufferfish - optimize further random ticking
+             // Paper start - optimise chunk ticking
+             this.getRandomBlockPosition(j, 0, k, 15, blockposition);
+@@ -851,7 +851,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         }
+ 
+         // Paper start - optimise random block ticking
+-        gameprofilerfiller.popPush("randomTick");
++        //gameprofilerfiller.popPush("randomTick"); // Purpur
+         timings.chunkTicksBlocks.startTiming(); // Paper
+         if (randomTickSpeed > 0) {
+             LevelChunkSection[] sections = chunk.getSections();
+@@ -887,7 +887,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         }
+         // Paper end - optimise random block ticking
+         timings.chunkTicksBlocks.stopTiming(); // Paper
+-        gameprofilerfiller.pop();
++        //gameprofilerfiller.pop(); // Purpur
+     }
+ 
+     public Optional<BlockPos> findLightningRod(BlockPos pos) {
+@@ -1166,19 +1166,19 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         try {
+         // Paper end - timings
+         entity.setOldPosAndRot();
+-        ProfilerFiller gameprofilerfiller = this.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.getProfiler(); // Purpur
+ 
+         ++entity.tickCount;
+-        this.getProfiler().push(() -> {
++        /*this.getProfiler().push(() -> { // Purpur
+             return Registry.ENTITY_TYPE.getKey(entity.getType()).toString();
+-        });
+-        gameprofilerfiller.incrementCounter("tickNonPassenger");
++        });*/ // Purpur
++        //gameprofilerfiller.incrementCounter("tickNonPassenger"); // Purpur
+         if (isActive) { // Paper - EAR 2
+             TimingHistory.activatedEntityTicks++;
+         entity.tick();
+         entity.postTick(); // CraftBukkit
+         } else { entity.inactiveTick(); } // Paper - EAR 2
+-        this.getProfiler().pop();
++        //this.getProfiler().pop(); // Purpur
+         } finally { timer.stopTiming(); } // Paper - timings
+         Iterator iterator = entity.getPassengers().iterator();
+ 
+@@ -1207,12 +1207,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                 // Paper end
+                 passenger.setOldPosAndRot();
+                 ++passenger.tickCount;
+-                ProfilerFiller gameprofilerfiller = this.getProfiler();
++                //ProfilerFiller gameprofilerfiller = this.getProfiler(); // Purpur
+ 
+-                gameprofilerfiller.push(() -> {
++                /*gameprofilerfiller.push(() -> { // Purpur
+                     return Registry.ENTITY_TYPE.getKey(passenger.getType()).toString();
+-                });
+-                gameprofilerfiller.incrementCounter("tickPassenger");
++                });*/ // Purpur
++                //gameprofilerfiller.incrementCounter("tickPassenger"); // Purpur
+                 // Paper start - EAR 2
+                 if (isActive) {
+                 passenger.rideTick();
+@@ -1224,7 +1224,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                     vehicle.positionRider(passenger);
+                 }
+                 // Paper end - EAR 2
+-                gameprofilerfiller.pop();
++                //gameprofilerfiller.pop(); // Purpur
+                 Iterator iterator = passenger.getPassengers().iterator();
+ 
+                 while (iterator.hasNext()) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index a66912570d7308dd8ec818ede625a377b8bcd1fa..375a49372e66b90f42baa934873e503ed3bd7ab9 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1116,7 +1116,7 @@ public class ServerPlayer extends Player {
+             PortalInfo shapedetectorshape = this.findDimensionEntryPoint(worldserver);
+ 
+             if (shapedetectorshape != null) {
+-                worldserver1.getProfiler().push("moving");
++                //worldserver1.getProfiler().push("moving"); // Purpur
+                 worldserver = shapedetectorshape.world; // CraftBukkit
+                 if (worldserver == null) { } else // CraftBukkit - empty to fall through to null to event
+                 if (resourcekey == LevelStem.OVERWORLD && worldserver.getTypeKey() == LevelStem.NETHER) { // CraftBukkit
+@@ -1139,8 +1139,8 @@ public class ServerPlayer extends Player {
+             worldserver = ((CraftWorld) exit.getWorld()).getHandle();
+             // CraftBukkit end
+ 
+-            worldserver1.getProfiler().pop();
+-            worldserver1.getProfiler().push("placing");
++            //worldserver1.getProfiler().pop(); // Purpur
++            //worldserver1.getProfiler().push("placing"); // Purpur
+             if (true) { // CraftBukkit
+                 this.isChangingDimension = true; // CraftBukkit - Set teleport invulnerability only if player changing worlds
+ 
+@@ -1158,7 +1158,7 @@ public class ServerPlayer extends Player {
+                 worldserver.addDuringPortalTeleport(this);
+                 this.connection.teleport(exit); // CraftBukkit - use internal teleport without event
+                 this.connection.resetPosition(); // CraftBukkit - sync position after changing it (from PortalTravelAgent#findAndteleport)
+-                worldserver1.getProfiler().pop();
++                //worldserver1.getProfiler().pop(); // Purpur
+                 this.triggerDimensionChangeTriggers(worldserver1);
+                 this.connection.send(new ClientboundPlayerAbilitiesPacket(this.getAbilities()));
+                 playerlist.sendLevelInfo(this, worldserver);
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 7bf8ade4c9907c0dc060b318c34cb43f7f9078c5..70cb34baa7dff7380bd9d33ed2d799450f72d597 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -405,7 +405,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+             this.aboveGroundVehicleTickCount = 0;
+         }} // Paper - end if (valid)
+ 
+-        this.server.getProfiler().push("keepAlive");
++        //this.server.getProfiler().push("keepAlive"); // Purpur
+         // Paper Start - give clients a longer time to respond to pings as per pre 1.12.2 timings
+         // This should effectively place the keepalive handling back to "as it was" before 1.12.2
+         long currentTime = Util.getMillis();
+@@ -441,7 +441,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+         }
+         // Paper end
+ 
+-        this.server.getProfiler().pop();
++        //this.server.getProfiler().pop(); // Purpur
+         // CraftBukkit start
+         for (int spam; (spam = this.chatSpamTickCount.get()) > 0 && !this.chatSpamTickCount.compareAndSet(spam, spam - 1); ) ;
+         if (tabSpamLimiter.get() > 0) tabSpamLimiter.getAndDecrement(); // Paper - split to seperate variable
+diff --git a/src/main/java/net/minecraft/server/packs/resources/ResourceManagerReloadListener.java b/src/main/java/net/minecraft/server/packs/resources/ResourceManagerReloadListener.java
+index 9ddbfcf80d9a381dace78a62880f85a4d767e0eb..7383c7d3820dce06108eaafd236a7c6c06a10a42 100644
+--- a/src/main/java/net/minecraft/server/packs/resources/ResourceManagerReloadListener.java
++++ b/src/main/java/net/minecraft/server/packs/resources/ResourceManagerReloadListener.java
+@@ -9,11 +9,11 @@ public interface ResourceManagerReloadListener extends PreparableReloadListener
+     @Override
+     default CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier synchronizer, ResourceManager manager, ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+         return synchronizer.wait(Unit.INSTANCE).thenRunAsync(() -> {
+-            applyProfiler.startTick();
+-            applyProfiler.push("listener");
++            //applyProfiler.startTick(); // Purpur
++            //applyProfiler.push("listener"); // Purpur
+             this.onResourceManagerReload(manager);
+-            applyProfiler.pop();
+-            applyProfiler.endTick();
++            //applyProfiler.pop(); // Purpur
++            //applyProfiler.endTick(); // Purpur
+         }, applyExecutor);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/util/profiling/ActiveProfiler.java b/src/main/java/net/minecraft/util/profiling/ActiveProfiler.java
+index 6d96da16f25e2359e053c45270310886e168f828..de024b88e7328c25748f59288fb7ff575fce1fdc 100644
+--- a/src/main/java/net/minecraft/util/profiling/ActiveProfiler.java
++++ b/src/main/java/net/minecraft/util/profiling/ActiveProfiler.java
+@@ -55,7 +55,7 @@ public class ActiveProfiler implements ProfileCollector {
+             this.started = true;
+             this.path = "";
+             this.paths.clear();
+-            this.push("root");
++            //this.push("root"); // Purpur
+         }
+     }
+ 
+@@ -64,7 +64,7 @@ public class ActiveProfiler implements ProfileCollector {
+         if (!this.started) {
+             LOGGER.error("Profiler tick already ended - missing startTick()?");
+         } else {
+-            this.pop();
++            //this.pop(); // Purpur
+             this.started = false;
+             if (!this.path.isEmpty()) {
+                 LOGGER.error("Profiler tick ended before path was fully popped (remainder: '{}'). Mismatched push/pop?", LogUtils.defer(() -> {
+@@ -93,7 +93,7 @@ public class ActiveProfiler implements ProfileCollector {
+ 
+     @Override
+     public void push(Supplier<String> locationGetter) {
+-        this.push(locationGetter.get());
++        //this.push(locationGetter.get()); // Purpur
+     }
+ 
+     @Override
+@@ -132,14 +132,14 @@ public class ActiveProfiler implements ProfileCollector {
+ 
+     @Override
+     public void popPush(String location) {
+-        this.pop();
+-        this.push(location);
++        //this.pop(); // Purpur
++        //this.push(location); // Purpur
+     }
+ 
+     @Override
+     public void popPush(Supplier<String> locationGetter) {
+-        this.pop();
+-        this.push(locationGetter);
++        //this.pop(); // Purpur
++        //this.push(locationGetter); // Purpur
+     }
+ 
+     private ActiveProfiler.PathEntry getCurrentEntry() {
+diff --git a/src/main/java/net/minecraft/util/profiling/ProfilerFiller.java b/src/main/java/net/minecraft/util/profiling/ProfilerFiller.java
+index 5725c6593480fada65facc29664a00a8cc073512..ccb1f998ae3122d1856d77149ff7e7dffeedc71a 100644
+--- a/src/main/java/net/minecraft/util/profiling/ProfilerFiller.java
++++ b/src/main/java/net/minecraft/util/profiling/ProfilerFiller.java
+@@ -6,32 +6,44 @@ import net.minecraft.util.profiling.metrics.MetricCategory;
+ public interface ProfilerFiller {
+     String ROOT = "root";
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void startTick();
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void endTick();
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void push(String location);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void push(Supplier<String> locationGetter);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void pop();
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void popPush(String location);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void popPush(Supplier<String> locationGetter);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void markForCharting(MetricCategory type);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     default void incrementCounter(String marker) {
+-        this.incrementCounter(marker, 1);
++        //this.incrementCounter(marker, 1); // Purpur
+     }
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void incrementCounter(String marker, int i);
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     default void incrementCounter(Supplier<String> markerGetter) {
+-        this.incrementCounter(markerGetter, 1);
++        //this.incrementCounter(markerGetter, 1); // Purpur
+     }
+ 
++    @io.papermc.paper.annotation.DoNotUse // Purpur
+     void incrementCounter(Supplier<String> markerGetter, int i);
+ 
+     static ProfilerFiller tee(final ProfilerFiller a, final ProfilerFiller b) {
+@@ -41,62 +53,62 @@ public interface ProfilerFiller {
+             return b == InactiveProfiler.INSTANCE ? a : new ProfilerFiller() {
+                 @Override
+                 public void startTick() {
+-                    a.startTick();
+-                    b.startTick();
++                    //a.startTick(); // Purpur
++                    //b.startTick(); // Purpur
+                 }
+ 
+                 @Override
+                 public void endTick() {
+-                    a.endTick();
+-                    b.endTick();
++                    //a.endTick(); // Purpur
++                    //b.endTick(); // Purpur
+                 }
+ 
+                 @Override
+                 public void push(String location) {
+-                    a.push(location);
+-                    b.push(location);
++                    //a.push(location); // Purpur
++                    //b.push(location); // Purpur
+                 }
+ 
+                 @Override
+                 public void push(Supplier<String> locationGetter) {
+-                    a.push(locationGetter);
+-                    b.push(locationGetter);
++                    //a.push(locationGetter); // Purpur
++                    //b.push(locationGetter); // Purpur
+                 }
+ 
+                 @Override
+                 public void markForCharting(MetricCategory type) {
+-                    a.markForCharting(type);
+-                    b.markForCharting(type);
++                    //a.markForCharting(type); // Purpur
++                    //b.markForCharting(type); // Purpur
+                 }
+ 
+                 @Override
+                 public void pop() {
+-                    a.pop();
+-                    b.pop();
++                    //a.pop(); // Purpur
++                    //b.pop(); // Purpur
+                 }
+ 
+                 @Override
+                 public void popPush(String location) {
+-                    a.popPush(location);
+-                    b.popPush(location);
++                    //a.popPush(location); // Purpur
++                    //b.popPush(location); // Purpur
+                 }
+ 
+                 @Override
+                 public void popPush(Supplier<String> locationGetter) {
+-                    a.popPush(locationGetter);
+-                    b.popPush(locationGetter);
++                    //a.popPush(locationGetter); // Purpur
++                    //b.popPush(locationGetter); // Purpur
+                 }
+ 
+                 @Override
+                 public void incrementCounter(String marker, int i) {
+-                    a.incrementCounter(marker, i);
+-                    b.incrementCounter(marker, i);
++                    //a.incrementCounter(marker, i); // Purpur
++                    //b.incrementCounter(marker, i); // Purpur
+                 }
+ 
+                 @Override
+                 public void incrementCounter(Supplier<String> markerGetter, int i) {
+-                    a.incrementCounter(markerGetter, i);
+-                    b.incrementCounter(markerGetter, i);
++                    //a.incrementCounter(markerGetter, i); // Purpur
++                    //b.incrementCounter(markerGetter, i); // Purpur
+                 }
+             };
+         }
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 32bb217e3b1a5ee3be8ba576e192ee93b4123d30..2909bd864bd2ae663a81aa133262ffb873a12995 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -841,7 +841,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+             return;
+         }
+         // Pufferfish end - entity TTL
+-        this.level.getProfiler().push("entityBaseTick");
++        //this.level.getProfiler().push("entityBaseTick"); // Purpur
+         if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
+         this.feetBlockState = null;
+         if (this.isPassenger() && this.getVehicle().isRemoved()) {
+@@ -908,7 +908,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         }
+ 
+         this.firstTick = false;
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+     }
+ 
+     public void setSharedFlagOnFire(boolean onFire) {
+@@ -1088,7 +1088,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 }
+             }
+ 
+-            this.level.getProfiler().push("move");
++            //this.level.getProfiler().push("move"); // Purpur
+             if (this.stuckSpeedMultiplier.lengthSqr() > 1.0E-7D) {
+                 movement = movement.multiply(this.stuckSpeedMultiplier);
+                 this.stuckSpeedMultiplier = Vec3.ZERO;
+@@ -1097,7 +1097,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+             // Paper start - ignore movement changes while inactive.
+             if (isTemporarilyActive && !(this instanceof ItemEntity || this instanceof net.minecraft.world.entity.vehicle.AbstractMinecart) && movement == getDeltaMovement() && movementType == MoverType.SELF) {
+                 setDeltaMovement(Vec3.ZERO);
+-                this.level.getProfiler().pop();
++                //this.level.getProfiler().pop(); // Purpur
+                 return;
+             }
+             // Paper end
+@@ -1118,8 +1118,8 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 this.setPos(this.getX() + vec3d1.x, this.getY() + vec3d1.y, this.getZ() + vec3d1.z);
+             }
+ 
+-            this.level.getProfiler().pop();
+-            this.level.getProfiler().push("rest");
++            //this.level.getProfiler().pop(); // Purpur
++            //this.level.getProfiler().push("rest"); // Purpur
+             boolean flag = !Mth.equal(movement.x, vec3d1.x);
+             boolean flag1 = !Mth.equal(movement.z, vec3d1.z);
+ 
+@@ -1138,7 +1138,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+             this.checkFallDamage(vec3d1.y, this.onGround, iblockdata, blockposition);
+             if (this.isRemoved()) {
+-                this.level.getProfiler().pop();
++                //this.level.getProfiler().pop(); // Purpur
+             } else {
+                 if (this.horizontalCollision) {
+                     Vec3 vec3d2 = this.getDeltaMovement();
+@@ -1290,7 +1290,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                     this.setRemainingFireTicks(-this.getFireImmuneTicks());
+                 }
+ 
+-                this.level.getProfiler().pop();
++                //this.level.getProfiler().pop(); // Purpur
+             }
+         }
+         // Paper start - detailed watchdog information
+@@ -2963,7 +2963,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 ServerLevel worldserver1 = minecraftserver.getLevel(resourcekey);
+ 
+                 if (true && !this.isPassenger() && this.portalTime++ >= i) { // CraftBukkit
+-                    this.level.getProfiler().push("portal");
++                    //this.level.getProfiler().push("portal"); // Purpur
+                     this.portalTime = i;
+                     // Paper start
+                     io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), worldserver1 == null ? null : worldserver1.getWorld(), org.bukkit.PortalType.NETHER);
+@@ -2981,7 +2981,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                     }
+                     } // Paper
+                     // CraftBukkit end
+-                    this.level.getProfiler().pop();
++                    //this.level.getProfiler().pop(); // Purpur
+                 }
+ 
+                 this.isInsidePortal = false;
+@@ -3435,14 +3435,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         }
+         // Paper end
+         if (this.level instanceof ServerLevel && !this.isRemoved()) {
+-            this.level.getProfiler().push("changeDimension");
++            //this.level.getProfiler().push("changeDimension"); // Purpur
+             // CraftBukkit start
+             // this.decouple();
+             if (worldserver == null) {
+                 return null;
+             }
+             // CraftBukkit end
+-            this.level.getProfiler().push("reposition");
++            //this.level.getProfiler().push("reposition"); // Purpur
+             PortalInfo shapedetectorshape = (location == null) ? this.findDimensionEntryPoint(worldserver) : new PortalInfo(new Vec3(location.x(), location.y(), location.z()), Vec3.ZERO, this.yRot, this.xRot, worldserver, null); // CraftBukkit
+ 
+             if (shapedetectorshape == null) {
+@@ -3476,7 +3476,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 this.unRide();
+                 // CraftBukkit end
+ 
+-                this.level.getProfiler().popPush("reloading");
++                //this.level.getProfiler().popPush("reloading"); // Purpur
+                 // Paper start - Change lead drop timing to prevent dupe
+                 if (this instanceof Mob) {
+                     ((Mob) this).dropLeash(true, true); // Paper drop lead
+@@ -3499,10 +3499,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 }
+ 
+                 this.removeAfterChangingDimensions();
+-                this.level.getProfiler().pop();
++                //this.level.getProfiler().pop(); // Purpur
+                 ((ServerLevel) this.level).resetEmptyTime();
+                 worldserver.resetEmptyTime();
+-                this.level.getProfiler().pop();
++                //this.level.getProfiler().pop(); // Purpur
+                 return entity;
+             }
+         } else {
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 7fe46ecd8221545d56f5c8e509f72cb90ad6425a..47e214bbc464d1e0925fa521b094f036c0098bbe 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -390,7 +390,7 @@ public abstract class LivingEntity extends Entity {
+         }
+ 
+         super.baseTick();
+-        this.level.getProfiler().push("livingEntityBaseTick");
++        //this.level.getProfiler().push("livingEntityBaseTick"); // Purpur
+         if (this.fireImmune() || this.level.isClientSide) {
+             this.clearFire();
+         }
+@@ -493,7 +493,7 @@ public abstract class LivingEntity extends Entity {
+         this.yHeadRotO = this.yHeadRot;
+         this.yRotO = this.getYRot();
+         this.xRotO = this.getXRot();
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+     }
+ 
+     public boolean canSpawnSoulSpeedParticle() {
+@@ -3006,10 +3006,10 @@ public abstract class LivingEntity extends Entity {
+         }
+ 
+         this.run += (f3 - this.run) * 0.3F;
+-        this.level.getProfiler().push("headTurn");
++        //this.level.getProfiler().push("headTurn"); // Purpur
+         f2 = this.tickHeadTurn(f1, f2);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("rangeChecks");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("rangeChecks"); // Purpur
+ 
+         // Paper start - Stop large pitch and yaw changes from crashing the server
+         this.yRotO += carpetfixes.helpers.FastMath.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F;
+@@ -3018,7 +3018,7 @@ public abstract class LivingEntity extends Entity {
+         this.yHeadRotO += carpetfixes.helpers.FastMath.round((this.yHeadRot - this.yHeadRotO) / 360.0F) * 360.0F;
+         // Paper end
+ 
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         this.animStep += f2;
+         if (this.isFallFlying()) {
+             ++this.fallFlyTicks;
+@@ -3300,19 +3300,19 @@ public abstract class LivingEntity extends Entity {
+         }
+ 
+         this.setDeltaMovement(d4, d5, d6);
+-        this.level.getProfiler().push("ai");
++        //this.level.getProfiler().push("ai"); // Purpur
+         if (this.isImmobile()) {
+             this.jumping = false;
+             this.xxa = 0.0F;
+             this.zza = 0.0F;
+         } else if (this.isEffectiveAi()) {
+-            this.level.getProfiler().push("newAi");
++            //this.level.getProfiler().push("newAi"); // Purpur
+             this.serverAiStep();
+-            this.level.getProfiler().pop();
++            //this.level.getProfiler().pop(); // Purpur
+         }
+ 
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("jump");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("jump"); // Purpur
+         if (this.jumping && this.isAffectedByFluids()) {
+             double d7;
+ 
+@@ -3339,8 +3339,8 @@ public abstract class LivingEntity extends Entity {
+             this.noJumpDelay = 0;
+         }
+ 
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("travel");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("travel"); // Purpur
+         this.xxa *= 0.98F;
+         this.zza *= 0.98F;
+         this.updateFallFlying();
+@@ -3349,8 +3349,8 @@ public abstract class LivingEntity extends Entity {
+         // SpigotTimings.timerEntityAIMove.startTiming(); // Spigot // Paper
+         this.travel(new Vec3((double) this.xxa, (double) this.yya, (double) this.zza));
+         // SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot // Paper
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("freezing");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("freezing"); // Purpur
+         boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
+         int i;
+ 
+@@ -3370,15 +3370,15 @@ public abstract class LivingEntity extends Entity {
+             this.hurt(DamageSource.FREEZE, (float) i);
+         }
+ 
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("push");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("push"); // Purpur
+         if (this.autoSpinAttackTicks > 0) {
+             --this.autoSpinAttackTicks;
+             this.checkAutoSpinAttack(axisalignedbb, this.getBoundingBox());
+         }
+ 
+         this.pushEntities();
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         // Paper start
+         if (((ServerLevel) this.level).hasEntityMoveEvent && !(this instanceof net.minecraft.world.entity.player.Player)) {
+             if (this.xo != getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index c39ceda8e9314dd8338ade29d92baa0c8173d2c9..4b54d5d3fcaba884e09f7f32e3399a3d51e1efff 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -329,13 +329,13 @@ public abstract class Mob extends LivingEntity {
+     @Override
+     public void baseTick() {
+         super.baseTick();
+-        this.level.getProfiler().push("mobBaseTick");
++        //this.level.getProfiler().push("mobBaseTick"); // Purpur
+         if (this.isAlive() && this.random.nextInt(1000) < this.ambientSoundTime++) {
+             this.resetAmbientSoundTime();
+             this.playAmbientSound();
+         }
+ 
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+     }
+ 
+     @Override
+@@ -634,7 +634,7 @@ public abstract class Mob extends LivingEntity {
+     @Override
+     public void aiStep() {
+         super.aiStep();
+-        this.level.getProfiler().push("looting");
++        //this.level.getProfiler().push("looting"); // Purpur
+         if (!this.level.isClientSide && this.canPickUpLoot() && this.isAlive() && !this.dead && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+             Vec3i baseblockposition = this.getPickupReach();
+             List<ItemEntity> list = this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate((double) baseblockposition.getX(), (double) baseblockposition.getY(), (double) baseblockposition.getZ()));
+@@ -654,7 +654,7 @@ public abstract class Mob extends LivingEntity {
+             }
+         }
+ 
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+     }
+ 
+     protected Vec3i getPickupReach() {
+@@ -850,45 +850,45 @@ public abstract class Mob extends LivingEntity {
+         }
+         // Paper end
+         int i = this.level.getServer().getTickCount() + this.getId(); // petal - move up
+-        this.level.getProfiler().push("sensing");
++        //this.level.getProfiler().push("sensing"); // Purpur
+         if (i % 10 == 0) this.sensing.tick(); // petal - only refresh line of sight cache every half second
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+ 
+         if (i % 2 != 0 && this.tickCount > 1) {
+-            this.level.getProfiler().push("targetSelector");
++            //this.level.getProfiler().push("targetSelector"); // Purpur
+             if (this.targetSelector.inactiveTick(this.activatedPriority, false)) // Pufferfish - use this to alternate ticking
+             this.targetSelector.tickRunningGoals(false);
+-            this.level.getProfiler().pop();
+-            this.level.getProfiler().push("goalSelector");
++            //this.level.getProfiler().pop(); // Purpur
++            //this.level.getProfiler().push("goalSelector"); // Purpur
+             if (this.goalSelector.inactiveTick(this.activatedPriority, false)) // Pufferfish - use this to alternate ticking
+             this.goalSelector.tickRunningGoals(false);
+-            this.level.getProfiler().pop();
++            //this.level.getProfiler().pop(); // Purpur
+         } else {
+-            this.level.getProfiler().push("targetSelector");
++            //this.level.getProfiler().push("targetSelector"); // Purpur
+             if (this.targetSelector.inactiveTick(this.activatedPriority, false)) // Pufferfish - use this to alternate ticking
+             this.targetSelector.tick();
+-            this.level.getProfiler().pop();
+-            this.level.getProfiler().push("goalSelector");
++            //this.level.getProfiler().pop(); // Purpur
++            //this.level.getProfiler().push("goalSelector"); // Purpur
+             if (this.goalSelector.inactiveTick(this.activatedPriority, false)) // Pufferfish - use this to alternate ticking
+             this.goalSelector.tick();
+-            this.level.getProfiler().pop();
++            //this.level.getProfiler().pop(); // Purpur
+         }
+ 
+-        this.level.getProfiler().push("navigation");
++        //this.level.getProfiler().push("navigation"); // Purpur
+         this.navigation.tick();
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("mob tick");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("mob tick"); // Purpur
+         this.customServerAiStep();
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("controls");
+-        this.level.getProfiler().push("move");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("controls"); // Purpur
++        //this.level.getProfiler().push("move"); // Purpur
+         this.moveControl.tick();
+-        this.level.getProfiler().popPush("look");
++        //this.level.getProfiler().popPush("look"); // Purpur
+         this.lookControl.tick();
+-        this.level.getProfiler().popPush("jump");
++        //this.level.getProfiler().popPush("jump"); // Purpur
+         this.jumpControl.tick();
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().pop(); // Purpur
+         this.sendDebugPackets();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
+index abc27a60986602e84eb556436a65b997617852a1..759a53072fe3672c9fd7ba505bf0bdb138b446d1 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
++++ b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
+@@ -103,8 +103,8 @@ public class GoalSelector {
+     }
+ 
+     public void tick() {
+-        ProfilerFiller profilerFiller = this.profiler.get();
+-        profilerFiller.push("goalCleanup");
++        //ProfilerFiller profilerFiller = this.profiler.get(); // Purpur
++        //profilerFiller.push("goalCleanup"); // Purpur
+ 
+         for(WrappedGoal wrappedGoal : this.availableGoals) {
+             if (wrappedGoal.isRunning() && (goalContainsAnyFlags(wrappedGoal, this.goalTypes) || !wrappedGoal.canContinueToUse())) {
+@@ -121,8 +121,8 @@ public class GoalSelector {
+             }
+         }
+ 
+-        profilerFiller.pop();
+-        profilerFiller.push("goalUpdate");
++        //profilerFiller.pop(); // Purpur
++        //profilerFiller.push("goalUpdate"); // Purpur
+ 
+         for(WrappedGoal wrappedGoal2 : this.availableGoals) {
+             // Paper start
+@@ -142,13 +142,13 @@ public class GoalSelector {
+             }
+         }
+ 
+-        profilerFiller.pop();
++        //profilerFiller.pop(); // Purpur
+         this.tickRunningGoals(true);
+     }
+ 
+     public void tickRunningGoals(boolean tickAll) {
+-        ProfilerFiller profilerFiller = this.profiler.get();
+-        profilerFiller.push("goalTick");
++        //ProfilerFiller profilerFiller = this.profiler.get(); // Purpur
++        //profilerFiller.push("goalTick"); // Purpur
+ 
+         for(WrappedGoal wrappedGoal : this.availableGoals) {
+             if (wrappedGoal.isRunning() && (tickAll || wrappedGoal.requiresUpdateEveryTick())) {
+@@ -156,7 +156,7 @@ public class GoalSelector {
+             }
+         }
+ 
+-        profilerFiller.pop();
++        //profilerFiller.pop(); // Purpur
+     }
+ 
+     public Set<WrappedGoal> getAvailableGoals() {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
+index aa3fbdaffd69d65d9522f82fab45d0475cae024f..f8b0ed25718c766fe6a152e350a38ee0f3a4d230 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
++++ b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
+@@ -174,12 +174,12 @@ public abstract class PathNavigation {
+                 }
+             }
+             // Paper end
+-            this.level.getProfiler().push("pathfind");
++            //this.level.getProfiler().push("pathfind"); // Purpur
+             BlockPos blockPos = useHeadPos ? this.mob.blockPosition().above() : this.mob.blockPosition();
+             int i = (int)(followRange + (float)range);
+             PathNavigationRegion pathNavigationRegion = new PathNavigationRegion(this.level, blockPos.offset(-i, -i, -i), blockPos.offset(i, i, i));
+             Path path = this.pathFinder.findPath(pathNavigationRegion, this.mob, positions, followRange, distance, this.maxVisitedNodesMultiplier);
+-            this.level.getProfiler().pop();
++            //this.level.getProfiler().pop(); // Purpur
+             
+             // Pufferfish start
+             if (!gg.pufferfish.pufferfish.PufferfishConfig.enableAsyncPathfinding) {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensing.java b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensing.java
+index 288c6627906d07c0d223eacd84ae4eb31a349998..9babe636176da3c40598eb5bdac0919a1704eaa0 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensing.java
++++ b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensing.java
+@@ -26,9 +26,9 @@ public class Sensing {
+         } else if (this.unseen.contains(i)) {
+             return false;
+         } else {
+-            this.mob.level.getProfiler().push("hasLineOfSight");
++            //this.mob.level.getProfiler().push("hasLineOfSight"); // Purpur
+             boolean bl = this.mob.hasLineOfSight(entity);
+-            this.mob.level.getProfiler().pop();
++            //this.mob.level.getProfiler().pop(); // Purpur
+             if (bl) {
+                 this.seen.add(i);
+             } else {
+diff --git a/src/main/java/net/minecraft/world/entity/animal/allay/Allay.java b/src/main/java/net/minecraft/world/entity/animal/allay/Allay.java
+index 2bc8917b7c4512f0607f34b1f18627a391fda07d..312eb7d12abeb6497d03c466d8321df0e92c817b 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/allay/Allay.java
++++ b/src/main/java/net/minecraft/world/entity/animal/allay/Allay.java
+@@ -118,7 +118,7 @@ public class Allay extends PathfinderMob implements InventoryCarrier {
+ 
+     @Override
+     public Brain<Allay> getBrain() {
+-        return super.getBrain();
++        return (Brain<Allay>) super.getBrain(); // Purpur - decompile error
+     }
+ 
+     public static AttributeSupplier.Builder createAttributes() {
+@@ -174,8 +174,7 @@ public class Allay extends PathfinderMob implements InventoryCarrier {
+ 
+     @Override
+     public boolean hurt(DamageSource source, float amount) {
+-        Entity optional = source.getEntity();
+-        if (optional instanceof Player player) {
++        if (source.getEntity() instanceof Player player) { // Purpur - decompile error
+             Optional<UUID> optional = this.getBrain().getMemory(MemoryModuleType.LIKED_PLAYER);
+             if (optional.isPresent() && player.getUUID().equals(optional.get())) {
+                 return false;
+@@ -215,12 +214,12 @@ public class Allay extends PathfinderMob implements InventoryCarrier {
+ 
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("allayBrain");
++        //this.level.getProfiler().push("allayBrain"); // Purpur
+         this.getBrain().tick((ServerLevel)this.level, this);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("allayActivityUpdate");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("allayActivityUpdate"); // Purpur
+         AllayAi.updateActivity(this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         super.customServerAiStep();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java b/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
+index fdd2c63ff0017bafa544a3cff2ee6d2d62c92cb3..c89281e940e21b5a6e7b20a610f1b9b8853bd23c 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
++++ b/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
+@@ -286,13 +286,13 @@ public class Axolotl extends Animal implements LerpingModel, Bucketable {
+     private int behaviorTick = 0; // Pufferfish
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("axolotlBrain");
++        //this.level.getProfiler().push("axolotlBrain"); // Purpur
+         if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+         this.getBrain().tick((ServerLevel) this.level, this);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("axolotlActivityUpdate");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("axolotlActivityUpdate"); // Purpur
+         AxolotlAi.updateActivity(this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         if (!this.isNoAi()) {
+             Optional<Integer> optional = this.getBrain().getMemory(MemoryModuleType.PLAY_DEAD_TICKS);
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java b/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
+index 9a2d1285c207290946ae664915a77b8f9dc00ad7..212108409e979ff5a2465443ebfecbde2da9c8a7 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
++++ b/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
+@@ -176,12 +176,12 @@ public class Frog extends Animal {
+ 
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("frogBrain");
++        //this.level.getProfiler().push("frogBrain"); // Purpur
+         this.getBrain().tick((ServerLevel)this.level, this);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("frogActivityUpdate");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("frogActivityUpdate"); // Purpur
+         FrogAi.updateActivity(this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         super.customServerAiStep();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/animal/frog/Tadpole.java b/src/main/java/net/minecraft/world/entity/animal/frog/Tadpole.java
+index 3dd4e6d622a6daafa00ae971edd88a147e34beef..69423113b638616e8b56bece13edd992a8d88f68 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/frog/Tadpole.java
++++ b/src/main/java/net/minecraft/world/entity/animal/frog/Tadpole.java
+@@ -78,12 +78,12 @@ public class Tadpole extends AbstractFish {
+ 
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("tadpoleBrain");
++        //this.level.getProfiler().push("tadpoleBrain"); // Purpur
+         this.getBrain().tick((ServerLevel) this.level, this);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("tadpoleActivityUpdate");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("tadpoleActivityUpdate"); // Purpur
+         TadpoleAi.updateActivity(this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         super.customServerAiStep();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
+index 362f952888f63a453a4352a9f1dc7df799244a3c..01cda034c6899755b0ec76ce63f33a0af25cbe9c 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
++++ b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
+@@ -166,13 +166,13 @@ public class Goat extends Animal {
+     private int behaviorTick = 0; // Pufferfish
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("goatBrain");
++        //this.level.getProfiler().push("goatBrain"); // Purpur
+         if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+         this.getBrain().tick((ServerLevel) this.level, this);
+-        this.level.getProfiler().pop();
+-        this.level.getProfiler().push("goatActivityUpdate");
++        //this.level.getProfiler().pop(); // Purpur
++        //this.level.getProfiler().push("goatActivityUpdate"); // Purpur
+         GoatAi.updateActivity(this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         super.customServerAiStep();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Zoglin.java b/src/main/java/net/minecraft/world/entity/monster/Zoglin.java
+index 056e4c2f7f632dadc0015710c032a0b718d46ff9..6f7c52c25a3d2772fe56be133f30edb9264a09b4 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Zoglin.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Zoglin.java
+@@ -90,11 +90,11 @@ public class Zoglin extends Monster implements Enemy, HoglinBase {
+     }
+ 
+     private static void initIdleActivity(Brain<Zoglin> brain) {
+-        brain.addActivity(Activity.IDLE, 10, ImmutableList.of(new StartAttacking<>(Zoglin::findNearestValidAttackTarget), new RunSometimes(new SetEntityLookTarget(8.0F), UniformInt.of(30, 60)), new RunOne(ImmutableList.of(Pair.of(new RandomStroll(0.4F), 2), Pair.of(new SetWalkTargetFromLookTarget(0.4F, 3), 2), Pair.of(new DoNothing(30, 60), 1)))));
++        brain.addActivity(Activity.IDLE, 10, ImmutableList.of(new StartAttacking<>(Zoglin::findNearestValidAttackTarget), new RunSometimes<>(new SetEntityLookTarget(8.0F), UniformInt.of(30, 60)), new RunOne<>(ImmutableList.of(Pair.of(new RandomStroll(0.4F), 2), Pair.of(new SetWalkTargetFromLookTarget(0.4F, 3), 2), Pair.of(new DoNothing(30, 60), 1))))); // Purpur - decompile error
+     }
+ 
+     private static void initFightActivity(Brain<Zoglin> brain) {
+-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10, ImmutableList.of(new SetWalkTargetFromAttackTargetIfTargetOutOfReach(1.0F), new RunIf<>(Zoglin::isAdult, new MeleeAttack(40)), new RunIf<>(Zoglin::isBaby, new MeleeAttack(15)), new StopAttackingIfTargetInvalid()), MemoryModuleType.ATTACK_TARGET);
++        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10, ImmutableList.of(new SetWalkTargetFromAttackTargetIfTargetOutOfReach(1.0F), new RunIf<>(Zoglin::isAdult, new MeleeAttack(40)), new RunIf<>(Zoglin::isBaby, new MeleeAttack(15)), new StopAttackingIfTargetInvalid<>()), MemoryModuleType.ATTACK_TARGET); // Purpur - decompile error
+     }
+ 
+     private Optional<? extends LivingEntity> findNearestValidAttackTarget() {
+@@ -183,7 +183,7 @@ public class Zoglin extends Monster implements Enemy, HoglinBase {
+ 
+     @Override
+     public Brain<Zoglin> getBrain() {
+-        return super.getBrain();
++        return (Brain<Zoglin>) super.getBrain(); // Purpur - decompile error
+     }
+ 
+     protected void updateActivity() {
+@@ -199,9 +199,9 @@ public class Zoglin extends Monster implements Enemy, HoglinBase {
+ 
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("zoglinBrain");
++        //this.level.getProfiler().push("zoglinBrain"); // Purpur
+         this.getBrain().tick((ServerLevel)this.level, this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         this.updateActivity();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/monster/hoglin/Hoglin.java b/src/main/java/net/minecraft/world/entity/monster/hoglin/Hoglin.java
+index 5d487f1613b1fc5807283c20e5cc23a432d08f42..62bff0eceb91fd8fd119d29e8d4df9e5d315d3a6 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/hoglin/Hoglin.java
++++ b/src/main/java/net/minecraft/world/entity/monster/hoglin/Hoglin.java
+@@ -129,10 +129,10 @@ public class Hoglin extends Animal implements Enemy, HoglinBase {
+     private int behaviorTick; // Pufferfish
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("hoglinBrain");
++        //this.level.getProfiler().push("hoglinBrain"); // Purpur
+         if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+         this.getBrain().tick((ServerLevel)this.level, this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         HoglinAi.updateActivity(this);
+         if (this.isConverting()) {
+             ++this.timeInOverworld;
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
+index 9bde52b723237b1f0f945bc564009e3507993508..6671bc818e90b5c424dc1a14f6cfced6b8987711 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/Piglin.java
+@@ -292,10 +292,10 @@ public class Piglin extends AbstractPiglin implements CrossbowAttackMob, Invento
+     private int behaviorTick; // Pufferfish
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("piglinBrain");
++        //this.level.getProfiler().push("piglinBrain"); // Purpur
+         if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+         this.getBrain().tick((ServerLevel) this.level, this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         PiglinAi.updateActivity(this);
+         super.customServerAiStep();
+     }
+diff --git a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinBrute.java b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinBrute.java
+index ac75c54e897565e340b66823caeed92ba1d1641a..3aa20d9dfd887d3ffa3c243bbe6bf3217b0ccd1f 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinBrute.java
++++ b/src/main/java/net/minecraft/world/entity/monster/piglin/PiglinBrute.java
+@@ -70,7 +70,7 @@ public class PiglinBrute extends AbstractPiglin {
+ 
+     @Override
+     public Brain<PiglinBrute> getBrain() {
+-        return super.getBrain();
++        return (Brain<PiglinBrute>) super.getBrain(); // Purpur - decompile error
+     }
+ 
+     @Override
+@@ -85,9 +85,9 @@ public class PiglinBrute extends AbstractPiglin {
+ 
+     @Override
+     protected void customServerAiStep() {
+-        this.level.getProfiler().push("piglinBruteBrain");
++        //this.level.getProfiler().push("piglinBruteBrain"); // Purpur
+         this.getBrain().tick((ServerLevel)this.level, this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         PiglinBruteAi.updateActivity(this);
+         PiglinBruteAi.maybePlayActivitySound(this);
+         super.customServerAiStep();
+diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
+index 27bd70dc30c8472e5a80f3273f9233a0392f831d..8629de9469aa87090c73037200c32e7a86dcc17c 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
++++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
+@@ -274,9 +274,9 @@ public class Warden extends Monster implements VibrationListener.VibrationListen
+     protected void customServerAiStep() {
+         ServerLevel worldserver = (ServerLevel) this.level;
+ 
+-        worldserver.getProfiler().push("wardenBrain");
++        //worldserver.getProfiler().push("wardenBrain"); // Purpur
+         this.getBrain().tick(worldserver, this);
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         super.customServerAiStep();
+         if ((this.tickCount + this.getId()) % 120 == 0) {
+             Warden.applyDarknessAround(worldserver, this.position(), this, 20);
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index 93077e8c6b5a35adc6febb749d1d08be172402f1..372635676e03aeff6aec49fa3919f115059c04a9 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -249,14 +249,14 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+     @Override
+     protected void customServerAiStep() { mobTick(false); }
+     protected void mobTick(boolean inactive) {
+-        this.level.getProfiler().push("villagerBrain");
++        //this.level.getProfiler().push("villagerBrain"); // Purpur
+         // Pufferfish start
+         if (!inactive) {
+             if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+             this.getBrain().tick((ServerLevel) this.level, this); // Paper
+          }
+         // Pufferfish end
+-        this.level.getProfiler().pop();
++        //this.level.getProfiler().pop(); // Purpur
+         if (this.assignProfessionWhenSpawned) {
+             this.assignProfessionWhenSpawned = false;
+         }
+diff --git a/src/main/java/net/minecraft/world/level/Explosion.java b/src/main/java/net/minecraft/world/level/Explosion.java
+index 01477e7240f9e33d08d416a7d40ee10f3e5d4abf..c9def2202d7c2a523858ec124df2beaf994d9888 100644
+--- a/src/main/java/net/minecraft/world/level/Explosion.java
++++ b/src/main/java/net/minecraft/world/level/Explosion.java
+@@ -363,7 +363,7 @@ public class Explosion {
+                 if (!iblockdata.isAir() && iblockdata.isDestroyable()) { // Paper
+                     BlockPos blockposition1 = blockposition.immutable();
+ 
+-                    this.level.getProfiler().push("explosion_blocks");
++                    //this.level.getProfiler().push("explosion_blocks"); // Purpur
+                     if (block.dropFromExplosion(this)) {
+                         Level world = this.level;
+ 
+@@ -385,7 +385,7 @@ public class Explosion {
+ 
+                     this.level.setBlock(blockposition, Blocks.AIR.defaultBlockState(), 3);
+                     block.wasExploded(this.level, blockposition, this);
+-                    this.level.getProfiler().pop();
++                    //this.level.getProfiler().pop(); // Purpur
+                 }
+             }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index e69be14b25f2a8686473da5806c4930469e2074b..1ca010d785f3cb76e45aee1650f625c10fbf30bc 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -666,9 +666,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+                 BlockState iblockdata2 = this.getBlockState(pos);
+ 
+                 if ((flags & 128) == 0 && iblockdata2 != iblockdata1 && (iblockdata2.getLightBlock(this, pos) != iblockdata1.getLightBlock(this, pos) || iblockdata2.getLightEmission() != iblockdata1.getLightEmission() || iblockdata2.useShapeForLightOcclusion() || iblockdata1.useShapeForLightOcclusion())) {
+-                    this.getProfiler().push("queueCheckLight");
++                    //this.getProfiler().push("queueCheckLight"); // Purpur
+                     this.getChunkSource().getLightEngine().checkBlock(pos);
+-                    this.getProfiler().pop();
++                    //this.getProfiler().pop(); // Purpur
+                 }
+ 
+                 /*
+@@ -944,9 +944,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     }
+ 
+     protected void tickBlockEntities() {
+-        ProfilerFiller gameprofilerfiller = this.getProfiler();
++        //ProfilerFiller gameprofilerfiller = this.getProfiler(); // Purpur
+ 
+-        gameprofilerfiller.push("blockEntities");
++        //gameprofilerfiller.push("blockEntities"); // Purpur
+         timings.tileEntityPending.startTiming(); // Spigot
+         this.tickingBlockEntities = true;
+         if (!this.pendingBlockEntityTickers.isEmpty()) {
+@@ -991,7 +991,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+         timings.tileEntityTick.stopTiming(); // Spigot
+         this.tickingBlockEntities = false;
+         co.aikar.timings.TimingHistory.tileEntityTicks += this.blockEntityTickers.size(); // Paper
+-        gameprofilerfiller.pop();
++        //gameprofilerfiller.pop(); // Purpur
+         spigotConfig.currentPrimedTnt = 0; // Spigot
+     }
+ 
+@@ -1152,7 +1152,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+ 
+     @Override
+     public List<Entity> getEntities(@Nullable Entity except, AABB box, Predicate<? super Entity> predicate) {
+-        this.getProfiler().incrementCounter("getEntities");
++        //this.getProfiler().incrementCounter("getEntities"); // Purpur
+         List<Entity> list = Lists.newArrayList();
+         this.entitySliceManager.getEntities(except, box, list, predicate); // Paper - optimise this call
+         return list;
+@@ -1160,7 +1160,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+ 
+     @Override
+     public <T extends Entity> List<T> getEntities(EntityTypeTest<Entity, T> filter, AABB box, Predicate<? super T> predicate) {
+-        this.getProfiler().incrementCounter("getEntities");
++        //this.getProfiler().incrementCounter("getEntities"); // Purpur
+         List<T> list = Lists.newArrayList();
+ 
+         // Paper start - optimise this call
+@@ -1491,7 +1491,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     }
+ 
+     public ProfilerFiller getProfiler() {
+-        if (gg.pufferfish.pufferfish.PufferfishConfig.disableMethodProfiler) return net.minecraft.util.profiling.InactiveProfiler.INSTANCE; // Pufferfish
++        if (true || gg.pufferfish.pufferfish.PufferfishConfig.disableMethodProfiler) return net.minecraft.util.profiling.InactiveProfiler.INSTANCE; // Pufferfish // Purpur
+         return (ProfilerFiller) this.profiler.get();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
+index 1f4acc1a2605f1e9051126fc811a5479351fc61a..8851cbb49a3f48b31d8a51f751da0e8e698e8d93 100644
+--- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
++++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
+@@ -131,7 +131,7 @@ public final class NaturalSpawner {
+     }
+ 
+     public static void spawnForChunk(ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnState info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn) {
+-        world.getProfiler().push("spawner");
++        //world.getProfiler().push("spawner"); // Purpur
+         world.timings.mobSpawn.startTiming(); // Spigot
+         MobCategory[] aenumcreaturetype = NaturalSpawner.SPAWNING_CATEGORIES;
+         int i = aenumcreaturetype.length;
+@@ -188,7 +188,7 @@ public final class NaturalSpawner {
+         }
+ 
+         world.timings.mobSpawn.stopTiming(); // Spigot
+-        world.getProfiler().pop();
++        //world.getProfiler().pop(); // Purpur
+     }
+ 
+     // Paper start
+diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+index dc836c231d7833c5a873a6f6b6acded23d495f7f..a635c6b9861f35ea3f5370a8a98a0d4f49a2a2d7 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
++++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+@@ -1236,9 +1236,9 @@ public class LevelChunk extends ChunkAccess {
+ 
+                 if (LevelChunk.this.isTicking(blockposition)) {
+                     try {
+-                        ProfilerFiller gameprofilerfiller = LevelChunk.this.level.getProfiler();
++                        //ProfilerFiller gameprofilerfiller = LevelChunk.this.level.getProfiler(); // Purpur
+ 
+-                        gameprofilerfiller.push(this::getType);
++                        //gameprofilerfiller.push(this::getType); // Purpur
+                         this.blockEntity.tickTimer.startTiming(); // Spigot
+                         BlockState iblockdata = LevelChunk.this.getBlockState(blockposition);
+ 
+@@ -1250,7 +1250,7 @@ public class LevelChunk extends ChunkAccess {
+                             LevelChunk.LOGGER.warn("Block entity {} @ {} state {} invalid for ticking:", new Object[]{LogUtils.defer(this::getType), LogUtils.defer(this::getPos), iblockdata});
+                         }
+ 
+-                        gameprofilerfiller.pop();
++                        //gameprofilerfiller.pop(); // Purpur
+                     } catch (Throwable throwable) {
+                         if (throwable instanceof ThreadDeath) throw throwable; // Paper
+                         // Paper start - Prevent tile entity and entity crashes
+diff --git a/src/main/java/net/minecraft/world/level/pathfinder/PathFinder.java b/src/main/java/net/minecraft/world/level/pathfinder/PathFinder.java
+index 0455c8a7da880da4f0b7ae9d57e83e281a55f0ae..23cb03d28c43729d5b5d450cd975456512477353 100644
+--- a/src/main/java/net/minecraft/world/level/pathfinder/PathFinder.java
++++ b/src/main/java/net/minecraft/world/level/pathfinder/PathFinder.java
+@@ -80,8 +80,8 @@ public class PathFinder {
+     // Paper start - optimize collection
+     private Path findPath(ProfilerFiller profiler, Node startNode, List<Map.Entry<Target, BlockPos>> positions, float followRange, int distance, float rangeMultiplier) {
+         // readd the profiler code for sync
+-        profiler.push("find_path");
+-        profiler.markForCharting(MetricCategory.PATH_FINDING);
++        //profiler.push("find_path"); // Purpur
++        //profiler.markForCharting(MetricCategory.PATH_FINDING); // Purpur
+ 
+         try {
+             return this.processPath(this.nodeEvaluator, startNode, positions, followRange, distance, rangeMultiplier);
+diff --git a/src/main/java/net/minecraft/world/ticks/LevelTicks.java b/src/main/java/net/minecraft/world/ticks/LevelTicks.java
+index 7f1ac2cb29eb84833c0895442d611dfa0504527e..5dea8414964e0d2d1fb15a6baa27227e9722bfc7 100644
+--- a/src/main/java/net/minecraft/world/ticks/LevelTicks.java
++++ b/src/main/java/net/minecraft/world/ticks/LevelTicks.java
+@@ -86,20 +86,20 @@ public class LevelTicks<T> implements LevelTickAccess<T> {
+     }
+ 
+     public void tick(long time, int maxTicks, BiConsumer<BlockPos, T> ticker) {
+-        ProfilerFiller profilerFiller = this.profiler.get();
+-        profilerFiller.push("collect");
+-        this.collectTicks(time, maxTicks, profilerFiller);
+-        profilerFiller.popPush("run");
+-        profilerFiller.incrementCounter("ticksToRun", this.toRunThisTick.size());
++        //ProfilerFiller profilerFiller = this.profiler.get(); // Purpur
++        //profilerFiller.push("collect"); // Purpur
++        this.collectTicks(time, maxTicks, null); // Purpur
++        //profilerFiller.popPush("run"); // Purpur
++        //profilerFiller.incrementCounter("ticksToRun", this.toRunThisTick.size()); // Purpur
+         this.runCollectedTicks(ticker);
+-        profilerFiller.popPush("cleanup");
++        //profilerFiller.popPush("cleanup"); // Purpur
+         this.cleanupAfterTick();
+-        profilerFiller.pop();
++        //profilerFiller.pop(); // Purpur
+     }
+ 
+     private void collectTicks(long time, int maxTicks, ProfilerFiller profiler) {
+         this.sortContainersToTick(time);
+-        profiler.incrementCounter("containersToTick", this.containersToTick.size());
++        //profiler.incrementCounter("containersToTick", this.containersToTick.size()); // Purpur
+         this.drainContainers(time, maxTicks);
+         this.rescheduleLeftoverContainers();
+     }
