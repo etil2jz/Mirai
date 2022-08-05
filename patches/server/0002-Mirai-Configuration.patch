@@ -168,7 +168,7 @@ index 0000000000000000000000000000000000000000..50ec3059c0af3ebf561394f542d8fff1
 +        setComment("info",
 +                "Mirai Configuration",
 +                "Join our Discord at https://discord.gg/DdH6Yfu9gM",
-+                "Download new builds at https://github.com/etil2jz/Mirai/releases");
++                "Download new builds at https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/");
 +
 +        for (Method method : MiraiConfig.class.getDeclaredMethods()) {
 +            if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&
