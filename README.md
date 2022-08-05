@@ -24,6 +24,7 @@
 - **Plugin compatibility** with Spigot & Paper plugins.
 
 ## Downloads
+
 The latest successful build can be downloaded here:
 [mirai-paperclip-1.19.1-R0.1-SNAPSHOT-reobf.jar](https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/)
 
@@ -33,6 +34,7 @@ You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
 ## Building
+
 In order to distribute and use this server software, you need a paperclip file:
 
 ```bash
@@ -40,16 +42,19 @@ In order to distribute and use this server software, you need a paperclip file:
 ```
 
 ## Patches
+
 Mirai includes patches from other forks as well. All credits go to the people who created them.
 ```
 [Yatopia-0003] [Only TimeUtils] Utilities
 ```
 
 ## License
+
 Patches are licensed under GPL-3.0.  
 All other files are licensed under MIT.
 
 ## bStats
+
 [![](https://bstats.org/signatures/server-implementation/mirai.svg)](https://bstats.org/plugin/server-implementation/Mirai/14774)
 
 Made with <span style="color: #e25555;">&#9829;</span> on Earth.
