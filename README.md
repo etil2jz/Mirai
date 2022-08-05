@@ -39,6 +39,12 @@ In order to distribute and use this server software, you need a paperclip file:
 ./gradlew applyPatches && ./gradlew createReobfPaperclipJar
 ```
 
+## Patches
+Mirai includes patches from other forks as well. All credits go to the people who created them.
+```
+[Yatopia-0003] [Only TimeUtils] Utilities
+```
+
 ## License
 Patches are licensed under GPL-3.0.  
 All other files are licensed under MIT.
