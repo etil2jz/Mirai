@@ -33,6 +33,13 @@ You can also clone this repository and build it yourself.
 If you are interested in making a fork, check out this template [there](https://github.com/PaperMC/paperweight-examples)!
 
 ## Building
+
+### Requirements
+
+If you want to build Mirai you will need these things to be installed and available from your shell:
+* [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17)
+* [Git](https://git-scm.com/)
+
 In order to distribute and use this server software, you need a paperclip file:
 
 ```bash
