@@ -59,7 +59,7 @@ index c0fdc5a79107f8694a514a12d5526bd431fc45e9..eeb20c5b9365a04db45e738793f6c10a
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e790ef23bdad13cb40666e408af97e4b6d4c411f..4ace20e9e87c53f2d737c46bde6b9e28282a26a3 100644
+index ad76c32905fe185b2f2518f0ba857e1871231ba5..724dff48ad5936d0ff762d38dcca234308d1aa7e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1020,6 +1020,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -78,7 +78,7 @@ index e790ef23bdad13cb40666e408af97e4b6d4c411f..4ace20e9e87c53f2d737c46bde6b9e28
              this.runAllTasks();
          }
          // Paper end
-@@ -2756,6 +2758,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2744,6 +2746,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
              return;
          }
  
@@ -87,10 +87,10 @@ index e790ef23bdad13cb40666e408af97e4b6d4c411f..4ace20e9e87c53f2d737c46bde6b9e28
          try {
              for (;;) {
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 9a4d3d75f12716a69aec78034079fcad6c8cca04..3dc5109f144b371b60d6a4943f853474cfa748de 100644
+index 4c6dc6589f359c4d17d425068d2c1d38fd3b60d9..c972b14ce7ceded7f1e98378ba27a4bd96b5c5e8 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -135,6 +135,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -131,6 +131,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
      }
  
      // Paper start - Cache authenticator threads
@@ -98,7 +98,7 @@ index 9a4d3d75f12716a69aec78034079fcad6c8cca04..3dc5109f144b371b60d6a4943f853474
      private static final AtomicInteger threadId = new AtomicInteger(0);
      private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
              r -> {
-@@ -144,7 +145,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -140,7 +141,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
  
                  return ret;
              }
@@ -107,7 +107,7 @@ index 9a4d3d75f12716a69aec78034079fcad6c8cca04..3dc5109f144b371b60d6a4943f853474
      // Paper end
      // Spigot start
      public void initUUID()
-@@ -329,7 +330,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -313,7 +314,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
                  // Paper end
                  // Spigot start
              // Paper start - Cache authenticator threads
@@ -117,7 +117,7 @@ index 9a4d3d75f12716a69aec78034079fcad6c8cca04..3dc5109f144b371b60d6a4943f853474
                      @Override
                      public void run() {
                          try {
-@@ -387,7 +389,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -371,7 +373,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
          }
  
          // Paper start - Cache authenticator threads
@@ -127,7 +127,7 @@ index 9a4d3d75f12716a69aec78034079fcad6c8cca04..3dc5109f144b371b60d6a4943f853474
              public void run() {
                  GameProfile gameprofile = ServerLoginPacketListenerImpl.this.gameProfile;
  
-@@ -536,7 +539,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -520,7 +523,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
              }
  
              // Proceed with login

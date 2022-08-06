@@ -19,7 +19,7 @@ index 2cc44fbf8e5bd436b6d4e19f6c06b351e750cb31..848ffaab670a6a245c40e52c43e0e7e8
  
          new TimingsExport(listeners, parent, history).start();
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index ad166788225841927bedc5243dbe94863c270425..ea461ff0b13a3ccba2f0ed02b9268712eaf728c1 100644
+index 519883c5549744e047a8a96afee142746fcb49cd..2ef1d4feff67f9e618dc96bd1a3a086ddff25673 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -228,6 +228,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -108,7 +108,7 @@ index 0000000000000000000000000000000000000000..d73428f5554384e5bbf1c8607073b50d
 \ No newline at end of file
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..50ec3059c0af3ebf561394f542d8fff1f5d66e9d
+index 0000000000000000000000000000000000000000..860f244e229b18701f4719b5ece7a00f377868a7
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -0,0 +1,134 @@
@@ -168,7 +168,7 @@ index 0000000000000000000000000000000000000000..50ec3059c0af3ebf561394f542d8fff1
 +        setComment("info",
 +                "Mirai Configuration",
 +                "Join our Discord at https://discord.gg/DdH6Yfu9gM",
-+                "Download new builds at https://github.com/etil2jz/Mirai/releases");
++                "Download new builds at https://ci.codemc.io/job/etil2jz/job/Mirai-1.19/lastSuccessfulBuild/");
 +
 +        for (Method method : MiraiConfig.class.getDeclaredMethods()) {
 +            if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&

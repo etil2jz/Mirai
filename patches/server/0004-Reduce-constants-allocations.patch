@@ -183,7 +183,7 @@ index 6a5e33d9821221be73f9c16afc17c9130248a231..29b7bde3ef3c5817910ccd5248e791f9
  
      public double getDouble(int index) {
 diff --git a/src/main/java/net/minecraft/network/Connection.java b/src/main/java/net/minecraft/network/Connection.java
-index 868d4913f63b3f4752f7f1cdcd81e118e482c474..813b77047cd2b158f0254a18f94983e37fce4b72 100644
+index 2a26d03fba2f3b37f176be9e47954ef9a6cd7b3e..969968cfcf2c2ed019fab3407b22d4974926bdd2 100644
 --- a/src/main/java/net/minecraft/network/Connection.java
 +++ b/src/main/java/net/minecraft/network/Connection.java
 @@ -311,7 +311,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
@@ -209,7 +209,7 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d92c69e902d7631634c2762f0a8339c966ad9f7d..da2cab1d6df536baa9274fb2aa949003d803e332 100644
+index a71567603595a4fef105c082c2c5cad38cce57f1..fe9f4e552766ca4de5011f65615257270bfa5c74 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1372,8 +1372,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -259,7 +259,7 @@ index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 5b543a3f115fc80778db662d8557d12d3bd36942..23038001b5165a0092c23707b779293c8811c868 100644
+index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4b923cd39 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -413,7 +413,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -271,7 +271,7 @@ index 5b543a3f115fc80778db662d8557d12d3bd36942..23038001b5165a0092c23707b779293c
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -875,13 +875,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -879,13 +879,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -287,7 +287,7 @@ index 5b543a3f115fc80778db662d8557d12d3bd36942..23038001b5165a0092c23707b779293c
              return;
          }
          // Paper end
-@@ -3346,7 +3346,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3396,7 +3396,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {
@@ -297,10 +297,10 @@ index 5b543a3f115fc80778db662d8557d12d3bd36942..23038001b5165a0092c23707b779293c
              }
          }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index c36babd85b7d5ba57c08708d0bbf01e16a70a4b2..9a4d3d75f12716a69aec78034079fcad6c8cca04 100644
+index 881f6f61015c7f2f28b204467f984dbf8d37d89a..4c6dc6589f359c4d17d425068d2c1d38fd3b60d9 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -295,8 +295,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -279,8 +279,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
  
      @Override
      public void handleHello(ServerboundHelloPacket packet) {
@@ -311,7 +311,7 @@ index c36babd85b7d5ba57c08708d0bbf01e16a70a4b2..9a4d3d75f12716a69aec78034079fcad
          // Paper start - validate usernames
          if (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.isProxyOnlineMode() && io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.performUsernameValidation) {
              if (!this.iKnowThisMayNotBeTheBestIdeaButPleaseDisableUsernameValidation && !validateUsername(packet.name())) {
-@@ -356,7 +356,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -340,7 +340,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
  
      @Override
      public void handleKey(ServerboundKeyPacket packet) {
@@ -321,7 +321,7 @@ index c36babd85b7d5ba57c08708d0bbf01e16a70a4b2..9a4d3d75f12716a69aec78034079fcad
          final String s;
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 37d8a797bb590c30bf42ab04128489a9390684d3..affcdfcc60a3c68a719115c7e3fc06b81e94eda6 100644
+index 71623c84a5b15023189c14a6bf36e1b08f935fc1..10b1ce4ed26905026fae651a52376ac19203c8d9 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -735,7 +735,7 @@ public abstract class PlayerList {
@@ -504,7 +504,7 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..b9579e3d1610ddcb5251baa2dd9462e0
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a2a0bc4874a031c964a5cdb5bc26494cd01351eb..670e2ae1ef532089c0ba76d96f6ca23535599b1d 100644
+index 0681a7499755b573c191804b38ac8783eb7d0f32..73abb858900d8d1bc4b3bc0fde6665e5309ece06 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -1521,7 +1521,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

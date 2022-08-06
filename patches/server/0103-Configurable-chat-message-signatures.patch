@@ -4,11 +4,24 @@ Date: Tue, 2 Aug 2022 14:48:12 +0200
 Subject: [PATCH] Configurable chat message signatures
 
 
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index aec14ff5235686a3e02b66eb3ad05fed2c4756b4..d072b064499a7743305c9f3e078015b97c5ac39e 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -619,7 +619,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+ 
+     @Override
+     public boolean enforceSecureProfile() {
+-        return this.getProperties().enforceSecureProfile && this.getProperties().onlineMode;
++        return this.getProperties().enforceSecureProfile && this.getProperties().onlineMode && wtf.etil.mirai.MiraiConfig.chatMessageSignatures; // Mirai - Configurable chat message signatures
+     }
+ 
+     protected boolean convertOldUsers() {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 2392913f2c221882bfdf324b671486a05a87ea76..a66912570d7308dd8ec818ede625a377b8bcd1fa 100644
+index 4d705dc5294bb07b0ce34c68d1c4bbf33bb84848..542b8c6be55f2a99a4f7e864a9021a8826976495 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1955,7 +1955,7 @@ public class ServerPlayer extends Player {
+@@ -1960,7 +1960,7 @@ public class ServerPlayer extends Player {
      }
  
      public void sendServerStatus(ServerStatus metadata) {
@@ -18,25 +31,25 @@ index 2392913f2c221882bfdf324b671486a05a87ea76..a66912570d7308dd8ec818ede625a377
  
      @Override
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index d8050543f6112c095e459500cc8c38cb1c485284..5e8344dfa56a9456cfbaa9b2fbb982d78c2ac510 100644
+index 5930ee1dbabf644361220b67407e3ac871c391a8..6bb64edc6d8357980400e6d83f828d110de0dca9 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1434,6 +1434,13 @@ public abstract class PlayerList {
-     private void broadcastChatMessage(PlayerChatMessage playerchatmessage, Predicate<ServerPlayer> shouldSendFiltered, @Nullable ServerPlayer entityplayer, ChatSender chatsender, ChatType.Bound chatmessagetype_a) {
-         boolean flag = this.verifyChatTrusted(playerchatmessage, chatsender);
+@@ -1445,6 +1445,13 @@ public abstract class PlayerList {
+         // Paper end
+         boolean flag = this.verifyChatTrusted(message, sourceProfile);
  
 +        // Mirai start - Configurable chat message signatures
 +        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) {
 +            flag = true;
-+            playerchatmessage = PlayerChatMessage.system(playerchatmessage.signedContent());
++            message = PlayerChatMessage.system(message.signedContent());
 +        }
 +        // Mirai end
 +
-         this.server.logChatMessage(playerchatmessage.serverContent(), chatmessagetype_a, flag ? null : "Not Secure");
-         OutgoingPlayerChatMessage outgoingplayerchatmessage = OutgoingPlayerChatMessage.create(playerchatmessage);
-         boolean flag1 = playerchatmessage.isFullyFiltered();
+         this.server.logChatMessage((unsignedFunction == null ? message : message.withUnsignedContent(unsignedFunction.apply(this.server.console))).serverContent(), params, flag ? null : "Not Secure"); // Paper
+         OutgoingPlayerChatMessage outgoingplayerchatmessage = OutgoingPlayerChatMessage.create(message);
+         boolean flag1 = message.isFullyFiltered();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 42da3cbd8bf1f1960fad09f6563087cab1e3fbee..72de28f361f4e7f652f715fc210488fff3c8a604 100644
+index f6f88a802c6f1892418fd6bcb8b4bc0b90fb6afb..13884ca2bd4e459498700e2fed1f0b4406538f53 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -244,4 +244,12 @@ public class MiraiConfig {

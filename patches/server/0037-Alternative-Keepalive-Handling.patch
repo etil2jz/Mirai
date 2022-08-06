@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 2c9c803880621da22e58afe5de992b4f22f833f9..7846ce8a78a560855d7e2263db656143ea12e3f8 100644
+index 214ef186233465d6f4e6567b3565897038acf801..1b563829545aebfb1b8f3cea6fa7f99e52a247cc 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -258,6 +258,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -40,7 +40,7 @@ index 2c9c803880621da22e58afe5de992b4f22f833f9..7846ce8a78a560855d7e2263db656143
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
-@@ -3546,6 +3562,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3596,6 +3612,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
  
      @Override
      public void handleKeepAlive(ServerboundKeepAlivePacket packet) {
@@ -58,7 +58,7 @@ index 2c9c803880621da22e58afe5de992b4f22f833f9..7846ce8a78a560855d7e2263db656143
          if (this.keepAlivePending && packet.getId() == this.keepAliveChallenge) {
              int i = (int) (Util.getMillis() - this.keepAliveTime);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 15121a29de7a5b6b6ae062449221ad586ead655e..eda02eabbdb3c8d2cfe8c524fe9f5dfcca1089d8 100644
+index c9cd093b4d1d828457e98b2b3f9bb7161586f0f0..42f641b7bbda79144d53f2a6e560e088cea4bab8 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -159,4 +159,11 @@ public class MiraiConfig {
