@@ -40,6 +40,19 @@ index 277cfd9d1e8fff5d9b5e534b75c3c5162d58b0b7..093170c13b3980791373fb240c9ec6c5
      private int size;
  
      public static int getLocationKey(final int x, final int y, final int z) {
+diff --git a/src/main/java/io/papermc/paper/command/subcommands/VersionCommand.java b/src/main/java/io/papermc/paper/command/subcommands/VersionCommand.java
+index ae60bd96b5284d54676d8e7e4dd5d170b526ec1e..2344ea858eda8e54c2eb3ccbdad464ed5934650c 100644
+--- a/src/main/java/io/papermc/paper/command/subcommands/VersionCommand.java
++++ b/src/main/java/io/papermc/paper/command/subcommands/VersionCommand.java
+@@ -14,7 +14,7 @@ public final class VersionCommand implements PaperSubcommand {
+     public boolean execute(final CommandSender sender, final String subCommand, final String[] args) {
+         final @Nullable Command ver = MinecraftServer.getServer().server.getCommandMap().getCommand("version");
+         if (ver != null) {
+-            ver.execute(sender, "paper", new String[0]);
++            ver.execute(sender, "paper", me.titaniumtown.Constants.EMPTY_string_arr); // JettPack
+         }
+         return true;
+     }
 diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 index 85882eeb86d7b74db0219aa65783946d8083885d..06bcf27bf42ad1b6259999c25fe7ae80eab1263e 100644
 --- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
@@ -103,6 +116,19 @@ index 0000000000000000000000000000000000000000..60bf30759a26c04c0f79ba739426aab1
 +    public static final net.minecraft.world.entity.Entity[] EMPTY_entity_arr = new net.minecraft.world.entity.Entity[0];
 +}
 \ No newline at end of file
+diff --git a/src/main/java/net/minecraft/advancements/RequirementsStrategy.java b/src/main/java/net/minecraft/advancements/RequirementsStrategy.java
+index 57d504d15794b1640ff7186f563d6ca5c2453d8c..97ca3c80af66884e74595a051224d54b9a8bde21 100644
+--- a/src/main/java/net/minecraft/advancements/RequirementsStrategy.java
++++ b/src/main/java/net/minecraft/advancements/RequirementsStrategy.java
+@@ -14,7 +14,7 @@ public interface RequirementsStrategy {
+         return strings;
+     };
+     RequirementsStrategy OR = (collection) -> {
+-        return new String[][]{collection.toArray(new String[0])};
++        return new String[][]{collection.toArray(me.titaniumtown.Constants.EMPTY_string_arr)}; // JettPack
+     };
+ 
+     String[][] createRequirements(Collection<String> criteriaNames);
 diff --git a/src/main/java/net/minecraft/nbt/ByteArrayTag.java b/src/main/java/net/minecraft/nbt/ByteArrayTag.java
 index 3dd8a189c26f41759c59c3b9d0e5282038989a9f..147beddf8ef369cdae4b1ed2dcd0d7b2fd865315 100644
 --- a/src/main/java/net/minecraft/nbt/ByteArrayTag.java
@@ -182,6 +208,34 @@ index 6a5e33d9821221be73f9c16afc17c9130248a231..29b7bde3ef3c5817910ccd5248e791f9
      }
  
      public double getDouble(int index) {
+diff --git a/src/main/java/net/minecraft/nbt/LongArrayTag.java b/src/main/java/net/minecraft/nbt/LongArrayTag.java
+index a39baec88dc9c73f1b592881ed96d11ab64ad785..710bb5579e23258c38a767f99d751576524f88f0 100644
+--- a/src/main/java/net/minecraft/nbt/LongArrayTag.java
++++ b/src/main/java/net/minecraft/nbt/LongArrayTag.java
+@@ -188,7 +188,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
+ 
+     @Override
+     public void clear() {
+-        this.data = new long[0];
++        this.data = me.titaniumtown.Constants.EMPTY_long_arr; // JettPack
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/network/CipherBase.java b/src/main/java/net/minecraft/network/CipherBase.java
+index a2920b8a9eff77d9c5d1d7f70ad3abdacba8f0fa..f7f19e360d712211625ff28e92f83949197c93b0 100644
+--- a/src/main/java/net/minecraft/network/CipherBase.java
++++ b/src/main/java/net/minecraft/network/CipherBase.java
+@@ -7,8 +7,8 @@ import javax.crypto.ShortBufferException;
+ 
+ public class CipherBase {
+     private final Cipher cipher;
+-    private byte[] heapIn = new byte[0];
+-    private byte[] heapOut = new byte[0];
++    private byte[] heapIn = me.titaniumtown.Constants.EMPTY_byte_arr; // JettPack
++    private byte[] heapOut = me.titaniumtown.Constants.EMPTY_byte_arr; // JettPack
+ 
+     protected CipherBase(Cipher cipher) {
+         this.cipher = cipher;
 diff --git a/src/main/java/net/minecraft/network/Connection.java b/src/main/java/net/minecraft/network/Connection.java
 index 2a26d03fba2f3b37f176be9e47954ef9a6cd7b3e..969968cfcf2c2ed019fab3407b22d4974926bdd2 100644
 --- a/src/main/java/net/minecraft/network/Connection.java
@@ -195,6 +249,19 @@ index 2a26d03fba2f3b37f176be9e47954ef9a6cd7b3e..969968cfcf2c2ed019fab3407b22d497
          this.packetListener = listener;
      }
      // Paper start
+diff --git a/src/main/java/net/minecraft/network/chat/contents/TranslatableContents.java b/src/main/java/net/minecraft/network/chat/contents/TranslatableContents.java
+index 02fb51f7f699992caf13d088c75b8275ec5267bb..11cb4ac19ddc09889117690ffec5191534a8adee 100644
+--- a/src/main/java/net/minecraft/network/chat/contents/TranslatableContents.java
++++ b/src/main/java/net/minecraft/network/chat/contents/TranslatableContents.java
+@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Style;
+ import net.minecraft.world.entity.Entity;
+ 
+ public class TranslatableContents implements ComponentContents {
+-    private static final Object[] NO_ARGS = new Object[0];
++    private static final Object[] NO_ARGS = me.titaniumtown.Constants.EMPTY_object_arr; // JettPack
+     private static final FormattedText TEXT_PERCENT = FormattedText.of("%");
+     private static final FormattedText TEXT_NULL = FormattedText.of("null");
+     private final String key;
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
 index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5424fb1bb 100644
 --- a/src/main/java/net/minecraft/server/Main.java
@@ -346,6 +413,18 @@ index 4fd709a550bf8da1e996894a1ca6b91206c31e9e..63c0fe30ff035b6b5c1b4b35d3ad6c64
      }
  
      // CraftBukkit start
+diff --git a/src/main/java/net/minecraft/util/MemoryReserve.java b/src/main/java/net/minecraft/util/MemoryReserve.java
+index 0ee04fe6ff6a4d09754f326526ae04fe7226bab2..58217ddb1d63f3bb628cc40e5cc0959657a17938 100644
+--- a/src/main/java/net/minecraft/util/MemoryReserve.java
++++ b/src/main/java/net/minecraft/util/MemoryReserve.java
+@@ -11,6 +11,6 @@ public class MemoryReserve {
+     }
+ 
+     public static void release() {
+-        reserve = new byte[0];
++        reserve = me.titaniumtown.Constants.EMPTY_byte_arr; // JettPack
+     }
+ }
 diff --git a/src/main/java/net/minecraft/util/ZeroBitStorage.java b/src/main/java/net/minecraft/util/ZeroBitStorage.java
 index 5d8e9bdf5538b19681f21949368d862fab8a89ad..97c744508cc535418eba65fa722859c81c22d647 100644
 --- a/src/main/java/net/minecraft/util/ZeroBitStorage.java
@@ -573,6 +652,19 @@ index 601f8099f74e81c17600566b3c9b7a6dd39c9bcb..f816fae46568b83ef4441bd3bb06f208
          }
  
          for (int i = 0; i < astring.length; ++i) {
+diff --git a/src/main/java/net/minecraft/world/scores/Team.java b/src/main/java/net/minecraft/world/scores/Team.java
+index 16d2aa4556bc9f32a2def7f9ca282aa3fa23fb87..290a0d35e1e4ca8b7281aa6d8cdb66dabdadf0f7 100644
+--- a/src/main/java/net/minecraft/world/scores/Team.java
++++ b/src/main/java/net/minecraft/world/scores/Team.java
+@@ -80,7 +80,7 @@ public abstract class Team {
+         public final int id;
+ 
+         public static String[] getAllNames() {
+-            return BY_NAME.keySet().toArray(new String[0]);
++            return BY_NAME.keySet().toArray(me.titaniumtown.Constants.EMPTY_string_arr); // JettPack
+         }
+ 
+         @Nullable
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftEquipmentSlot.java b/src/main/java/org/bukkit/craftbukkit/CraftEquipmentSlot.java
 index e91714a66f582c14184ddb5e4bf2443d3ed45efb..375107cbc51b907342379bb5539500d76fb76a92 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftEquipmentSlot.java

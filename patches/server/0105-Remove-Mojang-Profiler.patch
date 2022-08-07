@@ -7,7 +7,7 @@ Original license: MIT
 Original project: https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index ceb8e8db5813d5dd052a6a0079ae37e393b043fb..4291f9d996fb41f2c6180777ebc518679db4709e 100644
+index 6ab1549e53c5356f48212f39e50df97e645fe925..c21a724043cf5f142c4d2251604119b5e2fa5389 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -137,7 +137,7 @@ public class Commands {
@@ -41,7 +41,7 @@ index ceb8e8db5813d5dd052a6a0079ae37e393b043fb..4291f9d996fb41f2c6180777ebc51867
  
          return b0;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f5f42508ea95e25ad698678c81927489b71c3e1c..c03a0acaff532907e7912817546695fe04844f79 100644
+index fe8b2de61fdce195210f270e33f508376b60f793..754207cc726d0e89c47d190696a2a16330b36d58 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -325,13 +325,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -802,7 +802,7 @@ index a9bb78d68adac54729a954f766ad993989bfee77..d2a5fef04ede02700c566280599d2aac
  
                  while (iterator.hasNext()) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index a66912570d7308dd8ec818ede625a377b8bcd1fa..375a49372e66b90f42baa934873e503ed3bd7ab9 100644
+index 4d705dc5294bb07b0ce34c68d1c4bbf33bb84848..0323074105dc15579cd1ddeef2ff03e9d4ace2bc 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1116,7 +1116,7 @@ public class ServerPlayer extends Player {
@@ -835,7 +835,7 @@ index a66912570d7308dd8ec818ede625a377b8bcd1fa..375a49372e66b90f42baa934873e503e
                  this.connection.send(new ClientboundPlayerAbilitiesPacket(this.getAbilities()));
                  playerlist.sendLevelInfo(this, worldserver);
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 7bf8ade4c9907c0dc060b318c34cb43f7f9078c5..70cb34baa7dff7380bd9d33ed2d799450f72d597 100644
+index 475fb7879ddfce4e080e45031a97661e6f31f6f8..8b1dee2ec0a22ee08b06caf7e032091f68dcc08c 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -405,7 +405,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -1187,7 +1187,7 @@ index 32bb217e3b1a5ee3be8ba576e192ee93b4123d30..2909bd864bd2ae663a81aa133262ffb8
              }
          } else {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 7fe46ecd8221545d56f5c8e509f72cb90ad6425a..47e214bbc464d1e0925fa521b094f036c0098bbe 100644
+index b621253d69d4379faaf11ef39e9e000ed615e85f..80f2c1b7bb65c7274f0f755b5f9447f762d4fdc7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -390,7 +390,7 @@ public abstract class LivingEntity extends Entity {
@@ -1221,9 +1221,9 @@ index 7fe46ecd8221545d56f5c8e509f72cb90ad6425a..47e214bbc464d1e0925fa521b094f036
 +        //this.level.getProfiler().push("rangeChecks"); // Purpur
  
          // Paper start - Stop large pitch and yaw changes from crashing the server
-         this.yRotO += carpetfixes.helpers.FastMath.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F;
+         this.yRotO += carpetfixes.helpers.FastMath.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F; // Mirai
 @@ -3018,7 +3018,7 @@ public abstract class LivingEntity extends Entity {
-         this.yHeadRotO += carpetfixes.helpers.FastMath.round((this.yHeadRot - this.yHeadRotO) / 360.0F) * 360.0F;
+         this.yHeadRotO += carpetfixes.helpers.FastMath.round((this.yHeadRot - this.yHeadRotO) / 360.0F) * 360.0F; // Mirai
          // Paper end
  
 -        this.level.getProfiler().pop();
@@ -1593,9 +1593,15 @@ index 3dd4e6d622a6daafa00ae971edd88a147e34beef..69423113b638616e8b56bece13edd992
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
-index 362f952888f63a453a4352a9f1dc7df799244a3c..01cda034c6899755b0ec76ce63f33a0af25cbe9c 100644
+index 362f952888f63a453a4352a9f1dc7df799244a3c..4e52e88b8a72a4fc1016debe82fa4b8727db7cce 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
+@@ -1,4 +1,4 @@
+-package net.minecraft.world.entity.animal.goat;
++    package net.minecraft.world.entity.animal.goat;
+ 
+ import com.google.common.collect.ImmutableList;
+ import com.mojang.serialization.Dynamic;
 @@ -166,13 +166,13 @@ public class Goat extends Animal {
      private int behaviorTick = 0; // Pufferfish
      @Override
@@ -1772,7 +1778,7 @@ index 01477e7240f9e33d08d416a7d40ee10f3e5d4abf..c9def2202d7c2a523858ec124df2beaf
              }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index e69be14b25f2a8686473da5806c4930469e2074b..1ca010d785f3cb76e45aee1650f625c10fbf30bc 100644
+index f915415e2e24ee7ab3c279ae1fa98d2d9d19a683..8c710918e01fca05df95ebf101606b9bad15dfe7 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -666,9 +666,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

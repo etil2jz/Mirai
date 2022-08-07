@@ -13,12 +13,13 @@
 
 - **Fork of [Pufferfish](https://github.com/pufferfish-gg/Pufferfish)** for the best performance.
 - **Contains [Lithium](https://github.com/CaffeineMC/lithium-fabric) patches** which respect Vanilla parity.
-- **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Paper's algorithm.
+- **Efficient redstone** relying on [Alternate Current](https://github.com/SpaceWalkerRS/alternate-current), up to 4 times faster than Eigencraft's algorithm.
 - **(WIP) Implements [C2ME](https://github.com/RelativityMC/C2ME-fabric)** to improve chunk generation speed, I/O and loading.
+- **Async Pathfinding and Multithreaded Entity Tracker** from [Petal](https://github.com/Bloom-host/Petal) which drastically reduce entity load.
+- **Configurable chat report system** to disallow players from reporting others' messages to Mojang.
 - **Reduced bandwidth consumption and CPU usage** from avoiding sending useless packets in certain situations.
 - **Pre-tweaked** configuration files to reach optimal performance with minimal impact on normal behaviors.
 - **Login location** hiding feature, which adds another security layer in the logs for admins.
-- **Toggleable metrics**, no one can collect data, not even us.
 - **Bugfixes** for several Minecraft issues.
 - **Faster process** for Vanilla methods.
 - **Plugin compatibility** with Spigot & Paper plugins.
