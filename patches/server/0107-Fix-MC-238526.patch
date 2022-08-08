@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+Date: Mon, 8 Aug 2022 11:21:49 +0200
+Subject: [PATCH] Fix MC-238526
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/animal/WaterAnimal.java b/src/main/java/net/minecraft/world/entity/animal/WaterAnimal.java
+index 18389f46902bb9879ac6d734723e9a720724dc48..f23bb15cbed31ca555e49b2c417977813360cf04 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/WaterAnimal.java
++++ b/src/main/java/net/minecraft/world/entity/animal/WaterAnimal.java
+@@ -83,6 +83,6 @@ public abstract class WaterAnimal extends PathfinderMob {
+         i = world.getMinecraftWorld().paperConfig().entities.spawning.wateranimalSpawnHeight.maximum.or(i);
+         j = world.getMinecraftWorld().paperConfig().entities.spawning.wateranimalSpawnHeight.minimum.or(j);
+         // Paper end
+-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER);
++        return ((reason == MobSpawnType.SPAWNER) || (pos.getY() >= j && pos.getY() <= i)) && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER); // Mirai
+     }
+ }
