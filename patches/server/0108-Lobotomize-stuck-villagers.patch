@@ -59,7 +59,7 @@ index 372635676e03aeff6aec49fa3919f115059c04a9..af6c2abb7881a36aa70d6f334326f4e2
 +            // check half as often if not lobotomized for the last 3+ consecutive checks
 +            interval *= 2;
 +        }
-+        if ((this.level.getGameTime() + brainTickOffset) % interval == 0) {
++        if ((this.level.getGameTime()) % interval == 0) {
 +            // offset Y for short blocks like dirt_path/farmland
 +            this.isLobotomized = !canTravelFrom(new BlockPos(getX(), getY() + 0.0625D, getZ()));
 +
