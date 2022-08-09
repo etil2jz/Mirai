@@ -7,7 +7,7 @@ Original license: MIT
 Original project: https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 372635676e03aeff6aec49fa3919f115059c04a9..af6c2abb7881a36aa70d6f334326f4e20168778f 100644
+index 372635676e03aeff6aec49fa3919f115059c04a9..bc5ced70cb35034248da9ee6e011bd6db5342ede 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -139,6 +139,8 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
@@ -112,7 +112,7 @@ index f0b910df1ee471b4d72d97c6197ab14f2854976e..6ce32a52d621a0c2629568ea07e445f5
 +    // Purpur end
  }
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 13884ca2bd4e459498700e2fed1f0b4406538f53..977baa227857753ffd1bbb5fe1d3cc8893b07b15 100644
+index 13884ca2bd4e459498700e2fed1f0b4406538f53..b53da92ee9e96d76eada5ce7ed538378b88510c5 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -252,4 +252,11 @@ public class MiraiConfig {
@@ -121,7 +121,7 @@ index 13884ca2bd4e459498700e2fed1f0b4406538f53..977baa227857753ffd1bbb5fe1d3cc88
  
 +    public static boolean villagerLobotomizeEnabled;
 +    private static void lobotomizing() {
-+        villagerLobotomizeEnabled = getBoolean("villager-lobotomize", true,
++        villagerLobotomizeEnabled = getBoolean("villager-lobotomize", false,
 +                                        "Whether or not villagers should be lobotomized when",
 +                                        "standing on a 1x1 block while being stuck.");
 +    }
