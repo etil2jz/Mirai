@@ -59,10 +59,10 @@ index c0fdc5a79107f8694a514a12d5526bd431fc45e9..eeb20c5b9365a04db45e738793f6c10a
      public static Runnable once(Runnable run) {
          AtomicBoolean ran = new AtomicBoolean(false);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index ad76c32905fe185b2f2518f0ba857e1871231ba5..724dff48ad5936d0ff762d38dcca234308d1aa7e 100644
+index e1ae23a76d169145d5541f53c5f98e09d5a11118..7c0767c12cf01c71db982034e74cf5543ef25997 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1020,6 +1020,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1021,6 +1021,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          LOGGER.info("Flushing Chunk IO");
          com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.close(true, true); // Paper
          LOGGER.info("Closing Thread Pool");
@@ -70,7 +70,7 @@ index ad76c32905fe185b2f2518f0ba857e1871231ba5..724dff48ad5936d0ff762d38dcca2343
          Util.shutdownExecutors(); // Paper
          LOGGER.info("Closing Server");
          try {
-@@ -1470,6 +1471,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1471,6 +1472,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
          io.papermc.paper.util.CachedLists.reset(); // Paper
          // Paper start - move executeAll() into full server tick timing
          try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
@@ -78,7 +78,7 @@ index ad76c32905fe185b2f2518f0ba857e1871231ba5..724dff48ad5936d0ff762d38dcca2343
              this.runAllTasks();
          }
          // Paper end
-@@ -2744,6 +2746,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2745,6 +2747,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
              return;
          }
  
@@ -87,7 +87,7 @@ index ad76c32905fe185b2f2518f0ba857e1871231ba5..724dff48ad5936d0ff762d38dcca2343
          try {
              for (;;) {
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 4c6dc6589f359c4d17d425068d2c1d38fd3b60d9..c972b14ce7ceded7f1e98378ba27a4bd96b5c5e8 100644
+index 58556611709a953eee834fac56c9eb5218044f8d..03f17e568d41f5a4ac3c4bcb72e2fc39a02d7cd5 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -131,6 +131,7 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
@@ -127,7 +127,7 @@ index 4c6dc6589f359c4d17d425068d2c1d38fd3b60d9..c972b14ce7ceded7f1e98378ba27a4bd
              public void run() {
                  GameProfile gameprofile = ServerLoginPacketListenerImpl.this.gameProfile;
  
-@@ -520,7 +523,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
+@@ -521,7 +524,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se
              }
  
              // Proceed with login

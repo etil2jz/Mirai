@@ -7,7 +7,7 @@ Original license: MIT
 Original project: https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 372635676e03aeff6aec49fa3919f115059c04a9..bc5ced70cb35034248da9ee6e011bd6db5342ede 100644
+index 93077e8c6b5a35adc6febb749d1d08be172402f1..839e6a8819dfbfe8c54e116b5f5b23ded94e7ca1 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -139,6 +139,8 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
@@ -22,7 +22,7 @@ index 372635676e03aeff6aec49fa3919f115059c04a9..bc5ced70cb35034248da9ee6e011bd6d
 @@ -250,12 +252,27 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
      protected void customServerAiStep() { mobTick(false); }
      protected void mobTick(boolean inactive) {
-         //this.level.getProfiler().push("villagerBrain"); // Purpur
+         this.level.getProfiler().push("villagerBrain");
 +        // Purpur start
 +        if (wtf.etil.mirai.MiraiConfig.villagerLobotomizeEnabled) {
 +            // treat as inactive if lobotomized
@@ -44,7 +44,7 @@ index 372635676e03aeff6aec49fa3919f115059c04a9..bc5ced70cb35034248da9ee6e011bd6d
 +            restock();
 +        }
 +        // Purpur end
-         //this.level.getProfiler().pop(); // Purpur
+         this.level.getProfiler().pop();
          if (this.assignProfessionWhenSpawned) {
              this.assignProfessionWhenSpawned = false;
 @@ -1052,4 +1069,47 @@ public class Villager extends AbstractVillager implements ReputationEventHandler

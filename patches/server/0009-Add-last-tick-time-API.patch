@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index da2cab1d6df536baa9274fb2aa949003d803e332..f5110261542aa0546b10d0da7e3c4e95d2d59639 100644
+index 5b49126a64ea70ea4536a8e511f86f114d5fac1c..93ca26908310dca94f063c1820d96b99aa9557a6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1120,6 +1120,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1121,6 +1121,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      // Paper End
      // Spigot End
  
@@ -19,7 +19,7 @@ index da2cab1d6df536baa9274fb2aa949003d803e332..f5110261542aa0546b10d0da7e3c4e95
      protected void runServer() {
          try {
              long serverStartTime = Util.getNanos(); // Paper
-@@ -1190,7 +1192,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1191,7 +1193,9 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.nextTickTime += 50L;
                  this.startMetricsRecordingTick();
                  this.profiler.push("tick");
@@ -30,10 +30,10 @@ index da2cab1d6df536baa9274fb2aa949003d803e332..f5110261542aa0546b10d0da7e3c4e95
                  this.mayHaveDelayedTasks = true;
                  this.delayedTasksMaxNextTickTime = Math.max(Util.getMillis() + 50L, this.nextTickTime);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 920b905c91cc37acb09e26add02acdf5e026bd91..8529f79361b1881d42c0d4871a82a6e9844e2a1d 100644
+index c67e791d363f5c1972e02a53d8ef2f34ae882406..3fe1823a8d593f017655a6fb11008b7742206ad7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2902,6 +2902,12 @@ public final class CraftServer implements Server {
+@@ -2909,6 +2909,12 @@ public final class CraftServer implements Server {
      public CraftPotionBrewer getPotionBrewer() {
          return this.potionBrewer;
      }

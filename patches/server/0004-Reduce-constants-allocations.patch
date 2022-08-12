@@ -276,10 +276,10 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a71567603595a4fef105c082c2c5cad38cce57f1..fe9f4e552766ca4de5011f65615257270bfa5c74 100644
+index 02d3584994027d8cfd3c3c70a878404fe6f5fc76..5b49126a64ea70ea4536a8e511f86f114d5fac1c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1372,8 +1372,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1373,8 +1373,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -364,7 +364,7 @@ index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4
              }
          }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 881f6f61015c7f2f28b204467f984dbf8d37d89a..4c6dc6589f359c4d17d425068d2c1d38fd3b60d9 100644
+index 88a849a21d6e39fd70f6e7b554528da1a5a7dd57..58556611709a953eee834fac56c9eb5218044f8d 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -279,8 +279,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se

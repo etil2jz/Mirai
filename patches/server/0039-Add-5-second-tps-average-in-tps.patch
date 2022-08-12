@@ -29,7 +29,7 @@ index fa56cd09102a89692b42f1d14257990508c5c720..f9251183df72ddc56662fd3f02acf216
          setListData(vector);
      }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4ace20e9e87c53f2d737c46bde6b9e28282a26a3..55f6e8a47d4a50a65cfd08f15499546ef2a3327b 100644
+index 7c0767c12cf01c71db982034e74cf5543ef25997..2a5bd17084238d8073d2f891f4c1af04d33fd09d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -290,7 +290,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
@@ -41,7 +41,7 @@ index 4ace20e9e87c53f2d737c46bde6b9e28282a26a3..55f6e8a47d4a50a65cfd08f15499546e
      // Spigot end
      public final io.papermc.paper.configuration.PaperConfigurations paperConfigurations;
      public static long currentTickLong = 0L; // Paper
-@@ -1074,6 +1074,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1075,6 +1075,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
      private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
      private long lastTick = 0;
      private long catchupTime = 0;
@@ -49,7 +49,7 @@ index 4ace20e9e87c53f2d737c46bde6b9e28282a26a3..55f6e8a47d4a50a65cfd08f15499546e
      public final RollingAverage tps1 = new RollingAverage(60);
      public final RollingAverage tps5 = new RollingAverage(60 * 5);
      public final RollingAverage tps15 = new RollingAverage(60 * 15);
-@@ -1171,13 +1172,17 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -1172,13 +1173,17 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                  {
                      final long diff = curTime - tickSection;
                      java.math.BigDecimal currentTps = TPS_BASE.divide(new java.math.BigDecimal(diff), 30, java.math.RoundingMode.HALF_UP);
@@ -71,10 +71,10 @@ index 4ace20e9e87c53f2d737c46bde6b9e28282a26a3..55f6e8a47d4a50a65cfd08f15499546e
                      tickSection = curTime;
                  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 8529f79361b1881d42c0d4871a82a6e9844e2a1d..d1767ef9913d30cbdfd1a8a3a073ec85248c8597 100644
+index 3fe1823a8d593f017655a6fb11008b7742206ad7..83db94dcafc29c37f3897ba5af83251cb4937967 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2683,6 +2683,7 @@ public final class CraftServer implements Server {
+@@ -2690,6 +2690,7 @@ public final class CraftServer implements Server {
      @Override
      public double[] getTPS() {
          return new double[] {

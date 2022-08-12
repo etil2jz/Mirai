@@ -47,7 +47,7 @@ index 43e77cef0fce75f59aeb05e161668bebb8fca229..ef50fbf8cb3f008827850b5ed3342200
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
-index 4e52e88b8a72a4fc1016debe82fa4b8727db7cce..eaddf0445ac64c1376cbcc97459cb273c6bf2e12 100644
+index 362f952888f63a453a4352a9f1dc7df799244a3c..0a700defc04f649fb45cb3d3df1e332f39f6d89a 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/goat/Goat.java
 @@ -213,9 +213,10 @@ public class Goat extends Animal {
