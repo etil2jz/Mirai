@@ -40,6 +40,75 @@ index 22c309343299e60ed8028229b7f134109001ff35..d5947d29295ddc93ba8ac1c0fc61f7ba
      public static void serverTick(Level world, BlockPos pos, BlockState state, SculkCatalystBlockEntity blockEntity) {
          org.bukkit.craftbukkit.event.CraftEventFactory.sourceBlockOverride = blockEntity.getBlockPos(); // CraftBukkit - SPIGOT-7068: Add source block override, not the most elegant way but better than passing down a BlockPosition up to five methods deep.
          blockEntity.sculkSpreader.updateCursors(world, pos, world.getRandom(), true);
+diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+index 0b08a91ae9dc73c011dbb5f517becac7d08fd1e9..b3f8de20eb09547672218c62817759d03461922d 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
++++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
+@@ -84,7 +84,18 @@ public class LevelChunk extends ChunkAccess {
+     private Supplier<ChunkHolder.FullChunkStatus> fullStatus;
+     @Nullable
+     private LevelChunk.PostLoadProcessor postLoad;
+-    private final Int2ObjectMap<GameEventDispatcher> gameEventDispatcherSections;
++    // petal start
++    private final GameEventDispatcher[] gameEventDispatcherSections;
++    private static final int GAME_EVENT_DISPATCHER_RADIUS = 2;
++
++    private static int getGameEventSectionIndex(int sectionIndex) {
++        return sectionIndex + GAME_EVENT_DISPATCHER_RADIUS;
++    }
++
++    private static int getGameEventSectionLength(int sectionCount) {
++        return sectionCount + (GAME_EVENT_DISPATCHER_RADIUS * 2);
++    }
++    // petal end
+     private final LevelChunkTicks<Block> blockTicks;
+     private final LevelChunkTicks<Fluid> fluidTicks;
+     // Paper start - track last save time
+@@ -119,7 +130,7 @@ public class LevelChunk extends ChunkAccess {
+         this.tickersInLevel = Maps.newHashMap();
+         this.clientLightReady = false;
+         this.level = (ServerLevel) world; // CraftBukkit - type
+-        this.gameEventDispatcherSections = new Int2ObjectOpenHashMap();
++        this.gameEventDispatcherSections = new GameEventDispatcher[getGameEventSectionLength(this.getSectionsCount())]; // petal
+         Heightmap.Types[] aheightmap_type = Heightmap.Types.values();
+         int j = aheightmap_type.length;
+ 
+@@ -453,9 +464,23 @@ public class LevelChunk extends ChunkAccess {
+         if (world instanceof ServerLevel) {
+             ServerLevel worldserver = (ServerLevel) world;
+ 
+-            return (GameEventDispatcher) this.gameEventDispatcherSections.computeIfAbsent(ySectionCoord, (j) -> {
+-                return new EuclideanGameEventDispatcher(worldserver);
+-            });
++            // petal start
++            int sectionIndex = getGameEventSectionIndex(this.getSectionIndexFromSectionY(ySectionCoord));
++
++            // drop game events that are too far away (32 blocks) from loaded sections
++            // this matches the highest radius of game events in the game
++            if (sectionIndex < 0 || sectionIndex >= this.gameEventDispatcherSections.length) {
++                return GameEventDispatcher.NOOP;
++            }
++
++            var dispatcher = this.gameEventDispatcherSections[sectionIndex];
++
++            if (dispatcher == null) {
++                dispatcher = this.gameEventDispatcherSections[sectionIndex] = new EuclideanGameEventDispatcher(worldserver);
++            }
++
++            return dispatcher;
++            // petal end
+         } else {
+             return super.getEventDispatcher(ySectionCoord);
+         }
+@@ -819,7 +844,7 @@ public class LevelChunk extends ChunkAccess {
+ 
+                 gameeventdispatcher.unregister(gameeventlistener);
+                 if (gameeventdispatcher.isEmpty()) {
+-                    this.gameEventDispatcherSections.remove(i);
++                    this.gameEventDispatcherSections[getGameEventSectionIndex(this.getSectionIndexFromSectionY(i))] = null; // petal
+                 }
+             }
+         }
 diff --git a/src/main/java/net/minecraft/world/level/gameevent/EuclideanGameEventDispatcher.java b/src/main/java/net/minecraft/world/level/gameevent/EuclideanGameEventDispatcher.java
 index 0dd708ebe81f73710de51215529c05ec61837dd3..f5b402efa86f824c460db8cac20c1c2b090f82d0 100644
 --- a/src/main/java/net/minecraft/world/level/gameevent/EuclideanGameEventDispatcher.java
