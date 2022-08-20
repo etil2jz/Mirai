@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tom <cryptite@gmail.com>
+Date: Fri, 12 Aug 2022 08:20:02 -0500
+Subject: [PATCH] Set BlockData without light updates
+
+Copyright (c) 2021 Tom Miller
+
+Original license: MIT
+Original project: https://github.com/Cryptite/Slice
+
+diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukkit/block/Block.java
+index 9930ebe7a23d306c602840fd43652fbdaba481b3..ed65bb8867bc2b8e67726dee07a82ac3671b0306 100644
+--- a/src/main/java/org/bukkit/block/Block.java
++++ b/src/main/java/org/bukkit/block/Block.java
+@@ -297,6 +297,28 @@ public interface Block extends Metadatable, net.kyori.adventure.translation.Tran
+      */
+     void setBlockData(@NotNull BlockData data, boolean applyPhysics);
+ 
++    /**
++     * Sets the complete data for this block
++     *
++     * <br>
++     * Note that applyPhysics = false is not in general safe. It should only be
++     * used when you need to avoid triggering a physics update of neighboring
++     * blocks, for example when creating a {@link Bisected} block. If you are
++     * using a custom populator, then this parameter may also be required to
++     * prevent triggering infinite chunk loads on border blocks. This method
++     * should NOT be used to "hack" physics by placing blocks in impossible
++     * locations. Such blocks are liable to be removed on various events such as
++     * world upgrades. Furthermore setting large amounts of such blocks in close
++     * proximity may overload the server physics engine if an update is
++     * triggered at a later point. If this occurs, the resulting behavior is
++     * undefined.
++     *
++     * @param data new block specific data
++     * @param applyPhysics false to cancel physics from the changed block
++     * @param checkLight false to prevent a light-check update
++     */
++    void setBlockData(@NotNull BlockData data, boolean applyPhysics, boolean checkLight);
++
+     /**
+      * Sets the type of this block
+      *

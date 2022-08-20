@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 13 Aug 2022 08:58:21 -0500
+Subject: [PATCH] Smooth Teleports
+
+Copyright (c) 2021 Tom Miller
+
+Original license: MIT
+Original project: https://github.com/Cryptite/Slice
+
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index b607c229cfb1e95b17b6a0073380089ef5e1b675..fedd1c0f93946f08a395413b68bf959ed4e6b3f4 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -2727,6 +2727,19 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+     String getClientBrandName();
+     // Paper end
+ 
++    /**
++     * This abuses some of how Minecraft works and allows teleporting a player to another world without
++     * triggering typical respawn packets. All of natural state of chunk resends, entity adds/removes, etc still
++     * happen but the visual "refresh" of a world change is hidden. Depending on the destination location/world,
++     * this can act as a "smooth teleport" to a world if the new world is very similar looking to the old one.
++     *
++     * @param location New location to teleport this Player to
++     */
++    // Slice start
++    @org.jetbrains.annotations.ApiStatus.Experimental
++    void teleportWithoutRespawn(Location location);
++    // Slice end
++
+     // Paper start - Teleport API
+     /**
+      * Sets the player's rotation.

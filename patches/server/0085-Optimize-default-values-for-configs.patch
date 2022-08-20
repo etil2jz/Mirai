@@ -5,7 +5,7 @@ Subject: [PATCH] Optimize default values for configs
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 38cb29c646ff496ffaa6553f98a565b71155c464..755b165279b596807b8fa8def417671abbc4c4bf 100644
+index 38cb29c646ff496ffaa6553f98a565b71155c464..eb6437e73dfe8edabd21965a0f8f80f54ee34e71 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -216,7 +216,7 @@ public class PufferfishConfig {
@@ -33,8 +33,8 @@ index 38cb29c646ff496ffaa6553f98a565b71155c464..755b165279b596807b8fa8def417671a
 -        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
 -        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +        // Mirai start - optimize default values for configs
-+        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); 
-+        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
++        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 6, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); 
++        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 6, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +        // Mirai end
  
          setComment("projectile", "Optimizes projectile settings");
@@ -44,7 +44,7 @@ index 38cb29c646ff496ffaa6553f98a565b71155c464..755b165279b596807b8fa8def417671a
                  "from the player to start being effected by DEAR.");
          startDistanceSquared = startDistance * startDistance;
 -        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 20,
-+        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 30, // Mirai - optimize default values for configs
++        maximumActivationPrio = getInt("dab.max-tick-freq", "activation-range.max-tick-freq", 40, // Mirai - optimize default values for configs
                  "This value defines how often in ticks, the furthest entity",
                  "will get their pathfinders and behaviors ticked. 20 = 1s");
 -        activationDistanceMod = getInt("dab.activation-dist-mod", "activation-range.activation-dist-mod", 8,
