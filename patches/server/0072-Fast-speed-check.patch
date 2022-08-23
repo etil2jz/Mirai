@@ -36,7 +36,7 @@ index 6bc313aa05d572236f05d0960fde0f27b9f93d50..9bdcad2b05367a8dcb519a2db8c4efea
                  this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
                  // Paper start - remove expensive streams from here
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index c12ab155bdd4a1bad7bb428ecddc20a7999f91f5..b9351994ac2b9865ca39fdb76625983cf7c63cdb 100644
+index 7a5d000c25af93b60215b3e2867358d7c238c6e4..7658c7743646fb1d3e07a9f91245407a2dd191dd 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -221,4 +221,11 @@ public class MiraiConfig {

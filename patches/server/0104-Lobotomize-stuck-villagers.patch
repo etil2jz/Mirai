@@ -112,7 +112,7 @@ index f0b910df1ee471b4d72d97c6197ab14f2854976e..6ce32a52d621a0c2629568ea07e445f5
 +    // Purpur end
  }
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 3f879769032d8e01bfae51a604de2daf65e58014..d45447551a6850e40ae37e9f88c9ba9aa1d3982e 100644
+index 13884ca2bd4e459498700e2fed1f0b4406538f53..b53da92ee9e96d76eada5ce7ed538378b88510c5 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -252,4 +252,11 @@ public class MiraiConfig {

@@ -164,10 +164,10 @@ index e3e80db89c18588322ffdaa0f9fd85e398cb1471..d947011b80ee14e7aaf74af3d9081fc7
                  throw ERROR_INVALID_TICK_COUNT.create(j);
              } else {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5e8a2cd78380727969c771eafa745550f3c5f237..7e9a837a39553c1c1aaf9c24c9db325392fa434e 100644
+index 2a5bd17084238d8073d2f891f4c1af04d33fd09d..fe8b2de61fdce195210f270e33f508376b60f793 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2790,7 +2790,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2773,7 +2773,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      }
  
                      double overuseCount = (double)overuse/(double)MAX_CHUNK_EXEC_TIME;
@@ -515,7 +515,7 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..26ff7f68dacad945095d794c1def4752
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 65eac0889de3dd95a4b850f99b5193bede04358f..38c01de9c2edd1b81802bdece037abb38aa3f746 100644
+index 23761b89a2fac069e9709db9741afa1ba24ae1d1..f6f88a802c6f1892418fd6bcb8b4bc0b90fb6afb 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -235,4 +235,13 @@ public class MiraiConfig {
