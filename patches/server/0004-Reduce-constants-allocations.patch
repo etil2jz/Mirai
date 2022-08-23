@@ -276,10 +276,10 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 02d3584994027d8cfd3c3c70a878404fe6f5fc76..5b49126a64ea70ea4536a8e511f86f114d5fac1c 100644
+index 9b64602e5ce5100dd1d467d404b4a6486ccc2faa..e5e88728d2d3b4ac9e266294999af84aee4aeae4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1373,8 +1373,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1374,8 +1374,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -304,7 +304,7 @@ index 88152988425b7b02ec5ce229ba4c24b40e030329..a0317be1eea29e4e911976e0106563cf
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d0a12d450 100644
+index e3ba1f8f90b5cb8c8bf315f43dae63cd5ba0d77e..0805a2587abb75d57838373edcc1ecaf88662eaf 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -872,7 +872,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -326,10 +326,10 @@ index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4b923cd39 100644
+index 9aab29dd7a09c306d6c0e1e8143daf005d611d65..22c053d0c730e6d82acc556f08eedcd3c21d1877 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -413,7 +413,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -416,7 +416,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
@@ -338,7 +338,7 @@ index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -879,13 +879,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -882,13 +882,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -354,7 +354,7 @@ index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4
              return;
          }
          // Paper end
-@@ -3396,7 +3396,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3404,7 +3404,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {

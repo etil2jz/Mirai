@@ -27,7 +27,7 @@ index 67b88da702b780f79c0496cb17f1e6f1f8dd6c2b..712707da510977bfa1ce4b991fd8a8f5
                  // CraftBukkit start
                  java.util.Collection<MapDecoration> icons = new java.util.ArrayList<MapDecoration>();
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 7658c7743646fb1d3e07a9f91245407a2dd191dd..23761b89a2fac069e9709db9741afa1ba24ae1d1 100644
+index b9351994ac2b9865ca39fdb76625983cf7c63cdb..65eac0889de3dd95a4b850f99b5193bede04358f 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -228,4 +228,11 @@ public class MiraiConfig {

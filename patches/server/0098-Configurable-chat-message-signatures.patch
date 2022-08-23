@@ -29,10 +29,10 @@ index aec14ff5235686a3e02b66eb3ad05fed2c4756b4..60ba00eb6daeeb9b97281f9380d373af
      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index bc3f0dfe075ea2aeae48df05c66c9045810f7a0b..475fb7879ddfce4e080e45031a97661e6f31f6f8 100644
+index 58fe8b248f4893cce951931ae8ce447426c4b4b4..c0985012edd47677e4919174946732535515e478 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2166,10 +2166,34 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2169,10 +2169,34 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
  
      @Override
      public void send(Packet<?> packet) {
@@ -92,7 +92,7 @@ index 18c4f2eeb6bb427c1314608fc6a81e4642d92888..b029ae19db2bfde9b08950f41ba8a09e
      }
  
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index f6f88a802c6f1892418fd6bcb8b4bc0b90fb6afb..13884ca2bd4e459498700e2fed1f0b4406538f53 100644
+index 38c01de9c2edd1b81802bdece037abb38aa3f746..3f879769032d8e01bfae51a604de2daf65e58014 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -244,4 +244,12 @@ public class MiraiConfig {

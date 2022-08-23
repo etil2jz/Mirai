@@ -5,19 +5,19 @@ Subject: [PATCH] Configurable enchantment table book animation tick
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
-index 2341a5a249d455628165fc6ba508fc6d70c3dbfb..5a144c724eb6045909febf1fe32367179a3e04a3 100644
+index 2341a5a249d455628165fc6ba508fc6d70c3dbfb..e42acd14f2521b6adde094cea756f217c95aba86 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
 @@ -48,6 +48,7 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
      }
  
      public static void bookAnimationTick(Level world, BlockPos pos, BlockState state, EnchantmentTableBlockEntity blockEntity) {
-+        if (!wtf.etil.mirai.MiraiConfig.bookAnimationTick) return; // Mirai - skip enchantment table book tick
++        if (wtf.etil.mirai.MiraiConfig.bookAnimationTick) return; // Mirai - skip enchantment table book tick
          blockEntity.oOpen = blockEntity.open;
          blockEntity.oRot = blockEntity.rot;
          Player player = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 3.0D, false);
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 12fc0a1524d99d8509a826b09d59ce5b9b82c6bd..9bc1e365e0c96907f6fb2b5cd67a12c87d0cf7ed 100644
+index f6d9bc16896198c53d6ab7945df3205bf1054487..7339e70f8182209e6274c7f1f1f3558adcaa2cfa 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -202,4 +202,11 @@ public class MiraiConfig {
@@ -26,7 +26,7 @@ index 12fc0a1524d99d8509a826b09d59ce5b9b82c6bd..9bc1e365e0c96907f6fb2b5cd67a12c8
  
 +    public static boolean bookAnimationTick;
 +    private static void bookTicking() {
-+        bookAnimationTick = getBoolean("enchantment-table-book-animation-tick", false,
++        bookAnimationTick = getBoolean("disable-enchantment-table-book-animation", true,
 +                                "Whether or not server should animate enchantment table book.",
 +                                "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
 +    }
