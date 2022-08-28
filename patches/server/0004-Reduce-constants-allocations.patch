@@ -276,10 +276,10 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5
          OptionSpec<Integer> optionspec11 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(-1, new Integer[0]);
          OptionSpec<String> optionspec12 = optionparser.accepts("serverId").withRequiredArg();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 02d3584994027d8cfd3c3c70a878404fe6f5fc76..5b49126a64ea70ea4536a8e511f86f114d5fac1c 100644
+index 9b64602e5ce5100dd1d467d404b4a6486ccc2faa..e5e88728d2d3b4ac9e266294999af84aee4aeae4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1373,8 +1373,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1374,8 +1374,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              try {
                  BufferedImage bufferedimage = ImageIO.read(file);
  
@@ -304,10 +304,10 @@ index 88152988425b7b02ec5ce229ba4c24b40e030329..a0317be1eea29e4e911976e0106563cf
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d0a12d450 100644
+index 0c71d72fb04eb00e159ddd456df82376fc912b4e..8a941fab5a5e0335294f706d7643c51c70906e7f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -872,7 +872,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -875,7 +875,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -316,7 +316,7 @@ index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1127,7 +1127,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1130,7 +1130,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -326,10 +326,10 @@ index f58873ef4362bfcc618ead099be94ba2dd4d86ed..3b7eecdf4f54de06e79335f42ef09d2d
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4b923cd39 100644
+index 9aab29dd7a09c306d6c0e1e8143daf005d611d65..22c053d0c730e6d82acc556f08eedcd3c21d1877 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -413,7 +413,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -416,7 +416,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
@@ -338,7 +338,7 @@ index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -879,13 +879,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -882,13 +882,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -354,7 +354,7 @@ index d18b82f1f66cd10250a12222dfb983ef57629738..176eb38372b35938c7ff9e1e91ad0eb4
              return;
          }
          // Paper end
-@@ -3396,7 +3396,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3404,7 +3404,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {
@@ -388,10 +388,10 @@ index 88a849a21d6e39fd70f6e7b554528da1a5a7dd57..58556611709a953eee834fac56c9eb52
          final String s;
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 71623c84a5b15023189c14a6bf36e1b08f935fc1..10b1ce4ed26905026fae651a52376ac19203c8d9 100644
+index 8326775a4005b03468fba1ec556f951dc740c302..0406c3e9a3ca06ba2a8cc47bf9f4b6fa293814d7 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -735,7 +735,7 @@ public abstract class PlayerList {
+@@ -737,7 +737,7 @@ public abstract class PlayerList {
          while (iterator.hasNext()) {
              entityplayer = (ServerPlayer) iterator.next();
              this.save(entityplayer); // CraftBukkit - Force the player's inventory to be saved

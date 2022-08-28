@@ -8,10 +8,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 9b4a2640b7a4c3a07b617c82f8fec06631a8734a..5930ee1dbabf644361220b67407e3ac871c391a8 100644
+index 05eb9a1bd670c9e01f58cd13b3d72a232d454387..3fcb63003a06cf73b8b4ac8d4461c48a2e141fbd 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1032,22 +1032,22 @@ public abstract class PlayerList {
+@@ -1034,22 +1034,22 @@ public abstract class PlayerList {
      }
  
      public void tick() {
@@ -48,7 +48,7 @@ index 9b4a2640b7a4c3a07b617c82f8fec06631a8734a..5930ee1dbabf644361220b67407e3ac8
  
      public void broadcastAll(Packet<?> packet) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index ef9c3a7b15a4901e1662e6d55504b9cbbb804ad3..4b2e2446ca0f55f3309f537f16c0317041d29577 100644
+index 067d64ce06f626ce90b3ccf608d98f3c64fce335..ce9aab711f538d1cf333789ba42292d87b700ff9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1843,7 +1843,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 23038001b5165a0092c23707b779293c8811c868..c5a4eafdced5dbd8f8aa2607a3c8b77e2535a4a3 100644
+index 22c053d0c730e6d82acc556f08eedcd3c21d1877..bf51b61bfb71ff8726da2282610e4e1f8d156227 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -370,7 +370,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -373,7 +373,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          ++this.tickCount;
          this.knownMovePacketCount = this.receivedMovePacketCount;
          if (this.clientIsFloating && !this.player.isSleeping() && !this.player.isPassenger()) {
@@ -19,7 +19,7 @@ index 23038001b5165a0092c23707b779293c8811c868..c5a4eafdced5dbd8f8aa2607a3c8b77e
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked for floating too long!", this.player.getName().getString());
                  this.disconnect(io.papermc.paper.configuration.GlobalConfiguration.get().messages.kick.flyingPlayer, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
                  return;
-@@ -389,7 +389,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -392,7 +392,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              this.vehicleLastGoodY = this.lastVehicle.getY();
              this.vehicleLastGoodZ = this.lastVehicle.getZ();
              if (this.clientVehicleIsFloating && this.player.getRootVehicle().getControllingPassenger() == this.player) {
@@ -29,7 +29,7 @@ index 23038001b5165a0092c23707b779293c8811c868..c5a4eafdced5dbd8f8aa2607a3c8b77e
                      this.disconnect(io.papermc.paper.configuration.GlobalConfiguration.get().messages.kick.flyingVehicle, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                      return;
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 2849478bde14769d1202ca15ecaa8a341f1043a3..7ff2d1e0124757401b4e70158bbe5ada18614aa3 100644
+index b2b986166367ff9bd13320329c96a8c559dd1f1a..f8b725fc9615a1540de38b425fea95f545cc4a18 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -144,4 +144,13 @@ public class MiraiConfig {

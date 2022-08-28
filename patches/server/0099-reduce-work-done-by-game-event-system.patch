@@ -11,10 +11,10 @@ Original project: https://github.com/Bloom-host/Petal
 2. euclideangameeventdispatcher is not used concurrently so we ban that usage for improved performance with allays
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index ef932eaedf1dbf4d2a90cab270516b71923d5678..a9bb78d68adac54729a954f766ad993989bfee77 100644
+index 59029a06b450115d0c3aa2db4357f33bcff42bea..11db08bfb28eb7050c2409832e9bb5ad9c7ef3b0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1618,6 +1618,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1621,6 +1621,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  if (chunk != null) {
                      for (int j2 = k; j2 <= j1; ++j2) {
                          flag |= chunk.getEventDispatcher(j2).walkListeners(event, emitterPos, emitter, (gameeventlistener, vec3d1) -> {
