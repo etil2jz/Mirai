@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: MWHunter <s0521458@student.rockvalleycollege.edu>
-Date: Tue, 8 Feb 2022 22:03:15 -0600
+From: Jaren Knodel <Jaren@Knodel.com>
+Date: Wed, 24 Aug 2022 09:54:11 -0400
 Subject: [PATCH] PaperPR Stop large look changes from crashing the server
 
-Taken from https://github.com/PaperMC/Paper/pull/7459
+Taken from https://github.com/PaperMC/Paper/pull/8326
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 58fd02c12894e57312dca70fd4871b8a0590bb76..3174fb7fb678a8a669e28ae10c830ede3855a3ad 100644
+index 58fd02c12894e57312dca70fd4871b8a0590bb76..4c3d4155ee3f95331221d2fde97003e9456430c9 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3009,37 +3009,12 @@ public abstract class LivingEntity extends Entity {
@@ -44,7 +44,7 @@ index 58fd02c12894e57312dca70fd4871b8a0590bb76..3174fb7fb678a8a669e28ae10c830ede
 -        while (this.yHeadRot - this.yHeadRotO >= 180.0F) {
 -            this.yHeadRotO += 360.0F;
 -        }
-+        // Paper start - Stop large pitch and yaw changes from crashing the server
++        // Paper start - stop large pitch and yaw changes from crashing the server
 +        this.yRotO += Math.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F;
 +        this.yBodyRotO += Math.round((this.yBodyRot - this.yBodyRotO) / 360.0F) * 360.0F;
 +        this.xRotO += Math.round((this.getXRot() - this.xRotO) / 360.0F) * 360.0F;
@@ -53,3 +53,22 @@ index 58fd02c12894e57312dca70fd4871b8a0590bb76..3174fb7fb678a8a669e28ae10c830ede
  
          this.level.getProfiler().pop();
          this.animStep += f2;
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
+index 39ba6ca32b827daee300e1240bd76fd8f680ea02..85fb907fb149961611310c355d0911d81f1b735c 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
+@@ -275,13 +275,7 @@ public abstract class Projectile extends Entity {
+     }
+ 
+     protected static float lerpRotation(float prevRot, float newRot) {
+-        while (newRot - prevRot < -180.0F) {
+-            prevRot -= 360.0F;
+-        }
+-
+-        while (newRot - prevRot >= 180.0F) {
+-            prevRot += 360.0F;
+-        }
++        prevRot += Math.round((newRot - prevRot) / 360.0F) * 360.0F; // Paper - stop large look changes from crashing the server
+ 
+         return Mth.lerp(0.2F, prevRot, newRot);
+     }

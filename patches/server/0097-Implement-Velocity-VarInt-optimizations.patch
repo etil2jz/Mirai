@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+From: Arthur Blanchot <81570777+etil2jz@users.noreply.github.com>
 Date: Sat, 16 Jul 2022 18:12:38 +0200
 Subject: [PATCH] Implement Velocity VarInt optimizations
 

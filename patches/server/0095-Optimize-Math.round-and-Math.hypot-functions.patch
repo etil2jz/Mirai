@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+From: Arthur Blanchot <81570777+etil2jz@users.noreply.github.com>
 Date: Wed, 29 Jun 2022 02:17:00 +0200
 Subject: [PATCH] Optimize `Math.round` and `Math.hypot` functions
 
@@ -202,7 +202,7 @@ index ec587cf6592a1dc0d90d6f54af1bdfab97aec7c6..41fe8bbdf9235ce79bffe6b2fe1339f7
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index a2c348697b0a9a6646647e7946f6720c5897fb3d..0bc9eeef8dba308cf75c05def4de30de4475c030 100644
+index de10d051561bd7897a5a0e9ad52537f53ab7ad07..cd3755118bd15f7fa46c19b887e042c3d84297b4 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1496,7 +1496,7 @@ public abstract class LivingEntity extends Entity {
@@ -272,7 +272,7 @@ index a2c348697b0a9a6646647e7946f6720c5897fb3d..0bc9eeef8dba308cf75c05def4de30de
 @@ -3010,10 +3010,10 @@ public abstract class LivingEntity extends Entity {
          this.level.getProfiler().push("rangeChecks");
  
-         // Paper start - Stop large pitch and yaw changes from crashing the server
+         // Paper start - stop large pitch and yaw changes from crashing the server
 -        this.yRotO += Math.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F;
 -        this.yBodyRotO += Math.round((this.yBodyRot - this.yBodyRotO) / 360.0F) * 360.0F;
 -        this.xRotO += Math.round((this.getXRot() - this.xRotO) / 360.0F) * 360.0F;
@@ -515,11 +515,11 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..26ff7f68dacad945095d794c1def4752
  
      // Yatopia start - Last tick time API
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 23761b89a2fac069e9709db9741afa1ba24ae1d1..f6f88a802c6f1892418fd6bcb8b4bc0b90fb6afb 100644
+index 39b0c038ae053ef78c62691c73edecad94938fc7..110757bfec231278e7b5d0f22ede20f04cdbb913 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -235,4 +235,13 @@ public class MiraiConfig {
-                                 "A second is 20 ticks.");
+@@ -228,4 +228,13 @@ public class MiraiConfig {
+                             "to check when entity delta movement is null.");
      }
  
 +    public static boolean optimizedRound;

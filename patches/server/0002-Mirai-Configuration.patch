@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+From: Arthur Blanchot <81570777+etil2jz@users.noreply.github.com>
 Date: Wed, 20 Jul 2022 22:07:01 +0200
 Subject: [PATCH] Mirai Configuration
 
@@ -108,7 +108,7 @@ index 0000000000000000000000000000000000000000..d73428f5554384e5bbf1c8607073b50d
 \ No newline at end of file
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..860f244e229b18701f4719b5ece7a00f377868a7
+index 0000000000000000000000000000000000000000..adf6004cd1637a2662e2d448221b063688a26016
 --- /dev/null
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -0,0 +1,134 @@
@@ -164,7 +164,7 @@ index 0000000000000000000000000000000000000000..860f244e229b18701f4719b5ece7a00f
 +            }
 +        }
 +
-+        getString("info.version", "2.0");
++        getString("info.version", "2.1");
 +        setComment("info",
 +                "Mirai Configuration",
 +                "Join our Discord at https://discord.gg/DdH6Yfu9gM",

@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Arthur Blanchot <blanchot.arthur@protonmail.ch>
+From: Arthur Blanchot <81570777+etil2jz@users.noreply.github.com>
 Date: Tue, 2 Aug 2022 14:48:12 +0200
 Subject: [PATCH] Configurable chat message signatures
 
@@ -92,10 +92,10 @@ index 18c4f2eeb6bb427c1314608fc6a81e4642d92888..b029ae19db2bfde9b08950f41ba8a09e
      }
  
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index f6f88a802c6f1892418fd6bcb8b4bc0b90fb6afb..13884ca2bd4e459498700e2fed1f0b4406538f53 100644
+index 110757bfec231278e7b5d0f22ede20f04cdbb913..57df9a7d26855ca205190584f61fc8026d98225c 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -244,4 +244,12 @@ public class MiraiConfig {
+@@ -237,4 +237,12 @@ public class MiraiConfig {
                              "Whether or not Math.hypot should be replaced by a faster version.");
      }
  
