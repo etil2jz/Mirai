@@ -5,7 +5,7 @@ Subject: [PATCH] Optimize default values for configs
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 38cb29c646ff496ffaa6553f98a565b71155c464..581def3ae8f30246019d323c6e379e9a66a6243d 100644
+index 38cb29c646ff496ffaa6553f98a565b71155c464..26f9a007931edb1c0b67920309bc7c6b848bbd32 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -216,7 +216,7 @@ public class PufferfishConfig {
@@ -26,13 +26,11 @@ index 38cb29c646ff496ffaa6553f98a565b71155c464..581def3ae8f30246019d323c6e379e9a
  				"Whether or not async pathfinding should be enabled.");
  		if (!enableAsyncPathfindingInitialized) {
  			enableAsyncPathfindingInitialized = true;
-@@ -238,8 +238,8 @@ public class PufferfishConfig {
-     public static int maxProjectileLoadsPerTick;
+@@ -239,7 +239,7 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
--        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
+         maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
 -        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
-+        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 8, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick."); // Mirai - optimize default values for configs
 +        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 8, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed."); // Mirai - optimize default values for configs
  
          setComment("projectile", "Optimizes projectile settings");
@@ -63,10 +61,10 @@ index bc72131afa1ae9986ee311a9b371e97c8feb38f8..0130e2c3c047055fbea9c3d893a9b459
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index e2c612dd55fcb2769fb06f7878b8d0873f2be139..1f01b4a2c05451dd2b2c3ae8eb70318e167ba1d6 100644
+index e2c612dd55fcb2769fb06f7878b8d0873f2be139..503ec4de23cecc7f2d813a59703ea8165fa84c76 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-@@ -114,15 +114,15 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -114,8 +114,8 @@ public class WorldConfiguration extends ConfigurationPart {
          public ArmorStands armorStands;
  
          public class ArmorStands extends ConfigurationPart {
@@ -77,15 +75,6 @@ index e2c612dd55fcb2769fb06f7878b8d0873f2be139..1f01b4a2c05451dd2b2c3ae8eb70318e
          }
  
          public Spawning spawning;
- 
-         public class Spawning extends ConfigurationPart {
--            public ArrowDespawnRate nonPlayerArrowDespawnRate = ArrowDespawnRate.def(WorldConfiguration.this.spigotConfig);
--            public ArrowDespawnRate creativeArrowDespawnRate = ArrowDespawnRate.def(WorldConfiguration.this.spigotConfig);
-+            public int nonPlayerArrowDespawnRate = 20; // Mirai - optimize default values for configs
-+            public int creativeArrowDespawnRate = 20; // Mirai - optimize default values for configs
-             public boolean filterNbtDataFromSpawnEggsAndRelated = true;
-             public boolean disableMobSpawnerSpawnEggTransformation = false;
-             public boolean perPlayerMobSpawns = true;
 @@ -198,8 +198,8 @@ public class WorldConfiguration extends ConfigurationPart {
          public Behavior behavior;
  
@@ -245,21 +234,8 @@ index e2c612dd55fcb2769fb06f7878b8d0873f2be139..1f01b4a2c05451dd2b2c3ae8eb70318e
          public boolean disableEndCredits = false;
          public float maxLeashDistance = 10f;
          public boolean disableSprintInterruptionOnAttack = false;
-diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-index 49f093b21aa1268d40aa54ebfce06976bd79ae81..5d925f090401929de4d241fec08158e98f1aed19 100644
---- a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-+++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-@@ -336,7 +336,7 @@ public abstract class AbstractArrow extends Projectile {
- 
-     protected void tickDespawn() {
-         ++this.life;
--        if (this.life >= (pickup == Pickup.CREATIVE_ONLY ? level.paperConfig().entities.spawning.creativeArrowDespawnRate.value() : (pickup == Pickup.DISALLOWED ? level.paperConfig().entities.spawning.nonPlayerArrowDespawnRate.value() : ((this instanceof ThrownTrident) ? level.spigotConfig.tridentDespawnRate : level.spigotConfig.arrowDespawnRate)))) { // Spigot // Paper - TODO: Extract this to init?
-+        if (this.life >= (pickup == Pickup.CREATIVE_ONLY ? level.paperConfig().entities.spawning.creativeArrowDespawnRate : (pickup == Pickup.DISALLOWED ? level.paperConfig().entities.spawning.nonPlayerArrowDespawnRate : ((this instanceof ThrownTrident) ? level.spigotConfig.tridentDespawnRate : level.spigotConfig.arrowDespawnRate)))) { // Spigot // Paper - TODO: Extract this to init? // Mirai - optimize default values for configs
-             this.discard();
-         }
- 
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index ce61f9e8a835bc5e2d3815e337ed9785f9d06f04..0dc4aa6286bff96be8abfb33599502b1305adeb8 100644
+index ce61f9e8a835bc5e2d3815e337ed9785f9d06f04..1d65012e4d305df6736b148d4345682da6437267 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -150,14 +150,14 @@ public class SpigotWorldConfig
@@ -300,10 +276,9 @@ index ce61f9e8a835bc5e2d3815e337ed9785f9d06f04..0dc4aa6286bff96be8abfb33599502b1
 -    public int miscActivationRange = 16;
 +    public int miscActivationRange = 8; // Mirai - optimize default values for configs
      // Paper start
--    public int flyingMonsterActivationRange = 32;
+     public int flyingMonsterActivationRange = 32;
 -    public int waterActivationRange = 16;
 -    public int villagerActivationRange = 32;
-+    public int flyingMonsterActivationRange = 48; // Mirai - optimize default values for configs
 +    public int waterActivationRange = 8; // Mirai - optimize default values for configs
 +    public int villagerActivationRange = 16; // Mirai - optimize default values for configs
      public int wakeUpInactiveAnimals = 4;
