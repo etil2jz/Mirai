@@ -1,0 +1,65 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Wed, 31 Aug 2022 11:19:23 +0200
+Subject: [PATCH] Configurable mobs from spawners picking up loot
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
+index b8abee145fc92faddef98da913eca7715b6bfc03..512476fd32055e4eab0d780cc0da19d6f9885fda 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
++++ b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
+@@ -156,7 +156,13 @@ public abstract class AbstractSkeleton extends Monster implements RangedAttackMo
+         this.populateDefaultEquipmentSlots(randomsource, difficulty);
+         this.populateDefaultEquipmentEnchantments(randomsource, difficulty);
+         this.reassessWeaponGoal();
+-        this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.skeletons || randomsource.nextFloat() < 0.55F * difficulty.getSpecialMultiplier()); // Paper
++        // Mirai start
++        if (wtf.etil.mirai.MiraiConfig.skeletonPickupLoot && spawnReason == MobSpawnType.SPAWNER) {
++            this.setCanPickUpLoot(false);
++        } else {
++            this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.skeletons || randomsource.nextFloat() < 0.55F * difficulty.getSpecialMultiplier()); // Paper
++        }
++        // Mirai end
+         if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+             LocalDate localdate = LocalDate.now();
+             int i = localdate.get(ChronoField.DAY_OF_MONTH);
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
+index 97b3082dc020043fa38d9e5e4591102f97519ed3..a9756c298348a0f1551841540bbe826732ae386a 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
+@@ -514,7 +514,13 @@ public class Zombie extends Monster {
+         Object object = super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+         float f = difficulty.getSpecialMultiplier();
+ 
+-        this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.zombies || randomsource.nextFloat() < 0.55F * f); // Paper
++        // Mirai start
++        if (wtf.etil.mirai.MiraiConfig.zombiePickupLoot && spawnReason == MobSpawnType.SPAWNER) {
++            this.setCanPickUpLoot(false);
++        } else {
++            this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.zombies || randomsource.nextFloat() < 0.55F * f); // Paper
++        }
++        // Mirai end
+         if (object == null) {
+             object = new Zombie.ZombieGroupData(Zombie.getSpawnAsBabyOdds(randomsource), true);
+         }
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 156f5c1f28e36ca69b0ef5c15550d004b0ef69a4..56e36c0468d38a344d18f7f57bd1d014e68ff308 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -252,4 +252,15 @@ public class MiraiConfig {
+                                         "standing on a 1x1 block while being stuck.");
+     }
+ 
++    public static boolean skeletonPickupLoot;
++    public static boolean zombiePickupLoot;
++    private static void spawnersPickupLoot() {
++        skeletonPickupLoot = getBoolean("disable-spawners-pick-up-items.skeleton", false,
++                                    "Whether or not skeletons from spawners should be able to",
++                                    "pick up items on the ground.");
++        zombiePickupLoot = getBoolean("disable-spawners-pick-up-items.zombie", false,
++                                "Whether or not zombies from spawners should be able to",
++                                "pick up items on the ground.");
++    }
++
+ }
+\ No newline at end of file
