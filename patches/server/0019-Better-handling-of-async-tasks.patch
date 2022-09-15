@@ -7,10 +7,10 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index c0fdc5a79107f8694a514a12d5526bd431fc45e9..eeb20c5b9365a04db45e738793f6c10a4f2b759e 100644
+index e9f0ddf1a34bf3b0d868b53e4439d9d9851ad4d6..cae99d217f40f6bc8337619b6e26153ccf261fc2 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
-@@ -53,11 +53,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
+@@ -51,11 +51,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.function.BiConsumer;
  import java.util.function.Consumer;
  import java.util.function.Supplier;
@@ -27,7 +27,7 @@ index c0fdc5a79107f8694a514a12d5526bd431fc45e9..eeb20c5b9365a04db45e738793f6c10a
          new ThreadFactoryBuilder()
              .setNameFormat("Paper Async Task Handler Thread - %1$d")
              .setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(MinecraftServer.LOGGER))
-@@ -74,6 +77,30 @@ public final class MCUtil {
+@@ -72,6 +75,30 @@ public final class MCUtil {
  
      public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
  

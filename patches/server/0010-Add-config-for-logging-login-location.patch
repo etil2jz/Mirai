@@ -7,10 +7,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 0406c3e9a3ca06ba2a8cc47bf9f4b6fa293814d7..b2d98d5d6c5f99eff975a200e78ef6af69ccfe1a 100644
+index c50d214eed0414e9b8dc3062d67dc9427c534ef0..c687056ff9be0ff6877a22ba4d7aeda0d94e73e7 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -500,7 +500,13 @@ public abstract class PlayerList {
+@@ -504,7 +504,13 @@ public abstract class PlayerList {
          }
          // Paper end
          // CraftBukkit - Moved from above, added world
@@ -26,7 +26,7 @@ index 0406c3e9a3ca06ba2a8cc47bf9f4b6fa293814d7..b2d98d5d6c5f99eff975a200e78ef6af
  
      public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 860f244e229b18701f4719b5ece7a00f377868a7..c7d4aa9065a49120ed74fab4bddd6f0c08275f21 100644
+index adf6004cd1637a2662e2d448221b063688a26016..6f05bb1fe09dd68d4cd3e0569cbb55d5966d00a1 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 @@ -131,4 +131,10 @@ public class MiraiConfig {

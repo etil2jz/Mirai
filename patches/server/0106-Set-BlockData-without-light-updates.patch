@@ -31,7 +31,7 @@ index 8afacc53a673567cead4c6e49966f07f1d5da754..33f07595a99a94984f221fdf8e436dd3
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f915415e2e24ee7ab3c279ae1fa98d2d9d19a683..d110c887878fa1555c0a258818471baf6a2c6a8c 100644
+index 53149faf2b33d202809e259800b15a0d0c2dacf2..4f79fb616d594c1d1456cf7efc938c6621fbee68 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -613,12 +613,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -59,7 +59,7 @@ index f915415e2e24ee7ab3c279ae1fa98d2d9d19a683..d110c887878fa1555c0a258818471baf
                      this.getProfiler().push("queueCheckLight");
                      this.getChunkSource().getLightEngine().checkBlock(pos);
                      this.getProfiler().pop();
-@@ -812,7 +812,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -813,7 +813,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  

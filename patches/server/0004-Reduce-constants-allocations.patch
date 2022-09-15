@@ -263,10 +263,10 @@ index 02fb51f7f699992caf13d088c75b8275ec5267bb..11cb4ac19ddc09889117690ffec51915
      private static final FormattedText TEXT_NULL = FormattedText.of("null");
      private final String key;
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 0a843e0afbcb1af8e2641515eb244b791b819b8c..c420ce5c1bebdb0abe273d73a61a15e5424fb1bb 100644
+index 5962f7a2b185d7d54a0f9e341a4fdf6e6f1c1ec5..0b677d128cbd108bb58d74d3cfe6015551e94143 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -81,7 +81,7 @@ public class Main {
+@@ -85,7 +85,7 @@ public class Main {
          OptionSpec<Void> optionspec6 = optionparser.accepts("safeMode", "Loads level with vanilla datapack only");
          OptionSpec<Void> optionspec7 = optionparser.accepts("help").forHelp();
          OptionSpec<String> optionspec8 = optionparser.accepts("singleplayer").withRequiredArg();
@@ -304,10 +304,10 @@ index 88152988425b7b02ec5ce229ba4c24b40e030329..a0317be1eea29e4e911976e0106563cf
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 0c71d72fb04eb00e159ddd456df82376fc912b4e..8a941fab5a5e0335294f706d7643c51c70906e7f 100644
+index 8ed9f14f1ca71111a8215b28821bd5e398c0d0a6..31a4dac824b3d98e05cef5b96473a8a179516a01 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -875,7 +875,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -877,7 +877,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -316,7 +316,7 @@ index 0c71d72fb04eb00e159ddd456df82376fc912b4e..8a941fab5a5e0335294f706d7643c51c
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1130,7 +1130,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1132,7 +1132,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -326,10 +326,10 @@ index 0c71d72fb04eb00e159ddd456df82376fc912b4e..8a941fab5a5e0335294f706d7643c51c
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 9aab29dd7a09c306d6c0e1e8143daf005d611d65..22c053d0c730e6d82acc556f08eedcd3c21d1877 100644
+index d3dd458dc1d3eb7f426565e38d63bb26c48cec4b..85aaf1dd86808131f31ed02c28ea19f2d530f9ef 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -416,7 +416,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -410,7 +410,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          if (this.keepAlivePending) {
              if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                  ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
@@ -338,7 +338,7 @@ index 9aab29dd7a09c306d6c0e1e8143daf005d611d65..22c053d0c730e6d82acc556f08eedcd3
              }
          } else {
              if (elapsedTime >= 15000L) { // 15 seconds
-@@ -882,13 +882,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -876,13 +876,13 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // Paper - run this async
          // CraftBukkit start
          if (this.chatSpamTickCount.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
@@ -354,7 +354,7 @@ index 9aab29dd7a09c306d6c0e1e8143daf005d611d65..22c053d0c730e6d82acc556f08eedcd3
              return;
          }
          // Paper end
-@@ -3404,7 +3404,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3392,7 +3392,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {
@@ -388,10 +388,10 @@ index 88a849a21d6e39fd70f6e7b554528da1a5a7dd57..58556611709a953eee834fac56c9eb52
          final String s;
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 8326775a4005b03468fba1ec556f951dc740c302..0406c3e9a3ca06ba2a8cc47bf9f4b6fa293814d7 100644
+index 5999d85e38951503fc83b40cfe39671921ae5088..c50d214eed0414e9b8dc3062d67dc9427c534ef0 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -737,7 +737,7 @@ public abstract class PlayerList {
+@@ -741,7 +741,7 @@ public abstract class PlayerList {
          while (iterator.hasNext()) {
              entityplayer = (ServerPlayer) iterator.next();
              this.save(entityplayer); // CraftBukkit - Force the player's inventory to be saved
@@ -583,10 +583,10 @@ index 2f9f15d99f8b31e9f13f7f32378b2a9e09bcb5e5..b9579e3d1610ddcb5251baa2dd9462e0
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 0681a7499755b573c191804b38ac8783eb7d0f32..73abb858900d8d1bc4b3bc0fde6665e5309ece06 100644
+index 388a153113d87ba99515828c6d535110b4413c7c..6014e93a0698ddb283778478fd64ee1c8400a27b 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -1521,7 +1521,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1522,7 +1522,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public org.bukkit.entity.Entity[] getChunkEntities(int chunkX, int chunkZ) {
          io.papermc.paper.world.ChunkEntitySlices slices = this.entitySliceManager.getChunk(chunkX, chunkZ);
          if (slices == null) {
