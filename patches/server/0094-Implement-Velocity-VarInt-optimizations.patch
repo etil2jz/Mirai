@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Sat, 16 Jul 2022 18:12:38 +0200
+Subject: [PATCH] Implement Velocity VarInt optimizations
+
+Original license: GPLv3
+Original project: https://github.com/PaperMC/Velocity
+Paper pull request: https://github.com/PaperMC/Paper/pull/6957
+
+diff --git a/src/main/java/net/minecraft/network/FriendlyByteBuf.java b/src/main/java/net/minecraft/network/FriendlyByteBuf.java
+index 35377576ed182814051c11f902e02e8e921e84e3..8747a55d8818d4526939070fa29a12ab643f0798 100644
+--- a/src/main/java/net/minecraft/network/FriendlyByteBuf.java
++++ b/src/main/java/net/minecraft/network/FriendlyByteBuf.java
+@@ -82,19 +82,22 @@ public class FriendlyByteBuf extends ByteBuf {
+     private static final int PUBLIC_KEY_SIZE = 256;
+     private static final int MAX_PUBLIC_KEY_HEADER_SIZE = 256;
+     private static final int MAX_PUBLIC_KEY_LENGTH = 512;
++    // Mirai start - Optimize VarInts
++    private static final int[] VARINT_EXACT_BYTE_LENGTHS = new int[33];
++    static {
++        for (int i = 0; i <= 32; ++i) {
++            VARINT_EXACT_BYTE_LENGTHS[i] = (int) Math.ceil((31d - (i - 1)) / 7d);
++        }
++        VARINT_EXACT_BYTE_LENGTHS[32] = 1; // Special case for the number 0.
++    }
++    // Mirai end
+ 
+     public FriendlyByteBuf(ByteBuf parent) {
+         this.source = parent;
+     }
+ 
+     public static int getVarIntSize(int value) {
+-        for (int j = 1; j < 5; ++j) {
+-            if ((value & -1 << j * 7) == 0) {
+-                return j;
+-            }
+-        }
+-
+-        return 5;
++        return VARINT_EXACT_BYTE_LENGTHS[Integer.numberOfLeadingZeros(value)]; // Mirai - Optimize VarInts
+     }
+ 
+     public static int getVarLongSize(long value) {
+@@ -503,7 +506,23 @@ public class FriendlyByteBuf extends ByteBuf {
+         return new UUID(this.readLong(), this.readLong());
+     }
+ 
++    // Mirai start - Optimize VarInts
+     public FriendlyByteBuf writeVarInt(int value) {
++        // Peel the one and two byte count cases explicitly as they are the most common VarInt sizes
++        // that the proxy will write, to improve inlining.
++        if ((value & (0xFFFFFFFF << 7)) == 0) {
++            writeByte(value);
++        } else if ((value & (0xFFFFFFFF << 14)) == 0) {
++            int w = (value & 0x7F | 0x80) << 8 | (value >>> 7);
++            writeShort(w);
++        } else {
++            writeVarInt_(value);
++        }
++        return this;
++    }
++
++    public FriendlyByteBuf writeVarInt_(int value) {
++    // Mirai end
+         while ((value & -128) != 0) {
+             this.writeByte(value & 127 | 128);
+             value >>>= 7;

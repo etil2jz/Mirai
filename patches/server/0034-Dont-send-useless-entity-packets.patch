@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 6 Jul 2019 17:00:04 -0500
+Subject: [PATCH] Dont send useless entity packets
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index a0317be1eea29e4e911976e0106563cf49db1e6b..4197961b2f03a5151b396d0d09bf5cb9ab6481e7 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -181,6 +181,7 @@ public class ServerEntity {
+                         this.teleportDelay = 0;
+                         packet1 = new ClientboundTeleportEntityPacket(this.entity);
+                     }
++                    if (wtf.etil.mirai.MiraiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
+                 }
+ 
+                 if ((this.trackDelta || this.entity.hasImpulse || this.entity instanceof LivingEntity && ((LivingEntity) this.entity).isFallFlying()) && this.tickCount > 0) {
+@@ -247,6 +248,22 @@ public class ServerEntity {
+ 
+     }
+ 
++    // Purpur start
++    private boolean isUselessPacket(Packet<?> possibleUselessPacket) {
++        if (possibleUselessPacket instanceof ClientboundMoveEntityPacket) {
++            ClientboundMoveEntityPacket packet = (ClientboundMoveEntityPacket) possibleUselessPacket;
++            if (possibleUselessPacket instanceof ClientboundMoveEntityPacket.Pos) {
++                return packet.getXa() == 0 && packet.getYa() == 0 && packet.getZa() == 0;
++            } else if (possibleUselessPacket instanceof ClientboundMoveEntityPacket.PosRot) {
++                return packet.getXa() == 0 && packet.getYa() == 0 && packet.getZa() == 0 && packet.getyRot() == 0 && packet.getxRot() == 0;
++            } else if (possibleUselessPacket instanceof ClientboundMoveEntityPacket.Rot) {
++                return packet.getyRot() == 0 && packet.getxRot() == 0;
++            }
++        }
++        return false;
++    }
++    // Purpur end
++
+     public void removePairing(ServerPlayer player) {
+         this.entity.stopSeenByPlayer(player);
+         // Pufferfish start - ensure main thread
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 0f94e6a76ab2c323562231ffe58a7c18819e6b00..992ab312e6e2b8283ef8187bcbeeb35dd51858a1 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -153,4 +153,10 @@ public class MiraiConfig {
+                                 "Whether or not vanilla anticheat should check for passengers flying.");
+     }
+ 
++    public static boolean dontSendUselessEntityPackets;
++    private static void uselessEntityPackets() {
++        dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", true,
++                                        "Whether or not server should send entity packets with null movements.");
++    }
++
+ }
+\ No newline at end of file

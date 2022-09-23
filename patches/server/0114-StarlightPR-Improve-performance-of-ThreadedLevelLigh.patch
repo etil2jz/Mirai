@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: bluelhf <ilari.suhonen@gmail.com>
+Date: Wed, 21 Sep 2022 23:05:55 +0200
+Subject: [PATCH] StarlightPR Improve performance of ThreadedLevelLightEngine
+
+Taken from https://github.com/PaperMC/Starlight/pull/160
+
+diff --git a/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java b/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
+index ef8dcbb6bbc0769e9ccfdadb05e6a46c070eda98..9a5fa60cb8156fe254a123e237d957ccb82f7195 100644
+--- a/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
++++ b/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
+@@ -5,6 +5,7 @@ import ca.spottedleaf.starlight.common.util.WorldUtil;
+ import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
+ import it.unimi.dsi.fastutil.shorts.ShortCollection;
+ import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
++import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.SectionPos;
+ import net.minecraft.server.level.ServerChunkCache;
+@@ -21,7 +22,6 @@ import net.minecraft.world.level.lighting.LayerLightEventListener;
+ import net.minecraft.world.level.lighting.LevelLightEngine;
+ import java.util.ArrayDeque;
+ import java.util.ArrayList;
+-import java.util.HashSet;
+ import java.util.List;
+ import java.util.Set;
+ import java.util.concurrent.CompletableFuture;
+@@ -647,7 +647,7 @@ public final class StarLightInterface {
+ 
+         protected static final class ChunkTasks {
+ 
+-            public final Set<BlockPos> changedPositions = new HashSet<>();
++            public final Set<BlockPos> changedPositions = new ObjectOpenHashSet<>();
+             public Boolean[] changedSectionSet;
+             public ShortOpenHashSet queuedEdgeChecksSky;
+             public ShortOpenHashSet queuedEdgeChecksBlock;
+diff --git a/src/main/java/net/minecraft/server/level/ThreadedLevelLightEngine.java b/src/main/java/net/minecraft/server/level/ThreadedLevelLightEngine.java
+index b57bffce30154b196b879209c1ce559d0b82456e..937a8a24c912f25725dc17ded0fed3ca63a11b96 100644
+--- a/src/main/java/net/minecraft/server/level/ThreadedLevelLightEngine.java
++++ b/src/main/java/net/minecraft/server/level/ThreadedLevelLightEngine.java
+@@ -285,9 +285,7 @@ public class ThreadedLevelLightEngine extends LevelLightEngine implements AutoCl
+             for (int dz = -1; dz <= 1; ++dz) {
+                 ChunkHolder neighbour = world.getChunkSource().chunkMap.getUpdatingChunkIfPresent(CoordinateUtils.getChunkKey(dx + chunkX, dz + chunkZ));
+                 if (neighbour != null) {
+-                    neighbour.chunkToSave = neighbour.chunkToSave.thenCombine(updateFuture, (final ChunkAccess curr, final Void ignore) -> {
+-                        return curr;
+-                    });
++                    neighbour.chunkToSave = updateFuture.thenCompose(v -> neighbour.chunkToSave);
+                 }
+             }
+         }

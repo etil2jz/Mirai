@@ -1,0 +1,111 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 2 Aug 2022 14:48:12 +0200
+Subject: [PATCH] Configurable chat message signatures
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java b/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
+index 11183b4a39b9897e1b1067eb2a3556d2b1d90f52..d08127b516fbae1a5500a9d3f0df02a437b0d250 100644
+--- a/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
++++ b/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
+@@ -78,6 +78,7 @@ public class ServerStatus {
+     }
+ 
+     public boolean enforcesSecureChat() {
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) return true; // Mirai - configurable chat message signatures
+         return this.enforcesSecureChat;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index aec14ff5235686a3e02b66eb3ad05fed2c4756b4..60ba00eb6daeeb9b97281f9380d373af3cc29402 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -619,6 +619,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+ 
+     @Override
+     public boolean enforceSecureProfile() {
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) return false; // Mirai - configurable chat message signatures
+         return this.getProperties().enforceSecureProfile && this.getProperties().onlineMode;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index c2f1eeeac3f48b99ade23f95b2af034773af2286..bc916c46c940e9395feb4f7c835e2844273af2f4 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2164,10 +2164,34 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+ 
+     @Override
+     public void send(Packet<?> packet) {
++        // Mirai start - configurable chat message signatures
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) {
++            if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket) {
++                return;
++            } else if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatPacket chat) {
++                packet = new ClientboundSystemChatPacket(chat.chatType().resolve(this.player.level.registryAccess())
++                        .get().decorate(chat.message().serverContent()), false);
++
++
++                this.send(packet);
++                return;
++			}
++		}
++        // Mirai end
+         this.send(packet, (PacketSendListener) null);
+     }
+ 
+     public void send(Packet<?> packet, @Nullable PacketSendListener callbacks) {
++        // Mirai start - configurable chat message signatures
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) {
++            if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket) {
++                return;
++            } else if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatPacket chat && callbacks != null) {
++                this.send(chat);
++                return;
++            }
++        }
++        // Mirai end
+         // CraftBukkit start
+         if (packet == null || this.processedDisconnect) { // Spigot
+             return;
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 32b74aa339db55d187824984b1bd82ccb0953167..193ff873323b2f4845ef6e90f8a05fc168b6b77d 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1489,6 +1489,7 @@ public abstract class PlayerList {
+     }
+ 
+     public boolean verifyChatTrusted(PlayerChatMessage message, ChatSender profile) { // Paper - private -> public
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) return true; // Mirai - configurable chat message signatures
+         return !message.hasExpiredServer(Instant.now()) && message.verify(profile);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 18c4f2eeb6bb427c1314608fc6a81e4642d92888..b029ae19db2bfde9b08950f41ba8a09e8e4091a0 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1516,6 +1516,7 @@ public abstract class Player extends LivingEntity {
+ 
+     @Nullable
+     public ProfilePublicKey getProfilePublicKey() {
++        if (wtf.etil.mirai.MiraiConfig.chatMessageSignatures) return null; // Mirai - configurable chat message signatures
+         return this.profilePublicKey;
+     }
+ 
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 110757bfec231278e7b5d0f22ede20f04cdbb913..57df9a7d26855ca205190584f61fc8026d98225c 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -237,4 +237,12 @@ public class MiraiConfig {
+                             "Whether or not Math.hypot should be replaced by a faster version.");
+     }
+ 
++    public static boolean chatMessageSignatures;
++    private static void chatreport() {
++        chatMessageSignatures = getBoolean("disable-chat-reports", false,
++                                    "Whether or not players should be able to report chat messages.",
++                                    "It also disables the popup when joining a server without",
++                                    "'secure chat', such as offline-mode servers.");
++    }
++
+ }
+\ No newline at end of file

@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Thu, 14 Jan 2021 16:48:10 -0600
+Subject: [PATCH] Fix stuck in portals
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 422c65f6e42f3ba5e58126d936dd17913ae0d2b8..e52256415e2776f41d107cbf39a73708d6e0d506 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1153,6 +1153,7 @@ public class ServerPlayer extends Player {
+                 playerlist.sendPlayerPermissionLevel(this);
+                 worldserver1.removePlayerImmediately(this, Entity.RemovalReason.CHANGED_DIMENSION);
+                 this.unsetRemoved();
++                this.portalPos = net.minecraft.server.MCUtil.toBlockPosition(exit); // Purpur
+ 
+                 // CraftBukkit end
+                 this.setLevel(worldserver);
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 417570c2ad71bc3727e7d5eb841a92ec815d12f6..f30d79d0f77cf411bdb47148ae86ba406a2fdee6 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2875,12 +2875,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         return Vec3.directionFromRotation(this.getRotationVector());
+     }
+ 
++    public BlockPos portalPos = BlockPos.ZERO; // Purpur
+     public void handleInsidePortal(BlockPos pos) {
+         if (this.isOnPortalCooldown()) {
++            if (!(wtf.etil.mirai.MiraiConfig.playerFixStuckPortal && this instanceof Player && !pos.equals(portalPos))) // Purpur
+             this.setPortalCooldown();
+         } else {
+             if (!this.level.isClientSide && !pos.equals(this.portalEntrancePos)) {
+                 this.portalEntrancePos = pos.immutable();
++                portalPos = BlockPos.ZERO; // Purpur
+             }
+ 
+             this.isInsidePortal = true;
+diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+index 047b2a9ab1eae5c6aa7a95800892aa76554555dd..65db00dd6dc75af71a0d84e89529a0f55a730102 100644
+--- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+@@ -189,4 +189,11 @@ public class MiraiConfig {
+                                             "'{} sent expired chat: '{}'. Is the client/server system time unsynchronized?'");
+     }
+ 
++    public static boolean playerFixStuckPortal;
++    private static void fixStuckPortal() {
++        playerFixStuckPortal = getBoolean("player-fix-stuck-in-portal", false,
++                                    "Whether or not players can reset portal cooldown by",
++                                    "walking to another block in case they are stuck.");
++    }
++
+ }
+\ No newline at end of file
