@@ -7,7 +7,7 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index a0317be1eea29e4e911976e0106563cf49db1e6b..4197961b2f03a5151b396d0d09bf5cb9ab6481e7 100644
+index 9901ffe9de585a73e9ef32c700b1e8702f8786d3..aa1bd3423829900729d413a5f98f4a0b9aaf6135 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -181,6 +181,7 @@ public class ServerEntity {
@@ -40,7 +40,7 @@ index a0317be1eea29e4e911976e0106563cf49db1e6b..4197961b2f03a5151b396d0d09bf5cb9
 +
      public void removePairing(ServerPlayer player) {
          this.entity.stopSeenByPlayer(player);
-         // Pufferfish start - ensure main thread
+         player.connection.send(new ClientboundRemoveEntitiesPacket(new int[]{this.entity.getId()}));
 diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
 index 0f94e6a76ab2c323562231ffe58a7c18819e6b00..992ab312e6e2b8283ef8187bcbeeb35dd51858a1 100644
 --- a/src/main/java/wtf/etil/mirai/MiraiConfig.java

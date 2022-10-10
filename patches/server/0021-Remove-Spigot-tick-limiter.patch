@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 4b9db6c2e800c4ad8211afca79c2521a741dba1e..53149faf2b33d202809e259800b15a0d0c2dacf2 100644
+index 13aee2a785b3ddb481744277a25c1ab95e036d4a..7fc3c9892d69d14de694d5328fe17a971019cc54 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -176,8 +176,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -30,8 +30,8 @@ index 4b9db6c2e800c4ad8211afca79c2521a741dba1e..53149faf2b33d202809e259800b15a0d
 +        //this.entityLimiter = new org.spigotmc.TickLimiter(spigotConfig.entityMaxTickTime); // JettPack - remove tick limiter
 +        //this.tileLimiter = new org.spigotmc.TickLimiter(spigotConfig.tileMaxTickTime); // JettPack - remove tick limiter
          this.chunkPacketBlockController = this.paperConfig().anticheat.antiXray.enabled ? new com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray(this, executor) : com.destroystokyo.paper.antixray.ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
-         this.entitySliceManager = new io.papermc.paper.world.EntitySliceManager((ServerLevel)this); // Paper
      }
+ 
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 index bbf15fbb889670e57bd86377590a1b3abe80b96d..ce61f9e8a835bc5e2d3815e337ed9785f9d06f04 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java

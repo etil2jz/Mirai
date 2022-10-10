@@ -24,7 +24,7 @@ index 0000000000000000000000000000000000000000..beaa0a60771b17b93e4074b272b503a2
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/level/entity/EntitySection.java b/src/main/java/net/minecraft/world/level/entity/EntitySection.java
-index e9aee7d11798c3bd990466f101e9e342686de11c..13ebaf6aede402f5f702aae6c1e44445b00cd9bb 100644
+index 524f3c42964eb83c9109bcc548a1075f1e295411..98dca9b243273da3229d38bef6455b03733d5bc9 100644
 --- a/src/main/java/net/minecraft/world/level/entity/EntitySection.java
 +++ b/src/main/java/net/minecraft/world/level/entity/EntitySection.java
 @@ -8,6 +8,10 @@ import net.minecraft.util.ClassInstanceMultiMap;
@@ -38,7 +38,7 @@ index e9aee7d11798c3bd990466f101e9e342686de11c..13ebaf6aede402f5f702aae6c1e44445
  
  public class EntitySection<T extends EntityAccess> {
      private static final Logger LOGGER = LogUtils.getLogger();
-@@ -45,27 +49,62 @@ public class EntitySection<T extends EntityAccess> {
+@@ -27,27 +31,62 @@ public class EntitySection<T extends EntityAccess> {
          return this.storage.remove(entity);
      }
  

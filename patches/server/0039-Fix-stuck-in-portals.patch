@@ -7,10 +7,10 @@ Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 422c65f6e42f3ba5e58126d936dd17913ae0d2b8..e52256415e2776f41d107cbf39a73708d6e0d506 100644
+index 707b803e4851b1cb00aa31de49e0961d403dbad5..d298e85ff59d4fd3229a711468d520bb73028f8b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1153,6 +1153,7 @@ public class ServerPlayer extends Player {
+@@ -1138,6 +1138,7 @@ public class ServerPlayer extends Player {
                  playerlist.sendPlayerPermissionLevel(this);
                  worldserver1.removePlayerImmediately(this, Entity.RemovalReason.CHANGED_DIMENSION);
                  this.unsetRemoved();
@@ -19,10 +19,10 @@ index 422c65f6e42f3ba5e58126d936dd17913ae0d2b8..e52256415e2776f41d107cbf39a73708
                  // CraftBukkit end
                  this.setLevel(worldserver);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 417570c2ad71bc3727e7d5eb841a92ec815d12f6..f30d79d0f77cf411bdb47148ae86ba406a2fdee6 100644
+index fc4bd8ad4836aa6bdd228885f0aeb22500782af5..1af80fe51a67260e4ada32fb5880d50b3fac1d51 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2875,12 +2875,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2876,12 +2876,15 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return Vec3.directionFromRotation(this.getRotationVector());
      }
  
