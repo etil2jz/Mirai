@@ -201,7 +201,7 @@ index 1194c501a82e0e84d961d4ccb62f0c6092db559e..8afacc53a673567cead4c6e49966f07f
      @Override
      public FluidState getFluidState(BlockPos pos) {
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
-index 575efe82a7219e256afd8362984eb26795445119..6292dead8c2d682e524edee6af9f04b31a79489c 100644
+index cf87490a446285132daaf9d90154ac6d477a62fe..3d6c50822701a3828cbde704f419d1c900a67954 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
 @@ -67,6 +67,7 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {

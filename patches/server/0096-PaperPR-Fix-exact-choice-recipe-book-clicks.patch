@@ -98,10 +98,10 @@ index 4fea1c9873b4dd9c9f21722adbb02200487caf3c..cd47b6882509888f7d34e95b4687ca7a
          return instance.group(Registry.ITEM.byNameCodec().fieldOf("id").forGetter((itemstack) -> {
              return itemstack.item;
 diff --git a/src/main/java/net/minecraft/world/item/crafting/Ingredient.java b/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
-index bbf7d112b8020567f2c1d02ce0b2c1a22b2279d1..c707fd29ba282c1ee45d3dc8d8c03dca048420ef 100644
+index 895c0f1600139e340aa22a7c398978add56fa706..d5ced4c4ad354bbe6e6d256853de659923044299 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/Ingredient.java
-@@ -59,7 +59,11 @@ public final class Ingredient implements Predicate<ItemStack> {
+@@ -54,7 +54,11 @@ public final class Ingredient implements Predicate<ItemStack> {
          if (this.itemStacks == null) {
              this.itemStacks = (ItemStack[]) Arrays.stream(this.values).flatMap((recipeitemstack_provider) -> {
                  return recipeitemstack_provider.getItems().stream();
@@ -114,7 +114,7 @@ index bbf7d112b8020567f2c1d02ce0b2c1a22b2279d1..c707fd29ba282c1ee45d3dc8d8c03dca
                  return new ItemStack[i];
              });
          }
-@@ -102,7 +106,13 @@ public final class Ingredient implements Predicate<ItemStack> {
+@@ -104,7 +108,13 @@ public final class Ingredient implements Predicate<ItemStack> {
              for (int j = 0; j < i; ++j) {
                  ItemStack itemstack = aitemstack[j];
  

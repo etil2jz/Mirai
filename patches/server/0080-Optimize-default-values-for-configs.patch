@@ -5,28 +5,10 @@ Subject: [PATCH] Optimize default values for configs
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 38cb29c646ff496ffaa6553f98a565b71155c464..26f9a007931edb1c0b67920309bc7c6b848bbd32 100644
+index 34eb43ca2bf446504c372f98dfbe6dbfd0a81369..74d86c1a9ef79e09b1ec02b93e8f62d3e0746d43 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -216,7 +216,7 @@ public class PufferfishConfig {
- 	public static boolean enableAsyncEntityTracker;
- 	public static boolean enableAsyncEntityTrackerInitialized;
- 	private static void asyncEntityTracker() {
--		boolean temp = getBoolean("enable-async-entity-tracker", false,
-+		boolean temp = getBoolean("enable-async-entity-tracker", true, // Mirai - optimize default values for configs
- 				"Whether or not async entity tracking should be enabled.");
- 		if (!enableAsyncEntityTrackerInitialized) {
- 			enableAsyncEntityTrackerInitialized = true;
-@@ -227,7 +227,7 @@ public class PufferfishConfig {
- 	public static boolean enableAsyncPathfinding;
- 	public static boolean enableAsyncPathfindingInitialized;
- 	private static void asyncPathfinding() {
--		boolean temp = getBoolean("enable-async-pathfinding", false,
-+		boolean temp = getBoolean("enable-async-pathfinding", true, // Mirai - optimize default values for configs
- 				"Whether or not async pathfinding should be enabled.");
- 		if (!enableAsyncPathfindingInitialized) {
- 			enableAsyncPathfindingInitialized = true;
-@@ -239,7 +239,7 @@ public class PufferfishConfig {
+@@ -217,7 +217,7 @@ public class PufferfishConfig {
      public static int maxProjectileLoadsPerProjectile;
      private static void projectileLoading() {
          maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
@@ -36,10 +18,10 @@ index 38cb29c646ff496ffaa6553f98a565b71155c464..26f9a007931edb1c0b67920309bc7c6b
          setComment("projectile", "Optimizes projectile settings");
      }
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index bc72131afa1ae9986ee311a9b371e97c8feb38f8..0130e2c3c047055fbea9c3d893a9b4593fa10ed2 100644
+index 54bca103347e89f116fb7fbf37449a32ac094286..76810d7767b1a66315b006569654c718105ab4ee 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -56,7 +56,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -55,7 +55,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean enabled = true;
          public boolean reallyEnabled = false;
          public boolean verbose = true;
@@ -48,7 +30,7 @@ index bc72131afa1ae9986ee311a9b371e97c8feb38f8..0130e2c3c047055fbea9c3d893a9b459
          public boolean serverNamePrivacy = false;
          public List<String> hiddenConfigEntries = List.of(
              "database",
-@@ -266,9 +266,9 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -289,9 +289,9 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean fixEntityPositionDesync = true;
          public boolean loadPermissionsYmlBeforePlugins = true;
          @Constraints.Min(4)

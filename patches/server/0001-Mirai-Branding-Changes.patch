@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Branding Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 7074295d7399d03e259598bb4bfa0f21434d74be..b3b74bfee4a568697f36d6fab9f77652911c75ff 100644
+index f0d22a733e3b97fb959cd566fb6c93c6d5681e16..65441b943a97f8aa453f31bf5cf7f87862fdcc07 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,7 +9,7 @@ plugins {
@@ -204,7 +204,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
-index b0390eedb507d27426d1e1d73bd4ab63aec89ebe..509a9a5326d94200ca3d7a83ae47c6bb093d6969 100644
+index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..d0a342ce8a5cc1a12ecab7969187166fe3597708 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 +++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 @@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
@@ -217,10 +217,10 @@ index b0390eedb507d27426d1e1d73bd4ab63aec89ebe..509a9a5326d94200ca3d7a83ae47c6bb
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 92f685b1b6015cdd3e6c50fd39a79e2ad187fc91..9b64602e5ce5100dd1d467d404b4a6486ccc2faa 100644
+index af9da39dffda01325af2ab3dd8b5e1efb18e013a..da9623b90f3d25dc4c3e3aa269c4ccd2c8a0a52c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -923,7 +923,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -229,7 +229,7 @@ index 92f685b1b6015cdd3e6c50fd39a79e2ad187fc91..9b64602e5ce5100dd1d467d404b4a648
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1675,7 +1675,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1656,7 +1656,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -239,7 +239,7 @@ index 92f685b1b6015cdd3e6c50fd39a79e2ad187fc91..9b64602e5ce5100dd1d467d404b4a648
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 660d3f6e8a59751aa1d5b71f5bab72254b6065b8..613c72b94dc47edf5c454545e2e2b05752a92bc8 100644
+index b8efe50c860a7537f345f46f3b3d68906ad54006..adf6308c0d8dbd8919db60abce51082091005bd1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
@@ -302,10 +302,10 @@ index 80553face9c70c2a3d897681e7761df85b22d464..bcdb4fd83b665a6f96b6d6e989f2cfe2
      }
  }
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index d568fc92d03c313a782796cc720a1ebb1a5ad8be..413bcdb0389718a73047a114e6f5d05d96bdcf43 100644
+index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..a566fa4b061961fb07720642564c4d521fbacab6 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
-@@ -155,14 +155,14 @@ public class WatchdogThread extends Thread
+@@ -155,14 +155,14 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  if (isLongTimeout) {
                  // Paper end
                  log.log( Level.SEVERE, "------------------------------" );
@@ -323,7 +323,7 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..413bcdb0389718a73047a114e6f5d05d
                  //
                  if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
                  {
-@@ -185,12 +185,12 @@ public class WatchdogThread extends Thread
+@@ -185,12 +185,12 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  // Paper end
                  } else
                  {
@@ -335,10 +335,10 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..413bcdb0389718a73047a114e6f5d05d
                  log.log( Level.SEVERE, "------------------------------" );
 -                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
 +                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Mirai!):" ); // Paper // Mirai
-                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.dumpAllChunkLoadInfo(isLongTimeout); // Paper // Paper - rewrite chunk system
                  this.dumpTickingInfo(); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
-@@ -206,7 +206,7 @@ public class WatchdogThread extends Thread
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
+@@ -206,7 +206,7 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                      WatchdogThread.dumpThread( thread, log );
                  }
                  } else {

@@ -7,10 +7,10 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 94944ba458178f9e5b772224da329bb5d85f4394..56e5679a3910a6e5b25aeb0d3eb7420444296932 100644
+index af7acb628b84539b1ee5ef1934f75f091c4cd91e..707b803e4851b1cb00aa31de49e0961d403dbad5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -376,7 +376,7 @@ public class ServerPlayer extends Player {
+@@ -361,7 +361,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);
@@ -19,7 +19,7 @@ index 94944ba458178f9e5b772224da329bb5d85f4394..56e5679a3910a6e5b25aeb0d3eb74204
  
              for (int l1 = 0; l1 < i1; ++l1) {
                  int i2 = (k1 + j1 * l1) % i1;
-@@ -413,7 +413,7 @@ public class ServerPlayer extends Player {
+@@ -398,7 +398,7 @@ public class ServerPlayer extends Player {
              long l = k * k;
              int i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
              int j1 = this.getCoprime(i1);

@@ -8,7 +8,7 @@ You can find the original code on https://github.com/CaffeineMC/lithium-fabric (
 
 diff --git a/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d2b00d9a91b60716d5f458048df3d944060eb749
+index 0000000000000000000000000000000000000000..b8c9cb28876c2c1781cd72870076d528b9647916
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/lithium/common/util/math/CompactSineLUT.java
 @@ -0,0 +1,90 @@
@@ -67,12 +67,12 @@ index 0000000000000000000000000000000000000000..d2b00d9a91b60716d5f458048df3d944
 +
 +    // [VanillaCopy] MathHelper#sin(float)
 +    public static float sin(float f) {
-+        return lookup((int) (f * 10430.38) & 0xFFFF);
++        return lookup((int) (f * 10430.378f) & 0xFFFF);
 +    }
 +
 +    // [VanillaCopy] MathHelper#cos(float)
 +    public static float cos(float f) {
-+        return lookup((int) (f * 10430.38 + 16384.0) & 0xFFFF);
++        return lookup((int) (f * 10430.378f + 16384.0f) & 0xFFFF);
 +    }
 +
 +    private static float lookup(int index) {

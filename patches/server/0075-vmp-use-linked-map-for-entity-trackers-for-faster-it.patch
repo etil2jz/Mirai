@@ -9,23 +9,23 @@ Original code by RelativityMC, licensed under MIT
 You can find the original code on https://github.com/RelativityMC/VMP-fabric (Yarn mappings)
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index cec58f0d7ac6bf73a0f7b418a595704b8b807425..a9f83218af1675a15505acafd67d79954a8ed38d 100644
+index 4748828f84f7d5f2dd79945dd65f3fa55cd43010..a83b5520b0210d82e26cb6ec490fe30778ea92ab 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -111,6 +111,7 @@ import org.bukkit.craftbukkit.generator.CustomChunkGenerator;
- import org.bukkit.entity.Player;
+@@ -111,6 +111,7 @@ import org.bukkit.entity.Player;
  // CraftBukkit end
+ 
  import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet; // Paper
 +import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap; // Mirai - vmp: use linked map for entity trackers for faster iteration
  
  public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider {
  
-@@ -416,7 +417,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-         this.toDrop = new LongOpenHashSet();
+@@ -291,7 +292,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         // Paper - rewrite chunk system
          this.tickingGenerated = new AtomicInteger();
          this.playerMap = new PlayerMap();
 -        this.entityMap = new Int2ObjectOpenHashMap();
 +        this.entityMap = new Int2ObjectLinkedOpenHashMap<>(); // Mirai - vmp: use linked map for entity trackers for faster iteration
          this.chunkTypeCache = new Long2ByteOpenHashMap();
          this.chunkSaveCooldowns = new Long2LongOpenHashMap();
-         this.unloadQueue = new com.destroystokyo.paper.utils.CachedSizeConcurrentLinkedQueue<>(); // Paper - need constant-time size()
+         this.unloadQueue = Queues.newConcurrentLinkedQueue();

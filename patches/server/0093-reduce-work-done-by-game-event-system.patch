@@ -11,10 +11,10 @@ Original project: https://github.com/Bloom-host/Petal
 2. euclideangameeventdispatcher is not used concurrently so we ban that usage for improved performance with allays
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index e2da2c2823fd64ec714c3d083039fc04d11fea73..3f749f33f9168455cfe14a6e6120f36b412205f3 100644
+index b0b881eed06b1963c639b1a2c0808ab47fb34ac0..7dc341e91aaa581e499dfa3823712fcece9d5756 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1623,6 +1623,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1648,6 +1648,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  if (chunk != null) {
                      for (int j2 = k; j2 <= j1; ++j2) {
                          flag |= chunk.getEventDispatcher(j2).walkListeners(event, emitterPos, emitter, (gameeventlistener, vec3d1) -> {
@@ -41,7 +41,7 @@ index 22c309343299e60ed8028229b7f134109001ff35..d5947d29295ddc93ba8ac1c0fc61f7ba
          org.bukkit.craftbukkit.event.CraftEventFactory.sourceBlockOverride = blockEntity.getBlockPos(); // CraftBukkit - SPIGOT-7068: Add source block override, not the most elegant way but better than passing down a BlockPosition up to five methods deep.
          blockEntity.sculkSpreader.updateCursors(world, pos, world.getRandom(), true);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 0b08a91ae9dc73c011dbb5f517becac7d08fd1e9..b3f8de20eb09547672218c62817759d03461922d 100644
+index 34334c139176e0aa9f6d93a87821508d17567cfc..6ba7d8c32cdd51c2c291ccafe0a9d145c88155f5 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -84,7 +84,18 @@ public class LevelChunk extends ChunkAccess {
@@ -63,8 +63,8 @@ index 0b08a91ae9dc73c011dbb5f517becac7d08fd1e9..b3f8de20eb09547672218c62817759d0
 +    // petal end
      private final LevelChunkTicks<Block> blockTicks;
      private final LevelChunkTicks<Fluid> fluidTicks;
-     // Paper start - track last save time
-@@ -119,7 +130,7 @@ public class LevelChunk extends ChunkAccess {
+ 
+@@ -113,7 +124,7 @@ public class LevelChunk extends ChunkAccess {
          this.tickersInLevel = Maps.newHashMap();
          this.clientLightReady = false;
          this.level = (ServerLevel) world; // CraftBukkit - type
@@ -73,7 +73,7 @@ index 0b08a91ae9dc73c011dbb5f517becac7d08fd1e9..b3f8de20eb09547672218c62817759d0
          Heightmap.Types[] aheightmap_type = Heightmap.Types.values();
          int j = aheightmap_type.length;
  
-@@ -453,9 +464,23 @@ public class LevelChunk extends ChunkAccess {
+@@ -446,9 +457,23 @@ public class LevelChunk extends ChunkAccess {
          if (world instanceof ServerLevel) {
              ServerLevel worldserver = (ServerLevel) world;
  
@@ -100,7 +100,7 @@ index 0b08a91ae9dc73c011dbb5f517becac7d08fd1e9..b3f8de20eb09547672218c62817759d0
          } else {
              return super.getEventDispatcher(ySectionCoord);
          }
-@@ -819,7 +844,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -812,7 +837,7 @@ public class LevelChunk extends ChunkAccess {
  
                  gameeventdispatcher.unregister(gameeventlistener);
                  if (gameeventdispatcher.isEmpty()) {

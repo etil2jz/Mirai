@@ -114,7 +114,7 @@ index 40447d00aefb5ffedb8a2ee87155a04088f0649f..633a6e313174244cf13ed89b53893ea5
      }
  }
 diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
-index b53402903eb6845df361daf6b05a668608ad7b63..0d43afcdd5db346d0ddf82e06bad5b219721715c 100644
+index dd501e83d991e45598509134fab05bafc1904953..5ecdbeb90e9715fc89ff25e9b3c33a2e8d98ff93 100644
 --- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
 +++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
 @@ -387,11 +387,11 @@ public final class PlayerChunkLoader {
@@ -132,10 +132,10 @@ index b53402903eb6845df361daf6b05a668608ad7b63..0d43afcdd5db346d0ddf82e06bad5b21
  
      public void onChunkPlayerTickReady(final int chunkX, final int chunkZ) {
 diff --git a/src/main/java/io/papermc/paper/command/subcommands/FixLightCommand.java b/src/main/java/io/papermc/paper/command/subcommands/FixLightCommand.java
-index 68645bbbab9b4225048b647252d8f462028a9c84..14eff63f7725769ba0ce15eedf7f605ee34d1722 100644
+index 450bd95218852174cfbc88d4517e17daee5ffd5f..317e952655db5a4dcb2e6ec6573510f75bba9255 100644
 --- a/src/main/java/io/papermc/paper/command/subcommands/FixLightCommand.java
 +++ b/src/main/java/io/papermc/paper/command/subcommands/FixLightCommand.java
-@@ -105,12 +105,12 @@ public final class FixLightCommand implements PaperSubcommand {
+@@ -95,12 +95,12 @@ public final class FixLightCommand implements PaperSubcommand {
                  ++relitChunks[0];
                  sender.getBukkitEntity().sendMessage(text().color(DARK_AQUA).append(
                      text("Relit chunk ", BLUE), text(chunkPos.toString()),
@@ -143,7 +143,7 @@ index 68645bbbab9b4225048b647252d8f462028a9c84..14eff63f7725769ba0ce15eedf7f605e
 +                    text(", progress: ", BLUE), text((int) (carpetfixes.helpers.FastMath.round(100.0 * (double) (relitChunks[0]) / (double) pending[0])) + "%") // Mirai
                  ));
              },
-             (int totalRelit) -> {
+             (final int totalRelit) -> {
                  final long end = System.nanoTime();
 -                final long diff = Math.round(1.0e-6 * (end - start));
 +                final long diff = carpetfixes.helpers.FastMath.round(1.0e-6 * (end - start)); // Mirai
@@ -164,10 +164,10 @@ index e3e80db89c18588322ffdaa0f9fd85e398cb1471..d947011b80ee14e7aaf74af3d9081fc7
                  throw ERROR_INVALID_TICK_COUNT.create(j);
              } else {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c25f0c98128c85ed4e867c6d842c8de28e0936fb..2789eb371b3c9c8803a10d07f8c21ced49ad6d16 100644
+index 6cdced357fdcd5ea4ce0c63d29e39573a5f40f65..3c528e612e9ed17e8c58bbef6c26471cc3411a7a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2787,7 +2787,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+@@ -2767,7 +2767,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
                      }
  
                      double overuseCount = (double)overuse/(double)MAX_CHUNK_EXEC_TIME;
@@ -202,7 +202,7 @@ index ec587cf6592a1dc0d90d6f54af1bdfab97aec7c6..41fe8bbdf9235ce79bffe6b2fe1339f7
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035ae2c7041d 100644
+index 24484d985929c7860aa08dbfca6df113086d2ed0..2c4cd831414f73e6eba51e8b49d97cdb89ec6fbb 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1496,7 +1496,7 @@ public abstract class LivingEntity extends Entity {
@@ -214,7 +214,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
                  }
              }
  
-@@ -2047,9 +2047,9 @@ public abstract class LivingEntity extends Entity {
+@@ -2050,9 +2050,9 @@ public abstract class LivingEntity extends Entity {
  
                  if (f3 > 0.0F && f3 < 3.4028235E37F) {
                      if (this instanceof ServerPlayer) {
@@ -226,7 +226,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
                      }
                  }
              }
-@@ -2161,9 +2161,9 @@ public abstract class LivingEntity extends Entity {
+@@ -2164,9 +2164,9 @@ public abstract class LivingEntity extends Entity {
                  float f3 = (float) -event.getDamage(DamageModifier.RESISTANCE);
                  if (f3 > 0.0F && f3 < 3.4028235E37F) {
                      if (this instanceof ServerPlayer) {
@@ -238,7 +238,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
                      }
                  }
              }
-@@ -2195,10 +2195,10 @@ public abstract class LivingEntity extends Entity {
+@@ -2198,10 +2198,10 @@ public abstract class LivingEntity extends Entity {
              float f2 = absorptionModifier;
  
              if (f2 > 0.0F && f2 < 3.4028235E37F && this instanceof net.minecraft.world.entity.player.Player) {
@@ -251,7 +251,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
              }
  
              if (f > 0 || !human) {
-@@ -2206,7 +2206,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2209,7 +2209,7 @@ public abstract class LivingEntity extends Entity {
                      // PAIL: Be sure to drag all this code from the EntityHuman subclass each update.
                      ((net.minecraft.world.entity.player.Player) this).causeFoodExhaustion(damagesource.getFoodExhaustion(), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.DAMAGED); // CraftBukkit - EntityExhaustionEvent
                      if (f < 3.4028235E37F) {
@@ -260,7 +260,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
                      }
                  }
                  // CraftBukkit end
-@@ -2228,7 +2228,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2231,7 +2231,7 @@ public abstract class LivingEntity extends Entity {
                          CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayer) this, damagesource, f, originalDamage, true);
                          f2 = (float) -event.getDamage(DamageModifier.BLOCKING);
                          if (f2 > 0.0F && f2 < 3.4028235E37F) {
@@ -269,7 +269,7 @@ index fea7b1c5a1236a4667c738b9cf27800863b26cfb..e31bb8d49a9efa0417e6f855a020035a
                          }
                      }
  
-@@ -3032,13 +3032,13 @@ public abstract class LivingEntity extends Entity {
+@@ -3035,13 +3035,13 @@ public abstract class LivingEntity extends Entity {
          this.level.getProfiler().push("rangeChecks");
  
          // Paper start - stop large pitch and yaw changes from crashing the server
@@ -424,7 +424,7 @@ index 16504b8be08064e61b013fa943f692816612cbd0..38f6759501dcc2a0adb9608a9f639c24
  
          i = Mth.clamp(i, (int) 0, (int) 15);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..61e35c7a91341701bad119ca9ea56373b6b7d7a9 100644
+index cb64b46eb874bb7ce22cdbf9e9629c929a05fb61..92439cfe75932ff0997c6deabf43a552175e927e 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -249,8 +249,8 @@ public abstract class ChunkGenerator {
