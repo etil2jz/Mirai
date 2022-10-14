@@ -9,10 +9,10 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index d298e85ff59d4fd3229a711468d520bb73028f8b..48e195a6c8005a64cb286cfae39e54745f83affe 100644
+index 63e222d8a981a391b1dd01a8a10bb5df8099f922..66daae13483c3dfd84047ead2aa2cdade540f835 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -600,7 +600,7 @@ public class ServerPlayer extends Player {
+@@ -619,7 +619,7 @@ public class ServerPlayer extends Player {
  
      @Override
      protected void onInsideBlock(BlockState state) {
@@ -21,7 +21,7 @@ index d298e85ff59d4fd3229a711468d520bb73028f8b..48e195a6c8005a64cb286cfae39e5474
      }
  
      @Override
-@@ -646,7 +646,7 @@ public class ServerPlayer extends Player {
+@@ -665,7 +665,7 @@ public class ServerPlayer extends Player {
              }
          }
  
@@ -30,7 +30,7 @@ index d298e85ff59d4fd3229a711468d520bb73028f8b..48e195a6c8005a64cb286cfae39e5474
          if (this.levitationStartPos != null) {
              CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
          }
-@@ -722,9 +722,7 @@ public class ServerPlayer extends Player {
+@@ -741,9 +741,7 @@ public class ServerPlayer extends Player {
                  this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
              }
  

@@ -37,7 +37,7 @@ index 6a0a1731fd6804eb69d3641213712d31bce085b2..5f4bb589474ce7d4f214e32ab0bc4b9c
  
      public float getHealthOfLivingRaiders() {
 diff --git a/src/main/java/net/minecraft/world/entity/raid/Raider.java b/src/main/java/net/minecraft/world/entity/raid/Raider.java
-index 4bb9730b6a42702e91467f980b9f045585039db3..7ba9c7f995c2bacc8f9a86a78747ea30f45eb59a 100644
+index 8877423a99e387c18d1d994518bf15d8d9ba64af..a65e82c8e2975244d725ff2f4931df183f25b63f 100644
 --- a/src/main/java/net/minecraft/world/entity/raid/Raider.java
 +++ b/src/main/java/net/minecraft/world/entity/raid/Raider.java
 @@ -46,8 +46,9 @@ import net.minecraft.world.phys.Vec3;
@@ -60,7 +60,7 @@ index 4bb9730b6a42702e91467f980b9f045585039db3..7ba9c7f995c2bacc8f9a86a78747ea30
                      MobEffectInstance mobeffect = entityhuman.getEffect(MobEffects.BAD_OMEN);
                      byte b0 = 1;
                      int i;
-@@ -304,6 +305,7 @@ public abstract class Raider extends PatrollingMonster {
+@@ -309,6 +310,7 @@ public abstract class Raider extends PatrollingMonster {
      public class ObtainRaidLeaderBannerGoal<T extends Raider> extends Goal {
  
          private final T mob;
@@ -68,7 +68,7 @@ index 4bb9730b6a42702e91467f980b9f045585039db3..7ba9c7f995c2bacc8f9a86a78747ea30
  
          public ObtainRaidLeaderBannerGoal(T entityraider) { // CraftBukkit - decompile error
              this.mob = entityraider;
-@@ -315,7 +317,7 @@ public abstract class Raider extends PatrollingMonster {
+@@ -320,7 +322,7 @@ public abstract class Raider extends PatrollingMonster {
              if (!this.mob.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || !this.mob.canPickUpLoot()) return false; // Paper - respect game and entity rules for picking up items
              Raid raid = this.mob.getCurrentRaid();
  

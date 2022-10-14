@@ -304,7 +304,7 @@ index 1eb912ad97f9663bf6bd336ad739f2552b0a5c9b..9901ffe9de585a73e9ef32c700b1e870
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f8750675044708e71dbf6293be6ce36bd6c510ca..413c5891e1affc89f2d4e63214ef6621d63f83b3 100644
+index 917cf327f3f9d824ec0da70fd9204624e7cf96fb..c8941cdcebf7b3d09a67a7213ef6eab3feef1cab 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -907,7 +907,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -326,7 +326,7 @@ index f8750675044708e71dbf6293be6ce36bd6c510ca..413c5891e1affc89f2d4e63214ef6621
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index cc55cb14f2d0f656213be25a1e428132871ac5dd..69316c97dd898ecf1a72f032374ccd8ed9f974b9 100644
+index 59608a53bbf0eccf118b4d65557444f6532fedb4..50cbd7ca6394cc486b673fcf0d2bc4dc8c1f32de 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -410,7 +410,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -354,7 +354,7 @@ index cc55cb14f2d0f656213be25a1e428132871ac5dd..69316c97dd898ecf1a72f032374ccd8e
              return;
          }
          // Paper end
-@@ -3396,7 +3396,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3397,7 +3397,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {

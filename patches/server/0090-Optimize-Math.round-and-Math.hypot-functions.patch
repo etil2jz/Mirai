@@ -424,10 +424,10 @@ index 16504b8be08064e61b013fa943f692816612cbd0..38f6759501dcc2a0adb9608a9f639c24
  
          i = Mth.clamp(i, (int) 0, (int) 15);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index cb64b46eb874bb7ce22cdbf9e9629c929a05fb61..92439cfe75932ff0997c6deabf43a552175e927e 100644
+index 52264a583e79cc6adb9967aebac7f6b3ac129017..f642b7c58b8e9189d9734bf6a699848f9610b66d 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-@@ -249,8 +249,8 @@ public abstract class ChunkGenerator {
+@@ -254,8 +254,8 @@ public abstract class ChunkGenerator {
  
              for (int j1 = 0; j1 < j; ++j1) {
                  double d1 = (double) (4 * i + i * i1 * 6) + (randomsource.nextDouble() - 0.5D) * (double) i * 2.5D;
