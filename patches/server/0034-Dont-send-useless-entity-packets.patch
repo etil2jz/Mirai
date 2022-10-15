@@ -6,15 +6,31 @@ Subject: [PATCH] Dont send useless entity packets
 Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index db60b0dc87c5c7d50a5161ed2816067a49f2f5a7..9379fd91df73ac482064a89462764dac9835c71f 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -153,4 +153,10 @@ public class MiraiConfig {
+                                 "Whether or not vanilla anticheat should check for passengers flying.");
+     }
+ 
++    public static boolean dontSendUselessEntityPackets;
++    private static void uselessEntityPackets() {
++        dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", true,
++                                        "Whether or not server should send entity packets with null movements.");
++    }
++
+ }
+\ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 9901ffe9de585a73e9ef32c700b1e8702f8786d3..aa1bd3423829900729d413a5f98f4a0b9aaf6135 100644
+index 9901ffe9de585a73e9ef32c700b1e8702f8786d3..bf314a8ea0145a82c5ff4fdff23444b8978845fe 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -181,6 +181,7 @@ public class ServerEntity {
                          this.teleportDelay = 0;
                          packet1 = new ClientboundTeleportEntityPacket(this.entity);
                      }
-+                    if (wtf.etil.mirai.MiraiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
++                    if (dev.etil.mirai.MiraiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
                  }
  
                  if ((this.trackDelta || this.entity.hasImpulse || this.entity instanceof LivingEntity && ((LivingEntity) this.entity).isFallFlying()) && this.tickCount > 0) {
@@ -41,19 +57,3 @@ index 9901ffe9de585a73e9ef32c700b1e8702f8786d3..aa1bd3423829900729d413a5f98f4a0b
      public void removePairing(ServerPlayer player) {
          this.entity.stopSeenByPlayer(player);
          player.connection.send(new ClientboundRemoveEntitiesPacket(new int[]{this.entity.getId()}));
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 0f94e6a76ab2c323562231ffe58a7c18819e6b00..992ab312e6e2b8283ef8187bcbeeb35dd51858a1 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -153,4 +153,10 @@ public class MiraiConfig {
-                                 "Whether or not vanilla anticheat should check for passengers flying.");
-     }
- 
-+    public static boolean dontSendUselessEntityPackets;
-+    private static void uselessEntityPackets() {
-+        dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", true,
-+                                        "Whether or not server should send entity packets with null movements.");
-+    }
-+
- }
-\ No newline at end of file

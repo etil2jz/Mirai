@@ -5,7 +5,7 @@ Subject: [PATCH] Mirai Configuration
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 2cc44fbf8e5bd436b6d4e19f6c06b351e750cb31..848ffaab670a6a245c40e52c43e0e7e826b3acbb 100644
+index 2cc44fbf8e5bd436b6d4e19f6c06b351e750cb31..3491ee7e1dfeb130ffab57e9696b784220aeae67 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
 @@ -242,7 +242,8 @@ public class TimingsExport extends Thread {
@@ -14,30 +14,17 @@ index 2cc44fbf8e5bd436b6d4e19f6c06b351e750cb31..848ffaab670a6a245c40e52c43e0e7e8
              pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Pufferfish
 -            pair("pufferfish", mapAsJSON(gg.pufferfish.pufferfish.PufferfishConfig.getConfigCopy(), null)) // Pufferfish
 +            pair("pufferfish", mapAsJSON(gg.pufferfish.pufferfish.PufferfishConfig.getConfigCopy(), null)), // Pufferfish // Mirai
-+            pair("mirai", mapAsJSON(wtf.etil.mirai.MiraiConfig.getConfigCopy(), null)) // Mirai
++            pair("mirai", mapAsJSON(dev.etil.mirai.MiraiConfig.getConfigCopy(), null)) // Mirai
          ));
  
          new TimingsExport(listeners, parent, history).start();
-diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 519883c5549744e047a8a96afee142746fcb49cd..2ef1d4feff67f9e618dc96bd1a3a086ddff25673 100644
---- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-+++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -228,6 +228,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
-         // Paper end
-         gg.pufferfish.pufferfish.PufferfishConfig.load(); // Pufferfish
-         gg.pufferfish.pufferfish.PufferfishCommand.init(); // Pufferfish
-+        wtf.etil.mirai.MiraiConfig.load(); // Mirai
-+        wtf.etil.mirai.MiraiCommand.init(); // Mirai
- 
-         this.setPvpAllowed(dedicatedserverproperties.pvp);
-         this.setFlightAllowed(dedicatedserverproperties.allowFlight);
-diff --git a/src/main/java/wtf/etil/mirai/MiraiCommand.java b/src/main/java/wtf/etil/mirai/MiraiCommand.java
+diff --git a/src/main/java/dev/etil/mirai/MiraiCommand.java b/src/main/java/dev/etil/mirai/MiraiCommand.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d73428f5554384e5bbf1c8607073b50d74c9a4cc
+index 0000000000000000000000000000000000000000..cdfb44177311987a19d3867df2d158647e6cc9a3
 --- /dev/null
-+++ b/src/main/java/wtf/etil/mirai/MiraiCommand.java
++++ b/src/main/java/dev/etil/mirai/MiraiCommand.java
 @@ -0,0 +1,68 @@
-+package wtf.etil.mirai;
++package dev.etil.mirai;
 +
 +import java.io.IOException;
 +import java.util.Collections;
@@ -106,13 +93,13 @@ index 0000000000000000000000000000000000000000..d73428f5554384e5bbf1c8607073b50d
 +    }
 +}
 \ No newline at end of file
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..adf6004cd1637a2662e2d448221b063688a26016
+index 0000000000000000000000000000000000000000..54cab7abec16b0c7155fc494f317119f17804d49
 --- /dev/null
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
 @@ -0,0 +1,134 @@
-+package wtf.etil.mirai;
++package dev.etil.mirai;
 +
 +import java.io.File;
 +import java.io.IOException;
@@ -247,6 +234,19 @@ index 0000000000000000000000000000000000000000..adf6004cd1637a2662e2d448221b0636
 +
 +}
 \ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index d4efadbc87ee0b6cb8564c57fc9dcbb48367a767..d0c3b59233875e3dd05695ef4176573900d74b19 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -228,6 +228,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         // Paper end
+         gg.pufferfish.pufferfish.PufferfishConfig.load(); // Pufferfish
+         gg.pufferfish.pufferfish.PufferfishCommand.init(); // Pufferfish
++        dev.etil.mirai.MiraiConfig.load(); // Mirai
++        dev.etil.mirai.MiraiCommand.init(); // Mirai
+ 
+         this.setPvpAllowed(dedicatedserverproperties.pvp);
+         this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/resources/logo.png b/src/main/resources/logo.png
 index a7d785f60c884ee4ee487cc364402d66c3dc2ecc..17697262316fba32f4a87ea50a9bc8993be50820 100644
 GIT binary patch

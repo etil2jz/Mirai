@@ -6,8 +6,25 @@ Subject: [PATCH] Alternative Keepalive Handling
 Original code by PurpurMC, licensed under MIT
 You can find the original code on https://github.com/PurpurMC/Purpur
 
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 9379fd91df73ac482064a89462764dac9835c71f..432ba1293419dea0903e31043f68f5ad45ed0c2d 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -159,4 +159,11 @@ public class MiraiConfig {
+                                         "Whether or not server should send entity packets with null movements.");
+     }
+ 
++    public static boolean useAlternateKeepAlive;
++    private static void alternateKeepAlive() {
++        useAlternateKeepAlive = getBoolean("use-alternate-keepalive", true,
++                                    "Whether or not server should use an alternative keepalive algorithm.",
++                                    "This can drastically reduce players timeouts due to a bad connection.");
++    }
++
+ }
+\ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index ca245019669591a5468de2df6dedc3080b61282e..507cc0d0322bff3e2536629b89339982cdc8352f 100644
+index 40d0d7bc43e8c1465088408efe7eeed845eeb9f7..3bd4fd4a0b197bde9b254ec8f264e396064bf583 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -260,6 +260,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -23,7 +40,7 @@ index ca245019669591a5468de2df6dedc3080b61282e..507cc0d0322bff3e2536629b89339982
          long elapsedTime = currentTime - this.keepAliveTime;
  
 +        // Purpur start
-+        if (wtf.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
++        if (dev.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
 +            if (elapsedTime >= 1000L) { // 1 second
 +                if (!processedDisconnect && keepAlives.size() > KEEPALIVE_LIMIT) {
 +                    LOGGER.warn("{} was kicked due to keepalive timeout!", player.getName());
@@ -45,7 +62,7 @@ index ca245019669591a5468de2df6dedc3080b61282e..507cc0d0322bff3e2536629b89339982
      @Override
      public void handleKeepAlive(ServerboundKeepAlivePacket packet) {
 +        // Purpur start
-+        if (wtf.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
++        if (dev.etil.mirai.MiraiConfig.useAlternateKeepAlive) {
 +            long id = packet.getId();
 +            if (keepAlives.size() > 0 && keepAlives.contains(id)) {
 +                int ping = (int) (Util.getMillis() - id);
@@ -57,20 +74,3 @@ index ca245019669591a5468de2df6dedc3080b61282e..507cc0d0322bff3e2536629b89339982
          //PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // CraftBukkit // Paper - This shouldn't be on the main thread
          if (this.keepAlivePending && packet.getId() == this.keepAliveChallenge) {
              int i = (int) (Util.getMillis() - this.keepAliveTime);
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 992ab312e6e2b8283ef8187bcbeeb35dd51858a1..ffbee643991ff36bb3a0b8de937fcf518c25a294 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -159,4 +159,11 @@ public class MiraiConfig {
-                                         "Whether or not server should send entity packets with null movements.");
-     }
- 
-+    public static boolean useAlternateKeepAlive;
-+    private static void alternateKeepAlive() {
-+        useAlternateKeepAlive = getBoolean("use-alternate-keepalive", true,
-+                                    "Whether or not server should use an alternative keepalive algorithm.",
-+                                    "This can drastically reduce players timeouts due to a bad connection.");
-+    }
-+
- }
-\ No newline at end of file

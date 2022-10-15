@@ -10,7 +10,7 @@ Copyright (c) 2020 Fx Morin
 
 diff --git a/src/main/java/carpetfixes/helpers/FastMath.java b/src/main/java/carpetfixes/helpers/FastMath.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2f48a1c71356f7ebc00aaa44b28f6e10b2de1dee
+index 0000000000000000000000000000000000000000..e9d6256ab8bfd2d4147063235d6ab1de71da93a8
 --- /dev/null
 +++ b/src/main/java/carpetfixes/helpers/FastMath.java
 @@ -0,0 +1,59 @@
@@ -26,7 +26,7 @@ index 0000000000000000000000000000000000000000..2f48a1c71356f7ebc00aaa44b28f6e10
 +     * ~1.25x faster than {@link Math#round(float)}
 +     */
 +    public static int round(float a) {
-+        if (wtf.etil.mirai.MiraiConfig.optimizedRound) return a > 0F ? (int)(a + .5F) : (int)(a - .5F);
++        if (dev.etil.mirai.MiraiConfig.optimizedRound) return a > 0F ? (int)(a + .5F) : (int)(a - .5F);
 +        return Math.round(a);
 +    }
 +
@@ -35,7 +35,7 @@ index 0000000000000000000000000000000000000000..2f48a1c71356f7ebc00aaa44b28f6e10
 +     * ~1.28x faster than {@link Math#round(double)}
 +     */
 +    public static long round(double a) {
-+        if (wtf.etil.mirai.MiraiConfig.optimizedRound) return a > 0D ? (long)(a + .5D) : (long)(a - .5D);
++        if (dev.etil.mirai.MiraiConfig.optimizedRound) return a > 0D ? (long)(a + .5D) : (long)(a - .5D);
 +        return Math.round(a);
 +    }
 +
@@ -99,6 +99,25 @@ index c3e54da4ab6440811aab2f9dd1e218802ac13285..db1319c51a5410ee106d023fce759f1e
                  used, getTime(m.x)));
          }
      }
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index b9ab67acf30d20745111b9fe5c6ccf44dca3e006..3719d421ea6a959a6bae512cf9860085c0679c27 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -228,4 +228,13 @@ public class MiraiConfig {
+                             "to check when entity delta movement is null.");
+     }
+ 
++    public static boolean optimizedRound;
++    public static boolean optimizedHypot;
++    private static void fastMath() {
++        optimizedRound = getBoolean("optimize-math-round", true,
++                            "Whether or not Math.round should be replaced by a faster version.");
++        optimizedHypot = getBoolean("optimize-math-hypot", true,
++                            "Whether or not Math.hypot should be replaced by a faster version.");
++    }
++
+ }
+\ No newline at end of file
 diff --git a/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java b/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java
 index 40447d00aefb5ffedb8a2ee87155a04088f0649f..633a6e313174244cf13ed89b53893ea5900e2828 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/flare/collectors/TPSCollector.java
@@ -190,14 +209,14 @@ index 88f10d729aa1e0a01790521821d691a0ecd373a2..45b2aa542969798a5a3b73af78de21cc
      // Paper end
  }
 diff --git a/src/main/java/net/minecraft/util/Mth.java b/src/main/java/net/minecraft/util/Mth.java
-index ec587cf6592a1dc0d90d6f54af1bdfab97aec7c6..41fe8bbdf9235ce79bffe6b2fe1339f79f34822f 100644
+index ec587cf6592a1dc0d90d6f54af1bdfab97aec7c6..497497058500a9a1a1e530149fbed8a8e15acb5a 100644
 --- a/src/main/java/net/minecraft/util/Mth.java
 +++ b/src/main/java/net/minecraft/util/Mth.java
 @@ -792,6 +792,7 @@ public class Mth {
      }
  
      public static double length(double a, double b) {
-+        if (wtf.etil.mirai.MiraiConfig.optimizedHypot) return carpetfixes.helpers.FastMath.hypot(a, b); // Mirai
++        if (dev.etil.mirai.MiraiConfig.optimizedHypot) return carpetfixes.helpers.FastMath.hypot(a, b); // Mirai
          return Math.sqrt(lengthSquared(a, b));
      }
  
@@ -517,22 +536,3 @@ index 0ecac76577eb440a0c3104ef4603acec826c474d..26ff7f68dacad945095d794c1def4752
      }
  
      // Yatopia start - Last tick time API
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 39b0c038ae053ef78c62691c73edecad94938fc7..110757bfec231278e7b5d0f22ede20f04cdbb913 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -228,4 +228,13 @@ public class MiraiConfig {
-                             "to check when entity delta movement is null.");
-     }
- 
-+    public static boolean optimizedRound;
-+    public static boolean optimizedHypot;
-+    private static void fastMath() {
-+        optimizedRound = getBoolean("optimize-math-round", true,
-+                            "Whether or not Math.round should be replaced by a faster version.");
-+        optimizedHypot = getBoolean("optimize-math-hypot", true,
-+                            "Whether or not Math.hypot should be replaced by a faster version.");
-+    }
-+
- }
-\ No newline at end of file

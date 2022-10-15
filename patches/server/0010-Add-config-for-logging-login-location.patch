@@ -6,29 +6,10 @@ Subject: [PATCH] Add config for logging login location
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
-diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index c50d214eed0414e9b8dc3062d67dc9427c534ef0..c687056ff9be0ff6877a22ba4d7aeda0d94e73e7 100644
---- a/src/main/java/net/minecraft/server/players/PlayerList.java
-+++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -504,7 +504,13 @@ public abstract class PlayerList {
-         }
-         // Paper end
-         // CraftBukkit - Moved from above, added world
--        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
-+        // Yatopia start - configurable logging of player login location
-+        if (wtf.etil.mirai.MiraiConfig.logPlayerLoginLoc) {
-+            PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
-+        } else {
-+            PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
-+        }
-+        // Yatopia end - configurable logging of player login location
-     }
- 
-     public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index adf6004cd1637a2662e2d448221b063688a26016..6f05bb1fe09dd68d4cd3e0569cbb55d5966d00a1 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 54cab7abec16b0c7155fc494f317119f17804d49..5f3ba184fae5170425cfdbd95150ed00c3f3433b 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
 @@ -131,4 +131,10 @@ public class MiraiConfig {
          return config.getStringList(key);
      }
@@ -41,3 +22,22 @@ index adf6004cd1637a2662e2d448221b063688a26016..6f05bb1fe09dd68d4cd3e0569cbb55d5
 +
  }
 \ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 3fc95b7d7b41e078e1d219e29ada27aeab1320bf..1a10be52986bc55c20434b984443ca7164a867c1 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -504,7 +504,13 @@ public abstract class PlayerList {
+         }
+         // Paper end
+         // CraftBukkit - Moved from above, added world
+-        PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        // Yatopia start - configurable logging of player login location
++        if (dev.etil.mirai.MiraiConfig.logPlayerLoginLoc) {
++            PlayerList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", player.getName().getString(), s1, player.getId(), worldserver1.serverLevelData.getLevelName(), player.getX(), player.getY(), player.getZ());
++        } else {
++            PlayerList.LOGGER.info("{}[{}] logged in with entity id {}", player.getName().getString(), s1, player.getId());
++        }
++        // Yatopia end - configurable logging of player login location
+     }
+ 
+     public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {

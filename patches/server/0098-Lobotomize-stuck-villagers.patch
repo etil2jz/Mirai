@@ -6,8 +6,25 @@ Subject: [PATCH] Lobotomize stuck villagers
 Original license: MIT
 Original project: https://github.com/PurpurMC/Purpur
 
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 40755fa049ab889f31f626cd04eca4799197de13..3cd738e0f8bd1fdb2ec5203f8f73daad1e230205 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -245,4 +245,11 @@ public class MiraiConfig {
+                                     "'secure chat', such as offline-mode servers.");
+     }
+ 
++    public static boolean villagerLobotomizeEnabled;
++    private static void lobotomizing() {
++        villagerLobotomizeEnabled = getBoolean("villager-lobotomize", false,
++                                        "Whether or not villagers should be lobotomized when",
++                                        "standing on a 1x1 block while being stuck.");
++    }
++
+ }
+\ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 93077e8c6b5a35adc6febb749d1d08be172402f1..839e6a8819dfbfe8c54e116b5f5b23ded94e7ca1 100644
+index 93077e8c6b5a35adc6febb749d1d08be172402f1..e9c36f92bec3a54653db1fd9327467a20b577765 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -139,6 +139,8 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
@@ -24,7 +41,7 @@ index 93077e8c6b5a35adc6febb749d1d08be172402f1..839e6a8819dfbfe8c54e116b5f5b23de
      protected void mobTick(boolean inactive) {
          this.level.getProfiler().push("villagerBrain");
 +        // Purpur start
-+        if (wtf.etil.mirai.MiraiConfig.villagerLobotomizeEnabled) {
++        if (dev.etil.mirai.MiraiConfig.villagerLobotomizeEnabled) {
 +            // treat as inactive if lobotomized
 +            inactive = inactive || checkLobotomized();
 +        } else {
@@ -111,20 +128,3 @@ index f0b910df1ee471b4d72d97c6197ab14f2854976e..6ce32a52d621a0c2629568ea07e445f5
 +    }
 +    // Purpur end
  }
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 57df9a7d26855ca205190584f61fc8026d98225c..156f5c1f28e36ca69b0ef5c15550d004b0ef69a4 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-@@ -245,4 +245,11 @@ public class MiraiConfig {
-                                     "'secure chat', such as offline-mode servers.");
-     }
- 
-+    public static boolean villagerLobotomizeEnabled;
-+    private static void lobotomizing() {
-+        villagerLobotomizeEnabled = getBoolean("villager-lobotomize", false,
-+                                        "Whether or not villagers should be lobotomized when",
-+                                        "standing on a 1x1 block while being stuck.");
-+    }
-+
- }
-\ No newline at end of file

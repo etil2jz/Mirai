@@ -8,43 +8,10 @@ This patch adds toggles for three criterion triggers that are called every tick.
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
-diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 63e222d8a981a391b1dd01a8a10bb5df8099f922..66daae13483c3dfd84047ead2aa2cdade540f835 100644
---- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
-+++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -619,7 +619,7 @@ public class ServerPlayer extends Player {
- 
-     @Override
-     protected void onInsideBlock(BlockState state) {
--        CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
-+        if (wtf.etil.mirai.MiraiConfig.criterionTriggerEnterBlock) CriteriaTriggers.ENTER_BLOCK.trigger(this, state); // Mirai
-     }
- 
-     @Override
-@@ -665,7 +665,7 @@ public class ServerPlayer extends Player {
-             }
-         }
- 
--        CriteriaTriggers.TICK.trigger(this);
-+        if (wtf.etil.mirai.MiraiConfig.criterionTriggerTick) CriteriaTriggers.TICK.trigger(this); // Mirai
-         if (this.levitationStartPos != null) {
-             CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
-         }
-@@ -741,9 +741,7 @@ public class ServerPlayer extends Player {
-                 this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
-             }
- 
--            if (this.tickCount % 20 == 0) {
--                CriteriaTriggers.LOCATION.trigger(this);
--            }
-+            if (wtf.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) CriteriaTriggers.LOCATION.trigger(this); // Mirai
- 
-             // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
-             if (this.oldLevel == -1) {
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 13aab54df6d4e1a59063732852a02b8e67603591..559d0fb9931ae8a7d14a43e13fe1fdf544915ecb 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 929ccc5cf475a5b3d19e44d8d6b324e1d647b5d1..dde09a19916798afabe28902636a2ced642017a5 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
 @@ -209,4 +209,16 @@ public class MiraiConfig {
                                  "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
      }
@@ -63,3 +30,36 @@ index 13aab54df6d4e1a59063732852a02b8e67603591..559d0fb9931ae8a7d14a43e13fe1fdf5
 +
  }
 \ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 63e222d8a981a391b1dd01a8a10bb5df8099f922..d83093e1d6c09d643242a5baa4a73eeb20cd72e0 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -619,7 +619,7 @@ public class ServerPlayer extends Player {
+ 
+     @Override
+     protected void onInsideBlock(BlockState state) {
+-        CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
++        if (dev.etil.mirai.MiraiConfig.criterionTriggerEnterBlock) CriteriaTriggers.ENTER_BLOCK.trigger(this, state); // Mirai
+     }
+ 
+     @Override
+@@ -665,7 +665,7 @@ public class ServerPlayer extends Player {
+             }
+         }
+ 
+-        CriteriaTriggers.TICK.trigger(this);
++        if (dev.etil.mirai.MiraiConfig.criterionTriggerTick) CriteriaTriggers.TICK.trigger(this); // Mirai
+         if (this.levitationStartPos != null) {
+             CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
+         }
+@@ -741,9 +741,7 @@ public class ServerPlayer extends Player {
+                 this.connection.send(new ClientboundSetExperiencePacket(this.experienceProgress, this.totalExperience, this.experienceLevel));
+             }
+ 
+-            if (this.tickCount % 20 == 0) {
+-                CriteriaTriggers.LOCATION.trigger(this);
+-            }
++            if (dev.etil.mirai.MiraiConfig.criterionTriggerLocation && this.tickCount % 20 == 0) CriteriaTriggers.LOCATION.trigger(this); // Mirai
+ 
+             // CraftBukkit start - initialize oldLevel, fire PlayerLevelChangeEvent, and tick client-sided world border
+             if (this.oldLevel == -1) {

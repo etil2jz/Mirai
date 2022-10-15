@@ -11,34 +11,10 @@ NFT-Worlds is related to Stellar devs, known for countless paid forks mostly tak
 doing questionable/buggy ones, and claiming breathtaking performance improvements. Never ever pay for
 any of those Spigot forks!
 
-diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6e094f495dd4cdc13645b7593399ba14bfd2a81e..bbb555d367e5c8b59c43f9169ed43a10294f97c8 100644
---- a/src/main/java/net/minecraft/world/entity/Entity.java
-+++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1205,7 +1205,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
-                 }
- 
-                 this.tryCheckInsideBlocks();
--                float f2 = this.getBlockSpeedFactor();
-+                // NFT-Worlds start
-+                float f2;
-+                if (wtf.etil.mirai.MiraiConfig.fastSpeedCheck) {
-+                    if (this.getDeltaMovement().x == 0 && this.getDeltaMovement().z == 0) {
-+                        f2 = 1;
-+                    } else {
-+                        f2 = this.getBlockSpeedFactor();
-+                    }
-+                } else {
-+                    f2 = this.getBlockSpeedFactor();
-+                }
-+                // NFT-Worlds stop
- 
-                 this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
-                 // Paper start - remove expensive streams from here
-diff --git a/src/main/java/wtf/etil/mirai/MiraiConfig.java b/src/main/java/wtf/etil/mirai/MiraiConfig.java
-index 559d0fb9931ae8a7d14a43e13fe1fdf544915ecb..39b0c038ae053ef78c62691c73edecad94938fc7 100644
---- a/src/main/java/wtf/etil/mirai/MiraiConfig.java
-+++ b/src/main/java/wtf/etil/mirai/MiraiConfig.java
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index dde09a19916798afabe28902636a2ced642017a5..b9ab67acf30d20745111b9fe5c6ccf44dca3e006 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
 @@ -221,4 +221,11 @@ public class MiraiConfig {
                                          "Whether or not server should listen to location triggers.");
      }
@@ -52,3 +28,27 @@ index 559d0fb9931ae8a7d14a43e13fe1fdf544915ecb..39b0c038ae053ef78c62691c73edecad
 +
  }
 \ No newline at end of file
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 8e88ae24d7e3299d7250a2021cb3604c045eaac9..d2bffae52474883488a05534273dff9450a1634c 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1205,7 +1205,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 }
+ 
+                 this.tryCheckInsideBlocks();
+-                float f2 = this.getBlockSpeedFactor();
++                // NFT-Worlds start
++                float f2;
++                if (dev.etil.mirai.MiraiConfig.fastSpeedCheck) {
++                    if (this.getDeltaMovement().x == 0 && this.getDeltaMovement().z == 0) {
++                        f2 = 1;
++                    } else {
++                        f2 = this.getBlockSpeedFactor();
++                    }
++                } else {
++                    f2 = this.getBlockSpeedFactor();
++                }
++                // NFT-Worlds stop
+ 
+                 this.setDeltaMovement(this.getDeltaMovement().multiply((double) f2, 1.0D, (double) f2));
+                 // Paper start - remove expensive streams from here
