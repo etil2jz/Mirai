@@ -66,10 +66,10 @@ index 80c1e0e47818486a68e0114b063395290365346b..91b273d058d2fe83207cc562a25711e4
              hasSetFarWarned = true;
              if (this.getServer() != null && this.getServer().isDebugging()) {
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 3bd4fd4a0b197bde9b254ec8f264e396064bf583..f2e61291dccffb76c73bd7d53eb2eb84307407c2 100644
+index dfacc5d6b7eb30292f59b25752d2c7ee1ff9534f..ed98aab3df24bbefc1adc0e21ec7f1deab8d8aa1 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2627,7 +2627,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2628,7 +2628,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          }
  
          if (playerchatmessage.hasExpiredServer(Instant.now())) {

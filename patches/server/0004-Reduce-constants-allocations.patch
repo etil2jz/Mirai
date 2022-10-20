@@ -237,7 +237,7 @@ index a2920b8a9eff77d9c5d1d7f70ad3abdacba8f0fa..f7f19e360d712211625ff28e92f83949
      protected CipherBase(Cipher cipher) {
          this.cipher = cipher;
 diff --git a/src/main/java/net/minecraft/network/Connection.java b/src/main/java/net/minecraft/network/Connection.java
-index 6967c90c50ea75fb9dd5da808b2c8c8ea046ecec..2852c47afcba5633a747977e250e60a5d28b0e1e 100644
+index cd386a13d8c0909d4ac971a5df751cd23e609b1b..5344f1f81797344130bd48f16689161af8261882 100644
 --- a/src/main/java/net/minecraft/network/Connection.java
 +++ b/src/main/java/net/minecraft/network/Connection.java
 @@ -311,7 +311,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
@@ -304,10 +304,10 @@ index 1eb912ad97f9663bf6bd336ad739f2552b0a5c9b..9901ffe9de585a73e9ef32c700b1e870
  
              for (int j = 0; j < i; ++j) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 917cf327f3f9d824ec0da70fd9204624e7cf96fb..c8941cdcebf7b3d09a67a7213ef6eab3feef1cab 100644
+index e802ee2b2dc458f52dbce9746fc9891eebb6dcc1..f4280eb9f77568e4f3af6f264fc60901e667a936 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -907,7 +907,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -909,7 +909,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                      BlockPos blockposition2 = blockposition.set(j + randomX, randomY, k + randomZ);
                      BlockState iblockdata = com.destroystokyo.paper.util.maplist.IBlockDataList.getBlockDataFromRaw(raw);
  
@@ -316,7 +316,7 @@ index 917cf327f3f9d824ec0da70fd9204624e7cf96fb..c8941cdcebf7b3d09a67a7213ef6eab3
                      // We drop the fluid tick since LAVA is ALREADY TICKED by the above method (See LiquidBlock).
                      // TODO CHECK ON UPDATE
                  }
-@@ -1162,7 +1162,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1164,7 +1164,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static List<Entity> getCurrentlyTickingEntities() {
          Entity ticking = currentlyTickingEntity.get();
@@ -326,7 +326,7 @@ index 917cf327f3f9d824ec0da70fd9204624e7cf96fb..c8941cdcebf7b3d09a67a7213ef6eab3
          return ret;
      }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 59608a53bbf0eccf118b4d65557444f6532fedb4..50cbd7ca6394cc486b673fcf0d2bc4dc8c1f32de 100644
+index 4e615e5d5b8d79f6eaac2136be03961415fd093e..633fe61c98c1fc181f38b4195651c3ed6fc1db42 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -410,7 +410,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -354,7 +354,7 @@ index 59608a53bbf0eccf118b4d65557444f6532fedb4..50cbd7ca6394cc486b673fcf0d2bc4dc
              return;
          }
          // Paper end
-@@ -3397,7 +3397,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3398,7 +3398,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper start
          if (!org.bukkit.Bukkit.isPrimaryThread()) {
              if (recipeSpamPackets.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit) {
@@ -364,7 +364,7 @@ index 59608a53bbf0eccf118b4d65557444f6532fedb4..50cbd7ca6394cc486b673fcf0d2bc4dc
              }
          }
 diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index b607f5ccbce10570f827dd21eb38504f42781d2f..d6f1cbea24de82ada6083749f079401dbcca1ced 100644
+index ea9b56fd6ae1d5577da5bd3e0c38abfeec8f3646..f1105edce8484cac39d8fb33a42c9ed8d44fe5c0 100644
 --- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 @@ -269,8 +269,8 @@ public class ServerLoginPacketListenerImpl implements TickablePacketListener, Se

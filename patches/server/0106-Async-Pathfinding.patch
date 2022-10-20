@@ -8,10 +8,10 @@ This patch was ported downstream from the Petal fork.
 Makes most pathfinding-related work happen asynchronously
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 24e2c81fe0de5eb2e9a17554d81cfd14a36f90c4..8e755ea4d26756843850cbd17ac8383e45695adf 100644
+index 24e2c81fe0de5eb2e9a17554d81cfd14a36f90c4..8dffa2fadd615cfd59cc85630b4a1454c87e5aa9 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -263,4 +263,15 @@ public class MiraiConfig {
+@@ -263,4 +263,16 @@ public class MiraiConfig {
                                  "pick up items on the ground.");
      }
  
@@ -19,7 +19,8 @@ index 24e2c81fe0de5eb2e9a17554d81cfd14a36f90c4..8e755ea4d26756843850cbd17ac8383e
 +    public static boolean enableAsyncPathfindingInitialized;
 +    private static void asyncPathfinding() {
 +        boolean temp = getBoolean("enable-async-pathfinding", true,
-+                        "Whether or not async pathfinding should be enabled.");
++                "Whether or not async pathfinding should be enabled.",
++                "You may encounter issues with water interactions.");
 +        if (!enableAsyncPathfindingInitialized) {
 +            enableAsyncPathfindingInitialized = true;
 +            enableAsyncPathfinding = temp;
@@ -319,7 +320,7 @@ index 0000000000000000000000000000000000000000..2ecf19f9623a4c6c99a7b97e950387e8
 \ No newline at end of file
 diff --git a/src/main/java/dev/etil/mirai/path/AsyncPathProcessor.java b/src/main/java/dev/etil/mirai/path/AsyncPathProcessor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..050a4f73b49002b54a07a61d3435d1f84ba98191
+index 0000000000000000000000000000000000000000..6dc8f7bb7ba6b78b5db50801a61abe526c17c939
 --- /dev/null
 +++ b/src/main/java/dev/etil/mirai/path/AsyncPathProcessor.java
 @@ -0,0 +1,44 @@
@@ -343,7 +344,7 @@ index 0000000000000000000000000000000000000000..050a4f73b49002b54a07a61d3435d1f8
 +
 +    private static final Executor mainThreadExecutor = MinecraftServer.getServer();
 +    private static final Executor pathProcessingExecutor = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
-+            .setNameFormat("puff-path-processor-%d")
++            .setNameFormat("mirai-path-processor-%d")
 +            .setPriority(Thread.NORM_PRIORITY - 2)
 +            .build());
 +
@@ -517,7 +518,7 @@ index bf3b8ccb3e031e0ad24cd51e28ea8cbd4f8a8030..8efe9dfe75e1dfc430cd011f9dbeb3d1
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/MoveToTargetSink.java b/src/main/java/net/minecraft/world/entity/ai/behavior/MoveToTargetSink.java
-index 18364ce4c60172529b10bc9e3a813dcedc4b766f..771a8c7477ac2335f8858f97befd0b13d9710d2a 100644
+index 18364ce4c60172529b10bc9e3a813dcedc4b766f..fd2abf5a865518b12d2a64d52596015aede1177e 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/MoveToTargetSink.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/MoveToTargetSink.java
 @@ -21,6 +21,7 @@ public class MoveToTargetSink extends Behavior<Mob> {
@@ -581,10 +582,10 @@ index 18364ce4c60172529b10bc9e3a813dcedc4b766f..771a8c7477ac2335f8858f97befd0b13
 +            } else if (brain.hasMemoryValue(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
 +                brain.setMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, time);
 +            }
-+            
++
 +            if (!canReach) {
 +                Optional<WalkTarget> walkTarget = brain.getMemory(MemoryModuleType.WALK_TARGET);
-+    
++
 +                if (walkTarget.isPresent()) {
 +                    BlockPos blockPos = walkTarget.get().getTarget().currentBlockPosition();
 +                    Vec3 vec3 = DefaultRandomPos.getPosTowards((PathfinderMob)entity, 10, 7, Vec3.atBottomCenterOf(blockPos), (double)((float)Math.PI / 2F));
@@ -595,13 +596,13 @@ index 18364ce4c60172529b10bc9e3a813dcedc4b766f..771a8c7477ac2335f8858f97befd0b13
 +                        return;
 +                    }
 +                }
-+                
++
 +                brain.eraseMemory(MemoryModuleType.WALK_TARGET);
 +                this.path = null;
-+                
++
 +                return;
 +            }
-+            
++
 +            entity.getBrain().setMemory(MemoryModuleType.PATH, this.path);
 +            entity.getNavigation().moveTo(this.path, (double)this.speedModifier);
 +        }
@@ -648,7 +649,7 @@ index 18364ce4c60172529b10bc9e3a813dcedc4b766f..771a8c7477ac2335f8858f97befd0b13
      private boolean tryComputePath(Mob entity, WalkTarget walkTarget, long time) {
          BlockPos blockPos = walkTarget.getTarget().currentBlockPosition();
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java b/src/main/java/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java
-index 9bd6d4f7b86daaaa9cfbad454dde06b797e3f667..f25787989e9c4c7ffef5a8d31f6dc0a5c671b39c 100644
+index 9bd6d4f7b86daaaa9cfbad454dde06b797e3f667..9aca3f84b60273a0eb0ab657ff8403f21b46d4d5 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java
 @@ -71,19 +71,41 @@ public class SetClosestHomeAsWalkTarget extends Behavior<LivingEntity> {
@@ -669,7 +670,7 @@ index 9bd6d4f7b86daaaa9cfbad454dde06b797e3f667..f25787989e9c4c7ffef5a8d31f6dc0a5
 +        // Mirai start - await on path async
 +        if (dev.etil.mirai.MiraiConfig.enableAsyncPathfinding) {
 +            Path possiblePath = AcquirePoi.findPathToPois(pathfinderMob, set);
-+    
++
 +            // Mirai - wait on the path to be processed
 +            dev.etil.mirai.path.AsyncPathProcessor.awaitProcessing(possiblePath, path -> {
 +                if (path == null || !path.canReach() || this.triedCount < 5) { // Mirai - readd canReach check
@@ -678,7 +679,7 @@ index 9bd6d4f7b86daaaa9cfbad454dde06b797e3f667..f25787989e9c4c7ffef5a8d31f6dc0a5
 +                    });
 +                    return;
 +                }
-+        
++
 +                BlockPos blockPos = path.getTarget();
 +                Optional<Holder<PoiType>> optional = poiManager.getType(blockPos);
 +                if (optional.isPresent()) {
@@ -823,7 +824,7 @@ index f0248d839255763005ba333b0bfcf691407fb69b..dd627d720320b09ac909a19646f50435
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
-index c1781c92ff59f0c9eb47cbbef01e3252c5e1a1bf..e3e1b75653088bd9d32a5312b45188e352e117d4 100644
+index c1781c92ff59f0c9eb47cbbef01e3252c5e1a1bf..3803d5b79b4bb99d1a87c1af4d7e20ae4128a416 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
 @@ -150,6 +150,9 @@ public abstract class PathNavigation {
@@ -904,11 +905,20 @@ index c1781c92ff59f0c9eb47cbbef01e3252c5e1a1bf..e3e1b75653088bd9d32a5312b45188e3
      protected void followThePath() {
          Vec3 vec3 = this.getTempMobPos();
          this.maxDistanceToWaypoint = this.mob.getBbWidth() > 0.75F ? this.mob.getBbWidth() / 2.0F : 0.75F - this.mob.getBbWidth() / 2.0F;
+@@ -419,7 +448,7 @@ public abstract class PathNavigation {
+     public boolean shouldRecomputePath(BlockPos pos) {
+         if (this.hasDelayedRecomputation) {
+             return false;
+-        } else if (this.path != null && !this.path.isDone() && this.path.getNodeCount() != 0) {
++        } else if (this.path != null && this.path.isProcessed() && !this.path.isDone() && this.path.getNodeCount() != 0) { // Mirai
+             Node node = this.path.getEndNode();
+             Vec3 vec3 = new Vec3(((double)node.x + this.mob.getX()) / 2.0D, ((double)node.y + this.mob.getY()) / 2.0D, ((double)node.z + this.mob.getZ()) / 2.0D);
+             return pos.closerToCenterThan(vec3, (double)(this.path.getNodeCount() - this.path.getNextNodeIndex()));
 diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/NearestBedSensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/NearestBedSensor.java
-index 8db20db72cd51046213625fac46c35854c59ec5d..7b9c47dc06a98add8b11ab7fccee2b33819d6bcb 100644
+index 8db20db72cd51046213625fac46c35854c59ec5d..39b95ecb2b9dd313d2e58ee98349af0d665e7f01 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/sensing/NearestBedSensor.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/sensing/NearestBedSensor.java
-@@ -57,20 +57,41 @@ public class NearestBedSensor extends Sensor<Mob> {
+@@ -57,20 +57,42 @@ public class NearestBedSensor extends Sensor<Mob> {
              java.util.List<Pair<Holder<PoiType>, BlockPos>> poiposes = new java.util.ArrayList<>();
              // don't ask me why it's unbounded. ask mojang.
              io.papermc.paper.util.PoiAccess.findAnyPoiPositions(poiManager, type -> type.is(PoiTypes.HOME), predicate, entity.blockPosition(), 48, PoiManager.Occupancy.ANY, false, Integer.MAX_VALUE, poiposes);
@@ -923,6 +933,7 @@ index 8db20db72cd51046213625fac46c35854c59ec5d..7b9c47dc06a98add8b11ab7fccee2b33
 -            } else if (this.triedCount < 5) {
 -                this.batchCache.long2LongEntrySet().removeIf((entry) -> {
 -                    return entry.getLongValue() < this.lastUpdate;
++
 +            // Mirai start - await on path async
 +            if (dev.etil.mirai.MiraiConfig.enableAsyncPathfinding) {
 +                Path possiblePath = AcquirePoi.findPathToPois(entity, new java.util.HashSet<>(poiposes));
@@ -936,7 +947,7 @@ index 8db20db72cd51046213625fac46c35854c59ec5d..7b9c47dc06a98add8b11ab7fccee2b33
 +                        });
 +                        return;
 +                    }
-+        
++
 +                    BlockPos blockPos = path.getTarget();
 +                    Optional<Holder<PoiType>> optional = poiManager.getType(blockPos);
 +                    if (optional.isPresent()) {

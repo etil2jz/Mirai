@@ -7,7 +7,7 @@ Original license: GPLv3
 Original project: https://github.com/Electroid/SportPaper
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index aa1bd3423829900729d413a5f98f4a0b9aaf6135..82604712640140dbc5ec632233b937b2e073e28e 100644
+index bf314a8ea0145a82c5ff4fdff23444b8978845fe..3a0ff721e01e5bb2b2d05459019f8bba5f5d0737 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -342,8 +342,10 @@ public class ServerEntity {

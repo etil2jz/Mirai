@@ -11,10 +11,10 @@ Original project: https://github.com/Bloom-host/Petal
 2. euclideangameeventdispatcher is not used concurrently so we ban that usage for improved performance with allays
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index b0b881eed06b1963c639b1a2c0808ab47fb34ac0..7dc341e91aaa581e499dfa3823712fcece9d5756 100644
+index 42166dbec3154b9ebf26d9eda1752f80a9350764..ac96f90d2f89fa449907108700db327ca5c798d5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1648,6 +1648,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1643,6 +1643,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  if (chunk != null) {
                      for (int j2 = k; j2 <= j1; ++j2) {
                          flag |= chunk.getEventDispatcher(j2).walkListeners(event, emitterPos, emitter, (gameeventlistener, vec3d1) -> {
@@ -41,7 +41,7 @@ index 22c309343299e60ed8028229b7f134109001ff35..d5947d29295ddc93ba8ac1c0fc61f7ba
          org.bukkit.craftbukkit.event.CraftEventFactory.sourceBlockOverride = blockEntity.getBlockPos(); // CraftBukkit - SPIGOT-7068: Add source block override, not the most elegant way but better than passing down a BlockPosition up to five methods deep.
          blockEntity.sculkSpreader.updateCursors(world, pos, world.getRandom(), true);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 34334c139176e0aa9f6d93a87821508d17567cfc..6ba7d8c32cdd51c2c291ccafe0a9d145c88155f5 100644
+index f5adadb2e29ed8b52a502489ba06df4551cd06dc..5153dc3dcec63dc8063c7dd17d774d129dc0b67c 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -84,7 +84,18 @@ public class LevelChunk extends ChunkAccess {

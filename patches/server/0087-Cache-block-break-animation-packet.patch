@@ -7,10 +7,10 @@ Original license: GPLv3
 Original project: https://github.com/Electroid/SportPaper
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index aef9c28228be51e217b068e8731665cceff17717..b0b881eed06b1963c639b1a2c0808ab47fb34ac0 100644
+index f4280eb9f77568e4f3af6f264fc60901e667a936..42166dbec3154b9ebf26d9eda1752f80a9350764 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1570,6 +1570,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1565,6 +1565,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          if (entity instanceof Player) entityhuman = (Player) entity;
          // CraftBukkit end
  
@@ -18,7 +18,7 @@ index aef9c28228be51e217b068e8731665cceff17717..b0b881eed06b1963c639b1a2c0808ab4
          while (iterator.hasNext()) {
              ServerPlayer entityplayer = (ServerPlayer) iterator.next();
  
-@@ -1585,7 +1586,10 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1580,7 +1581,10 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  // CraftBukkit end
  
                  if (d0 * d0 + d1 * d1 + d2 * d2 < 1024.0D) {

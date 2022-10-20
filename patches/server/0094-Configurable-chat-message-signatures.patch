@@ -47,7 +47,7 @@ index 54a53a65130919b68f9cd8fd2d580fd8b9d2dfb3..7d7d88d2f920446a98c63229a351dc0d
      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index f2e61291dccffb76c73bd7d53eb2eb84307407c2..c1f40592ee346e610d018542a65a79f2c9f5e8bd 100644
+index ed98aab3df24bbefc1adc0e21ec7f1deab8d8aa1..e4abcd2f58dabe919a41162470386a6322f91f05 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -2165,10 +2165,34 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
