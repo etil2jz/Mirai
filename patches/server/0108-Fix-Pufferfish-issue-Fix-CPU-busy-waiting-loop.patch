@@ -1,0 +1,134 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MartijnMuijsers <martijnmuijsers@live.nl>
+Date: Wed, 16 Nov 2022 19:32:11 +0100
+Subject: [PATCH] (Fix Pufferfish issue) Fix CPU busy waiting loop
+
+
+diff --git a/src/main/java/gg/pufferfish/pufferfish/util/AsyncExecutor.java b/src/main/java/gg/pufferfish/pufferfish/util/AsyncExecutor.java
+index 9d6dc2c80945bec9bea74714c657c7a2e0bdde9e..5e05618b8043e13e012865d6f733467227a954a4 100644
+--- a/src/main/java/gg/pufferfish/pufferfish/util/AsyncExecutor.java
++++ b/src/main/java/gg/pufferfish/pufferfish/util/AsyncExecutor.java
+@@ -3,49 +3,90 @@ package gg.pufferfish.pufferfish.util;
+ import com.google.common.collect.Queues;
+ import gg.pufferfish.pufferfish.PufferfishLogger;
+ import java.util.Queue;
+-import java.util.concurrent.locks.LockSupport;
+-import java.util.function.BooleanSupplier;
++import java.util.concurrent.locks.Condition;
++import java.util.concurrent.locks.Lock;
++import java.util.concurrent.locks.ReentrantLock;
+ import java.util.logging.Level;
+ 
++/**
++ * <p>
++ * A simple executor that has its own thread to perform tasks on.
++ * This executor is currently only used to move some calculations required for mob spawning off the main thread
++ * ({@link net.minecraft.server.MinecraftServer#mobSpawnExecutor}).
++ * </p>
++ * <p>
++ * It uses a non-blocking {@link java.util.concurrent.ConcurrentLinkedQueue} to store its tasks.
++ * </p>
++ */
+ public class AsyncExecutor implements Runnable {
+-	
++
+ 	private Queue<Runnable> jobs = Queues.newConcurrentLinkedQueue();
+ 	private final Thread thread;
+-	private final BooleanSupplier shouldRun;
++	// Mirai start - fix Pufferfish CPU busy waiting loop
++	// Use tryLock() instead of lock() on this lock to avoid blocking the (main) thread,
++	// because any thread will hold this lock for much shorter than the time it takes to do a context switch (~5 micros)
++	private final Lock waitLock = new ReentrantLock();
++	private final Condition waitCondition = waitLock.newCondition();
++	// Mirai end - fix Pufferfish CPU busy waiting loop
+ 	private volatile boolean killswitch = false;
+-	
+-	public AsyncExecutor(String threadName, BooleanSupplier shouldRun) {
++
++	public AsyncExecutor(String threadName) { // Mirai - fix Pufferfish CPU busy waiting loop
+ 		this.thread = new Thread(this, threadName);
+-		this.shouldRun = shouldRun;
+ 	}
+-	
++
++	// Mirai start - fix Pufferfish CPU busy waiting loop
++	private void signalWaiting() {
++		while (!waitLock.tryLock()) {}
++		try {
++			if (killswitch || !jobs.isEmpty()) {
++				waitCondition.signal();
++			}
++		} finally {
++			waitLock.unlock();
++		}
++	}
++	// Mirai end - fix Pufferfish CPU busy waiting loop
++
+ 	public void start() {
+ 		thread.start();
+ 	}
+-	
++
+ 	public void kill() {
+ 		killswitch = true;
++		signalWaiting(); // Mirai - fix Pufferfish CPU busy waiting loop
+ 	}
+-	
++
+ 	public void submit(Runnable runnable) {
+ 		jobs.offer(runnable);
++		signalWaiting(); // Mirai - fix Pufferfish CPU busy waiting loop
+ 	}
+-	
++
+ 	@Override
+ 	public void run() {
+ 		while (!killswitch) {
+-			if (shouldRun.getAsBoolean()) {
+-				try {
+-					Runnable runnable;
+-					while ((runnable = jobs.poll()) != null) {
+-						runnable.run();
++			// Mirai start - fix Pufferfish CPU busy waiting loop
++			while (!waitLock.tryLock()) {}
++			try {
++				while (!killswitch && jobs.isEmpty()) {
++					try {
++						waitCondition.await();
++					} catch (InterruptedException e) {
++						PufferfishLogger.LOGGER.log(Level.WARNING, e, () -> "Async waiting for tasks was interrupted " + thread.getName());
+ 					}
++				}
++			} finally {
++				waitLock.unlock();
++			}
++			Runnable runnable;
++			while ((runnable = jobs.poll()) != null) {
++				try {
++					runnable.run();
+ 				} catch (Exception e) {
+ 					PufferfishLogger.LOGGER.log(Level.SEVERE, e, () -> "Failed to execute async job for thread " + thread.getName());
+ 				}
+ 			}
+-			LockSupport.parkNanos("executing tasks", 1000L);
++			// Mirai end - fix Pufferfish CPU busy waiting loop
+ 		}
+ 	}
+-	
++
+ }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 3c528e612e9ed17e8c58bbef6c26471cc3411a7a..6ac457705b9532eb32bd24dc116f6d3bbffbf01a 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -298,8 +298,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<Runnab
+     public volatile Thread shutdownThread; // Paper
+     public volatile boolean abnormalExit = false; // Paper
+     public boolean isIteratingOverLevels = false; // Paper
+-    
+-    public gg.pufferfish.pufferfish.util.AsyncExecutor mobSpawnExecutor = new gg.pufferfish.pufferfish.util.AsyncExecutor("MobSpawning", () -> true); // Pufferfish - optimize mob spawning
++
++    public gg.pufferfish.pufferfish.util.AsyncExecutor mobSpawnExecutor = new gg.pufferfish.pufferfish.util.AsyncExecutor("MobSpawning"); // Pufferfish - optimize mob spawning // Mirai - fix Pufferfish CPU busy waiting loop
+ 
+     public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
+         AtomicReference<S> atomicreference = new AtomicReference();
