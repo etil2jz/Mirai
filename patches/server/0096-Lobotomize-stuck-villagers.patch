@@ -7,10 +7,10 @@ Original license: MIT
 Original project: https://github.com/PurpurMC/Purpur
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 40755fa049ab889f31f626cd04eca4799197de13..3cd738e0f8bd1fdb2ec5203f8f73daad1e230205 100644
+index ad7317bb6282cd6b317e22f39b2b6ca8d98969a1..b9fae1be7cf86c50d8de27e83f879e4c3d264d30 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -245,4 +245,11 @@ public class MiraiConfig {
+@@ -238,4 +238,11 @@ public class MiraiConfig {
                                      "'secure chat', such as offline-mode servers.");
      }
  

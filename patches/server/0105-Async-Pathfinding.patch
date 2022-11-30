@@ -8,10 +8,10 @@ This patch was ported downstream from the Petal fork.
 Makes most pathfinding-related work happen asynchronously
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 24e2c81fe0de5eb2e9a17554d81cfd14a36f90c4..8dffa2fadd615cfd59cc85630b4a1454c87e5aa9 100644
+index 1edd50fa9aaf1f8c541c95d04f815348a945c911..229f243c374b4ecb96a0e7476e7fa8a3cf35b1f2 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -263,4 +263,16 @@ public class MiraiConfig {
+@@ -256,4 +256,16 @@ public class MiraiConfig {
                                  "pick up items on the ground.");
      }
  

@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable chat message signatures
 
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 3719d421ea6a959a6bae512cf9860085c0679c27..40755fa049ab889f31f626cd04eca4799197de13 100644
+index fb2ba15c6fea8d32d6605ed70f618fea1c8dca59..ad7317bb6282cd6b317e22f39b2b6ca8d98969a1 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -237,4 +237,12 @@ public class MiraiConfig {
+@@ -230,4 +230,12 @@ public class MiraiConfig {
                              "Whether or not Math.hypot should be replaced by a faster version.");
      }
  
