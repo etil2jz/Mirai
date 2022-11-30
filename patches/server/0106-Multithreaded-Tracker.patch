@@ -13,10 +13,10 @@ Some things are too unsafe to run off the main thread so we don't attempt to do
 that. This multithreaded tracker remains accurate, non-breaking and fast.
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 8dffa2fadd615cfd59cc85630b4a1454c87e5aa9..4c8dd8b1a3355578f067d547ab1d0151314f7ddf 100644
+index 229f243c374b4ecb96a0e7476e7fa8a3cf35b1f2..88cd331614e6557ab04d70c81b28ec2ba2ddb332 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -275,4 +275,16 @@ public class MiraiConfig {
+@@ -268,4 +268,16 @@ public class MiraiConfig {
          }
      }
  

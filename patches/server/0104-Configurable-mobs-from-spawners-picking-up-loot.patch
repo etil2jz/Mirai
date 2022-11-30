@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable mobs from spawners picking up loot
 
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 3cd738e0f8bd1fdb2ec5203f8f73daad1e230205..24e2c81fe0de5eb2e9a17554d81cfd14a36f90c4 100644
+index b9fae1be7cf86c50d8de27e83f879e4c3d264d30..1edd50fa9aaf1f8c541c95d04f815348a945c911 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -252,4 +252,15 @@ public class MiraiConfig {
+@@ -245,4 +245,15 @@ public class MiraiConfig {
                                          "standing on a 1x1 block while being stuck.");
      }
  

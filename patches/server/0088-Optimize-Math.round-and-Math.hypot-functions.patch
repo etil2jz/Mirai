@@ -100,10 +100,10 @@ index c3e54da4ab6440811aab2f9dd1e218802ac13285..db1319c51a5410ee106d023fce759f1e
          }
      }
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index b9ab67acf30d20745111b9fe5c6ccf44dca3e006..3719d421ea6a959a6bae512cf9860085c0679c27 100644
+index 47747b24e215d06e2b6a48c1927ecb4ed40f4e03..fb2ba15c6fea8d32d6605ed70f618fea1c8dca59 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -228,4 +228,13 @@ public class MiraiConfig {
+@@ -221,4 +221,13 @@ public class MiraiConfig {
                              "to check when entity delta movement is null.");
      }
  

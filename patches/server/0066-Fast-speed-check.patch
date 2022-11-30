@@ -12,13 +12,14 @@ doing questionable/buggy ones, and claiming breathtaking performance improvement
 any of those Spigot forks!
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index dde09a19916798afabe28902636a2ced642017a5..b9ab67acf30d20745111b9fe5c6ccf44dca3e006 100644
+index 7d0823abb18563b6a4117a5939b8b41678ae76b0..47747b24e215d06e2b6a48c1927ecb4ed40f4e03 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -221,4 +221,11 @@ public class MiraiConfig {
+@@ -214,4 +214,11 @@ public class MiraiConfig {
                                          "Whether or not server should listen to location triggers.");
      }
  
+-}
 +    public static boolean fastSpeedCheck;
 +    private static void speedCheck() {
 +        fastSpeedCheck = getBoolean("fast-speed-check", true,
@@ -26,7 +27,7 @@ index dde09a19916798afabe28902636a2ced642017a5..b9ab67acf30d20745111b9fe5c6ccf44
 +                            "to check when entity delta movement is null.");
 +    }
 +
- }
++}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
 index 8e88ae24d7e3299d7250a2021cb3604c045eaac9..d2bffae52474883488a05534273dff9450a1634c 100644

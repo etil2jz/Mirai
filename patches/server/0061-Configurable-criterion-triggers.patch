@@ -9,13 +9,15 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
-index 929ccc5cf475a5b3d19e44d8d6b324e1d647b5d1..dde09a19916798afabe28902636a2ced642017a5 100644
+index 8e720820a94cf5d39e59998700932bfbb5c15544..7d0823abb18563b6a4117a5939b8b41678ae76b0 100644
 --- a/src/main/java/dev/etil/mirai/MiraiConfig.java
 +++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
-@@ -209,4 +209,16 @@ public class MiraiConfig {
-                                 "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
+@@ -202,4 +202,16 @@ public class MiraiConfig {
+                                     "Whether or not entities should be able to use portals.");
      }
  
+-}
+\ No newline at end of file
 +    public static boolean criterionTriggerEnterBlock;
 +    public static boolean criterionTriggerTick;
 +    public static boolean criterionTriggerLocation;
@@ -28,8 +30,7 @@ index 929ccc5cf475a5b3d19e44d8d6b324e1d647b5d1..dde09a19916798afabe28902636a2ced
 +                                        "Whether or not server should listen to location triggers.");
 +    }
 +
- }
-\ No newline at end of file
++}
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 index 33cb9a669fed30509d2737898dbd15ce16193da4..d1a6a21bfe93882e23a0bad742abd6fedcac29d0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
