@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Fri, 4 Mar 2022 19:57:07 +0100
+Subject: [PATCH] Skip cloning loot parameters
+
+
+diff --git a/src/main/java/net/minecraft/advancements/Advancement.java b/src/main/java/net/minecraft/advancements/Advancement.java
+index dd4409790524293be07483f00df05d8a8743e3d9..b816302aa46528bdd14b6d47c3e6b5ce5ebdc222 100644
+--- a/src/main/java/net/minecraft/advancements/Advancement.java
++++ b/src/main/java/net/minecraft/advancements/Advancement.java
+@@ -45,7 +45,7 @@ public class Advancement {
+     public Advancement(ResourceLocation id, @Nullable Advancement parent, @Nullable DisplayInfo display, AdvancementRewards rewards, Map<String, Criterion> criteria, String[][] requirements) {
+         this.id = id;
+         this.display = display;
+-        this.criteria = ImmutableMap.copyOf(criteria);
++        this.criteria = java.util.Collections.unmodifiableMap(criteria); // Mirai - Skip cloning loot parameters
+         this.parent = parent;
+         this.rewards = rewards;
+         this.requirements = requirements;

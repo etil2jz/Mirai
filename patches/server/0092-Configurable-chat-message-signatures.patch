@@ -1,0 +1,110 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Tue, 2 Aug 2022 14:48:12 +0200
+Subject: [PATCH] Configurable chat message signatures
+
+
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index b29efeef8fbdd395604a7c464ee60e2a112fb12f..213d394a4fcfaa3e384edd9fd7c098e05b44529f 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -236,4 +236,12 @@ public class MiraiConfig {
+         optimizedHypot = getBoolean("optimize-math-hypot", true,
+             "Whether or not Math.hypot should be replaced by a faster version.");
+     }
++
++    public static boolean chatMessageSignatures;
++    private static void chatreport() {
++        chatMessageSignatures = getBoolean("disable-chat-reports", false,
++            "Whether or not players should be able to report chat messages.",
++            "It also disables the popup when joining a server without",
++            "'secure chat', such as offline-mode servers.");
++    }
+ }
+diff --git a/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java b/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
+index 11183b4a39b9897e1b1067eb2a3556d2b1d90f52..df109dd1b2d252f82096d02e57596fdd4076771f 100644
+--- a/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
++++ b/src/main/java/net/minecraft/network/protocol/status/ServerStatus.java
+@@ -78,6 +78,7 @@ public class ServerStatus {
+     }
+ 
+     public boolean enforcesSecureChat() {
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) return true; // Mirai - configurable chat message signatures
+         return this.enforcesSecureChat;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index f8d4154388f7ddae4e65835e24edf5fa6a9dce2b..38994fdf82f8bffc9caecc083e790caf11236322 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -646,6 +646,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+ 
+     @Override
+     public boolean enforceSecureProfile() {
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) return false; // Mirai - configurable chat message signatures
+         return this.getProperties().enforceSecureProfile && this.getProperties().onlineMode;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 214650909f83f024ebc5ddb0689682d5a81719db..c6235099e79881f8aae1d6243decf18cf19e12ff 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2165,10 +2165,34 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+ 
+     @Override
+     public void send(Packet<?> packet) {
++        // Mirai start - configurable chat message signatures
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) {
++            if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket) {
++                return;
++            } else if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatPacket chat) {
++                packet = new ClientboundSystemChatPacket(chat.chatType().resolve(this.player.level.registryAccess())
++                    .get().decorate(chat.message().serverContent()), false);
++
++
++                this.send(packet);
++                return;
++            }
++        }
++        // Mirai end
+         this.send(packet, (PacketSendListener) null);
+     }
+ 
+     public void send(Packet<?> packet, @Nullable PacketSendListener callbacks) {
++        // Mirai start - configurable chat message signatures
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) {
++            if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket) {
++                return;
++            } else if (packet instanceof net.minecraft.network.protocol.game.ClientboundPlayerChatPacket chat && callbacks != null) {
++                this.send(chat);
++                return;
++            }
++        }
++        // Mirai end
+         // CraftBukkit start
+         if (packet == null || this.processedDisconnect) { // Spigot
+             return;
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 367e08286dd9b668d8ef5855b05998082e4011b3..7b1ba24e2c541d1271335c95e440102bbd46e1fb 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1489,6 +1489,7 @@ public abstract class PlayerList {
+     }
+ 
+     public boolean verifyChatTrusted(PlayerChatMessage message, ChatSender profile) { // Paper - private -> public
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) return true; // Mirai - configurable chat message signatures
+         return !message.hasExpiredServer(Instant.now()) && message.verify(profile);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 2d1497480a5d535798d70ece277a7252a3d5dc79..ae205f436251c18573d45927a1d39c549e1f0bf4 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1525,6 +1525,7 @@ public abstract class Player extends LivingEntity {
+ 
+     @Nullable
+     public ProfilePublicKey getProfilePublicKey() {
++        if (dev.etil.mirai.MiraiConfig.chatMessageSignatures) return null; // Mirai - configurable chat message signatures
+         return this.profilePublicKey;
+     }
+ 

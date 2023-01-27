@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Fri, 24 Jun 2022 20:10:19 +0200
+Subject: [PATCH] Configurable enchantment table book animation tick
+
+
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 697b766953607e25a6e9f3eced2ea9e801d37e81..53fa3c4b9d589ebc7d003a12a40a43c2772e004c 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -201,4 +201,11 @@ public class MiraiConfig {
+         entitiesCanUsePortals = getBoolean("entities-can-use-portals", true,
+             "Whether or not entities should be able to use portals.");
+     }
++
++    public static boolean bookAnimationTick;
++    private static void bookTicking() {
++        bookAnimationTick = getBoolean("enchantment-table-book-animation-tick", false,
++            "Whether or not server should animate enchantment table book.",
++            "Disabling it can save MSPT, especially with quite a lot of enchantment tables.");
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+index 65e1381bb2d10bd212463feb602c60f8fdb9ade1..528a722919e5ab79ff71236fd713ed614713af2a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/EnchantmentTableBlockEntity.java
+@@ -48,6 +48,7 @@ public class EnchantmentTableBlockEntity extends BlockEntity implements Nameable
+     }
+ 
+     public static void bookAnimationTick(Level world, BlockPos pos, BlockState state, EnchantmentTableBlockEntity blockEntity) {
++        if (!dev.etil.mirai.MiraiConfig.bookAnimationTick) return; // Mirai - skip enchantment table book tick
+         blockEntity.oOpen = blockEntity.open;
+         blockEntity.oRot = blockEntity.rot;
+         Player player = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 3.0D, false);

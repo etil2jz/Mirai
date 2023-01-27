@@ -7,7 +7,7 @@ Original code by PatinaMC, licensed under GNU General Public License v3.0
 You can find the original code on https://github.com/PatinaMC/Patina
 
 diff --git a/src/main/java/net/minecraft/commands/CommandSourceStack.java b/src/main/java/net/minecraft/commands/CommandSourceStack.java
-index e0dd0fc1638377f4d4226d4b2976b901d635dff0..e75a428ff261a52b8d5f72d5c46437feef5b8ac4 100644
+index 81f4e3c869623b6dd2d80886652fa41791fe7032..ac5496ee97ba2fdfcf9ec31f0cf8ff5b5426729e 100644
 --- a/src/main/java/net/minecraft/commands/CommandSourceStack.java
 +++ b/src/main/java/net/minecraft/commands/CommandSourceStack.java
 @@ -59,7 +59,7 @@ public class CommandSourceStack implements SharedSuggestionProvider, com.destroy
@@ -16,6 +16,6 @@ index e0dd0fc1638377f4d4226d4b2976b901d635dff0..e75a428ff261a52b8d5f72d5c46437fe
      private final TaskChainer chatMessageChainer;
 -    public java.util.Map<Thread, CommandNode> currentCommand = new java.util.concurrent.ConcurrentHashMap<>(); // CraftBukkit // Paper
 +    public final java.util.Map<Thread, CommandNode> currentCommand = new java.util.concurrent.ConcurrentHashMap<>(); // CraftBukkit // Paper // Patina - make a field final
+     public boolean bypassSelectorPermissions = false; // Paper
  
      public CommandSourceStack(CommandSource output, Vec3 pos, Vec2 rot, ServerLevel world, int level, String name, Component displayName, MinecraftServer server, @Nullable Entity entity) {
-         this(output, pos, rot, world, level, name, displayName, server, entity, false, (commandcontext, flag, j) -> {

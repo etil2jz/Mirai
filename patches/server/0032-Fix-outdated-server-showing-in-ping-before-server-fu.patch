@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Tue, 4 Jun 2019 15:50:08 -0500
+Subject: [PATCH] Fix 'outdated server' showing in ping before server fully
+ boots
+
+Original code by PurpurMC, licensed under MIT
+You can find the original code on https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerStatusPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerStatusPacketListenerImpl.java
+index f90eb6c50208879c4a2d5ad7e4181c06d38076f8..603d13f66684e3b44f913e2c71233032a38cd5db 100644
+--- a/src/main/java/net/minecraft/server/network/ServerStatusPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerStatusPacketListenerImpl.java
+@@ -153,6 +153,7 @@ public class ServerStatusPacketListenerImpl implements ServerStatusPacketListene
+             this.connection.send(new ClientboundStatusResponsePacket(ping));
+             // CraftBukkit end
+             */
++            if (this.server.getStatus().getVersion() == null) return; // Purpur - do not respond to pings before we know the protocol version
+             com.destroystokyo.paper.network.StandardPaperServerListPingEventImpl.processRequest(this.server, this.connection);
+             // Paper end
+         }

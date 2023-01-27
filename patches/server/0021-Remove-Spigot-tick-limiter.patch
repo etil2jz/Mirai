@@ -7,7 +7,7 @@ Original code by Titaniumtown, licensed under GNU General Public License v3.0
 You can find the original code on https://gitlab.com/Titaniumtown/JettPack
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 13aee2a785b3ddb481744277a25c1ab95e036d4a..7fc3c9892d69d14de694d5328fe17a971019cc54 100644
+index 513cbb4a21762a5c8c5c07a9f51194dc85cef75c..139866dd8c0db8e26b49923a3811e2c106ee37c3 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -176,8 +176,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -33,10 +33,10 @@ index 13aee2a785b3ddb481744277a25c1ab95e036d4a..7fc3c9892d69d14de694d5328fe17a97
      }
  
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 46ef3400605cc420bd88f13838df7d1f1106235e..a5a2e497eb3e651f3e715f995a80161d919ebab9 100644
+index 5503ad6a93d331771a0e92c0da6adedf2ac81aff..7c1efc3b6045b2179139dd419e969569f1af9f6d 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-@@ -446,6 +446,7 @@ public class SpigotWorldConfig
+@@ -442,6 +442,7 @@ public class SpigotWorldConfig
          this.hangingTickFrequency = this.getInt( "hanging-tick-frequency", 100 );
      }
  
@@ -44,7 +44,7 @@ index 46ef3400605cc420bd88f13838df7d1f1106235e..a5a2e497eb3e651f3e715f995a80161d
      public int tileMaxTickTime;
      public int entityMaxTickTime;
      private void maxTickTimes()
-@@ -454,6 +455,7 @@ public class SpigotWorldConfig
+@@ -450,6 +451,7 @@ public class SpigotWorldConfig
          this.entityMaxTickTime = this.getInt("max-tick-time.entity", 50);
          this.log("Tile Max Tick Time: " + this.tileMaxTickTime + "ms Entity max Tick Time: " + this.entityMaxTickTime + "ms");
      }
