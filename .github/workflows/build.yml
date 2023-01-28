@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.4
+        uses: gradle/wrapper-validation-action@master
       - name: Set up JDK (GraalVM)
         uses: graalvm/setup-graalvm@v1
         with:
@@ -15,7 +15,7 @@ jobs:
           java-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull Gradle Cache
-        uses: actions/cache@v3.0.4
+        uses: actions/cache@v3
         id: gradle-cache
         with:
           path: ~/.gradle
@@ -31,17 +31,11 @@ jobs:
       - name: Build
         run: |
           ./gradlew -Dorg.gradle.jvmargs="-Dfile.encoding=UTF-8 -Dgraal.CompilerConfiguration=community -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.WriteableCodeCache=true --add-modules jdk.incubator.vector" createReobfPaperclipJar --stacktrace --no-daemon
-      - name: Archive Paperclip
-        uses: actions/upload-artifact@v3.1.0
+      - name: Release
+        if: github.ref_name == 'ver/1.19.2'
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          name: Mirai-1.19.2
-          path: build/libs/mirai-paperclip-1.19.2-R0.1-SNAPSHOT-reobf.jar
-#      - name: Release
-#        if: github.ref_name == 'ver/1.19'
-#        uses: marvinpinto/action-automatic-releases@v1.2.1
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          automatic_release_tag: '1.19'
-#          prerelease: false
-#          title: 'Mirai 1.19'
-#          files: build/libs/mirai-paperclip-1.19-R0.1-SNAPSHOT-reobf.jar
+          title: "Mirai-1.19.2"
+          automatic_release_tag: "1.19.2"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: build/libs/mirai-paperclip-1.19.2-R0.1-SNAPSHOT-reobf.jar

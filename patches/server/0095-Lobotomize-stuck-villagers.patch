@@ -1,0 +1,129 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Thu, 3 Dec 2020 17:56:18 -0600
+Subject: [PATCH] Lobotomize stuck villagers
+
+Original license: MIT
+Original project: https://github.com/PurpurMC/Purpur
+
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 213d394a4fcfaa3e384edd9fd7c098e05b44529f..523375618efaeca8f7cb51216a9cc4b48dc6b0d7 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -244,4 +244,11 @@ public class MiraiConfig {
+             "It also disables the popup when joining a server without",
+             "'secure chat', such as offline-mode servers.");
+     }
++
++    public static boolean villagerLobotomizeEnabled;
++    private static void lobotomizing() {
++        villagerLobotomizeEnabled = getBoolean("villager-lobotomize", false,
++            "Whether or not villagers should be lobotomized when",
++            "standing on a 1x1 block while being stuck.");
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index fa7cede4a0b59efde4949dba4a010aed5cd0a960..8b00e82a09e48103ec35af4320644b2ff25574f4 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -139,6 +139,8 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+     }, MemoryModuleType.MEETING_POINT, (entityvillager, holder) -> {
+         return holder.is(PoiTypes.MEETING);
+     });
++    private boolean isLobotomized = false; public boolean isLobotomized() { return this.isLobotomized; } // Purpur
++    private int notLobotomizedCount = 0; // Purpur
+ 
+     public long nextGolemPanic = -1; // Pufferfish
+ 
+@@ -250,12 +252,27 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+     protected void customServerAiStep() { mobTick(false); }
+     protected void mobTick(boolean inactive) {
+         this.level.getProfiler().push("villagerBrain");
++        // Purpur start
++        if (dev.etil.mirai.MiraiConfig.villagerLobotomizeEnabled) {
++            // treat as inactive if lobotomized
++            inactive = inactive || checkLobotomized();
++        } else {
++            // clean up state for API
++            this.isLobotomized = false;
++        }
++        // Purpur end
+         // Pufferfish start
+         if (!inactive) {
+             if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+             this.getBrain().tick((ServerLevel) this.level, this); // Paper
+          }
+         // Pufferfish end
++        // Purpur start
++        else if (this.isLobotomized && shouldRestock()) {
++            // make sure we restock if needed when lobotomized
++            restock();
++        }
++        // Purpur end
+         this.level.getProfiler().pop();
+         if (this.assignProfessionWhenSpawned) {
+             this.assignProfessionWhenSpawned = false;
+@@ -1060,4 +1077,47 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+ 
+         return optional.isPresent() ? worldTime - (Long) optional.get() < 24000L : false;
+     }
++
++    // Purpur start
++    private boolean checkLobotomized() {
++        int interval = 100;
++        if (this.notLobotomizedCount > 3) {
++            // check half as often if not lobotomized for the last 3+ consecutive checks
++            interval *= 2;
++        }
++        if ((this.level.getGameTime()) % interval == 0) {
++            // offset Y for short blocks like dirt_path/farmland
++            this.isLobotomized = !canTravelFrom(new BlockPos(getX(), getY() + 0.0625D, getZ()));
++
++            if (this.isLobotomized) {
++                this.notLobotomizedCount = 0;
++            } else {
++                this.notLobotomizedCount++;
++            }
++        }
++        return this.isLobotomized;
++    }
++
++    private boolean canTravelFrom(BlockPos pos) {
++        return canTravelTo(pos.east()) || canTravelTo(pos.west()) || canTravelTo(pos.north()) || canTravelTo(pos.south());
++    }
++
++    private boolean canTravelTo(BlockPos pos) {
++        net.minecraft.world.level.block.state.BlockState state = this.level.getBlockStateIfLoaded(pos);
++        if (state == null) {
++            // chunk not loaded
++            return false;
++        }
++        net.minecraft.world.level.block.Block bottom = state.getBlock();
++        if (bottom instanceof net.minecraft.world.level.block.FenceBlock ||
++                bottom instanceof net.minecraft.world.level.block.FenceGateBlock ||
++                bottom instanceof net.minecraft.world.level.block.WallBlock) {
++            // bottom block is too tall to get over
++            return false;
++        }
++        net.minecraft.world.level.block.Block top = level.getBlockState(pos.above()).getBlock();
++        // only if both blocks have no collision
++        return !bottom.hasCollision && !top.hasCollision;
++    }
++    // Purpur end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftVillager.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftVillager.java
+index 9220b1a7aa30ba59ac8dc6196859923b0675d8ec..3e820092c2b48c37b822a7afbb3f342340eed5c7 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftVillager.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftVillager.java
+@@ -222,4 +222,11 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
+         getHandle().getGossips().getReputations().clear();
+     }
+     // Paper end
++
++    // Purpur start
++    @Override
++    public boolean isLobotomized() {
++        return getHandle().isLobotomized();
++    }
++    // Purpur end
+ }

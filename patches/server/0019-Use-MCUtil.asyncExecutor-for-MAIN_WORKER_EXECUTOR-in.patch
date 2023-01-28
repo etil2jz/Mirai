@@ -39,7 +39,7 @@ index 0000000000000000000000000000000000000000..7bd88761137b2a68c04fbaa920a9ea9c
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 59ecf5ff33617a6b9d2a3ae317315484235da804..4b4f3533f6f8624551794e63baae87138a495835 100644
+index 04704bd2b3ea8f6d95edbc0404ba36da448c7d26..f818ad4d10e60e2d39d93382db71f2ccdae0001c 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
 @@ -73,6 +73,12 @@ import net.minecraft.util.TimeSource;
@@ -49,7 +49,7 @@ index 59ecf5ff33617a6b9d2a3ae317315484235da804..4b4f3533f6f8624551794e63baae8713
 +// JettPack start
 +import java.util.concurrent.AbstractExecutorService;
 +import me.titaniumtown.ServerWorkerWrapper;
-+import net.minecraft.server.MCUtil;
++import io.papermc.paper.util.MCUtil;
 +import java.util.Collections;
 +// JettPack end
  
@@ -59,10 +59,10 @@ index 59ecf5ff33617a6b9d2a3ae317315484235da804..4b4f3533f6f8624551794e63baae8713
          if (i <= 0) {
              executorService = MoreExecutors.newDirectExecutorService();
          } else {
--            executorService = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new net.minecraft.server.ServerWorkerThread(target, s, priorityModifier));
+-            executorService = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new io.papermc.paper.util.ServerWorkerThread(target, s, priorityModifier));
 +            //executorService = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new net.minecraft.server.ServerWorkerThread(target, s, priorityModifier)); // JettPack
 +            // JettPack start
-+            executorService = Integer.getInteger("Paper.WorkerThreadCount", i) <= 0 ? MoreExecutors.newDirectExecutorService() : new AbstractExecutorService(){
++            executorService = Integer.getInteger("Paper.WorkerThreadCount", i) <= 0 ? MoreExecutors.newDirectExecutorService() : new AbstractExecutorService() {
 +                private volatile boolean shutdown = false;
 +
 +                @Override

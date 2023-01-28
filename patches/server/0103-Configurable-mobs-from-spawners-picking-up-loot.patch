@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: etil2jz <81570777+etil2jz@users.noreply.github.com>
+Date: Wed, 31 Aug 2022 11:19:23 +0200
+Subject: [PATCH] Configurable mobs from spawners picking up loot
+
+
+diff --git a/src/main/java/dev/etil/mirai/MiraiConfig.java b/src/main/java/dev/etil/mirai/MiraiConfig.java
+index 523375618efaeca8f7cb51216a9cc4b48dc6b0d7..db7901672c113a85b3c7cfb32f5051ade4a9e492 100644
+--- a/src/main/java/dev/etil/mirai/MiraiConfig.java
++++ b/src/main/java/dev/etil/mirai/MiraiConfig.java
+@@ -251,4 +251,15 @@ public class MiraiConfig {
+             "Whether or not villagers should be lobotomized when",
+             "standing on a 1x1 block while being stuck.");
+     }
++
++    public static boolean skeletonPickupLoot;
++    public static boolean zombiePickupLoot;
++    private static void spawnersPickupLoot() {
++        skeletonPickupLoot = getBoolean("disable-spawners-pick-up-items.skeleton", false,
++            "Whether or not skeletons from spawners should be able to",
++            "pick up items on the ground.");
++        zombiePickupLoot = getBoolean("disable-spawners-pick-up-items.zombie", false,
++            "Whether or not zombies from spawners should be able to",
++            "pick up items on the ground.");
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
+index b8abee145fc92faddef98da913eca7715b6bfc03..4f6d0ffb03a6490494327e9cc0cdf5f079075537 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
++++ b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
+@@ -156,7 +156,13 @@ public abstract class AbstractSkeleton extends Monster implements RangedAttackMo
+         this.populateDefaultEquipmentSlots(randomsource, difficulty);
+         this.populateDefaultEquipmentEnchantments(randomsource, difficulty);
+         this.reassessWeaponGoal();
+-        this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.skeletons || randomsource.nextFloat() < 0.55F * difficulty.getSpecialMultiplier()); // Paper
++        // Mirai start
++        if (dev.etil.mirai.MiraiConfig.skeletonPickupLoot && spawnReason == MobSpawnType.SPAWNER) {
++            this.setCanPickUpLoot(false);
++        } else {
++            this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.skeletons || randomsource.nextFloat() < 0.55F * difficulty.getSpecialMultiplier()); // Paper
++        }
++        // Mirai end
+         if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+             LocalDate localdate = LocalDate.now();
+             int i = localdate.get(ChronoField.DAY_OF_MONTH);
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
+index e0e16d3b4ba0afc3cfc66b93ecf5f889599f48dd..3093e55473696667056ea93b48f76f8e83a4c551 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
+@@ -513,7 +513,13 @@ public class Zombie extends Monster {
+         Object object = super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+         float f = difficulty.getSpecialMultiplier();
+ 
+-        this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.zombies || randomsource.nextFloat() < 0.55F * f); // Paper
++        // Mirai start
++        if (dev.etil.mirai.MiraiConfig.zombiePickupLoot && spawnReason == MobSpawnType.SPAWNER) {
++            this.setCanPickUpLoot(false);
++        } else {
++            this.setCanPickUpLoot(this.level.paperConfig().entities.behavior.mobsCanAlwaysPickUpLoot.zombies || randomsource.nextFloat() < 0.55F * f); // Paper
++        }
++        // Mirai end
+         if (object == null) {
+             object = new Zombie.ZombieGroupData(Zombie.getSpawnAsBabyOdds(randomsource), true);
+         }
